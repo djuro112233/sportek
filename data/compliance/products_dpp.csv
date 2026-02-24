@@ -1,0 +1,201 @@
+product_id,product_name,brand,hs_code_6digit,hs_code_10digit,country_origin,materials_composition,weight_grams,carbon_footprint_kg,recyclability_score,hazardous_substances,factory_id,production_date,batch_number
+PROD-0001,Air Max Flyknit Upper Assembly v1,Nike,640411,6404110090,VN,upper: polyester 55% elastane 30% nylon 15%,278,7.99,69,REACH compliant; no SVHC detected,NKE-VN-001,2026-01-22,B202601-2679
+PROD-0002,Pegasus 3D Knit Collar v1,Nike,640411,6404110090,KH,recycled polyester 70% elastane 30%,57,3.38,83,REACH compliant; no SVHC detected,NKE-CN-018,2026-02-10,B202602-1488
+PROD-0003,Classic Clog Strap Assembly v1,Crocs,640299,6402990500,CN,croslite 100%,51,2.3,68,phthalate-free; REACH compliant,CRC-VN-008,2025-04-17,B202504-4257
+PROD-0004,Kalenji Trail Sole Unit v1,Decathlon,640520,6405201000,KH,rubber 70% EVA 30%,323,9.24,59,PAH below EU limit; REACH compliant,DCT-BD-018,2026-01-27,B202601-5557
+PROD-0005,ZoomX Carbon Plate Insert v1,Nike,640411,6404110090,IN,carbon fiber 100%,45,12.18,27,epoxy resin traces; REACH compliant,NKE-TW-006,2025-03-04,B202503-4527
+PROD-0006,Air Max Flyknit Upper Assembly v2,Nike,640411,6404110090,VN,upper: polyester 55% elastane 30% nylon 15%,282,7.69,72,REACH compliant; no SVHC detected,NKE-VN-003,2025-08-20,B202508-5333
+PROD-0007,Pegasus 3D Knit Collar v2,Nike,640411,6404110090,KH,recycled polyester 70% elastane 30%,72,2.45,89,REACH compliant; no SVHC detected,NKE-CN-015,2025-03-23,B202503-2291
+PROD-0008,Classic Clog Strap Assembly v2,Crocs,640299,6402990500,BD,croslite 100%,46,2.25,61,phthalate-free; REACH compliant,CRC-VN-020,2025-12-08,B202512-1750
+PROD-0009,Kalenji Trail Sole Unit v2,Decathlon,640520,6405201000,CN,rubber 70% EVA 30%,312,10.51,51,PAH below EU limit; REACH compliant,DCT-BD-010,2026-02-02,B202602-7227
+PROD-0010,ZoomX Carbon Plate Insert v2,Nike,640411,6404110090,ID,carbon fiber 100%,37,12.24,28,epoxy resin traces; REACH compliant,NKE-TW-012,2025-07-21,B202507-5374
+PROD-0011,Air Max Flyknit Upper Assembly v3,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,289,8.77,75,REACH compliant; no SVHC detected,NKE-VN-003,2026-02-23,B202602-5010
+PROD-0012,Pegasus 3D Knit Collar v3,Nike,640411,6404110090,ID,recycled polyester 70% elastane 30%,63,4.18,93,REACH compliant; no SVHC detected,NKE-CN-013,2025-05-23,B202505-4598
+PROD-0013,Classic Clog Strap Assembly v3,Crocs,640299,6402990500,BD,croslite 100%,42,2.74,65,phthalate-free; REACH compliant,CRC-VN-002,2026-02-14,B202602-7572
+PROD-0014,Kalenji Trail Sole Unit v3,Decathlon,640520,6405201000,VN,rubber 70% EVA 30%,328,10.55,55,PAH below EU limit; REACH compliant,DCT-BD-007,2025-07-16,B202507-4483
+PROD-0015,ZoomX Carbon Plate Insert v3,Nike,640411,6404110090,ID,carbon fiber 100%,52,12.42,29,epoxy resin traces; REACH compliant,NKE-TW-013,2026-01-30,B202601-3287
+PROD-0016,Air Max Flyknit Upper Assembly v4,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,287,8.03,76,REACH compliant; no SVHC detected,NKE-VN-018,2025-07-05,B202507-8019
+PROD-0017,Pegasus 3D Knit Collar v4,Nike,640411,6404110090,ID,recycled polyester 70% elastane 30%,62,4.19,85,REACH compliant; no SVHC detected,NKE-CN-012,2025-12-24,B202512-9348
+PROD-0018,Classic Clog Strap Assembly v4,Crocs,640299,6402990500,VN,croslite 100%,38,1.41,62,phthalate-free; REACH compliant,CRC-VN-002,2025-11-08,B202511-7916
+PROD-0019,Kalenji Trail Sole Unit v4,Decathlon,640520,6405201000,VN,rubber 70% EVA 30%,322,9.99,57,PAH below EU limit; REACH compliant,DCT-BD-013,2025-12-31,B202512-9669
+PROD-0020,ZoomX Carbon Plate Insert v4,Nike,640411,6404110090,TW,carbon fiber 100%,35,12.86,33,epoxy resin traces; REACH compliant,NKE-TW-001,2025-07-07,B202507-5371
+PROD-0021,Air Max Flyknit Upper Assembly v5,Nike,640411,6404110090,BD,upper: polyester 55% elastane 30% nylon 15%,279,8.37,74,REACH compliant; no SVHC detected,NKE-VN-004,2026-01-23,B202601-1053
+PROD-0022,Pegasus 3D Knit Collar v5,Nike,640411,6404110090,TW,recycled polyester 70% elastane 30%,71,4.03,93,REACH compliant; no SVHC detected,NKE-CN-006,2025-07-13,B202507-5889
+PROD-0023,Classic Clog Strap Assembly v5,Crocs,640299,6402990500,TW,croslite 100%,41,1.41,62,phthalate-free; REACH compliant,CRC-VN-020,2026-01-22,B202601-9837
+PROD-0024,Kalenji Trail Sole Unit v5,Decathlon,640520,6405201000,VN,rubber 70% EVA 30%,320,9.78,51,PAH below EU limit; REACH compliant,DCT-BD-020,2025-11-27,B202511-6947
+PROD-0025,ZoomX Carbon Plate Insert v5,Nike,640411,6404110090,CN,carbon fiber 100%,39,13.26,26,epoxy resin traces; REACH compliant,NKE-TW-002,2025-08-05,B202508-2403
+PROD-0026,Air Max Flyknit Upper Assembly v6,Nike,640411,6404110090,IN,upper: polyester 55% elastane 30% nylon 15%,287,9.03,69,REACH compliant; no SVHC detected,NKE-VN-003,2025-11-04,B202511-8787
+PROD-0027,Pegasus 3D Knit Collar v6,Nike,640411,6404110090,CN,recycled polyester 70% elastane 30%,71,3.94,89,REACH compliant; no SVHC detected,NKE-CN-009,2025-12-07,B202512-4470
+PROD-0028,Classic Clog Strap Assembly v6,Crocs,640299,6402990500,IN,croslite 100%,44,1.9,70,phthalate-free; REACH compliant,CRC-VN-007,2025-12-02,B202512-7118
+PROD-0029,Kalenji Trail Sole Unit v6,Decathlon,640520,6405201000,TW,rubber 70% EVA 30%,313,9.3,51,PAH below EU limit; REACH compliant,DCT-BD-015,2025-10-11,B202510-6539
+PROD-0030,ZoomX Carbon Plate Insert v6,Nike,640411,6404110090,TW,carbon fiber 100%,39,12.68,25,epoxy resin traces; REACH compliant,NKE-TW-018,2025-03-11,B202503-2163
+PROD-0031,Air Max Flyknit Upper Assembly v7,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,277,7.63,67,REACH compliant; no SVHC detected,NKE-VN-002,2026-02-26,B202602-6413
+PROD-0032,Pegasus 3D Knit Collar v7,Nike,640411,6404110090,TW,recycled polyester 70% elastane 30%,63,3.54,86,REACH compliant; no SVHC detected,NKE-CN-008,2025-04-06,B202504-9834
+PROD-0033,Classic Clog Strap Assembly v7,Crocs,640299,6402990500,KH,croslite 100%,53,2.05,67,phthalate-free; REACH compliant,CRC-VN-019,2025-05-07,B202505-7669
+PROD-0034,Kalenji Trail Sole Unit v7,Decathlon,640520,6405201000,VN,rubber 70% EVA 30%,323,9.51,56,PAH below EU limit; REACH compliant,DCT-BD-004,2025-06-06,B202506-8651
+PROD-0035,ZoomX Carbon Plate Insert v7,Nike,640411,6404110090,KH,carbon fiber 100%,33,12.31,30,epoxy resin traces; REACH compliant,NKE-TW-004,2025-03-28,B202503-2790
+PROD-0036,Air Max Flyknit Upper Assembly v8,Nike,640411,6404110090,CN,upper: polyester 55% elastane 30% nylon 15%,287,8.4,73,REACH compliant; no SVHC detected,NKE-VN-007,2025-07-06,B202507-4006
+PROD-0037,Pegasus 3D Knit Collar v8,Nike,640411,6404110090,ID,recycled polyester 70% elastane 30%,57,3.09,91,REACH compliant; no SVHC detected,NKE-CN-008,2025-07-21,B202507-2604
+PROD-0038,Classic Clog Strap Assembly v8,Crocs,640299,6402990500,KH,croslite 100%,35,3.04,63,phthalate-free; REACH compliant,CRC-VN-018,2025-03-26,B202503-3724
+PROD-0039,Kalenji Trail Sole Unit v8,Decathlon,640520,6405201000,ID,rubber 70% EVA 30%,316,10.53,50,PAH below EU limit; REACH compliant,DCT-BD-016,2025-09-25,B202509-3697
+PROD-0040,ZoomX Carbon Plate Insert v8,Nike,640411,6404110090,VN,carbon fiber 100%,40,13.35,32,epoxy resin traces; REACH compliant,NKE-TW-013,2025-09-11,B202509-5673
+PROD-0041,Air Max Flyknit Upper Assembly v9,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,285,7.81,71,REACH compliant; no SVHC detected,NKE-VN-018,2025-10-03,B202510-4566
+PROD-0042,Pegasus 3D Knit Collar v9,Nike,640411,6404110090,TW,recycled polyester 70% elastane 30%,56,3.7,83,REACH compliant; no SVHC detected,NKE-CN-018,2025-03-30,B202503-1821
+PROD-0043,Classic Clog Strap Assembly v9,Crocs,640299,6402990500,ID,croslite 100%,51,1.41,68,phthalate-free; REACH compliant,CRC-VN-017,2025-12-25,B202512-2312
+PROD-0044,Kalenji Trail Sole Unit v9,Decathlon,640520,6405201000,VN,rubber 70% EVA 30%,312,10.15,53,PAH below EU limit; REACH compliant,DCT-BD-020,2025-06-04,B202506-7615
+PROD-0045,ZoomX Carbon Plate Insert v9,Nike,640411,6404110090,TW,carbon fiber 100%,50,12.69,34,epoxy resin traces; REACH compliant,NKE-TW-008,2025-05-01,B202505-2343
+PROD-0046,Air Max Flyknit Upper Assembly v10,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,288,8.55,71,REACH compliant; no SVHC detected,NKE-VN-019,2025-10-01,B202510-4346
+PROD-0047,Pegasus 3D Knit Collar v10,Nike,640411,6404110090,KH,recycled polyester 70% elastane 30%,62,2.73,85,REACH compliant; no SVHC detected,NKE-CN-011,2026-02-06,B202602-5915
+PROD-0048,Classic Clog Strap Assembly v10,Crocs,640299,6402990500,BD,croslite 100%,35,2.02,69,phthalate-free; REACH compliant,CRC-VN-003,2025-10-21,B202510-2638
+PROD-0049,Kalenji Trail Sole Unit v10,Decathlon,640520,6405201000,TW,rubber 70% EVA 30%,326,9.33,55,PAH below EU limit; REACH compliant,DCT-BD-007,2025-04-07,B202504-2127
+PROD-0050,ZoomX Carbon Plate Insert v10,Nike,640411,6404110090,BD,carbon fiber 100%,37,12.38,33,epoxy resin traces; REACH compliant,NKE-TW-010,2025-07-04,B202507-5956
+PROD-0051,Air Max Flyknit Upper Assembly v11,Nike,640411,6404110090,IN,upper: polyester 55% elastane 30% nylon 15%,270,8.84,75,REACH compliant; no SVHC detected,NKE-VN-017,2026-01-08,B202601-5905
+PROD-0052,Pegasus 3D Knit Collar v11,Nike,640411,6404110090,VN,recycled polyester 70% elastane 30%,63,2.43,84,REACH compliant; no SVHC detected,NKE-CN-005,2026-02-03,B202602-3546
+PROD-0053,Classic Clog Strap Assembly v11,Crocs,640299,6402990500,BD,croslite 100%,41,2.54,63,phthalate-free; REACH compliant,CRC-VN-020,2025-07-18,B202507-5325
+PROD-0054,Kalenji Trail Sole Unit v11,Decathlon,640520,6405201000,ID,rubber 70% EVA 30%,311,8.98,56,PAH below EU limit; REACH compliant,DCT-BD-009,2025-11-14,B202511-5533
+PROD-0055,ZoomX Carbon Plate Insert v11,Nike,640411,6404110090,VN,carbon fiber 100%,36,12.77,29,epoxy resin traces; REACH compliant,NKE-TW-011,2025-03-23,B202503-3647
+PROD-0056,Air Max Flyknit Upper Assembly v12,Nike,640411,6404110090,TW,upper: polyester 55% elastane 30% nylon 15%,287,7.52,68,REACH compliant; no SVHC detected,NKE-VN-014,2025-10-13,B202510-3442
+PROD-0057,Pegasus 3D Knit Collar v12,Nike,640411,6404110090,VN,recycled polyester 70% elastane 30%,73,3.31,89,REACH compliant; no SVHC detected,NKE-CN-012,2025-12-05,B202512-3088
+PROD-0058,Classic Clog Strap Assembly v12,Crocs,640299,6402990500,BD,croslite 100%,36,2.9,63,phthalate-free; REACH compliant,CRC-VN-012,2025-03-22,B202503-5088
+PROD-0059,Kalenji Trail Sole Unit v12,Decathlon,640520,6405201000,VN,rubber 70% EVA 30%,327,10.57,56,PAH below EU limit; REACH compliant,DCT-BD-012,2026-02-05,B202602-3532
+PROD-0060,ZoomX Carbon Plate Insert v12,Nike,640411,6404110090,IN,carbon fiber 100%,37,13.26,25,epoxy resin traces; REACH compliant,NKE-TW-006,2025-06-30,B202506-3938
+PROD-0061,Air Max Flyknit Upper Assembly v13,Nike,640411,6404110090,IN,upper: polyester 55% elastane 30% nylon 15%,277,8.03,68,REACH compliant; no SVHC detected,NKE-VN-014,2025-08-18,B202508-7267
+PROD-0062,Pegasus 3D Knit Collar v13,Nike,640411,6404110090,IN,recycled polyester 70% elastane 30%,62,2.6,90,REACH compliant; no SVHC detected,NKE-CN-016,2025-03-20,B202503-6728
+PROD-0063,Classic Clog Strap Assembly v13,Crocs,640299,6402990500,IN,croslite 100%,42,1.15,63,phthalate-free; REACH compliant,CRC-VN-008,2025-08-04,B202508-7528
+PROD-0064,Kalenji Trail Sole Unit v13,Decathlon,640520,6405201000,BD,rubber 70% EVA 30%,318,9.5,58,PAH below EU limit; REACH compliant,DCT-BD-003,2025-08-16,B202508-7548
+PROD-0065,ZoomX Carbon Plate Insert v13,Nike,640411,6404110090,IN,carbon fiber 100%,42,13.38,26,epoxy resin traces; REACH compliant,NKE-TW-018,2026-02-11,B202602-5279
+PROD-0066,Air Max Flyknit Upper Assembly v14,Nike,640411,6404110090,TW,upper: polyester 55% elastane 30% nylon 15%,271,7.72,73,REACH compliant; no SVHC detected,NKE-VN-009,2025-05-31,B202505-6663
+PROD-0067,Pegasus 3D Knit Collar v14,Nike,640411,6404110090,ID,recycled polyester 70% elastane 30%,71,2.43,92,REACH compliant; no SVHC detected,NKE-CN-020,2025-08-08,B202508-4114
+PROD-0068,Classic Clog Strap Assembly v14,Crocs,640299,6402990500,VN,croslite 100%,35,2.14,68,phthalate-free; REACH compliant,CRC-VN-014,2025-07-09,B202507-4228
+PROD-0069,Kalenji Trail Sole Unit v14,Decathlon,640520,6405201000,ID,rubber 70% EVA 30%,320,10.05,60,PAH below EU limit; REACH compliant,DCT-BD-003,2025-09-03,B202509-3041
+PROD-0070,ZoomX Carbon Plate Insert v14,Nike,640411,6404110090,TW,carbon fiber 100%,45,12.15,29,epoxy resin traces; REACH compliant,NKE-TW-010,2025-08-01,B202508-3085
+PROD-0071,Air Max Flyknit Upper Assembly v15,Nike,640411,6404110090,ID,upper: polyester 55% elastane 30% nylon 15%,275,8.73,71,REACH compliant; no SVHC detected,NKE-VN-013,2025-06-07,B202506-7653
+PROD-0072,Pegasus 3D Knit Collar v15,Nike,640411,6404110090,IN,recycled polyester 70% elastane 30%,64,2.77,89,REACH compliant; no SVHC detected,NKE-CN-001,2025-12-06,B202512-6279
+PROD-0073,Classic Clog Strap Assembly v15,Crocs,640299,6402990500,ID,croslite 100%,41,2.12,62,phthalate-free; REACH compliant,CRC-VN-015,2025-10-25,B202510-2389
+PROD-0074,Kalenji Trail Sole Unit v15,Decathlon,640520,6405201000,TW,rubber 70% EVA 30%,320,8.99,53,PAH below EU limit; REACH compliant,DCT-BD-020,2025-07-24,B202507-6085
+PROD-0075,ZoomX Carbon Plate Insert v15,Nike,640411,6404110090,IN,carbon fiber 100%,36,11.55,28,epoxy resin traces; REACH compliant,NKE-TW-007,2025-06-24,B202506-8784
+PROD-0076,Air Max Flyknit Upper Assembly v16,Nike,640411,6404110090,IN,upper: polyester 55% elastane 30% nylon 15%,284,8.33,77,REACH compliant; no SVHC detected,NKE-VN-003,2026-01-07,B202601-4185
+PROD-0077,Pegasus 3D Knit Collar v16,Nike,640411,6404110090,ID,recycled polyester 70% elastane 30%,67,2.69,93,REACH compliant; no SVHC detected,NKE-CN-016,2026-02-20,B202602-1090
+PROD-0078,Classic Clog Strap Assembly v16,Crocs,640299,6402990500,IN,croslite 100%,42,1.45,68,phthalate-free; REACH compliant,CRC-VN-014,2025-04-24,B202504-8611
+PROD-0079,Kalenji Trail Sole Unit v16,Decathlon,640520,6405201000,TW,rubber 70% EVA 30%,313,9.71,57,PAH below EU limit; REACH compliant,DCT-BD-008,2025-03-26,B202503-9702
+PROD-0080,ZoomX Carbon Plate Insert v16,Nike,640411,6404110090,TW,carbon fiber 100%,46,12.73,33,epoxy resin traces; REACH compliant,NKE-TW-011,2025-12-12,B202512-7991
+PROD-0081,Air Max Flyknit Upper Assembly v17,Nike,640411,6404110090,ID,upper: polyester 55% elastane 30% nylon 15%,285,8.4,70,REACH compliant; no SVHC detected,NKE-VN-006,2025-12-06,B202512-5543
+PROD-0082,Pegasus 3D Knit Collar v17,Nike,640411,6404110090,ID,recycled polyester 70% elastane 30%,63,3.08,87,REACH compliant; no SVHC detected,NKE-CN-008,2025-11-22,B202511-4841
+PROD-0083,Classic Clog Strap Assembly v17,Crocs,640299,6402990500,BD,croslite 100%,52,1.26,62,phthalate-free; REACH compliant,CRC-VN-011,2025-07-18,B202507-4788
+PROD-0084,Kalenji Trail Sole Unit v17,Decathlon,640520,6405201000,KH,rubber 70% EVA 30%,316,8.93,56,PAH below EU limit; REACH compliant,DCT-BD-005,2025-09-13,B202509-6421
+PROD-0085,ZoomX Carbon Plate Insert v17,Nike,640411,6404110090,ID,carbon fiber 100%,33,11.91,31,epoxy resin traces; REACH compliant,NKE-TW-014,2025-12-03,B202512-7381
+PROD-0086,Air Max Flyknit Upper Assembly v18,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,288,8.26,67,REACH compliant; no SVHC detected,NKE-VN-001,2025-12-25,B202512-6763
+PROD-0087,Pegasus 3D Knit Collar v18,Nike,640411,6404110090,IN,recycled polyester 70% elastane 30%,68,3.28,91,REACH compliant; no SVHC detected,NKE-CN-013,2025-07-31,B202507-4613
+PROD-0088,Classic Clog Strap Assembly v18,Crocs,640299,6402990500,CN,croslite 100%,48,2.07,66,phthalate-free; REACH compliant,CRC-VN-009,2025-11-05,B202511-6507
+PROD-0089,Kalenji Trail Sole Unit v18,Decathlon,640520,6405201000,KH,rubber 70% EVA 30%,315,10.48,52,PAH below EU limit; REACH compliant,DCT-BD-013,2026-02-06,B202602-9751
+PROD-0090,ZoomX Carbon Plate Insert v18,Nike,640411,6404110090,ID,carbon fiber 100%,50,12.83,26,epoxy resin traces; REACH compliant,NKE-TW-019,2025-03-14,B202503-8022
+PROD-0091,Air Max Flyknit Upper Assembly v19,Nike,640411,6404110090,IN,upper: polyester 55% elastane 30% nylon 15%,275,7.6,73,REACH compliant; no SVHC detected,NKE-VN-015,2025-05-09,B202505-6363
+PROD-0092,Pegasus 3D Knit Collar v19,Nike,640411,6404110090,ID,recycled polyester 70% elastane 30%,65,3.72,89,REACH compliant; no SVHC detected,NKE-CN-011,2025-06-17,B202506-5558
+PROD-0093,Classic Clog Strap Assembly v19,Crocs,640299,6402990500,BD,croslite 100%,50,1.14,68,phthalate-free; REACH compliant,CRC-VN-003,2025-10-02,B202510-1853
+PROD-0094,Kalenji Trail Sole Unit v19,Decathlon,640520,6405201000,CN,rubber 70% EVA 30%,330,8.88,50,PAH below EU limit; REACH compliant,DCT-BD-003,2025-08-27,B202508-5051
+PROD-0095,ZoomX Carbon Plate Insert v19,Nike,640411,6404110090,IN,carbon fiber 100%,51,11.8,27,epoxy resin traces; REACH compliant,NKE-TW-001,2025-06-11,B202506-8758
+PROD-0096,Air Max Flyknit Upper Assembly v20,Nike,640411,6404110090,VN,upper: polyester 55% elastane 30% nylon 15%,276,8.43,71,REACH compliant; no SVHC detected,NKE-VN-019,2026-02-06,B202602-7043
+PROD-0097,Pegasus 3D Knit Collar v20,Nike,640411,6404110090,TW,recycled polyester 70% elastane 30%,58,3.76,85,REACH compliant; no SVHC detected,NKE-CN-020,2025-05-25,B202505-6096
+PROD-0098,Classic Clog Strap Assembly v20,Crocs,640299,6402990500,TW,croslite 100%,44,2.25,66,phthalate-free; REACH compliant,CRC-VN-001,2025-04-25,B202504-7498
+PROD-0099,Kalenji Trail Sole Unit v20,Decathlon,640520,6405201000,VN,rubber 70% EVA 30%,330,9.29,54,PAH below EU limit; REACH compliant,DCT-BD-019,2025-06-10,B202506-2983
+PROD-0100,ZoomX Carbon Plate Insert v20,Nike,640411,6404110090,IN,carbon fiber 100%,43,12.57,35,epoxy resin traces; REACH compliant,NKE-TW-002,2025-12-15,B202512-7071
+PROD-0101,Air Max Flyknit Upper Assembly v21,Nike,640411,6404110090,TW,upper: polyester 55% elastane 30% nylon 15%,270,9.2,74,REACH compliant; no SVHC detected,NKE-VN-011,2025-04-05,B202504-2729
+PROD-0102,Pegasus 3D Knit Collar v21,Nike,640411,6404110090,BD,recycled polyester 70% elastane 30%,59,3.07,91,REACH compliant; no SVHC detected,NKE-CN-015,2025-10-08,B202510-5425
+PROD-0103,Classic Clog Strap Assembly v21,Crocs,640299,6402990500,IN,croslite 100%,50,2.03,69,phthalate-free; REACH compliant,CRC-VN-018,2026-01-10,B202601-5397
+PROD-0104,Kalenji Trail Sole Unit v21,Decathlon,640520,6405201000,IN,rubber 70% EVA 30%,312,9.36,57,PAH below EU limit; REACH compliant,DCT-BD-008,2025-08-13,B202508-4995
+PROD-0105,ZoomX Carbon Plate Insert v21,Nike,640411,6404110090,TW,carbon fiber 100%,44,12.17,32,epoxy resin traces; REACH compliant,NKE-TW-020,2025-10-24,B202510-6325
+PROD-0106,Air Max Flyknit Upper Assembly v22,Nike,640411,6404110090,ID,upper: polyester 55% elastane 30% nylon 15%,281,9.1,72,REACH compliant; no SVHC detected,NKE-VN-007,2025-06-02,B202506-5581
+PROD-0107,Pegasus 3D Knit Collar v22,Nike,640411,6404110090,KH,recycled polyester 70% elastane 30%,72,2.22,86,REACH compliant; no SVHC detected,NKE-CN-009,2025-12-31,B202512-2402
+PROD-0108,Classic Clog Strap Assembly v22,Crocs,640299,6402990500,KH,croslite 100%,50,2.21,63,phthalate-free; REACH compliant,CRC-VN-014,2025-07-02,B202507-8800
+PROD-0109,Kalenji Trail Sole Unit v22,Decathlon,640520,6405201000,KH,rubber 70% EVA 30%,324,10.39,51,PAH below EU limit; REACH compliant,DCT-BD-016,2026-01-25,B202601-5820
+PROD-0110,ZoomX Carbon Plate Insert v22,Nike,640411,6404110090,ID,carbon fiber 100%,41,12.83,30,epoxy resin traces; REACH compliant,NKE-TW-008,2025-06-22,B202506-8753
+PROD-0111,Air Max Flyknit Upper Assembly v23,Nike,640411,6404110090,TW,upper: polyester 55% elastane 30% nylon 15%,283,9.49,75,REACH compliant; no SVHC detected,NKE-VN-012,2025-12-09,B202512-6419
+PROD-0112,Pegasus 3D Knit Collar v23,Nike,640411,6404110090,KH,recycled polyester 70% elastane 30%,63,2.81,86,REACH compliant; no SVHC detected,NKE-CN-015,2025-08-28,B202508-2976
+PROD-0113,Classic Clog Strap Assembly v23,Crocs,640299,6402990500,BD,croslite 100%,52,3.0,62,phthalate-free; REACH compliant,CRC-VN-004,2025-06-07,B202506-4138
+PROD-0114,Kalenji Trail Sole Unit v23,Decathlon,640520,6405201000,KH,rubber 70% EVA 30%,318,10.25,58,PAH below EU limit; REACH compliant,DCT-BD-016,2025-06-19,B202506-5636
+PROD-0115,ZoomX Carbon Plate Insert v23,Nike,640411,6404110090,IN,carbon fiber 100%,41,11.95,27,epoxy resin traces; REACH compliant,NKE-TW-007,2025-04-21,B202504-5952
+PROD-0116,Air Max Flyknit Upper Assembly v24,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,274,8.05,67,REACH compliant; no SVHC detected,NKE-VN-018,2025-03-08,B202503-5786
+PROD-0117,Pegasus 3D Knit Collar v24,Nike,640411,6404110090,CN,recycled polyester 70% elastane 30%,58,3.95,92,REACH compliant; no SVHC detected,NKE-CN-016,2026-02-21,B202602-5658
+PROD-0118,Classic Clog Strap Assembly v24,Crocs,640299,6402990500,ID,croslite 100%,45,1.47,60,phthalate-free; REACH compliant,CRC-VN-015,2025-10-27,B202510-5136
+PROD-0119,Kalenji Trail Sole Unit v24,Decathlon,640520,6405201000,VN,rubber 70% EVA 30%,322,9.78,59,PAH below EU limit; REACH compliant,DCT-BD-003,2025-10-31,B202510-1878
+PROD-0120,ZoomX Carbon Plate Insert v24,Nike,640411,6404110090,CN,carbon fiber 100%,41,11.67,28,epoxy resin traces; REACH compliant,NKE-TW-019,2025-05-17,B202505-2940
+PROD-0121,Air Max Flyknit Upper Assembly v25,Nike,640411,6404110090,IN,upper: polyester 55% elastane 30% nylon 15%,289,8.69,76,REACH compliant; no SVHC detected,NKE-VN-014,2025-12-11,B202512-4697
+PROD-0122,Pegasus 3D Knit Collar v25,Nike,640411,6404110090,ID,recycled polyester 70% elastane 30%,69,2.79,92,REACH compliant; no SVHC detected,NKE-CN-015,2025-11-23,B202511-8025
+PROD-0123,Classic Clog Strap Assembly v25,Crocs,640299,6402990500,TW,croslite 100%,36,2.32,61,phthalate-free; REACH compliant,CRC-VN-020,2025-08-04,B202508-4404
+PROD-0124,Kalenji Trail Sole Unit v25,Decathlon,640520,6405201000,CN,rubber 70% EVA 30%,312,9.11,52,PAH below EU limit; REACH compliant,DCT-BD-009,2026-01-15,B202601-2229
+PROD-0125,ZoomX Carbon Plate Insert v25,Nike,640411,6404110090,VN,carbon fiber 100%,46,12.88,32,epoxy resin traces; REACH compliant,NKE-TW-014,2025-05-20,B202505-5771
+PROD-0126,Air Max Flyknit Upper Assembly v26,Nike,640411,6404110090,CN,upper: polyester 55% elastane 30% nylon 15%,279,8.91,74,REACH compliant; no SVHC detected,NKE-VN-010,2025-03-17,B202503-2166
+PROD-0127,Pegasus 3D Knit Collar v26,Nike,640411,6404110090,CN,recycled polyester 70% elastane 30%,75,3.38,86,REACH compliant; no SVHC detected,NKE-CN-009,2026-02-15,B202602-7965
+PROD-0128,Classic Clog Strap Assembly v26,Crocs,640299,6402990500,TW,croslite 100%,55,1.4,64,phthalate-free; REACH compliant,CRC-VN-008,2025-04-28,B202504-3330
+PROD-0129,Kalenji Trail Sole Unit v26,Decathlon,640520,6405201000,VN,rubber 70% EVA 30%,319,9.99,59,PAH below EU limit; REACH compliant,DCT-BD-006,2025-04-06,B202504-5728
+PROD-0130,ZoomX Carbon Plate Insert v26,Nike,640411,6404110090,VN,carbon fiber 100%,41,12.9,29,epoxy resin traces; REACH compliant,NKE-TW-015,2025-10-11,B202510-9199
+PROD-0131,Air Max Flyknit Upper Assembly v27,Nike,640411,6404110090,ID,upper: polyester 55% elastane 30% nylon 15%,272,8.7,73,REACH compliant; no SVHC detected,NKE-VN-015,2025-12-02,B202512-6280
+PROD-0132,Pegasus 3D Knit Collar v27,Nike,640411,6404110090,BD,recycled polyester 70% elastane 30%,57,2.66,93,REACH compliant; no SVHC detected,NKE-CN-001,2026-01-04,B202601-1339
+PROD-0133,Classic Clog Strap Assembly v27,Crocs,640299,6402990500,IN,croslite 100%,53,1.18,62,phthalate-free; REACH compliant,CRC-VN-009,2026-02-08,B202602-8708
+PROD-0134,Kalenji Trail Sole Unit v27,Decathlon,640520,6405201000,KH,rubber 70% EVA 30%,318,9.16,59,PAH below EU limit; REACH compliant,DCT-BD-015,2025-11-21,B202511-8141
+PROD-0135,ZoomX Carbon Plate Insert v27,Nike,640411,6404110090,IN,carbon fiber 100%,34,12.44,31,epoxy resin traces; REACH compliant,NKE-TW-016,2026-01-20,B202601-6460
+PROD-0136,Air Max Flyknit Upper Assembly v28,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,275,8.16,74,REACH compliant; no SVHC detected,NKE-VN-004,2025-08-12,B202508-5722
+PROD-0137,Pegasus 3D Knit Collar v28,Nike,640411,6404110090,ID,recycled polyester 70% elastane 30%,56,3.11,88,REACH compliant; no SVHC detected,NKE-CN-018,2026-02-03,B202602-5135
+PROD-0138,Classic Clog Strap Assembly v28,Crocs,640299,6402990500,VN,croslite 100%,51,2.75,60,phthalate-free; REACH compliant,CRC-VN-013,2025-08-13,B202508-9889
+PROD-0139,Kalenji Trail Sole Unit v28,Decathlon,640520,6405201000,ID,rubber 70% EVA 30%,316,9.84,59,PAH below EU limit; REACH compliant,DCT-BD-002,2025-10-23,B202510-9167
+PROD-0140,ZoomX Carbon Plate Insert v28,Nike,640411,6404110090,ID,carbon fiber 100%,38,12.03,27,epoxy resin traces; REACH compliant,NKE-TW-002,2026-01-15,B202601-5719
+PROD-0141,Air Max Flyknit Upper Assembly v29,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,273,7.56,77,REACH compliant; no SVHC detected,NKE-VN-016,2025-10-11,B202510-4920
+PROD-0142,Pegasus 3D Knit Collar v29,Nike,640411,6404110090,CN,recycled polyester 70% elastane 30%,72,2.23,89,REACH compliant; no SVHC detected,NKE-CN-010,2026-02-27,B202602-2527
+PROD-0143,Classic Clog Strap Assembly v29,Crocs,640299,6402990500,IN,croslite 100%,49,2.99,70,phthalate-free; REACH compliant,CRC-VN-004,2025-06-24,B202506-3522
+PROD-0144,Kalenji Trail Sole Unit v29,Decathlon,640520,6405201000,KH,rubber 70% EVA 30%,326,10.21,56,PAH below EU limit; REACH compliant,DCT-BD-010,2025-11-11,B202511-8905
+PROD-0145,ZoomX Carbon Plate Insert v29,Nike,640411,6404110090,CN,carbon fiber 100%,49,11.79,28,epoxy resin traces; REACH compliant,NKE-TW-015,2025-10-28,B202510-9327
+PROD-0146,Air Max Flyknit Upper Assembly v30,Nike,640411,6404110090,IN,upper: polyester 55% elastane 30% nylon 15%,278,9.05,73,REACH compliant; no SVHC detected,NKE-VN-003,2025-05-09,B202505-6568
+PROD-0147,Pegasus 3D Knit Collar v30,Nike,640411,6404110090,BD,recycled polyester 70% elastane 30%,64,3.65,92,REACH compliant; no SVHC detected,NKE-CN-001,2025-11-15,B202511-9022
+PROD-0148,Classic Clog Strap Assembly v30,Crocs,640299,6402990500,ID,croslite 100%,50,1.79,68,phthalate-free; REACH compliant,CRC-VN-018,2025-05-16,B202505-9903
+PROD-0149,Kalenji Trail Sole Unit v30,Decathlon,640520,6405201000,ID,rubber 70% EVA 30%,316,10.76,53,PAH below EU limit; REACH compliant,DCT-BD-011,2025-09-10,B202509-7274
+PROD-0150,ZoomX Carbon Plate Insert v30,Nike,640411,6404110090,IN,carbon fiber 100%,33,12.14,32,epoxy resin traces; REACH compliant,NKE-TW-014,2025-06-28,B202506-7246
+PROD-0151,Air Max Flyknit Upper Assembly v31,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,285,9.43,69,REACH compliant; no SVHC detected,NKE-VN-005,2025-09-14,B202509-9229
+PROD-0152,Pegasus 3D Knit Collar v31,Nike,640411,6404110090,BD,recycled polyester 70% elastane 30%,69,2.4,90,REACH compliant; no SVHC detected,NKE-CN-004,2025-12-28,B202512-1251
+PROD-0153,Classic Clog Strap Assembly v31,Crocs,640299,6402990500,ID,croslite 100%,37,2.04,64,phthalate-free; REACH compliant,CRC-VN-005,2025-05-13,B202505-6546
+PROD-0154,Kalenji Trail Sole Unit v31,Decathlon,640520,6405201000,KH,rubber 70% EVA 30%,330,8.96,55,PAH below EU limit; REACH compliant,DCT-BD-013,2026-01-14,B202601-9742
+PROD-0155,ZoomX Carbon Plate Insert v31,Nike,640411,6404110090,BD,carbon fiber 100%,49,11.57,26,epoxy resin traces; REACH compliant,NKE-TW-016,2025-09-11,B202509-4846
+PROD-0156,Air Max Flyknit Upper Assembly v32,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,277,8.99,73,REACH compliant; no SVHC detected,NKE-VN-010,2026-01-18,B202601-2612
+PROD-0157,Pegasus 3D Knit Collar v32,Nike,640411,6404110090,KH,recycled polyester 70% elastane 30%,69,2.53,87,REACH compliant; no SVHC detected,NKE-CN-004,2026-01-19,B202601-1474
+PROD-0158,Classic Clog Strap Assembly v32,Crocs,640299,6402990500,BD,croslite 100%,44,1.82,66,phthalate-free; REACH compliant,CRC-VN-002,2025-03-24,B202503-3385
+PROD-0159,Kalenji Trail Sole Unit v32,Decathlon,640520,6405201000,TW,rubber 70% EVA 30%,328,10.16,52,PAH below EU limit; REACH compliant,DCT-BD-014,2025-07-04,B202507-3785
+PROD-0160,ZoomX Carbon Plate Insert v32,Nike,640411,6404110090,VN,carbon fiber 100%,44,12.74,28,epoxy resin traces; REACH compliant,NKE-TW-020,2025-05-29,B202505-9153
+PROD-0161,Air Max Flyknit Upper Assembly v33,Nike,640411,6404110090,CN,upper: polyester 55% elastane 30% nylon 15%,284,8.78,74,REACH compliant; no SVHC detected,NKE-VN-008,2025-12-24,B202512-5183
+PROD-0162,Pegasus 3D Knit Collar v33,Nike,640411,6404110090,VN,recycled polyester 70% elastane 30%,64,3.56,85,REACH compliant; no SVHC detected,NKE-CN-015,2026-02-05,B202602-2210
+PROD-0163,Classic Clog Strap Assembly v33,Crocs,640299,6402990500,BD,croslite 100%,44,2.38,66,phthalate-free; REACH compliant,CRC-VN-019,2025-10-13,B202510-5097
+PROD-0164,Kalenji Trail Sole Unit v33,Decathlon,640520,6405201000,IN,rubber 70% EVA 30%,316,10.8,57,PAH below EU limit; REACH compliant,DCT-BD-010,2025-10-20,B202510-2747
+PROD-0165,ZoomX Carbon Plate Insert v33,Nike,640411,6404110090,ID,carbon fiber 100%,43,12.65,29,epoxy resin traces; REACH compliant,NKE-TW-019,2025-06-30,B202506-1359
+PROD-0166,Air Max Flyknit Upper Assembly v34,Nike,640411,6404110090,ID,upper: polyester 55% elastane 30% nylon 15%,270,8.63,77,REACH compliant; no SVHC detected,NKE-VN-009,2026-02-01,B202602-1803
+PROD-0167,Pegasus 3D Knit Collar v34,Nike,640411,6404110090,KH,recycled polyester 70% elastane 30%,64,3.75,86,REACH compliant; no SVHC detected,NKE-CN-016,2026-01-05,B202601-6772
+PROD-0168,Classic Clog Strap Assembly v34,Crocs,640299,6402990500,KH,croslite 100%,54,1.6,70,phthalate-free; REACH compliant,CRC-VN-007,2025-06-21,B202506-3240
+PROD-0169,Kalenji Trail Sole Unit v34,Decathlon,640520,6405201000,VN,rubber 70% EVA 30%,319,10.38,50,PAH below EU limit; REACH compliant,DCT-BD-002,2026-01-16,B202601-6977
+PROD-0170,ZoomX Carbon Plate Insert v34,Nike,640411,6404110090,VN,carbon fiber 100%,42,12.99,27,epoxy resin traces; REACH compliant,NKE-TW-010,2025-05-07,B202505-4289
+PROD-0171,Air Max Flyknit Upper Assembly v35,Nike,640411,6404110090,IN,upper: polyester 55% elastane 30% nylon 15%,281,8.56,71,REACH compliant; no SVHC detected,NKE-VN-018,2025-05-07,B202505-3695
+PROD-0172,Pegasus 3D Knit Collar v35,Nike,640411,6404110090,IN,recycled polyester 70% elastane 30%,64,3.69,88,REACH compliant; no SVHC detected,NKE-CN-016,2025-07-10,B202507-2886
+PROD-0173,Classic Clog Strap Assembly v35,Crocs,640299,6402990500,VN,croslite 100%,42,2.82,70,phthalate-free; REACH compliant,CRC-VN-005,2025-10-26,B202510-7511
+PROD-0174,Kalenji Trail Sole Unit v35,Decathlon,640520,6405201000,BD,rubber 70% EVA 30%,322,8.83,58,PAH below EU limit; REACH compliant,DCT-BD-003,2025-12-11,B202512-3024
+PROD-0175,ZoomX Carbon Plate Insert v35,Nike,640411,6404110090,BD,carbon fiber 100%,50,12.26,35,epoxy resin traces; REACH compliant,NKE-TW-009,2025-10-19,B202510-7086
+PROD-0176,Air Max Flyknit Upper Assembly v36,Nike,640411,6404110090,KH,upper: polyester 55% elastane 30% nylon 15%,285,7.55,75,REACH compliant; no SVHC detected,NKE-VN-008,2025-04-25,B202504-6374
+PROD-0177,Pegasus 3D Knit Collar v36,Nike,640411,6404110090,CN,recycled polyester 70% elastane 30%,75,3.85,87,REACH compliant; no SVHC detected,NKE-CN-003,2026-01-07,B202601-7689
+PROD-0178,Classic Clog Strap Assembly v36,Crocs,640299,6402990500,CN,croslite 100%,36,1.71,67,phthalate-free; REACH compliant,CRC-VN-002,2025-04-29,B202504-2902
+PROD-0179,Kalenji Trail Sole Unit v36,Decathlon,640520,6405201000,CN,rubber 70% EVA 30%,314,9.58,55,PAH below EU limit; REACH compliant,DCT-BD-018,2025-04-19,B202504-9850
+PROD-0180,ZoomX Carbon Plate Insert v36,Nike,640411,6404110090,TW,carbon fiber 100%,45,12.81,32,epoxy resin traces; REACH compliant,NKE-TW-005,2025-10-01,B202510-7686
+PROD-0181,Air Max Flyknit Upper Assembly v37,Nike,640411,6404110090,VN,upper: polyester 55% elastane 30% nylon 15%,276,8.39,70,REACH compliant; no SVHC detected,NKE-VN-012,2025-07-22,B202507-6942
+PROD-0182,Pegasus 3D Knit Collar v37,Nike,640411,6404110090,KH,recycled polyester 70% elastane 30%,72,4.0,93,REACH compliant; no SVHC detected,NKE-CN-012,2025-04-20,B202504-6876
+PROD-0183,Classic Clog Strap Assembly v37,Crocs,640299,6402990500,ID,croslite 100%,41,3.04,67,phthalate-free; REACH compliant,CRC-VN-009,2025-04-01,B202504-2501
+PROD-0184,Kalenji Trail Sole Unit v37,Decathlon,640520,6405201000,CN,rubber 70% EVA 30%,310,8.9,55,PAH below EU limit; REACH compliant,DCT-BD-020,2026-02-03,B202602-4990
+PROD-0185,ZoomX Carbon Plate Insert v37,Nike,640411,6404110090,IN,carbon fiber 100%,38,11.64,33,epoxy resin traces; REACH compliant,NKE-TW-019,2025-05-04,B202505-4394
+PROD-0186,Air Max Flyknit Upper Assembly v38,Nike,640411,6404110090,CN,upper: polyester 55% elastane 30% nylon 15%,280,9.05,76,REACH compliant; no SVHC detected,NKE-VN-008,2025-12-26,B202512-1046
+PROD-0187,Pegasus 3D Knit Collar v38,Nike,640411,6404110090,IN,recycled polyester 70% elastane 30%,59,3.28,85,REACH compliant; no SVHC detected,NKE-CN-005,2025-07-20,B202507-2801
+PROD-0188,Classic Clog Strap Assembly v38,Crocs,640299,6402990500,IN,croslite 100%,39,1.13,63,phthalate-free; REACH compliant,CRC-VN-001,2026-02-02,B202602-6304
+PROD-0189,Kalenji Trail Sole Unit v38,Decathlon,640520,6405201000,CN,rubber 70% EVA 30%,311,9.05,56,PAH below EU limit; REACH compliant,DCT-BD-009,2025-03-09,B202503-9619
+PROD-0190,ZoomX Carbon Plate Insert v38,Nike,640411,6404110090,KH,carbon fiber 100%,47,12.4,30,epoxy resin traces; REACH compliant,NKE-TW-003,2025-04-28,B202504-9408
+PROD-0191,Air Max Flyknit Upper Assembly v39,Nike,640411,6404110090,VN,upper: polyester 55% elastane 30% nylon 15%,286,7.94,76,REACH compliant; no SVHC detected,NKE-VN-015,2025-12-29,B202512-1710
+PROD-0192,Pegasus 3D Knit Collar v39,Nike,640411,6404110090,TW,recycled polyester 70% elastane 30%,69,3.49,83,REACH compliant; no SVHC detected,NKE-CN-010,2026-02-01,B202602-1996
+PROD-0193,Classic Clog Strap Assembly v39,Crocs,640299,6402990500,IN,croslite 100%,48,2.47,67,phthalate-free; REACH compliant,CRC-VN-013,2025-11-01,B202511-8267
+PROD-0194,Kalenji Trail Sole Unit v39,Decathlon,640520,6405201000,VN,rubber 70% EVA 30%,329,9.1,52,PAH below EU limit; REACH compliant,DCT-BD-011,2025-04-07,B202504-5505
+PROD-0195,ZoomX Carbon Plate Insert v39,Nike,640411,6404110090,KH,carbon fiber 100%,49,12.92,31,epoxy resin traces; REACH compliant,NKE-TW-019,2026-01-14,B202601-9692
+PROD-0196,Air Max Flyknit Upper Assembly v40,Nike,640411,6404110090,ID,upper: polyester 55% elastane 30% nylon 15%,289,8.36,68,REACH compliant; no SVHC detected,NKE-VN-017,2025-07-29,B202507-4522
+PROD-0197,Pegasus 3D Knit Collar v40,Nike,640411,6404110090,ID,recycled polyester 70% elastane 30%,68,2.88,90,REACH compliant; no SVHC detected,NKE-CN-008,2025-10-07,B202510-7532
+PROD-0198,Classic Clog Strap Assembly v40,Crocs,640299,6402990500,KH,croslite 100%,45,1.95,70,phthalate-free; REACH compliant,CRC-VN-004,2025-09-29,B202509-5176
+PROD-0199,Kalenji Trail Sole Unit v40,Decathlon,640520,6405201000,CN,rubber 70% EVA 30%,312,8.98,51,PAH below EU limit; REACH compliant,DCT-BD-016,2025-09-08,B202509-2527
+PROD-0200,ZoomX Carbon Plate Insert v40,Nike,640411,6404110090,VN,carbon fiber 100%,36,12.61,34,epoxy resin traces; REACH compliant,NKE-TW-012,2025-10-08,B202510-6400
