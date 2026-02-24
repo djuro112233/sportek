@@ -1,0 +1,556 @@
+================================================================================
+SPORTEK d.o.o. Banja Luka
+STANDARDNA OPERATIVNA PROCEDURA
+================================================================================
+
+Dokument:       SOP-QC-001
+Naziv:          Finalna inspekcija kvaliteta gotove obuće
+Revizija:       Rev. 04
+Datum izdanja:  15.01.2025.
+Datum revizije: 10.01.2026.
+Pripremio:      Miloš Kovačević, QC menadžer
+Odobrio:        Dragan Simić, direktor proizvodnje
+Klasifikacija:  INTERNO - POVJERLJIVO
+
+================================================================================
+SADRŽAJ
+================================================================================
+
+1. Svrha i opseg
+2. Reference i normativni dokumenti
+3. Definicije i skraćenice
+4. Odgovornosti i ovlaštenja
+5. Oprema za inspekciju
+6. Postupak finalne inspekcije
+7. Klasifikacija defekata i kriteriji prihvatljivosti
+8. AQL nivoi po brendovima
+9. Dokumentiranje i evidencija
+10. Eskalacija i korektivne akcije
+11. Historija revizija
+
+================================================================================
+1. SVRHA I OPSEG
+================================================================================
+
+Svrha ove standardne operativne procedure je definisanje jednoznačnog i
+ponovljivog postupka za finalnu inspekciju kvaliteta gotove obuće prije
+pakovanja i otpreme krajnjem kupcu. Procedura osigurava da svaki par obuće
+koji napusti proizvodni pogon Sportek d.o.o. zadovoljava definirane standarde
+kvaliteta, kako interne tako i specifične zahtjeve brendova za koje se
+proizvodi.
+
+Opseg ove procedure obuhvata sve proizvodne linije od L1 do L8 u glavnom
+proizvodnom pogonu u Banjoj Luci. Procedura se primjenjuje na sve brendove
+za koje Sportek d.o.o. trenutno proizvodi, uključujući ali ne ograničavajući
+se na Nike, Crocs, Decathlon (Kalenji, Quechua), te vlastite marke. Bez
+obzira na tip obuće, bilo da se radi o sportskoj obući, sandalama, radnoj
+obući ili casual modelu, ova procedura predstavlja obavezan korak u
+proizvodnom procesu koji se ne smije preskočiti ni pod kojim okolnostima.
+
+Procedura pokriva sve aspekte finalne inspekcije uključujući vizuelnu
+inspekciju, dimenzionalnu kontrolu, funkcionalnu provjeru, verifikaciju
+označavanja i pakovanja, te skeniranje NFC tagova gdje je primjenjivo. Sve
+stavke navedene u ovoj proceduri su obavezne osim ako nije drugačije
+naznačeno za specifični brend ili model.
+
+================================================================================
+2. REFERENCE I NORMATIVNI DOKUMENTI
+================================================================================
+
+Ova procedura je usklađena sa sljedećim dokumentima i standardima:
+
+- ISO 9001:2015 - Sistem upravljanja kvalitetom
+- ISO 2859-1:1999 - Postupci uzorkovanja za inspekciju po atributima
+- ISO 20344:2021 - Osobna zaštitna oprema - Metode ispitivanja za obuću
+- Nike Manufacturing Quality Standards (NQS) Rev. 2024
+- Crocs Supplier Quality Manual Rev. 8
+- Decathlon Quality Assurance Protocol (QAP) v3.2
+- Sportek interni standard kvaliteta SKS-001 Rev. 06
+- REACH Uredba (EC) br. 1907/2006
+- Sportek BOM specifikacije za aktuelne modele
+
+Svi inspektori su dužni imati pristup aktuelnim verzijama navedenih
+dokumenata na radnom mjestu, bilo u fizičkom ili digitalnom obliku putem
+internog QC portala.
+
+================================================================================
+3. DEFINICIJE I SKRAĆENICE
+================================================================================
+
+QC - Quality Control (kontrola kvaliteta)
+AQL - Acceptable Quality Level (prihvatljivi nivo kvaliteta)
+BOM - Bill of Materials (sastavnica materijala)
+FPY - First Pass Yield (prinos pri prvom prolazu)
+NFC - Near Field Communication
+SDS - Safety Data Sheet (sigurnosno-tehnički list)
+LZO - Lična zaštitna oprema
+SMSI - Supplier Manufacturing Standards Index
+OTD - On Time Delivery (isporuka na vrijeme)
+Delta E - mjera razlike u boji u CIE Lab prostoru boja
+Kritični defekt - defekt koji ugrožava sigurnost ili funkcionalnost proizvoda
+Veći defekt - defekt koji značajno utiče na izgled ili upotrebljivost
+Manji defekt - kozmetički defekt koji ne utiče na funkcionalnost
+
+================================================================================
+4. ODGOVORNOSTI I OVLAŠTENJA
+================================================================================
+
+4.1 QC menadžer
+
+QC menadžer je krajnje odgovoran za implementaciju i održavanje ove procedure.
+Njegove specifične odgovornosti uključuju:
+
+- Osiguranje da svi inspektori posjeduju adekvatnu obuku i certifikaciju
+- Organizovanje recertifikacije inspektora svaka 3 (tri) mjeseca bez izuzetka
+- Pregled i ažuriranje ove procedure minimalno jednom godišnje ili pri svakoj
+  promjeni zahtjeva brendova
+- Analiza mjesečnih QC izvještaja i identifikacija trendova
+- Eskalacija kritičnih pitanja kvaliteta direktoru proizvodnje
+- Odobravanje odstupanja od standardne procedure kada je to opravdano
+- Održavanje kalibracionog plana za svu inspekcijsku opremu
+- Koordinacija sa predstavnicima brendova prilikom audita
+
+4.2 QC inspektori
+
+QC inspektori su operativno odgovorni za provođenje inspekcije. Svaki
+inspektor mora:
+
+- Posjedovati važeću internu certifikaciju za finalnu inspekciju (obnavlja
+  se svaka 3 mjeseca putem praktičnog i teoretskog ispita)
+- Poznavati specifične zahtjeve svih brendova za koje vrši inspekciju
+- Prijaviti svako odstupanje od procedure QC menadžeru
+- Dokumentovati sve nalaze u QC informacionom sistemu u realnom vremenu
+- Odbiti svaki pritisak za propuštanje neusaglašenih proizvoda
+- Nositi propisanu LZO tokom rada
+
+Recertifikacioni ispit se sastoji od teoretskog dijela (30 pitanja, minimum
+80% tačnih odgovora) i praktičnog dijela (inspekcija 20 pari sa namjerno
+ubačenim defektima, minimum 90% detekcija). Inspektori koji ne polože
+recertifikaciju ne smiju vršiti finalnu inspekciju dok ne polože ponovljeni
+ispit u roku od 7 dana.
+
+4.3 Vođa proizvodne linije
+
+Vođa linije je odgovoran za pripremu gotovih proizvoda za inspekciju prema
+zahtjevima ove procedure, uključujući pravilno slaganje u inspekcijske
+kutije i popratnu dokumentaciju.
+
+================================================================================
+5. OPREMA ZA INSPEKCIJU
+================================================================================
+
+Svako inspekcijsko radno mjesto mora biti opremljeno sljedećom opremom koja
+mora biti ispravna i kalibrirana:
+
+5.1 LED inspekcijski sto
+
+Inspekcijski sto mora imati integrirano LED osvjetljenje sa minimalnim
+intenzitetom od 1000 luksa na radnoj površini. Temperatura boje svjetla
+mora biti u rasponu od 5000K do 6500K za preciznu procjenu boja. Sto mora
+imati mat bijelu radnu površinu kako bi se izbjegao odsjaj. Intenzitet
+osvjetljenja se provjerava lux metrom mjesečno, a rezultat se bilježi u
+kalibracionom dnevniku.
+
+5.2 Digitalni kaliper
+
+Digitalni kaliper sa rezolucijom od 0.01 mm i mjernim rasponom od minimalno
+0 do 300 mm. Kaliper mora biti kalibriran prema ISO 13385-1, sa
+kalibracionim certifikatom koji se obnavlja svakih 6 mjeseci. Svaki
+inspektor dobiva svoj lični kaliper sa evidencionim brojem.
+
+5.3 Kolorimetar
+
+Kolorimetar za mjerenje Delta E vrijednosti prema CIE Lab standardu.
+Uređaj mora imati mogućnost pohranjivanja referentnih boja za aktuelne
+modele. Kalibracija se vrši na početku svake smjene pomoću bijele i crne
+referentne pločice isporučene uz uređaj.
+
+5.4 Lupa
+
+Lupa sa minimalno 10x uvećanjem za detaljnu inspekciju šavova, teksture
+materijala i sitnih defekata. Poželjno je da lupa ima integrirano LED
+osvjetljenje za rad u sjenovitim područjima.
+
+5.5 Tenziometar
+
+Digitalni tenziometar za mjerenje sile ljepljenja (peel strength test) i
+sile kidanja šavova. Mjerni raspon minimalno 0 do 200N sa rezolucijom 0.1N.
+Kalibracija svakih 6 mjeseci sa certifikatom.
+
+5.6 Vaga
+
+Precizna digitalna vaga sa rezolucijom od 1 gram i kapacitetom minimalno
+2 kg za provjeru težine obuće. Kalibracija kvartalno pomoću certificiranih
+utega.
+
+5.7 Dodatna oprema
+
+- NFC čitač kompatibilan sa tagovima koji se koriste u proizvodnji
+- Digitalna kamera za dokumentiranje defekata (minimalno 12 MP)
+- Referentni uzorci odobreni od brendova (golden samples)
+- Fleksometar za provjeru savitljivosti đona
+- Mjerač debljine za đon sa rezolucijom 0.1 mm
+
+================================================================================
+6. POSTUPAK FINALNE INSPEKCIJE
+================================================================================
+
+6.1 Prijem proizvoda na inspekciju
+
+Gotovi proizvodi se dostavljaju na inspekcijsku stanicu u standardnim
+inspekcijskim kutijama. Svaka kutija sadrži 12 (dvanaest) pari obuće iste
+veličine i modela. Uz svaku kutiju mora biti priložen inspekcijski obrazac
+IL-001 sa sljedećim podacima:
+
+- Broj radnog naloga
+- Naziv modela i šifra artikla
+- Veličinski raspon
+- Broj proizvodne linije (L1 do L8)
+- Datum proizvodnje
+- Ime vođe linije
+- Broj kutije i ukupan broj kutija u seriji
+
+Inspektor prvo provjerava kompletnost dokumentacije. Nekompletna
+dokumentacija je razlog za vraćanje kutije na liniju bez inspekcije.
+
+6.2 Vizuelna inspekcija gornjeg dijela (upper)
+
+Svaki par se vadi iz kutije i postavlja na inspekcijski sto. Inspekcija
+gornjeg dijela obuhvata sljedeće stavke:
+
+6.2.1 Šavovi
+
+Šavovi moraju biti ravnomjerni, bez preskakanja, kidanja ili razlabavljenih
+konaca. Minimalan broj uboda po centimetru zavisi od brenda:
+
+- Nike: minimum 8 uboda po centimetru
+- Crocs (komponente sa šavovima): minimum 6 uboda po centimetru
+- Decathlon: minimum 7 uboda po centimetru
+- Ostali brendovi: minimum 6 uboda po centimetru
+
+Konac mora biti pravilno zateziran, niti previše labav (vidljiva petlja) niti
+previše zategnut (skupljanje materijala). Krajevi konaca moraju biti uredno
+odsječeni i osigurani, bez vidljivih krajeva dužih od 2 mm.
+
+6.2.2 Ljepilo
+
+Inspektor vizuelno provjerava vidljivost ljepila na svim spojevima. Ljepilo
+ne smije biti vidljivo na A zonama (direktno vidljive površine) ni pod kojim
+okolnostima. Na B zonama (bočne površine) tragovi ljepila su prihvatljivi
+samo ako su manji od 3 mm i jedva primjetni. Na C zonama (donja strana) tragovi
+ljepila do 5 mm se klasifikuju kao manji defekt.
+
+6.2.3 Boja
+
+Boja se provjerava vizuelno u usporedbi sa odobrenim referentnim uzorkom
+(golden sample) i instrumentalno kolorimetrom. Dozvoljene razlike:
+
+- Nike: Delta E < 1.5 (strožiji zahtjev)
+- Crocs: Delta E < 2.0
+- Decathlon: Delta E < 2.0
+- Ostali brendovi: Delta E < 2.0
+
+Oba cipela u paru moraju imati identičnu boju bez vidljive razlike golim okom.
+Razlika unutar para mora biti Delta E < 0.5 bez obzira na brend.
+
+6.2.4 Logo i oznake
+
+Pozicija loga mora biti u skladu sa specifikacijom za dati model. Dozvoljena
+tolerancija pozicioniranja je +/- 2 mm od specificirane pozicije. Logo mora
+biti čist, jasan, bez oštećenja, mrlja ili nepotpunog otiska. Veličina loga
+mora odgovarati specifikaciji za datu veličinu obuće.
+
+6.3 Inspekcija đona (outsole)
+
+6.3.1 Ljepljenje đona
+
+Provjerava se prianjanje đona po cijelom obodu. Inspektor pokušava prst
+uvući između gornjeg dijela i đona na više tačaka. Svako odvajanje veće od
+2 mm na bilo kojoj tački je kritični defekt (đeparacija). Peel strength test
+na uzorku iz svake serije mora pokazati minimum 35 N/cm za Nike, 25 N/cm za
+Crocs, i 30 N/cm za Decathlon.
+
+6.3.2 Profil đona
+
+Gazni sloj mora imati jasno definiran uzorak bez deformacija, nedostataka
+materijala ili kratkih injekcija. Dubina profila mora biti u skladu sa
+specifikacijom za dati model.
+
+6.3.3 Debljina đona
+
+Debljina đona se mjeri na minimalno 3 tačke (peta, sredina, prstni dio)
+digitalnim mjeračem debljine. Dozvoljeno odstupanje od nominalne debljine
+je +/- 1 mm. Svako veće odstupanje se klasifikuje kao veći defekt.
+
+6.3.4 Fleksibilnost đona
+
+Fleksibilnost se provjerava ručnim savijanjem na mjestu prirodnog pregiba
+stopala. Đon se mora saviti glatko bez pucanja, bijelih linija ili
+deformacije. Za detaljno ispitivanje koristi se fleksometar sa zahtjevom
+prema specifikaciji modela.
+
+6.4 Inspekcija unutrašnjosti
+
+6.4.1 Ulošci (insole)
+
+Ulošci moraju biti pravilno pozicionirani, ravni, bez nabora ili pomjeranja.
+Moraju odgovarati veličini obuće i biti čvrsto fiksirani. Površina uloška
+mora biti čista, bez mrlja ili oštećenja. Za LiteRide uloške (Crocs)
+provjeriti specifičnu gustoću i tvrdoću prema specifikaciji.
+
+6.4.2 Podstava (lining)
+
+Podstava mora biti uredno prišivena ili zalijepljena bez nabora, mjehurića
+ili odvajanja. Šavovi podstave ne smiju biti grubi ili iritantni za stopalo.
+Materijal podstave mora odgovarati BOM specifikaciji.
+
+6.4.3 Heel counter (ukrutka pete)
+
+Heel counter mora biti pravilno pozicioniran, simetričan u oba cipela i
+pružati adekvatnu potporu peti. Provjerava se pritiskom palca da se utvrdi
+da je dovoljno čvrst i da se ne deformiše trajno.
+
+6.4.4 NFC tag skeniranje
+
+Za modele koji zahtijevaju NFC tag, inspektor skenira tag čitačem i
+provjerava:
+
+- Da tag reaguje na skeniranje (aktivnost)
+- Da pohranjeni podaci odgovaraju modelu, veličini i serijskom broju
+- Da je tag pravilno pozicioniran prema specifikaciji
+
+Nedostatak NFC taga ili nefunkcionalan tag je kritični defekt koji zahtijeva
+trenutno odbijanje para.
+
+6.5 Dimenzionalna kontrola
+
+Dimenzionalna kontrola se vrši na uzorku od 20% parova iz svake inspekcijske
+kutije (minimalno 2 para, maksimalno 5 pari po kutiji od 12 pari). Odabir
+parova za dimenzionalnu kontrolu vrši se slučajnim uzorkovanjem.
+
+Mjere se sljedeće dimenzije digitalnim kaliperom:
+
+6.5.1 Dužina (unutrašnja)
+- Nominalna dužina prema tablici veličina za dati model
+- Dozvoljena tolerancija: +/- 2 mm
+- Razlika između lijevog i desnog cipela: maksimalno 1.5 mm
+
+6.5.2 Širina (na najširem dijelu)
+- Nominalna širina prema tablici veličina za dati model
+- Dozvoljena tolerancija: +/- 1.5 mm
+- Razlika između lijevog i desnog cipela: maksimalno 1.0 mm
+
+6.5.3 Težina
+- Provjeriti na vagi i uporediti sa specifikacijom
+- Dozvoljena tolerancija: +/- 5% od nominalne težine
+- Razlika između lijevog i desnog cipela: maksimalno 3%
+
+6.5.4 Simetrija para
+- Oba cipela staviti jedan pored drugog i vizuelno provjeriti simetriju
+- Maksimalna razlika u visini, obliku ili proporcijama: 2 mm
+
+Bilo koje dimenzionalno odstupanje izvan navedenih tolerancija klasifikuje se
+kao veći defekt, osim pogrešne veličine koja je kritični defekt.
+
+================================================================================
+7. KLASIFIKACIJA DEFEKATA I KRITERIJI PRIHVATLJIVOSTI
+================================================================================
+
+7.1 Kritični defekti
+
+Kritični defekti su oni koji ugrožavaju sigurnost korisnika ili čine
+proizvod potpuno neupotrebljivim. Prisustvo bilo kojeg kritičnog defekta
+zahtijeva TRENUTNO ODBIJANJE para bez izuzetka. Kritični defekti uključuju:
+
+- Đeparacija (odvajanje đona od gornjeg dijela > 2 mm)
+- Pogrešna veličina (neusklađenost stvarne veličine sa oznakom)
+- Oštećenje strukture (pukotine, lomovi, oštećenja koja ugrožavaju integritet)
+- Nedostaje NFC tag (za modele koji ga zahtijevaju)
+- Metalni predmeti u obući (igle, klamerice, žica)
+- Oštri rubovi unutar obuće koji mogu povrijediti korisnika
+- Pogrešan model ili brend
+- Nedostatak bitne komponente (npr. heel counter, ulošak)
+
+Za kritične defekte nema tolerancije. Svaki pronađeni kritični defekt
+aktivira inspekciju 100% serije za taj tip defekta.
+
+7.2 Veći defekti
+
+Veći defekti značajno utiču na izgled proizvoda ili njegovu upotrebljivost,
+ali ne predstavljaju sigurnosni rizik. Maksimalno 2 (dva) veća defekta po
+paru su dozvoljena, pod uslovom da nisu na A zoni istovremeno.
+
+Primjeri većih defekata:
+
+- Vidljivo ljepilo na A ili B zoni duže od 5 mm
+- Neravnomjeran šav sa vidljivim preskocima ili neujednačenom tenzijom
+- Odstupanje boje (Delta E iznad dozvoljenog za dati brend)
+- Dimenzionalno odstupanje izvan tolerancije ali unutar 150% tolerancije
+- Logo pomjeren više od 2 mm ali manje od 4 mm
+- Oštećenje površine materijala vidljivo sa 30 cm udaljenosti
+- Neravnomjerna debljina đona izvan tolerancije
+- Nabori na podstavi vidljivi bez savijanja obuće
+
+7.3 Manji defekti
+
+Manji defekti su kozmetički nedostaci koji ne utiču na funkcionalnost niti
+značajno na izgled kada se obuća nosi. Maksimalno 4 (četiri) manja defekta
+po paru su dozvoljena.
+
+Primjeri manjih defekata:
+
+- Ljepilo manje od 5 mm na skrivenom ili manje vidljivom mjestu (B/C zona)
+- Sitno kozmetičko oštećenje vidljivo samo pri detaljnom pregledu
+- Logo blago pomjeren (unutar 2 mm) ali i dalje vizuelno prihvatljiv
+- Sitna neravnomjernost boje vidljiva samo pod inspekcijskim osvjetljenjem
+- Minimalne neravnine na đonu u C zoni
+- Blago vidljiv otisak iz kalupa na C zoni
+- Neznatan višak materijala na šavu (manje od 1 mm)
+
+================================================================================
+8. AQL NIVOI PO BRENDOVIMA
+================================================================================
+
+Uzorkovanje i AQL nivoi se primjenjuju prema ISO 2859-1 sa sljedećim
+specifičnim zahtjevima po brendovima:
+
+8.1 Nike
+
+Nike zahtijeva najstrožije AQL nivoe u skladu sa Nike Manufacturing Quality
+Standards:
+
+- Kritični defekti: AQL 0.065 (specijalni nivo S-2)
+- Veći defekti:    AQL 1.5
+- Manji defekti:   AQL 4.0
+
+Nivo inspekcije: Normalna inspekcija, prelaz na pojačanu pri 2 odbijene
+serije od 5 uzastopnih. Povratak na normalnu nakon 5 uzastopno prihvaćenih
+serija na pojačanoj inspekciji.
+
+8.2 Crocs
+
+- Kritični defekti: AQL 0.1
+- Veći defekti:    AQL 2.5
+- Manji defekti:   AQL 4.0
+
+Posebna napomena: Za Croslite komponente primjenjuje se dodatni kriterij
+gustoće materijala koji se provjerava destruktivnim testiranjem na uzorku
+iz svake serije.
+
+8.3 Decathlon (Kalenji, Quechua)
+
+- Kritični defekti: AQL 0.065
+- Veći defekti:    AQL 2.5
+- Manji defekti:   AQL 6.5
+
+Decathlon zahtijeva da se rezultati inspekcije unose u njihov portal kvaliteta
+(Decathlon Supplier Quality Portal) u roku od 24 sata od inspekcije.
+
+8.4 Ostali brendovi i vlastite marke
+
+- Kritični defekti: AQL 0.1
+- Veći defekti:    AQL 2.5
+- Manji defekti:   AQL 6.5
+
+Za vlastite marke Sportek može prilagoditi AQL nivoe u dogovoru sa QC
+menadžerom i direktorom proizvodnje, ali nikad iznad navedenih vrijednosti.
+
+================================================================================
+9. DOKUMENTIRANJE I EVIDENCIJA
+================================================================================
+
+9.1 QC informacioni sistem
+
+Svi rezultati inspekcije se unose u QC informacioni sistem u realnom vremenu.
+Za svaki inspekcijski lot se unose sljedeći podaci:
+
+- Identifikacija lota (broj radnog naloga, model, veličina, linija)
+- Datum i vrijeme inspekcije
+- Ime inspektora i njegov certifikacioni broj
+- Broj pregledanih parova
+- Broj i tip pronađenih defekata po kategorijama
+- Fotografije defekata (obavezno za kritične, preporučeno za veće)
+- Odluka (prihvati / odbij / doradi)
+- Potpis inspektora
+
+9.2 Izvještavanje
+
+QC menadžer generiše sljedeće izvještaje iz sistema:
+
+- Dnevni izvještaj: defect rate po liniji i modelu, distribuira se vođama
+  linija i direktoru proizvodnje do 08:00 narednog dana
+- Sedmični izvještaj: trendovi, Pareto analiza defekata, FPY po liniji
+- Mjesečni izvještaj: sveobuhvatna analiza sa preporukama, dostavlja se
+  upravi i brendovima do 5. u mjesecu
+- Ad hoc izvještaji po zahtjevu brendova ili za potrebe audita
+
+9.3 Čuvanje evidencije
+
+Sva dokumentacija inspekcije se čuva minimalno 3 godine u elektronskom obliku
+i 1 godinu u fizičkom obliku. Fotografije defekata se čuvaju minimalno 2
+godine. Kalibracioni certifikati se čuvaju trajno.
+
+================================================================================
+10. ESKALACIJA I KOREKTIVNE AKCIJE
+================================================================================
+
+10.1 Eskalacioni pragovi
+
+Defect rate se prati u realnom vremenu na nivou proizvodne linije. Definisani
+su sljedeći eskalacioni pragovi:
+
+Prag 1 - Defect rate dostiže 5%:
+- Automatska notifikacija QC menadžeru i vođi linije
+- QC menadžer vrši dodatnu provjeru i identifikuje uzrok
+- Vođa linije implementira trenutne korektivne mjere
+- Pojačana inspekcija (udvostručen uzorak) za naredna 2 sata
+- Dokumentuje se u sistemu kao Minor Quality Alert
+
+Prag 2 - Defect rate dostiže 8%:
+- Automatska notifikacija direktoru proizvodnje
+- Zaustavljanje proizvodnje na pogođenoj liniji dok se ne utvrdi uzrok
+- QC menadžer formira tim za analizu uzroka (5 Why / Ishikawa dijagram)
+- Sve neinspekcione serije proizvedene od zadnje poznato dobre serije se
+  vraćaju na 100% inspekciju
+- Korektivne akcije moraju biti definirane u roku od 4 sata
+- Proizvodnja se nastavlja tek nakon odobrenja QC menadžera
+- Dokumentuje se kao Major Quality Alert sa obaveznim izvještajem brendu
+
+10.2 Korektivne akcije
+
+Za svaki Major Quality Alert pokreće se formalni proces korektivnih akcija:
+
+1. Zaustavi i izoluj - sav sumnjiv proizvod se fizički izdvaja i označava
+2. Utvrdi uzrok - koristeći 5 Why analizu ili Ishikawa dijagram
+3. Definiraj korektivnu akciju - konkretne mjere za eliminisanje uzroka
+4. Implementiraj - provedi korektivne mjere sa jasnim rokom
+5. Verifikuj - potvrdi efikasnost korektivnih mjera nakon 30 dana
+6. Dokumentuj - kompletna dokumentacija u QC sistemu
+
+Brendovi se obavještavaju o svim Major Quality Alertima u roku od 24 sata
+sa predloženim korektivnim akcijama.
+
+10.3 Kontinuirano poboljšanje
+
+QC menadžer na mjesečnom sastanku prezentuje analizu svih defekata,
+eskalacija i korektivnih akcija. Na osnovu ove analize definišu se
+projekti poboljšanja sa jasnim ciljevima, rokovima i odgovornim osobama.
+Napredak projekata poboljšanja se prati na sedmičnom sastanku kvaliteta.
+
+================================================================================
+11. HISTORIJA REVIZIJA
+================================================================================
+
+Rev. 01 (15.03.2023) - Inicijalno izdanje
+Rev. 02 (10.09.2023) - Dodani NFC tag zahtjevi, ažurirani AQL za Nike
+Rev. 03 (15.01.2025) - Ažurirani kriteriji za Delta E, dodana dimenzionalna
+                        kontrola, ažurirani eskalacioni pragovi
+Rev. 04 (10.01.2026) - Ažurirana oprema (dodan kolorimetar), revidirani
+                        kriteriji za Crocs komponente, dodane odgovornosti
+                        za recertifikaciju inspektora
+
+================================================================================
+NAPOMENA: Ovaj dokument je vlasništvo Sportek d.o.o. Banja Luka.
+Neovlašteno kopiranje, distribucija ili korištenje je strogo zabranjeno.
+Za pitanja kontaktirati QC odjel: qc@sportek.ba
+================================================================================

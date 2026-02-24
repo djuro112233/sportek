@@ -1,0 +1,630 @@
+================================================================================
+SPORTEK d.o.o. Banja Luka
+STANDARDNA OPERATIVNA PROCEDURA
+================================================================================
+
+Dokument:       SOP-PROD-003
+Naziv:          Setup SHIMA SEIKI mašina za 3D knit proizvodnju
+Revizija:       Rev. 03
+Datum izdanja:  01.06.2024.
+Datum revizije: 15.12.2025.
+Pripremio:      Igor Radović, inženjer 3D knit odjela
+Odobrio:        Dragan Simić, direktor proizvodnje
+Klasifikacija:  INTERNO - POVJERLJIVO
+
+================================================================================
+SADRŽAJ
+================================================================================
+
+1. Svrha i opseg
+2. Reference
+3. Definicije i skraćenice
+4. Preduvjeti za početak rada
+5. Yarn setup - priprema prede
+6. Učitavanje programa i parametri
+7. Parametri po brendu
+8. Test run procedura
+9. Troubleshooting - rješavanje problema
+10. Održavanje tokom smjene
+11. Dokumentovanje i evidencija
+12. Historija revizija
+
+================================================================================
+1. SVRHA I OPSEG
+================================================================================
+
+Ova standardna operativna procedura definiše korak-po-korak postupak za
+setup i pokretanje SHIMA SEIKI ravnopletačkih mašina za 3D knit proizvodnju
+u pogonu Sportek d.o.o. Banja Luka. Procedura pokriva sve faze od pripreme
+mašine i materijala do uspješnog pokretanja proizvodnje i dobijanja QC
+odobrenja za serijsku proizvodnju.
+
+Opseg procedure obuhvata sve SHIMA SEIKI mašine instalirane u 3D knit odjelu,
+uključujući modele MACH2XS i SWG-N2. Procedura se primjenjuje na proizvodnju
+3D pletenih gornjih dijelova (upper) za sve brendove, sa posebnim fokusom na
+Nike Flyknit liniju i Crocs knit komponente. Svaki operater koji radi na
+SHIMA SEIKI mašinama mora biti upoznat sa ovom procedurom i posjedovati
+važeću internu certifikaciju za rad na pletačkim mašinama.
+
+Postupanje suprotno ovoj proceduri može rezultirati oštećenjem mašine,
+neusaglašenim proizvodima ili sigurnosnim incidentima. Svako odstupanje od
+procedure mora biti dokumentovano i odobreno od strane inženjera 3D knit
+odjela ili direktora proizvodnje.
+
+================================================================================
+2. REFERENCE
+================================================================================
+
+- SHIMA SEIKI MACH2XS Operator Manual Rev. 5
+- SHIMA SEIKI SWG-N2 Operator Manual Rev. 3
+- SDS-ONE APEX4 Design System User Guide
+- Nike Flyknit Manufacturing Specification NFS-2024-08
+- Crocs Knit Component Specification CKS-Rev6
+- Sportek interni standard pletenja SPL-002
+- ISO 13934-1 Tekstil - Svojstva vlačne čvrstoće tkanina
+- Sportek BOM specifikacije za aktuelne modele
+- Sportek kalibracioni plan KP-003
+
+================================================================================
+3. DEFINICIJE I SKRAĆENICE
+================================================================================
+
+3D knit - trodimenzionalno pletenje koje omogućava izradu kompletnog gornjeg
+          dijela obuće u jednom komadu bez šivanja
+BOM - Bill of Materials (sastavnica materijala)
+GG - Gauge (finesa mašine, broj igala po inču)
+SDS-ONE APEX - SHIMA SEIKI softverski sistem za dizajn i programiranje
+.sds - format datoteke za SHIMA SEIKI programe
+Stitch density - gustoća petlji (broj petlji po jedinici površine)
+Take-down tension - sila izvlačenja pletiva iz zone pletenja
+Carrier - nosač prede koji se kreće po mašini
+Yarn break sensor - senzor za prekid prede
+FPY - First Pass Yield (prinos prvog prolaza)
+Flyknit - Nike patentirana tehnologija pletenja gornjeg dijela obuće
+Loop - petlja u pletivu
+
+================================================================================
+4. PREDUVJETI ZA POČETAK RADA
+================================================================================
+
+Prije početka setup procedure, operater mora provjeriti i osigurati sljedeće
+preduvjete. Nijedan korak se ne smije preskočiti. Operater potvrđuje svaki
+preduvjet potpisom na setup listu SL-003.
+
+4.1 Radni nalog
+
+Operater mora imati aktuelan i potpisan radni nalog koji sadrži:
+
+- Broj radnog naloga i datum izdavanja
+- Naziv modela i šifra artikla
+- Brend za koji se proizvodi
+- Količina komada za proizvodnju
+- Rok završetka
+- BOM specifikacija sa tačnim vrstama i količinama prede
+- Referenca na .sds program fajl
+- Posebne napomene ili izmjene u odnosu na standardni setup
+
+Ako bilo koji podatak nedostaje ili je nejasan, operater mora kontaktirati
+planera proizvodnje prije početka rada. Rad bez kompletnog radnog naloga
+nije dozvoljen.
+
+4.2 Provjera prede prema BOM
+
+Operater provjerava sve konuse prede isporučene za dati radni nalog:
+
+- Vrsta prede mora odgovarati BOM specifikaciji (materijal, denjer, boja)
+- Lot number svakog konusa se bilježi na setup listu
+- Vizuelna provjera konusa na oštećenja, kontaminaciju ili neravnomjernost
+- Provjera da količina prede zadovoljava potrebe za planiranu proizvodnju
+  plus 10% rezerve za gubitke pri setupu i test runovima
+- Za Nike Flyknit: dodatna provjera da pređa ima certificat od odobrenog
+  dobavljača prema Nike listi odobrenih dobavljača materijala
+
+Svako odstupanje od BOM specifikacije mora se prijaviti inženjeru odjela
+koji odlučuje o daljem postupanju. Korištenje neodobrene prede je strogo
+zabranjeno, posebno za Nike proizvode.
+
+4.3 Čistoća mašine
+
+Mašina mora biti čista i bez ostataka prede, prašine ili ulja od prethodne
+proizvodnje:
+
+- Provjeriti igličasto polje na zaostale niti ili vlakna
+- Očistiti sve vodilice prede komprimiranim zrakom (max 2 bara)
+- Obrisati sinker plate čistom suhom krpom
+- Provjeriti da li je karbon četka za čišćenje istrošena i zamijeniti po potrebi
+- Očistiti zona senzora za yarn break od prašine
+- Provjeriti uljni sistem i dopuniti ako je nivo ispod oznake MIN
+
+Čistoća mašine se dokumentuje na dnevnom listu održavanja DLO-003 prije
+svakog novog setupa.
+
+4.4 Kalibracioni status
+
+Operater provjerava kalibracioni status mašine na kalibracionoj naljepnici:
+
+- Datum posljednje kalibracije ne smije biti stariji od 30 dana
+- Naljepnica mora biti zelena (kalibrirano i ispravno)
+- Žuta naljepnica (kalibracija ističe u narednih 7 dana) - obavijestiti
+  održavanje i nastaviti rad
+- Crvena naljepnica (kalibracija istekla) - NE POKRETATI MAŠINU dok se
+  ne izvrši kalibracija
+
+Kalibracioni plan obuhvata provjeru: pozicioniranja igala, tenzije
+take-down sistema, brzine carriera, pozicioniranja senzora i preciznosti
+brojača komada.
+
+================================================================================
+5. YARN SETUP - PRIPREMA PREDE
+================================================================================
+
+5.1 Lot number verifikacija
+
+Za svaki konus prede koji se stavlja na mašinu:
+
+- Skenirati ili ručno unijeti lot number u proizvodni sistem
+- Sistem automatski provjerava usklađenost sa BOM specifikacijom
+- Zeleno svjetlo na terminalu potvrđuje ispravnost
+- Crveno svjetlo zahtijeva provjeru i odobrenje inženjera
+
+Svi konusi u jednom proizvodnom nalogu moraju biti iz istog lota kako bi se
+izbjegla razlika u boji ili teksturi. Miješanje lotova je dozvoljeno samo
+uz pisano odobrenje QC menadžera i inženjera odjela.
+
+5.2 Postavljanje konusa na pozicije
+
+Konusi se postavljaju na creel (stalak za konuse) prema layout dijagramu
+koji je specificiran u radnom nalogu:
+
+- Svaka pozicija na creelu je numerisana i odgovara specifičnom carrieru
+- Operater slijedi layout dijagram i postavlja konuse na odgovarajuće pozicije
+- Dijagram prikazuje koja boja i vrsta prede ide na koju poziciju
+- Za Nike Flyknit tipično se koristi 6 do 8 carriera sa različitim predama
+- Za Crocs knit tipično se koristi 4 do 6 carriera
+- Konusi moraju biti pravilno fiksirani da se ne pomjeraju tokom rada
+- Smjer odmotavanja konusa mora biti ispravan (gore prema dolje)
+
+5.3 Podešavanje tenzije prede
+
+Tenzija prede je kritični parametar koji direktno utiče na kvalitet pletiva.
+Podešava se na tenzionerima montiranim na putu prede od konusa do mašine:
+
+- Nike Flyknit: tenzija 3-5 grama (niža tenzija za mekši, fleksibilniji
+  pletiv koji je karakteristika Flyknit tehnologije)
+- Standard polyester (Crocs, Decathlon, ostali): tenzija 2-4 grama
+- Mješavine sa elastanom: tenzija 1.5-3 grama (elastan zahtijeva nižu
+  tenziju zbog svoje elastičnosti)
+
+Tenzija se mjeri digitalnim tenziometrom na svakom konusu nakon threadinga.
+Vrijednosti se bilježe na setup listu. Razlika u tenziji između konusa iste
+prede ne smije biti veća od 0.5 grama.
+
+5.4 Threading (provlačenje prede)
+
+Pređa se provlači od konusa kroz sljedeće tačke:
+
+1. Gornja vodilica na creelu
+2. Pre-tenzioner (osnovni tenzioner)
+3. Yarn break senzor
+4. Glavni tenzioner (finog podešavanja)
+5. Srednja vodilica
+6. Ulazna vodilica na mašini
+7. Carrier (nosač prede)
+
+Pređa mora prolaziti glatko kroz sve tačke bez zapletanja ili trenja o
+oštre rubove. Operater provlači prstu duž puta prede da provjeri glatkoću.
+Svako trenje se otklanja podešavanjem vodilica ili zamjenom istrošenih
+keramičkih vodilica.
+
+5.5 Provjera yarn break senzora
+
+Nakon threadinga, operater provjerava ispravnost svakog yarn break senzora:
+
+- Namjerno prekinuti predu ispred senzora
+- Mašina se mora automatski zaustaviti u roku od 0.5 sekundi
+- Alarm mora biti jasan i vidljiv na kontrolnom panelu
+- Ponovo uvesti predu i resetovati alarm
+- Ponoviti za svaki carrier
+
+Neispravan yarn break senzor je sigurnosni rizik i razlog za zaustavljanje
+mašine do popravke. Bez ispravnih senzora rad nije dozvoljen jer nedetektovani
+prekid prede može uzrokovati masovni škart i oštećenje igličastog polja.
+
+================================================================================
+6. UČITAVANJE PROGRAMA I PARAMETRI
+================================================================================
+
+6.1 SDS-ONE APEX panel
+
+Program za pletenje se učitava putem SDS-ONE APEX panela koji je integrisan
+u kontrolni sistem mašine ili je spojen kao vanjska radna stanica:
+
+- Pokrenuti SDS-ONE APEX softver ako nije aktivan
+- Prijaviti se sa operaterskim korisničkim imenom i lozinkom
+- Navigirati do direktorija sa programima za aktuelni radni nalog
+- Odabrati odgovarajući .sds fajl prema referenci iz radnog naloga
+
+6.2 Učitavanje .sds fajla
+
+- Otvoriti .sds fajl i sačekati da se kompletno učita
+- Provjeriti da naziv fajla i verzija odgovaraju radnom nalogu
+- Potvrditi da datum kreiranja/zadnje izmjene nije stariji od datuma
+  posljednjeg odobrenja za taj model
+
+6.3 Simulacija pregled
+
+Prije učitavanja na mašinu, obavezan je pregled simulacije:
+
+- Pokrenuti funkciju 3D simulacije u APEX softveru
+- Vizuelno provjeriti da simulacija odgovara referentnom uzorku
+- Provjeriti da su svi pattern elementi na ispravnim pozicijama
+- Obratiti pažnju na zone sa gustim pletivom i zone sa otvorima
+- Provjeriti carrier assignment (koji carrier pleje koji dio)
+- Usporediti dimenzije u simulaciji sa specifikacijom iz BOM-a
+
+Ako simulacija pokazuje bilo kakvo odstupanje, operater mora kontaktirati
+programera ili inženjera odjela. Ne smije se pokretati program koji
+vizuelno ne odgovara specifikaciji.
+
+6.4 Parametri mašine
+
+Nakon uspješnog pregleda simulacije, postavljaju se parametri mašine:
+
+6.4.1 Gauge (finesa)
+- Gauge je fiksna karakteristika mašine i ne podešava se
+- Provjeriti da mašina ima ispravan gauge za dati program:
+  * Nike Flyknit: 15GG (15 igala po inču)
+  * Crocs knit: 12GG (12 igala po inču)
+  * Standard modeli: 10GG ili 12GG prema specifikaciji
+- Pokretanje programa na mašini pogrešnog gaugea rezultirat će škartom
+
+6.4.2 Stitch density (gustoća petlji)
+- Nike Flyknit: 32-36 loops/cm (petlji po centimetru)
+- Crocs knit: 28-32 loops/cm
+- Standard polyester: 26-30 loops/cm
+- Podešava se na APEX panelu u parametrima programa
+- Fine tuning se vrši nakon test runa na osnovu mjerenja stvarnog pletiva
+
+6.4.3 Speed (brzina pletenja)
+- Nike Flyknit: 0.8 m/s (niža brzina zbog finoće materijala i preciznosti)
+- Crocs knit: 1.0 m/s
+- Standard modeli: 0.9-1.2 m/s prema specifikaciji
+- Brzina se može privremeno smanjiti ako se primijete problemi sa kvalitetom
+
+6.4.4 Take-down tension (tenzija izvlačenja)
+- Nike Flyknit: nivo 4 (srednje-niski, za očuvanje elastičnosti)
+- Crocs knit: nivo 5 (srednji, za stabilnost dimenzija)
+- Standard modeli: nivo 4-6 prema specifikaciji
+- Prevelika tenzija uzrokuje deformaciju pletiva
+- Premala tenzija uzrokuje petljanje i jam na mašini
+
+6.4.5 Broj carriera
+- Nike Flyknit: 6-8 carriera (više boja i struktura u jednom komadu)
+- Crocs knit: 4-6 carriera
+- Standard modeli: 4-8 prema kompleksnosti dizajna
+
+================================================================================
+7. PARAMETRI PO BRENDU - DETALJNA TABELA
+================================================================================
+
+7.1 Nike Flyknit
+
+Model mašine:        MACH2XS ili SWG-N2
+Gauge:               15GG
+Stitch density:      32-36 loops/cm
+Brzina pletenja:     0.8 m/s
+Take-down tension:   Nivo 4
+Broj carriera:       6-8
+Tenzija prede:       3-5 g
+Pređa:               Nike-odobrena Flyknit pređa (polyester + elastan)
+Ciklus pletenja:     12-18 minuta po komadu (ovisno o modelu)
+Posebni zahtjevi:    Golden sample odobren od Nike QC, svaki 10. komad
+                     dimenzionalna provjera, boja pod D65 svjetlom
+
+Nike Flyknit zahtijeva posebnu pažnju na konzistentnost gustoće pletiva
+jer čak i minimalna varijacija utiče na fit i performanse obuće. Svaka
+promjena lota prede zahtijeva novi test run i QC odobrenje.
+
+7.2 Crocs Knit
+
+Model mašine:        MACH2XS ili SWG-N2
+Gauge:               12GG
+Stitch density:      28-32 loops/cm
+Brzina pletenja:     1.0 m/s
+Take-down tension:   Nivo 5
+Broj carriera:       4-6
+Tenzija prede:       2-4 g
+Pređa:               Standard polyester prema Crocs specifikaciji
+Ciklus pletenja:     8-14 minuta po komadu
+Posebni zahtjevi:    Fokus na konzistentnost boje, čvrstoća na rastezanje
+                     min 150N, otpornost na habanje min 15000 ciklusa
+
+7.3 Prilagodba parametara
+
+Navedeni parametri su početne vrijednosti. Operater i inženjer mogu
+prilagoditi parametre u sljedećim granicama:
+
+- Stitch density: +/- 10% od nominalnog
+- Brzina: maksimalno smanjenje 20%, povećanje nije dozvoljeno bez odobrenja
+- Take-down tension: +/- 1 nivo od nominalnog
+- Tenzija prede: +/- 1 g od nominalnog
+
+Svaka prilagodba se dokumentuje na setup listu sa obrazloženjem i potpisom
+operatera i inženjera. Prilagodbe izvan navedenih granica zahtijevaju
+odobrenje direktora proizvodnje.
+
+================================================================================
+8. TEST RUN PROCEDURA
+================================================================================
+
+8.1 Pokretanje test runa
+
+Nakon kompletiranja setupa, prije početka serijske proizvodnje, obavezan je
+test run:
+
+1. Pokrenuti mašinu na niskoj brzini (50% nominalne) za prvi komad
+2. Pažljivo posmatrati pletenje, posebno:
+   - Prelaze carriera (glatki, bez zastoja)
+   - Formiranje petlji (ravnomjerno, bez preskoka)
+   - Take-down (ravnomjerno izvlačenje bez deformacije)
+   - Yarn break senzore (da li reaguju na mikro-prekide)
+3. Pustiti da se prvi komad kompletno ispleje
+4. Skinuti komad sa mašine i vizuelno pregledati
+
+8.2 Provjera prvog komada
+
+Prvi komad se detaljno provjerava:
+
+- Vizuelni pregled na inspekcijskom stolu pod 1000 lux osvjetljenjem
+- Dimenzionalna provjera: dužina, širina na 5 tačaka, uporediti sa specifikacijom
+- Provjera gustoće pletiva (brojanje petlji na 1 cm2 na 3 različite pozicije)
+- Provjera boje pod D65 standardnim svjetlom
+- Provjera simetrije za lijevi i desni gornji dio
+- Provjera svih pattern elemenata (logovi, otvori, zone gustoće)
+- Provjera rubova i završnih zona
+
+8.3 QC odobrenje
+
+Inspektor kvaliteta vrši formalnu provjeru test komada:
+
+- Mjeri sve kritične dimenzije i upoređuje sa specifikacijom
+- Provjerava strukturu pletiva lupom (10x)
+- Potvrđuje usklađenost sa golden sampleom
+- Ako je sve u redu, potpisuje odobrenje na setup listu (sekcija QC Approval)
+- Ako komad nije zadovoljavajući, bilježi neusaglašenosti i traži korekciju
+
+Bez potpisa QC inspektora na setup listu, serijska proizvodnja NE SMIJE
+početi. Ovo pravilo nema izuzetaka bez obzira na urgentnost narudžbe.
+
+8.4 Setup dokumentovanje
+
+Nakon dobijanja QC odobrenja, operater kompletira setup list sa svim
+konačnim parametrima:
+
+- Svi podešeni parametri mašine (gustoća, brzina, tenzije)
+- Lot numberi svih konusa prede
+- Rezultati mjerenja test komada
+- QC odobrenje sa potpisom i datumom
+- Vrijeme potrebno za kompletni setup
+- Eventualne napomene za smjenu koja preuzima
+
+Setup list se predaje inženjeru odjela i kopija se skenira u proizvodni
+informacioni sistem.
+
+================================================================================
+9. TROUBLESHOOTING - RJEŠAVANJE PROBLEMA
+================================================================================
+
+9.1 Yarn break (prekid prede)
+
+Simptomi: Mašina se zaustavlja, alarm za yarn break, vidljiv prekinut konac.
+
+Postupak dijagnostike i rješavanja:
+
+A) Provjera tenzije:
+   - Izmjeriti tenziju na konusu koji se prekinuo
+   - Ako je izvan opsega, podesiti tenzioner
+   - Previše zategnuta pređa puca, premalo zategnuta se petlja
+
+B) Provjera vodilica:
+   - Pregledati sve vodilice na putu prekinute prede
+   - Tražiti oštre rubove, brazde ili naslage prede
+   - Keramičke vodilice zamijeniti ako su istrošene ili napukle
+   - Čelične vodilice ispolirati finim brusnim papirom (2000 grit)
+
+C) Provjera lota prede:
+   - Uporediti frekvenciju prekida sa drugim konusima istog lota
+   - Ako se jedan konus češće kida, zamijeniti ga novim iz istog lota
+   - Ako se cijeli lot kida češće od normalnog (više od 2 prekida po satu
+     po carrieru), prijaviti inženjeru za provjeru kvaliteta prede
+   - Dokumentovati na formularu za prijavu kvaliteta materijala
+
+D) Provjera igličastog polja:
+   - Ako se prekidi dešavaju na istom mjestu, provjeriti igle u tom području
+   - Savijene ili oštećene igle mogu sjeći predu
+   - Zamjena igala se vrši prema proceduri održavanja SOP-ODR-005
+
+9.2 Neravnomjerna gustoća pletiva
+
+Simptomi: Vidljive zone različite gustoće, pletivo nije uniformno, dimenzije
+odstupaju od specifikacije.
+
+Postupak dijagnostike i rješavanja:
+
+A) Rekalibracija stitch density:
+   - Zaustaviti mašinu i pregledati posljednjih nekoliko komada
+   - Izmjeriti gustoću na problematičnim zonama
+   - Prilagoditi stitch density parametar u APEX panelu
+   - Pokrenuti test komad i provjeriti rezultat
+
+B) Provjera take-down tenzije:
+   - Neravnomjerna take-down tenzija uzrokuje neravnomjernu gustoću
+   - Provjeriti take-down valjke na habanje i čistoću
+   - Očistiti valjke od naslaga vlakana
+   - Provjeriti opruge take-down sistema
+   - Podesiti tenziju prema parametrima za dati brend
+
+C) Provjera tenzije prede:
+   - Neravnomjerna tenzija između carriera uzrokuje zone različite gustoće
+   - Ponovo izmjeriti tenziju na svim carrierima
+   - Izjednačiti tenziju na svim carrierima u dozvoljenom opsegu
+
+D) Provjera igala:
+   - Istrošene igle proizvode veće petlje
+   - Provjeriti igličasto polje na istrošenost
+   - Zamijeniti istrošene igle prema planu održavanja
+
+9.3 Pattern greška (pogrešan uzorak)
+
+Simptomi: Uzorak na pletivu ne odgovara simulaciji, elementi su pomjereni
+ili nedostaju, pogrešne boje na pogrešnim pozicijama.
+
+Postupak dijagnostike i rješavanja:
+
+A) Reload programa:
+   - Zaustaviti mašinu
+   - Kompletno ukloniti program iz memorije mašine
+   - Ponovo učitati .sds fajl sa izvorne lokacije
+   - Ponovo pokrenuti simulaciju i uporediti sa referentnim uzorkom
+   - Pokrenuti novi test komad
+
+B) Provjera carrier assignmenta:
+   - Provjeriti da li je svaki carrier dodijeljen ispravnoj predi
+   - Uporediti fizičko stanje (koji konus je na kojoj poziciji) sa layout
+     dijagramom
+   - Česta greška: zamijenjeni carrieri nakon threading-a
+   - Ispraviti raspored konusa prema dijagramu
+
+C) Provjera programa:
+   - Ako reload ne rješava problem, kontaktirati programera
+   - Moguća je greška u samom programu ili nekompatibilnost verzije
+   - Programer provjerava .sds fajl i po potrebi ispravlja
+   - Novi fajl se učitava i testira
+
+9.4 Mašina se zaglavila (jam)
+
+Simptomi: Mašina se zaustavlja sa alaromom za jam, carrier se ne može
+pomjeriti, pletivo je zapetljano.
+
+Postupak:
+
+- NE FORSIRATI carrier ručno bez prethodnog isključivanja pogona
+- Isključiti pogon carriera na kontrolnom panelu
+- Identificirati mjesto zaglavljenja
+- Pažljivo ukloniti zapetljanu predu škarama
+- Provjeriti igle u zahvaćenom području na oštećenja
+- Zamijeniti oštećene igle
+- Ponovo pokrenuti mašinu na najnižoj brzini
+- Ako se jam ponavlja, pozvati službu održavanja
+
+================================================================================
+10. ODRŽAVANJE TOKOM SMJENE
+================================================================================
+
+Redovno održavanje tokom smjene je ključno za konzistentan kvalitet i
+prevenciju zastoja. Operater je odgovoran za sljedeće aktivnosti:
+
+10.1 Svaka 2 sata - vizuelna provjera i čišćenje prašine
+
+- Vizualni pregled igličastog polja na nakupljanje vlakana
+- Čišćenje zone pletenja komprimiranim zrakom (kratki impulsi, max 2 bara)
+- Provjera kvaliteta zadnjih ispletenih komada (vizuelno)
+- Provjera creela na zapetljane niti
+- Provjera nivoa ulja u sistemu za podmazivanje
+- Bilježenje stanja na listu za praćenje tokom smjene
+
+10.2 Svaka 4 sata - provjera tenzije
+
+- Mjerenje tenzije prede na svim carrierima tenziometrom
+- Poređenje sa vrijednostima iz setup lista
+- Prilagodba tenzije ako je izvan dozvoljenog opsega
+- Provjera yarn break senzora (brzi test na jednom carrieru)
+- Provjera dimenzija zadnjeg ispletenog komada
+- Bilježenje rezultata mjerenja na listu za praćenje
+
+10.3 Kraj smjene - kompletno čišćenje
+
+- Zaustavljanje mašine i sigurnosno isključivanje pogona
+- Kompletno čišćenje igličastog polja komprimiranim zrakom
+- Čišćenje svih vodilica prede i tenzionera
+- Čišćenje take-down sistema (valjci, opruge)
+- Čišćenje radnog prostora oko mašine
+- Popunjavanje dnevnog lista održavanja DLO-003
+- Prijava bilo kakvih uočenih problema službi održavanja
+- Informisanje operatera sljedeće smjene o stanju mašine i eventualnim
+  problemima (usmeno i pisano u smjenskoj knjizi)
+
+10.4 Sedmično održavanje (služba održavanja)
+
+- Detaljna inspekcija igličastog polja i zamjena istrošenih igala
+- Provjera i kalibracija tenzionera
+- Provjera i podmazivanje svih pokretnih dijelova
+- Provjera električne instalacije i konektora
+- Provjera softvera i backup podataka
+- Čišćenje filtera sistema za hlađenje
+- Izvještaj o stanju mašine inženjeru odjela
+
+================================================================================
+11. DOKUMENTOVANJE I EVIDENCIJA
+================================================================================
+
+11.1 Setup list SL-003
+
+Za svaki novi setup popunjava se setup list koji sadrži:
+
+- Identifikacija mašine i operatera
+- Radni nalog i model
+- Svi parametri mašine
+- Lot numberi konusa prede
+- Rezultati tenzionih mjerenja
+- Rezultati test runa (dimenzije, gustoća, vizuelni kvalitet)
+- QC odobrenje sa potpisom
+- Vrijeme početka i završetka setupa
+- Napomene i prilagodbe
+
+Setup list se čuva minimalno 2 godine u fizičkom i elektronskom obliku.
+
+11.2 Dnevni list održavanja DLO-003
+
+Bilježi se:
+
+- Sve aktivnosti održavanja tokom smjene
+- Problemi i zaustavljanja mašine
+- Zamijenjeni dijelovi
+- Potrošnja materijala za održavanje (ulje, komprimirani zrak)
+- Potpis operatera i smjenskog voditelja
+
+11.3 Smjenska knjiga
+
+Predaja smjene se dokumentuje u smjenskoj knjizi sa:
+
+- Stanje mašine na kraju smjene
+- Broj proizvedenih komada i škart
+- Aktivni radni nalozi
+- Problemi koji zahtijevaju pažnju naredne smjene
+- Nivo zaliha prede na creelu
+
+11.4 Izvještaj o zastojima
+
+Svaki zastoj duži od 15 minuta se dokumentuje na posebnom formularu sa:
+
+- Uzrok zastoja (mašinski, materijal, operaterska greška, planirano)
+- Trajanje zastoja
+- Preduzete mjere
+- Uticaj na proizvodnju (izgubljeni komadi)
+- Preventivne mjere za sprečavanje ponovnog zastoja
+
+================================================================================
+12. HISTORIJA REVIZIJA
+================================================================================
+
+Rev. 01 (01.06.2024) - Inicijalno izdanje za MACH2XS
+Rev. 02 (15.11.2024) - Dodana procedura za SWG-N2, ažurirani Flyknit parametri
+Rev. 03 (15.12.2025) - Ažurirani parametri za Crocs knit, dodana sekcija
+                        troubleshooting za jam, revidirani intervali održavanja
+
+================================================================================
+NAPOMENA: Ovaj dokument je vlasništvo Sportek d.o.o. Banja Luka.
+Neovlašteno kopiranje, distribucija ili korištenje je strogo zabranjeno.
+Za pitanja kontaktirati 3D knit odjel: knit@sportek.ba
+================================================================================

@@ -1,0 +1,695 @@
+================================================================================
+SPORTEK d.o.o. Banja Luka
+PRIRUČNIK ZA KVALITET - NIKE PROGRAM
+================================================================================
+
+Dokument:       NQM-2024-001
+Naziv:          Nike priručnik za kvalitet i standarde dobavljača
+Revizija:       Rev. 05
+Datum izdanja:  01.03.2024.
+Datum revizije: 20.01.2026.
+Pripremio:      Miloš Kovačević, QC menadžer
+Odobrio:        Aleksandra Đurić, direktorica za strateška partnerstva
+Klasifikacija:  INTERNO - POVJERLJIVO
+
+================================================================================
+SADRŽAJ
+================================================================================
+
+1. Uvod i svrha
+2. SMSI sistem ocjenjivanja dobavljača
+3. Scoring sistem i kategorije
+4. Trenutni Sportek status i plan poboljšanja
+5. Standardi ispitivanja materijala
+6. Dimenzionalna tačnost i tolerancije
+7. ABC zona klasifikacija
+8. AQL nivoi i inspekcijski protokol
+9. In-process kontrola kvaliteta
+10. Korektivne akcije i proces rješavanja problema
+11. Izvještavanje i komunikacija
+12. Održivost i ekološki zahtjevi
+13. Historija revizija
+
+================================================================================
+1. UVOD I SVRHA
+================================================================================
+
+Ovaj priručnik definiše sve zahtjeve kvaliteta koje Sportek d.o.o. mora
+ispunjavati kao certificirani dobavljač za Nike Inc. Dokument je baziran na
+Nike Manufacturing Quality Standards (NQS) i prilagođen je specifičnim
+proizvodnim procesima i kapacitetima Sportek pogona u Banjoj Luci.
+
+Svrha priručnika je da osigura da svaki zaposleni uključen u Nike proizvodnju
+razumije zahtjeve brenda, standarde kvaliteta, i procese koje mora slijediti.
+Priručnik služi kao referentni dokument za svakodnevni rad, obuku novih
+zaposlenika, pripremu za Nike audite, i kontinuirano poboljšanje kvaliteta.
+
+Nike postavlja jedne od najstrožijih standarda kvaliteta u industriji obuće.
+Kao dobavljač, Sportek d.o.o. je obavezan ne samo da ispunjava ove standarde
+već i da kontinuirano radi na njihovom nadmašivanju. Ovaj priručnik se
+ažurira minimalno jednom godišnje ili pri svakoj promjeni Nike zahtjeva,
+ovisno što je češće.
+
+Svaki zaposleni koji radi na Nike proizvodnim linijama mora pročitati i
+razumjeti relevantne sekcije ovog priručnika. Potpisane izjave o razumijevanju
+se čuvaju u HR odjelu.
+
+================================================================================
+2. SMSI SISTEM OCJENJIVANJA DOBAVLJAČA
+================================================================================
+
+Nike koristi Supplier Manufacturing Standards Index (SMSI) za ocjenjivanje
+i rangiranje svih svojih dobavljača širom svijeta. SMSI je sveobuhvatan
+sistem koji mjeri performanse dobavljača u četiri ključne oblasti:
+
+2.1 Kvalitet (Quality) - 40% ukupne ocjene
+
+Kvalitet nosi najveću težinu u SMSI sistemu. Ocjenjuju se:
+
+- Defect rate na finalnoj inspekciji (cilj < 2.5%)
+- First Pass Yield (FPY) na svim proizvodnim koracima
+- Broj kritičnih defekata (cilj: nula)
+- Rezultati Nike audita kvaliteta (planirani i nenajavljeni)
+- Efikasnost korektivnih akcija (zatvaranje u roku)
+- Konzistentnost kvaliteta (varijacija defect rate mjesec-na-mjesec)
+- Rezultati laboratorijskih ispitivanja materijala
+- Rework rate (cilj < 1.5%)
+
+Svaki Nike audit kvaliteta se boduje po standardizovanoj metodologiji.
+Sportek mora proći minimum 2 planirana i 1 nenajavljeni audit godišnje.
+
+2.2 Isporuka (Delivery) - 25% ukupne ocjene
+
+- On Time Delivery (OTD) - procenat narudžbi isporučenih na dogovoreni datum
+  ili prije (cilj > 95%)
+- In Full Delivery - procenat narudžbi isporučenih u kompletnoj količini
+  (cilj > 98%)
+- Lead time adherence - poštivanje dogovorenih rokova za svaki korak
+  proizvodnje
+- Fleksibilnost - sposobnost prilagodbe promjenama u rasporedu
+- Kapacitet - korištenje kapaciteta i sposobnost apsorbiranja dodatnih
+  narudžbi
+- Komunikacija - pravovremeno obavještavanje o kašnjenjima ili problemima
+
+OTD se mjeri od momenta potvrde narudžbe do momenta kada roba napusti
+fabriku sa kompletnom dokumentacijom. Svako kašnjenje, čak i od jednog dana,
+negativno utiče na OTD score.
+
+2.3 Održivost (Sustainability) - 20% ukupne ocjene
+
+Nike pridaje značajnu važnost održivosti u lancu snabdijevanja:
+
+- Carbon footprint reporting - izvještavanje o emisijama CO2
+- Upravljanje otpadom - reciklaža, smanjenje otpada, cirkularna ekonomija
+- Potrošnja vode i energije - monitoring i planovi smanjenja
+- Hemijski menadžment - usklađenost sa Nike RSL (Restricted Substances List)
+- Radna prava i uslovi rada - usklađenost sa Nike Code of Conduct
+- Zaštita okoline - upravljanje emisijama u zrak i vodu
+- Obnovljivi izvori energije - procenat energije iz obnovljivih izvora
+
+Nike zahtijeva godišnji Sustainability Report od svakog dobavljača sa
+konkretnim podacima i planovima poboljšanja. Od 2025. godine, carbon
+reporting mora biti usklađen sa GHG Protocol Scope 1, 2 i 3 metodologijom.
+
+2.4 Inovacije (Innovation) - 15% ukupne ocjene
+
+- Prijedlozi za poboljšanje procesa i proizvoda
+- Implementacija novih tehnologija (automatizacija, digitalizacija)
+- Prijedlozi za smanjenje troškova bez uticaja na kvalitet
+- Učešće u Nike inovacionim programima
+- Investicije u istraživanje i razvoj
+- Prihvatanje i implementacija novih materijala i tehnologija
+
+Nike očekuje da dobavljači proaktivno predlažu inovacije, a ne samo da
+reaguju na zahtjeve. Svaki implementirani prijedlog za poboljšanje se
+boduje pozitivno u SMSI sistemu.
+
+================================================================================
+3. SCORING SISTEM I KATEGORIJE
+================================================================================
+
+Na osnovu ukupnog SMSI scora, dobavljači se klasifikuju u četiri kategorije:
+
+3.1 Platinum (90-100 bodova)
+
+Platinum dobavljači su preferirani partneri koji uživaju sljedeće benefite:
+
+- Prioritet pri dodjeli novih narudžbi i novih modela
+- Veće količine i dugoročniji ugovori
+- Mogućnost učešća u ekskluzivnim Nike programima
+- Smanjeni auditi (jednom godišnje umjesto kvartalno)
+- Pristup Nike inovacionim laboratorijama
+- Veća margina pregovaranja cijena
+- Rani pristup informacijama o novim kolekcijama
+
+Trenutno manje od 15% Nike dobavljača širom svijeta ima Platinum status.
+
+3.2 Gold (80-89 bodova)
+
+Gold dobavljači su pouzdani partneri sa stabilnim performansama:
+
+- Redovne narudžbe sa stabilnim količinama
+- Mogućnost rasta volumena ako performanse rastu
+- Standardni kvartalni auditi
+- Pristup Nike edukativnim programima
+- Prioritet u odnosu na Silver i Bronze dobavljače
+
+Gold je minimalni ciljani status za Sportek. Sa Gold statusom, Sportek bi
+osigurao stabilne i rastuće narudžbe za naredni period.
+
+3.3 Silver (70-79 bodova)
+
+Silver dobavljači su dobavljači sa prostom za poboljšanje:
+
+- Redovne ali ograničene narudžbe
+- Kvartalni auditi sa detaljnim praćenjem poboljšanja
+- Obavezan plan poboljšanja sa mjesečnim praćenjem
+- Rizik od smanjenja narudžbi ako se performanse ne poboljšaju
+- Ograničen pristup novim modelima
+
+Silver status je signal da su potrebna značajna poboljšanja da bi se
+osigurao dugoročni partnerski odnos sa Nike.
+
+3.4 Bronze (ispod 70 bodova)
+
+Bronze dobavljači su u rizičnoj zoni:
+
+- Značajno smanjene narudžbe
+- Obavezne korektivne akcije sa strogim rokovima
+- Mjesečni auditi
+- Rizik od prekida saradnje ako se ne postigne poboljšanje u roku od 6 mjeseci
+- Nema pristupa novim modelima
+- Mogućnost prelaska narudžbi na konkurentske dobavljače
+
+================================================================================
+4. TRENUTNI SPORTEK STATUS I PLAN POBOLJŠANJA
+================================================================================
+
+4.1 Trenutni status
+
+Na osnovu posljednjeg SMSI ocjenjivanja (Q4 2025), Sportek d.o.o. ima
+sljedeći status:
+
+Kategorija: SILVER
+Ukupan score: 74 boda
+
+Raščlamba po oblastima:
+
+Kvalitet (40%):     Score 76
+- Defect rate: 3.4% (cilj < 2.5%)
+- FPY: 94.2% (cilj > 97%)
+- Kritični defekti: 2 incidenta u posljednjem kvartalu
+- Rework rate: 2.1% (cilj < 1.5%)
+
+Isporuka (25%):     Score 78
+- OTD: 91% (cilj > 95%)
+- In Full: 96% (cilj > 98%)
+- Kašnjenja uglavnom vezana za probleme sa sirovinama i 3D knit kapacitet
+
+Održivost (20%):    Score 65
+- Carbon reporting: nekompletni (Scope 3 nedostaje)
+- Upravljanje otpadom: u skladu sa zahtjevima
+- Hemijski menadžment: usklađen sa RSL
+- Godišnji Sustainability Report: dostavljen ali nepotpun
+
+Inovacije (15%):    Score 72
+- Implementiran 3D knit za Flyknit
+- Uveden NFC tracking
+- Potrebno više proaktivnih prijedloga
+
+4.2 Identificirani nedostaci (gaps)
+
+Na osnovu analize, identificirani su sljedeći ključni nedostaci koje je
+potrebno riješiti za dostizanje Gold statusa:
+
+Gap 1: Defect rate 3.4% vs cilj < 2.5%
+- Uzrok: nedovoljna in-process kontrola, nekonzistentna obuka operatera
+- Akcija: pojačati in-process QC, uvesti SPC, obuka operatera na problemskim
+  linijama L3 i L6
+
+Gap 2: OTD 91% vs cilj > 95%
+- Uzrok: nedostatak sirovine zbog kašnjenja dobavljača, nedovoljan kapacitet
+  3D knit mašina za peak periode
+- Akcija: safety stock za kritične materijale, nabavka 2 dodatne SHIMA SEIKI
+  mašine planirana za Q1 2026
+
+Gap 3: Carbon reporting nekompletni
+- Uzrok: nedostatak sistema za praćenje Scope 3 emisija, nedovoljna
+  ekspertiza internog tima
+- Akcija: angažovanje konsultanta za GHG Protocol, implementacija softvera
+  za carbon tracking do Q1 2026
+
+Gap 4: Rework rate 2.1% vs cilj < 1.5%
+- Uzrok: visok rework na ljepljenju đona i šivanju na L3
+- Akcija: rekalibarcija ljepilnih stanica, zamjena istrošenih šivaćih mašina
+  na L3, dodatna obuka operatera
+
+4.3 Cilj i vremenski okvir
+
+Cilj: Dostići Gold status sa scorom minimalno 82 boda do Q2 2026
+
+Plan poboljšanja po kvartalima:
+
+Q1 2026 (januar - mart):
+- Implementacija pojačane in-process kontrole na svim linijama
+- Nabavka i instalacija 2 nove SHIMA SEIKI mašine
+- Angažovanje sustainability konsultanta
+- Obuka operatera na L3 i L6 (ljepljenje, šivanje)
+- Cilj: defect rate < 3.0%, OTD > 93%
+
+Q2 2026 (april - juni):
+- Pune operativne nove mašine za 3D knit
+- Kompletiran carbon reporting za Scope 1, 2 i 3
+- SPC implementiran na kritičnim procesima
+- Cilj: defect rate < 2.5%, OTD > 95%, overall score > 82
+
+Projekat poboljšanja vodi Aleksandra Đurić sa sedmičnim praćenjem napretka
+i mjesečnim izvještajem upravi i Nike predstavniku.
+
+================================================================================
+5. STANDARDI ISPITIVANJA MATERIJALA
+================================================================================
+
+Nike zahtijeva da svi materijali korišteni u proizvodnji prolaze definirane
+laboratorijske testove. Sportek koristi kombinaciju internog laboratorija i
+eksternog certificiranog laboratorija za provođenje testova.
+
+5.1 Abrazija (otpornost na habanje)
+
+- Metoda: Martindale metoda prema ISO 12947-2
+- Zahtjev: minimum 20.000 ciklusa bez vidljivog oštećenja
+- Testira se: gornji materijal (outer), podstava (lining), ulošak (insole)
+- Frekvencija: svaki novi lot materijala, minimum kvartalno za tekuće lotove
+- Kriterij prolaz/pad: nakon 20.000 ciklusa ne smije biti propadanja,
+  rupica, značajnog pilinga ili promjene boje veće od Grade 3
+
+5.2 Postojanost boje (Color Fastness)
+
+- Metoda: ISO 105-B02 (svjetlo), ISO 105-X12 (trljanje), ISO 105-E04 (znoj)
+- Zahtjev: minimalno Grade 4 na sivoj skali za sve testove
+- Posebno: za bijele materijale zahtjev je Grade 4-5
+- Frekvencija: svaki novi lot bojenog materijala
+- Za Flyknit pređu: dodatni test na UV postojanost (ISO 105-B06, 100h)
+
+5.3 Vlačna čvrstoća (Tensile Strength)
+
+- Metoda: ISO 13934-1 (strip metoda)
+- Zahtjev: minimum 100 N za gornje materijale
+- Za podstavu: minimum 60 N
+- Za pletene materijale (knit): minimum 80 N u smjeru pletenja, minimum
+  60 N poprečno
+- Frekvencija: svaki novi materijal, kvartalno za tekuće materijale
+
+5.4 Snaga ljepljenja (Peel Strength)
+
+- Metoda: ISO 20344 (prilagođena za obuću)
+- Zahtjev: minimum 35 N/cm za spoj gornjeg dijela i đona
+- Za Flyknit spoj: minimum 40 N/cm (strožiji zahtjev zbog specifičnosti
+  pletenog materijala)
+- Testira se: 5 uzoraka iz svake serije, prosjek mora zadovoljiti zahtjev,
+  nijedan pojedinačni rezultat ne smije biti ispod 80% zahtjeva
+- Frekvencija: svaka proizvodna serija
+
+5.5 Fleksibilnost (Flex Resistance)
+
+- Metoda: ISO 17707 (Ross flex test) ili SATRA TM92
+- Zahtjev: minimum 100.000 ciklusa savijanja bez pucanja, đeparacije ili
+  vidljivog oštećenja
+- Testira se na kompletnom cipelu u zoni prirodnog pregiba stopala
+- Frekvencija: svaki novi model, kvartalno za tekuće modele
+- Nakon testa: vizuelna inspekcija pod lupom 10x za mikropukotine
+
+5.6 Dokumentacija testova
+
+Svi rezultati laboratorijskih testova se dokumentuju u Nike formatu i
+pohranjuju u bazu podataka kvaliteta. Izvještaji se dostavljaju Nike
+predstavniku na zahtjev ili kao dio mjesečnog izvještaja. Certifikati
+eksternog laboratorija se čuvaju minimalno 5 godina.
+
+================================================================================
+6. DIMENZIONALNA TAČNOST I TOLERANCIJE
+================================================================================
+
+Dimenzionalna tačnost je kritičan aspekt kvaliteta za Nike jer direktno
+utiče na fit i komfor obuće. Nike definisao je stroge tolerancije koje
+Sportek mora poštivati:
+
+6.1 Dužina (unutrašnja dužina cipele)
+
+- Tolerancija: +/- 2 mm od nominalne dužine za datu veličinu
+- Mjerenje: od vrha (toe box) do kraja (heel) po centralnoj osi
+- Alat: digitalni kaliper sa produženom čeljusti ili kalup za mjerenje
+- Razlika između lijevog i desnog cipela u paru: maksimalno 1.5 mm
+
+6.2 Širina (na najširem dijelu - ball girth zona)
+
+- Tolerancija: +/- 1.5 mm od nominalne širine
+- Mjerenje: na najširem dijelu na MTP (metatarsophalangeal) zglobu
+- Razlika između lijevog i desnog cipela u paru: maksimalno 1.0 mm
+
+6.3 Težina
+
+- Tolerancija: +/- 5% od nominalne težine za datu veličinu i model
+- Mjerenje: na kalibriranoj digitalnoj vagi sa rezolucijom 1 gram
+- Razlika između lijevog i desnog cipela u paru: maksimalno 3%
+- Prevelika razlika u težini unutar para ukazuje na razliku u gustoći
+  materijala ili količini ljepila
+
+6.4 Simetrija para
+
+- Maksimalna razlika u bilo kojoj dimenziji između lijevog i desnog cipela:
+  2 mm
+- Oba cipela moraju biti vizuelno identična kada se postave jedan pored drugog
+- Provjerava se: visina pete, visina jezika, pozicija loga, oblik toe boxa
+- Asimetrija veća od 2 mm se klasifikuje kao veći defekt
+
+6.5 Posebne dimenzije
+
+Za specifične Nike modele mogu postojati dodatne dimenzionalne kontrole:
+
+- Visina Air sole jedinice (za modele sa Air tehnologijom)
+- Debljina Flyknit gornjeg dijela na ključnim tačkama
+- Visina ovratnika (collar height)
+- Dužina i pozicija ojačanja (reinforcement zones)
+
+Ove dodatne kontrole su specificirane u tehničkom paketu za svaki model i
+moraju biti uključene u inspekcijski plan.
+
+================================================================================
+7. ABC ZONA KLASIFIKACIJA
+================================================================================
+
+Nike koristi ABC zona sistem za klasifikaciju površina obuće prema vidljivosti
+i važnosti za krajnjeg korisnika. Ovaj sistem direktno utiče na prihvatljivost
+defekata.
+
+7.1 A zona - direktno vidljiva područja
+
+A zona obuhvata sve površine koje su direktno vidljive kada korisnik stoji
+ili hoda i gleda na svoje cipele, kao i površine vidljive drugim ljudima.
+
+Obuhvata:
+- Gornji dio (vamp) - prednji dio cipele
+- Bočne strane do sredine đona
+- Jezik (tongue) - vidljivi dio
+- Ovratnik (collar) - gornji rub
+- Peta - zadnji dio
+- Logo i oznake na vidljivim pozicijama
+
+Zahtjev za A zonu: NULA defekata bilo koje kategorije. Čak ni manji
+kozmetički defekti nisu prihvatljivi na A zoni. Svaki defekt pronađen na
+A zoni automatski se klasifikuje kao veći ili kritični defekt, bez obzira
+na svoju prirodu.
+
+7.2 B zona - bočna i manje vidljiva područja
+
+B zona obuhvata površine koje su vidljive samo iz određenih uglova ili pri
+detaljnom pregledu.
+
+Obuhvata:
+- Donji dio bočnih strana (blizu đona)
+- Unutrašnja strana jezika
+- Zona ispod ovratnika
+- Donji dio pete (ispod linije vidljivosti)
+
+Zahtjev za B zonu: maksimalno 1 (jedan) manji defekt dozvoljen. Veći i
+kritični defekti nisu prihvatljivi na B zoni. Manji defekt na B zoni mora
+biti jedva primjetan golim okom sa 30 cm udaljenosti.
+
+7.3 C zona - donja i skrivena područja
+
+C zona obuhvata površine koje su normalno skrivene od pogleda tokom nošenja.
+
+Obuhvata:
+- Đon (donja strana)
+- Unutrašnjost cipele (ispod uloška)
+- Područja skrivena konstruktivnim elementima
+
+Zahtjev za C zonu: maksimalno 2 (dva) manja defekta dozvoljena. Veći i
+kritični defekti nisu prihvatljivi ni na C zoni. Funkcionalni aspekti C zone
+(npr. grip profil đona) moraju biti bez defekata.
+
+7.4 Primjena zona u inspekciji
+
+Svaki inspektor mora imati ABC zona dijagram za aktuelne modele na svom
+radnom mjestu. Dijagrami se ažuriraju za svaki novi model i distribuiraju
+prije početka proizvodnje. Tokom obuke, inspektori vježbaju identifikaciju
+zona na fizičkim uzorcima.
+
+================================================================================
+8. AQL NIVOI I INSPEKCIJSKI PROTOKOL
+================================================================================
+
+8.1 AQL nivoi za Nike
+
+Nike primjenjuje sljedeće AQL (Acceptable Quality Level) nivoe prema
+ISO 2859-1:
+
+- Kritični defekti: AQL 0.065 (specijalni nivo inspekcije S-2)
+- Veći defekti:     AQL 1.5 (normalni nivo inspekcije II)
+- Manji defekti:    AQL 4.0 (normalni nivo inspekcije II)
+
+AQL 0.065 za kritične defekte je jedan od najstrožijih nivoa u industriji
+i praktično znači da je dozvoljena nula kritičnih defekata u standardnim
+veličinama uzoraka.
+
+8.2 Veličina uzorka
+
+Veličina uzorka se određuje prema ISO 2859-1 tablicama na osnovu veličine
+lota. Za tipične Sportek serije:
+
+- Lot 501-1200 komada: uzorak 80 komada
+- Lot 1201-3200 komada: uzorak 125 komada
+- Lot 3201-10000 komada: uzorak 200 komada
+
+8.3 Prelaz na pojačanu inspekciju
+
+Pojačana inspekcija se aktivira kada:
+
+- 2 od posljednjih 5 uzastopnih lotova bude odbijeno
+- Nike predstavnik zahtijeva pojačanu inspekciju
+- Novi model u prvih 30 dana proizvodnje
+- Nakon kritičnog defekta pronađenog kod krajnjeg korisnika
+
+Pojačana inspekcija podrazumijeva veći uzorak i strožije kriterije
+prihvatanja prema ISO 2859-1 tablicama za pojačanu inspekciju.
+
+8.4 Povratak na normalnu inspekciju
+
+Povratak na normalnu inspekciju je dozvoljen nakon 5 uzastopno prihvaćenih
+lotova na pojačanoj inspekciji, uz odobrenje Nike predstavnika.
+
+================================================================================
+9. IN-PROCESS KONTROLA KVALITETA
+================================================================================
+
+Pored finalne inspekcije, Nike zahtijeva sistematsku in-process kontrolu
+kvaliteta na svim ključnim koracima proizvodnje.
+
+9.1 Spot check svaka 2 sata
+
+Na svakoj proizvodnoj liniji koja radi Nike proizvode, QC inspektor vrši
+spot check svaka 2 sata:
+
+- Uzorak: 5% tekuće proizvodnje ili minimalno 5 pari, ovisno šta je veće
+- Provjera se vrši na radnom mjestu, ne na QC stanici
+- Provjeravaju se ključni parametri za dati korak proizvodnje:
+  * Šivanje: gustoća uboda, ravnost šavova, tenzija konca
+  * Ljepljenje: ravnomjerna aplikacija ljepila, pozicioniranje
+  * Montaža: pravilno spajanje komponenti, pozicioniranje
+  * 3D knit: gustoća pletiva, dimenzije, vizuelni kvalitet
+
+9.2 Dokumentiranje in-process nalaza
+
+Rezultati spot check-a se unose u QC sistem u realnom vremenu:
+
+- Linija, korak proizvodnje, vrijeme kontrole
+- Broj provjerenih komada
+- Pronađeni defekti (tip, lokacija, ozbiljnost)
+- Preduzete mjere (obavještavanje vođe linije, zaustavljanje linije)
+- Potpis inspektora
+
+9.3 Reakcija na in-process nalaze
+
+Ako se tokom spot check-a pronađe defekt:
+
+- 1 defekt u uzorku: obavijestiti vodu linije, pojačati nadzor
+- 2 ili više defekata u uzorku: zaustaviti proces, pregledati svu
+  proizvodnju od zadnjeg dobrog spot check-a
+- Kritični defekt: odmah zaustaviti liniju, eskalirati QC menadžeru
+
+================================================================================
+10. KOREKTIVNE AKCIJE I PROCES RJEŠAVANJA PROBLEMA
+================================================================================
+
+10.1 Koraci korektivnog procesa
+
+Kada se identificira problem kvaliteta na Nike proizvodu, primjenjuje se
+sljedeći strukturirani pristup:
+
+Korak 1: ZAUSTAVI
+- Odmah zaustaviti proces koji proizvodi neusaglašen proizvod
+- Identificirati opseg problema (koliko komada, koliko dugo)
+- Obavijestiti QC menadžera i vođu linije
+
+Korak 2: IZOLUJ
+- Fizički izdvojiti sve sumnjive proizvode
+- Označiti crvenom oznakom "HOLD - QC Investigation"
+- Nijedan proizvod pod HOLD oznakom ne smije napustiti zonu izolacije
+- Popisati količinu i identificifikaciju svakog izoliranog komada
+
+Korak 3: ANALIZIRAJ UZROK
+- Za svaki problem koristiti jednu od priznatih metoda analize uzroka:
+  * 5 Why analiza - za jednostavnije probleme
+  * Ishikawa (fishbone) dijagram - za kompleksne probleme sa više mogućih
+    uzroka (kategorije: Man, Machine, Material, Method, Measurement, Mother
+    Nature)
+- Tim za analizu uključuje: QC inspektora koji je pronašao problem, vođu
+  linije, tehničara za opremu (ako je relevantno), inženjera procesa
+- Analiza mora identificirati ROOT CAUSE, ne samo simptom
+
+Korak 4: DEFINIRAJ KOREKTIVNU AKCIJU
+- Korektivna akcija mora biti definirana u roku od 48 sati od identifikacije
+  problema
+- Akcija mora adresirati root cause, ne samo simptom
+- Mora imati jasnog odgovornog, rok implementacije i metod verifikacije
+- Korektivna akcija se dokumentuje na Nike CAPA (Corrective and Preventive
+  Action) formularu
+
+Korak 5: IMPLEMENTIRAJ
+- Provesti korektivnu akciju prema planu
+- Dokumentovati svaki korak implementacije
+- Obavijestiti sve pogođene zaposlenike o promjeni
+
+Korak 6: VERIFIKUJ
+- Nakon implementacije, pratiti efikasnost korektivne akcije 30 dana
+- Mjeriti iste parametre koji su ukazali na problem
+- Ako problem nije riješen, ponoviti analizu uzroka
+- Verifikacija se dokumentuje i dostavlja Nike predstavniku
+
+10.2 Rokovi za korektivne akcije
+
+- Kritični problem: korektivna akcija definirana u 24h, implementirana u 48h
+- Veći problem: korektivna akcija definirana u 48h, implementirana u 7 dana
+- Manji problem: korektivna akcija definirana u 7 dana, implementirana u 30
+  dana
+- Verifikacija za sve nivoe: 30 dana od implementacije
+
+10.3 Nike notifikacija
+
+Nike se obavještava o svim kritičnim i većim problemima kvaliteta u roku od
+24 sata putem Nike Quality Portal-a. Obavijest mora sadržavati opis problema,
+opseg, trenutne mjere zaštite i plan korektivnih akcija.
+
+================================================================================
+11. IZVJEŠTAVANJE I KOMUNIKACIJA
+================================================================================
+
+11.1 Mjesečni izvještaj
+
+Sportek dostavlja Nike mjesečni izvještaj kvaliteta do 5. u mjesecu za
+prethodni mjesec. Izvještaj se šalje putem Nike Supplier Portal-a i
+sadrži sljedeće sekcije:
+
+11.1.1 Defect Rate
+- Ukupan defect rate za mjesec (kritični, veći, manji)
+- Defect rate po modelu
+- Defect rate po proizvodnoj liniji
+- Trend u odnosu na prethodna 3 mjeseca
+- Top 5 defekata po frekvenciji (Pareto analiza)
+
+11.1.2 Rework
+- Rework rate ukupno i po kategoriji
+- Troškovi reworka
+- Najčešći razlozi za rework
+- Trend u odnosu na prethodna 3 mjeseca
+
+11.1.3 Returns (reklamacije)
+- Broj i vrijednost reklamacija od krajnjih kupaca
+- Analiza uzroka reklamacija
+- Korektivne akcije za svaku reklamaciju
+- Trend u odnosu na prethodna 3 mjeseca
+
+11.1.4 On Time Delivery
+- OTD procenat za mjesec
+- Detalji kašnjenja (razlozi, trajanje, pogođene narudžbe)
+- Plan za poboljšanje OTD
+
+11.1.5 Korektivne akcije
+- Status svih otvorenih CAPA (Corrective and Preventive Action)
+- Novootvorene CAPA u mjesecu
+- Zatvorene CAPA sa rezultatima verifikacije
+- Prošle rokove CAPA (ako ih ima) sa objašnjenjem
+
+11.1.6 Sustainability
+- Potrošnja energije i vode
+- Količina otpada i procenat reciklaže
+- Emisije CO2 (ako su dostupne za taj mjesec)
+- Napredak na sustainability projektima
+
+11.2 Kvartalni pregled
+
+Svaka 3 mjeseca Sportek i Nike održavaju kvartalni pregled (Quarterly
+Business Review) na kojem se prezentira:
+
+- SMSI score i trend
+- Napredak na planu poboljšanja
+- Finansijski rezultati partnerstva
+- Planovi za naredni kvartal
+- Nove mogućnosti i izazovi
+
+11.3 Komunikacija u hitnim slučajevima
+
+Za kritične probleme kvaliteta ili sigurnosti, komunikacija mora biti
+trenutna putem telefonskog poziva Nike Quality kontakt osobi, praćena
+pisanom potvrdom putem portala u roku od 4 sata.
+
+================================================================================
+12. ODRŽIVOST I EKOLOŠKI ZAHTJEVI
+================================================================================
+
+12.1 Nike Move to Zero
+
+Nike Move to Zero je Nikeov program za postizanje nula emisija i nula otpada.
+Kao dobavljač, Sportek mora aktivno doprinositi ovom cilju:
+
+- Godišnje smanjenje emisija CO2 za minimalno 3%
+- Plan za prelazak na obnovljive izvore energije
+- Minimalno 80% otpada mora biti reciklirano ili ponovo upotrijebljeno
+- Eliminacija jednokratne plastike u pakovanju do 2027
+- Korištenje recikliranih materijala gdje god je tehnički izvodljivo
+
+12.2 Restricted Substances List (RSL)
+
+Svi materijali moraju biti usklađeni sa Nike RSL koja je strožija od REACH
+zahtjeva. Ključne restrikcije uključuju:
+
+- Formaldehid: < 75 mg/kg za materijale u kontaktu sa kožom
+- Teški metali: u skladu sa EU direktivama
+- Ftalati: potpuna zabrana za dječiju obuću, ograničenje za odrasle
+- AZO boje: potpuna zabrana
+- PFAS: ograničena primjena sa planom potpune eliminacije
+
+Sportek održava evidenciju RSL certifikata za sve materijale i periodično
+vrši testiranje putem akreditovanog laboratorija.
+
+================================================================================
+13. HISTORIJA REVIZIJA
+================================================================================
+
+Rev. 01 (01.03.2024) - Inicijalno izdanje
+Rev. 02 (01.06.2024) - Dodani sustainability zahtjevi, ažurirani AQL nivoi
+Rev. 03 (01.09.2024) - Ažurirana ABC zona klasifikacija, dodani Flyknit
+                        specifični zahtjevi
+Rev. 04 (01.01.2025) - Ažurirani materijalni testovi, dodane dimenzionalne
+                        tolerancije, ažuriran SMSI scoring
+Rev. 05 (20.01.2026) - Ažuriran Sportek status (Silver 74), dodan detaljan
+                        plan poboljšanja za Gold, ažurirani sustainability
+                        zahtjevi (carbon reporting Scope 3)
+
+================================================================================
+NAPOMENA: Ovaj dokument je vlasništvo Sportek d.o.o. Banja Luka.
+Sadrži povjerljive informacije o Nike programu. Distribucija izvan
+kompanije je strogo zabranjena bez pisane saglasnosti Nike Inc.
+Za pitanja kontaktirati: quality@sportek.ba
+================================================================================
