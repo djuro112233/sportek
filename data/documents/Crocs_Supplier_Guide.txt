@@ -1,0 +1,596 @@
+================================================================================
+SPORTEK d.o.o. Banja Luka
+VODIČ ZA DOBAVLJAČE - CROCS PROGRAM
+================================================================================
+
+Dokument:       CSG-2025-001
+Naziv:          Crocs vodič za dobavljače - zahtjevi kvaliteta i proizvodnje
+Revizija:       Rev. 04
+Datum izdanja:  01.04.2024.
+Datum revizije: 05.02.2026.
+Pripremio:      Jelena Marković, koordinatorica za Crocs program
+Odobrio:        Aleksandra Đurić, direktorica za strateška partnerstva
+Klasifikacija:  INTERNO - POVJERLJIVO
+
+================================================================================
+SADRŽAJ
+================================================================================
+
+1. Uvod i pregled Crocs programa
+2. Sportek proizvodni portfolio za Crocs
+3. Croslite materijal - specifikacije i procesni parametri
+4. Strap komponente - specifikacije
+5. AQL nivoi i inspekcijski zahtjevi
+6. Specifični defekti i kriteriji prihvatljivosti
+7. Pakovanje i logistika
+8. Izvještavanje i komunikacija
+9. Upravljanje zalihama i planiranje
+10. Održivost i ekološki zahtjevi
+11. Audit i ocjenjivanje dobavljača
+12. Historija revizija
+
+================================================================================
+1. UVOD I PREGLED CROCS PROGRAMA
+================================================================================
+
+Ovaj vodič definiše sve zahtjeve koje Sportek d.o.o. mora ispunjavati kao
+certificirani dobavljač komponenti za Crocs Inc. Dokument pokriva kvalitet,
+proizvodne specifikacije, pakovanje, logistiku i izvještavanje, te služi kao
+primarni referentni dokument za sve zaposlenike uključene u Crocs proizvodnju.
+
+Crocs Inc. je globalni lider u proizvodnji casual i komforne obuće,
+prepoznatljiv po ikoničnom Classic Clog modelu izrađenom od patentiranog
+Croslite materijala. Sportek d.o.o. je od 2021. godine certificirani
+dobavljač komponenti za Crocs, fokusiran na strap assembly, Bayaband
+komponente i LiteRide ulošake.
+
+Partnerstvo sa Crocs-om je strateški važno za Sportek. Crocs program
+trenutno čini približno 20% ukupnog proizvodnog volumena Sportek-a sa
+trendom rasta. Kvalitetna proizvodnja i poštivanje zahtjeva ovog vodiča
+je preduslov za održavanje i jačanje ovog partnerstva.
+
+Vodič se ažurira minimalno jednom godišnje ili pri svakoj promjeni Crocs
+zahtjeva. Svaka revizija se distribuira svim relevantnim odjeljenjima, a
+potvrda prijema i razumijevanja se dokumentuje.
+
+================================================================================
+2. SPORTEK PROIZVODNI PORTFOLIO ZA CROCS
+================================================================================
+
+2.1 Strap assembly - Classic Clog
+
+Sportek proizvodi kompletne strap (remenčić) sklopove za Crocs Classic Clog
+model. Strap assembly uključuje:
+
+- Lijevi i desni strap komad
+- Pivoting zakačke (riveti) za fiksiranje na Clog tijelo
+- Ukrasne elemente (Jibbitz otvore) prema specifikaciji modela
+- Potpunu montažu i kvalitetnu kontrolu sklopa
+
+Strap za Classic Clog je funkcionalna i vizuelna komponenta koja mora
+osigurati siguran i komforan fit dok zadržava prepoznatljiv Crocs dizajn.
+Proizvodnja strapa zahtijeva precizno brizganje ili rezanje materijala,
+montažu zakački i detaljnu inspekciju.
+
+Godišnji volumen: približno 800.000 pari strap assembly-a sa sezonskim
+varijacijama (peak u Q1 i Q2 za ljetnju sezonu).
+
+2.2 Bayaband komponente
+
+Sportek proizvodi specifične komponente za Bayaband liniju proizvoda:
+
+- Bayaband strap sa karakterističnim sportskim dizajnom
+- Bočne band trake od TPU materijala
+- Ukrasne elemente specifične za Bayaband
+
+Bayaband linija zahtijeva viši nivo preciznosti u bojama i dimenzijama jer
+koristi kontrastne elemente koji čine greške vizuelno uočljivijima.
+
+Godišnji volumen: približno 350.000 pari Bayaband komponenti.
+
+2.3 LiteRide insole (ulošak)
+
+Sportek proizvodi LiteRide ulošake koji se koriste u premium liniji Crocs
+obuće. LiteRide je Crocs patentirana pjena koja pruža izuzetan komfor.
+
+Karakteristike LiteRide uloška:
+- Dvostruka gustoća pjene za optimalan komfor i potporu
+- Anatomski oblik prilagođen specifičnim Crocs modelima
+- Antimikrobna obrada površine
+- Dostupan u više boja prema kolekciji
+
+Godišnji volumen: približno 500.000 pari LiteRide insole-a.
+
+2.4 Ukupan obim saradnje
+
+Ukupan godišnji volumen Crocs komponenti koje Sportek proizvodi je približno
+1.650.000 pari, što Sportek pozicionira kao značajnog regionalnog dobavljača
+u Crocs lancu snabdijevanja za evropsko tržište. Cilj za 2026. godinu je
+rast na 2.000.000 pari.
+
+================================================================================
+3. CROSLITE MATERIJAL - SPECIFIKACIJE I PROCESNI PARAMETRI
+================================================================================
+
+3.1 Opšte o Croslite materijalu
+
+Croslite je Crocs patentirani closed-cell resin materijal koji je osnova
+većine Crocs proizvoda. Materijal je izuzetan po svojoj lakoći, komforu,
+antibakterijskim svojstvima i otpornosti na mirise. Sportek koristi Croslite
+za proizvodnju strap komponenti i određenih ukrasnih elemenata.
+
+Croslite je zatvoreno-ćelijski materijal na bazi EVA (ethylene-vinyl acetate)
+smole sa Crocs proprietary formulacijom. Sportek prima gotovu Croslite smolu
+od Crocs-odobrenih dobavljača sirovine i ne smije koristiti zamjenske
+materijale bez eksplicitnog pisanog odobrenja Crocs Inc.
+
+3.2 Procesni parametri za brizganje/kompresiju
+
+Temperatura obrade:
+- Raspon: 180-200°C
+- Optimalna temperatura za strap: 190°C (+/- 5°C)
+- Temperatura se prati kontinuirano putem termopara u kalupu
+- Temperatura materijala prije ubrizgavanja: 170-180°C
+- Prekomjerna temperatura (> 205°C) uzrokuje degradaciju materijala i
+  promjenu boje, dok preniska temperatura (< 175°C) rezultira nepotpunim
+  punjenjem kalupa i poroznom strukturom
+
+Pritisak:
+- Raspon: 80-120 bar
+- Optimalni pritisak za strap komponente: 100 bar (+/- 10 bar)
+- Pritisak se podešava u zavisnosti od veličine i kompleksnosti komponente
+- Za veće komponente (Bayaband band) koristi se gornji raspon pritiska
+- Prenizak pritisak uzrokuje short shot, previsok uzrokuje flash
+
+Vrijeme hlađenja:
+- Raspon: 45-60 sekundi
+- Optimalno za strap: 50 sekundi (+/- 5 sekundi)
+- Hlađenje se vrši u kalupu sa cirkulacijom vode temperature 15-20°C
+- Prekratko hlađenje rezultira deformacijom pri vađenju iz kalupa
+- Predugačko hlađenje smanjuje produktivnost bez značajnog poboljšanja
+
+3.3 Fizičke karakteristike gotovog Croslite proizvoda
+
+Gustoća:
+- Zahtjev: 0.12-0.15 g/cm3
+- Mjerenje: metodom uranjanja ili preciznom vagom i kaliperom
+- Frekvencija provjere: svaki sat tokom proizvodnje (3 uzorka)
+- Gustoća direktno utiče na komfor i trajnost proizvoda
+
+Shore A tvrdoća:
+- Zahtjev: 35-40 Shore A
+- Mjerenje: Shore A durometrom prema ISO 868
+- Mjerenje na ravnoj površini debljine minimalno 6 mm
+- Očitanje nakon 3 sekunde pritiska
+- Frekvencija: svaki sat tokom proizvodnje (3 uzorka)
+- Tvrdoća izvan opsega utiče na komfor (pretvrd) ili trajnost (premekan)
+
+3.4 Skladištenje Croslite sirovine
+
+- Temperatura skladištenja: 15-25°C (suho i hladno)
+- Zaštita od direktne sunčeve svjetlosti
+- Originalna ambalaža do momenta upotrebe
+- Rok trajanja: 12 mjeseci od datuma proizvodnje
+- FIFO princip (First In First Out) obavezan
+- Evidencija lotova i datuma prijema u skladišni sistem
+
+================================================================================
+4. STRAP KOMPONENTE - SPECIFIKACIJE
+================================================================================
+
+4.1 Materijal
+
+Strap komponente se izrađuju od TPU (termoplastičnog poliuretana) ili
+Croslite materijala, ovisno o modelu:
+
+- Classic Clog strap: Croslite (isti materijal kao tijelo)
+- Bayaband strap: TPU
+- Premium modeli: prema specifičnoj specifikaciji
+
+TPU strap karakteristike:
+- Fleksibilnost na temperaturi od -10°C do +50°C
+- Otpornost na UV zračenje (minimalno 200 sati bez promjene boje)
+- Otpornost na habanje
+
+4.2 Dimenzije
+
+Debljina:
+- Zahtjev: 2.5-3.0 mm
+- Tolerancija: +/- 0.2 mm
+- Mjerenje na 3 tačke po komadu (oba kraja i sredina)
+- Neravnomjerna debljina utiče na komfor i funkcionalnost
+
+Širina i dužina:
+- Prema specifikaciji za svaku veličinu
+- Tolerancija dužine: +/- 1 mm
+- Tolerancija širine: +/- 0.5 mm
+
+4.3 Snaga ljepljenja (Peel Strength)
+
+- Zahtjev: minimum 25 N/cm
+- Metoda: ISO 20344 (prilagođena)
+- Testiranje: 3 uzorka po seriji
+- Nijedan pojedinačni rezultat ne smije biti ispod 20 N/cm
+- Peel strength se testira na spoju strap-rivet i na spoju strap-dekorativni
+  element
+
+4.4 Zakačke (riveti)
+
+- Materijal: nehrđajući čelik ili plastika prema specifikaciji modela
+- Sila rotacije: 1.5-3.0 Nm (mora se okretati glatko ali ne previše labavo)
+- Sila izvlačenja: minimum 50 N (rivet ne smije ispasti pri normalnoj
+  upotrebi)
+- Vizuelni izgled: bez ogrebotina, korozije ili deformacija
+- Testiranje sile rotacije i izvlačenja na 5% uzorka iz svake serije
+
+================================================================================
+5. AQL NIVOI I INSPEKCIJSKI ZAHTJEVI
+================================================================================
+
+5.1 AQL nivoi
+
+Crocs primjenjuje sljedeće AQL nivoe prema ISO 2859-1:
+
+- Kritični defekti: AQL 0.1
+- Veći defekti:     AQL 2.5
+- Manji defekti:    AQL 4.0
+
+Nivo inspekcije: Normalna inspekcija (General Inspection Level II)
+
+5.2 Kritični defekti - definicija za Crocs komponente
+
+Kritični defekti za Crocs komponente uključuju:
+
+- Short shot (nepotpuno punjenje kalupa) - komponenta nema kompletnu formu
+- Strukturalni lom ili pukotina koja ugrožava integritet
+- Pogrešna veličina (ne odgovara označenoj veličini)
+- Pogrešan materijal (nije Croslite ili TPU prema specifikaciji)
+- Rivet koji se ne može okretati ili ispada bez sile
+- Oštri rubovi koji mogu povrijediti korisnika
+- Kontaminacija stranim tijelom u materijalu
+
+Za kritične defekte tolerancija je NULA. Svaki pronađeni kritični defekt
+zahtijeva 100% inspekciju cjelokupne serije za taj tip defekta.
+
+5.3 Veći defekti
+
+- Flash (višak materijala) veći od 1 mm
+- Sink marks na A zoni (udubljenja na površini)
+- Boja odstupa od odobrenog uzorka (Delta E > 2.0)
+- Dimenzije izvan tolerancije za više od 50% dozvoljenog odstupanja
+- Neravnomjerna tekstura površine vidljiva sa 30 cm
+- Rivet sa silom rotacije izvan specificiranog raspona
+- Deformacija oblika vidljiva pri normalnom pregledu
+
+5.4 Manji defekti
+
+- Flash do 1 mm na B ili C zoni
+- Minimalne površinske nesavršenosti vidljive samo pod inspekcijskim
+  osvjetljenjem
+- Blaga neravnomjernost boje unutar Delta E < 2.0
+- Dimenzije na granici tolerancije
+- Sitne kozmetičke nesavršenosti koje ne utiču na funkcionalnost
+
+5.5 Inspekcijska procedura
+
+Inspekcija se vrši prema Sportek SOP-QC-001 sa sljedećim specifičnostima
+za Crocs komponente:
+
+- Vizuelna inspekcija pod 1000 lux osvjetljenjem
+- Dimenzionalna provjera kaliperom (debljina, širina, dužina)
+- Funkcionalna provjera riveta (rotacija, izvlačenje) na uzorku
+- Provjera gustoće i tvrdoće Croslite komponenti (svaki sat)
+- Provjera boje kolorimetrom u usporedbi sa odobrenim uzorkom
+- Dokumentiranje nalaza u QC sistemu
+
+================================================================================
+6. SPECIFIČNI DEFEKTI I KRITERIJI PRIHVATLJIVOSTI
+================================================================================
+
+6.1 Flash (višak materijala)
+
+Flash nastaje kada materijal istekne iz kalupa tokom brizganja ili
+kompresije. Klasifikacija:
+
+- Flash > 1 mm na bilo kojoj zoni: VEĆI defekt
+- Flash do 1 mm na A zoni: VEĆI defekt (A zona mora biti čista)
+- Flash do 1 mm na B ili C zoni: MANJI defekt
+- Flash > 3 mm na bilo kojoj zoni: razmotriti kao KRITIČNI ako utiče na fit
+
+Flash se može ukloniti trimovanjem ali samo ako trimovana površina zadržava
+glatkoću i ne ostavlja vidljive tragove obrade na A zoni. Za B i C zone
+trimovanje je dozvoljeno uz minimalnu vidljivost obrade.
+
+Prevencija: redovna provjera kalupa, pravilan pritisak, kontrola temperature.
+
+6.2 Sink marks (udubljenja na površini)
+
+Sink marks nastaju uslijed neravnomjernog hlađenja ili nedovoljnog pritiska
+tokom procesa. Klasifikacija:
+
+- Sink marks na A zoni: NEPRIHVATLJIVO (veći defekt bez izuzetka)
+- Sink marks na B zoni: VEĆI defekt ako su vidljivi sa 30 cm
+- Sink marks na B zoni: MANJI defekt ako su vidljivi samo pod inspekcijskim
+  osvjetljenjem
+- Sink marks na C zoni: MANJI defekt
+
+Sink marks se ne mogu popraviti post-produkciono i zahtijevaju analizu
+procesnih parametara za eliminisanje uzroka (obično nedovoljan pritisak
+ili prebrzo hlađenje).
+
+6.3 Short shot (nepotpuno punjenje)
+
+Short shot je defekt kada kalup nije potpuno ispunjen materijalom, što
+rezultira nepotpunom komponentom. Klasifikacija:
+
+- Short shot: UVIJEK KRITIČNI defekt, bez izuzetka
+- Čak i minimalan short shot na nevažnom dijelu je kritični
+- Komponenta sa short shot-om se NIKAD ne smije prepraviti ili koristiti
+
+Uzroci: preniska temperatura, prenizak pritisak, blokiran tok materijala,
+neispravan kalup. Svaki short shot zahtijeva provjeru procesnih parametara.
+
+6.4 Weld lines (linije spajanja tokova)
+
+Weld lines nastaju kada se dva toka materijala susretnu u kalupu. Ove linije
+su inherentne procesu ali moraju biti minimalne i pozicionirane na manje
+vidljive zone. Klasifikacija:
+
+- Weld lines na A zoni: VEĆI defekt (nije dozvoljeno)
+- Weld lines na B zoni: VEĆI defekt ako su jasno vidljive
+- Weld lines na B zoni: MANJI defekt ako su jedva vidljive
+- Weld lines samo na C zoni: PRIHVATLJIVO (ne bilježi se kao defekt)
+
+Pozicija weld linija se kontroliše dizajnom kalupa i pozicijom ubrizgavanja.
+Ako se pojave na nedozvoljenim zonama, potrebno je pregledati kalup.
+
+6.5 Diskoloracija (promjena boje)
+
+- Delta E < 1.0: PRIHVATLJIVO (u okviru normale)
+- Delta E 1.0-2.0: PRIHVATLJIVO ali praćenje trenda
+- Delta E > 2.0: VEĆI defekt
+- Delta E > 3.0: KRITIČNI defekt (razmatranje odbijanja serije)
+- Razlika unutar para: Delta E < 0.5
+
+Diskoloracija se mjeri kolorimetrom u usporedbi sa odobrenim referentnim
+uzorkom (golden sample) pod D65 standardnim osvjetljenjem. Svaka promjena
+lota sirovine zahtijeva provjeru boje.
+
+6.6 Mjehurići i poroznost
+
+- Mjehurići na površini A zone: VEĆI defekt
+- Mjehurići na površini B zone > 1 mm: VEĆI defekt
+- Mjehurići na površini B zone < 1 mm: MANJI defekt
+- Mjehurići na C zoni: MANJI defekt
+- Interna poroznost koja utiče na mehaničke osobine: KRITIČNI defekt
+
+================================================================================
+7. PAKOVANJE I LOGISTIKA
+================================================================================
+
+7.1 Individualno pakovanje
+
+Svaki par komponenti se pakuje u individualni polybag (plastičnu vrećicu):
+
+- Materijal polybaga: LDPE (Low Density Polyethylene)
+- Debljina polybaga: minimalno 0.04 mm
+- Polybag mora biti proziran za vizuelnu provjeru bez otvaranja
+- Svaki polybag sadrži par komponenti (lijevi i desni)
+- Polybag mora biti zatvoren (zavareni ili sa samoljepljivom trakom)
+- Na polybagu mora biti naljepnica sa:
+  * Model i šifra artikla
+  * Veličina
+  * Boja
+  * Lot number
+  * Datum proizvodnje
+  * Barcode (EAN-13 ili GS1-128)
+
+7.2 Master kutija
+
+- Svaka master kutija sadrži 12 (dvanaest) pari komponenti
+- Svi parovi u jednoj kutiji moraju biti iste veličine, boje i modela
+- Kutija: standard kartonska, minimalna gramatura 200 g/m2, dvostruki val
+- Kutija mora imati ECT (Edge Crush Test) vrijednost minimalno 8.0 kN/m
+- Unutrašnjost kutije: čista, suha, bez mirisa
+- Parovi se slažu u 2 reda po 6 ili 3 reda po 4, ovisno o veličini
+  komponente
+- Prazan prostor se popunjava zaštitnim papirom ili folijom
+
+Označavanje master kutije:
+- Crocs logo i šifra artikla
+- Naziv modela, boja, veličina
+- Količina (12 pari)
+- Bruto i neto težina
+- Dimenzije kutije
+- Lot number i datum proizvodnje
+- GS1-128 barcode na dvije naspramne strane
+- "Made in Bosnia and Herzegovina"
+- Broj kutije u seriji (npr. 1/50, 2/50...)
+
+7.3 Paletizacija
+
+- Paleta: EUR standard 80 x 120 cm
+- Kutije se slažu u stabilne redove sa prekirivanjem (interlocking pattern)
+- Maksimalna visina palete sa kutijama: 180 cm (uključujući paletu)
+- Paleta se obmotava stretch folijom (minimalno 3 sloja)
+- Na vrh palete stavlja se kartonski poklopac za zaštitu od vlage
+- Svaka paleta mora imati paletnu etiketu na 2 naspramne strane sa:
+  * GS1 barcode
+  * SSCC (Serial Shipping Container Code)
+  * Sadržaj (model, veličina, količina kutija)
+  * Težina (bruto)
+  * Destinacija
+
+7.4 Transportni dokumenti
+
+Uz svaku isporuku moraju se priložiti:
+
+- Otpremnica (packing list) sa detaljnim popisom sadržaja
+- Certificat kvaliteta za seriju
+- Izvještaj o inspekciji (sažetak)
+- CMR tovarni list za cestovni transport
+- Carinski dokumenti (ako je primjenjivo)
+
+================================================================================
+8. IZVJEŠTAVANJE I KOMUNIKACIJA
+================================================================================
+
+8.1 Mjesečni izvještaj
+
+Sportek dostavlja Crocs mjesečni operativni izvještaj do 10. u mjesecu za
+prethodni mjesec. Izvještaj sadrži:
+
+8.1.1 Volumes (količine)
+- Proizvedene količine po modelu i veličini
+- Usporedba sa planom (plan vs aktuelno)
+- Kapacitet iskorištenosti po liniji
+- Prognoza za naredni mjesec
+
+8.1.2 First Pass Yield (FPY)
+- FPY po modelu i procesu
+- Top 5 defekata po frekvenciji
+- Trend u odnosu na prethodna 3 mjeseca
+- Korektivne akcije za defekte sa rastućim trendom
+
+8.1.3 Delivery (isporuka)
+- OTD (On Time Delivery) procenat
+- Detalji eventualnih kašnjenja sa uzrocima
+- Status otvorenih narudžbi
+- Prosječni lead time
+
+8.1.4 Inventory (zalihe)
+- Zalihe gotovih proizvoda po modelu i veličini
+- Zalihe sirovina (Croslite, TPU, riveti, polybag)
+- Dani zaliha za svaki materijal
+- Upozorenja za materijale sa niskim zalihama ili bliskim rokom
+
+8.2 Sedmični status
+
+Svaki petak do 14:00 šalje se kratki sedmični status email Crocs planeru:
+
+- Količine proizvedene u sedmici vs plan
+- Status kritičnih narudžbi
+- Eventualni problemi ili rizici
+- Plan za narednu sedmicu
+
+8.3 Komunikacija u hitnim slučajevima
+
+Za probleme koji mogu uticati na kvalitet ili isporuku:
+
+- Telefonski poziv Crocs kontakt osobi u roku od 4 sata
+- Pisana potvrda emailom u roku od 8 sati
+- Detaljan izvještaj sa analizom uzroka i korektivnim akcijama u roku od 48h
+
+================================================================================
+9. UPRAVLJANJE ZALIHAMA I PLANIRANJE
+================================================================================
+
+9.1 Sirovine
+
+Sportek održava sljedeće minimalne zalihe sirovina za Crocs program:
+
+- Croslite smola: minimalno 2 sedmice proizvodnje
+- TPU granulat: minimalno 2 sedmice proizvodnje
+- Riveti: minimalno 3 sedmice proizvodnje (duži lead time nabavke)
+- Polybag i karton: minimalno 2 sedmice
+- Etikete i barcodes: minimalno 4 sedmice
+
+9.2 Planiranje proizvodnje
+
+- Crocs dostavlja rolling forecast na 3 mjeseca unaprijed
+- Potvrđene narudžbe sa fiksnim količinama na 4 sedmice unaprijed
+- Sportek potvrđuje kapacitet i rokove u roku od 48h od prijema narudžbe
+- Lead time od potvrđene narudžbe do isporuke: 15 radnih dana
+- Za urgentne narudžbe: mogućnost isporuke u 8 radnih dana uz prethodni
+  dogovor i potvrdu kapaciteta
+
+9.3 Safety stock gotovih proizvoda
+
+Za najprodavanije veličine i boje, Sportek održava safety stock od 5%
+mjesečnog volumena kako bi mogao brzo reagovati na fluktuacije u potražnji.
+Crocs kvartalno ažurira listu artikala za koje je potreban safety stock.
+
+================================================================================
+10. ODRŽIVOST I EKOLOŠKI ZAHTJEVI
+================================================================================
+
+10.1 Crocs Comfort Without Carbon
+
+Crocs je posvećen smanjenju carbon footprinta na neto nulu do 2030. godine.
+Kao dobavljač, Sportek mora doprinositi ovom cilju:
+
+- Godišnje izvještavanje o emisijama CO2 vezanim za Crocs proizvodnju
+- Plan smanjenja emisija za minimalno 2% godišnje
+- Praćenje potrošnje energije i vode po jedinici proizvoda
+- Korištenje recikliranih materijala za pakovanje gdje je moguće
+- Minimiziranje otpada u proizvodnji (cilj < 3% škarta)
+
+10.2 Hemikalije i materijali
+
+- Svi materijali moraju biti usklađeni sa REACH regulativom
+- Zabrana korištenja teških metala (olovo, kadmij, živa, šestovalentni hrom)
+  prema EU direktivama
+- Crocs RSL (Restricted Substances List) mora biti ispunjen
+- Godišnje testiranje materijala u akreditovanom laboratoriju
+- Certifikati o usklađenosti za sve materijale moraju biti dostupni
+
+10.3 Upravljanje otpadom
+
+- Croslite otpad od proizvodnje se sakuplja odvojeno za reciklažu
+- TPU otpad se odvaja po bojama za moguću ponovnu preradu
+- Kartonski otpad se reciklira
+- Plastični otpad (polybag škart) se odvaja za reciklažu
+- Mjesečna evidencija količina otpada po kategorijama
+
+================================================================================
+11. AUDIT I OCJENJIVANJE DOBAVLJAČA
+================================================================================
+
+11.1 Crocs audit program
+
+Crocs provodi godišnji audit dobavljača koji obuhvata:
+
+- Kvalitet proizvoda i procesa
+- Kapacitet i sposobnost isporuke
+- Upravljanje materijalima i zalihama
+- Radne uslove i sigurnost
+- Ekološke aspekte
+- Sistem upravljanja kvalitetom
+
+Audit se ocjenjuje na skali od 0 do 100 bodova. Minimalni zahtjev za
+nastavak saradnje je 70 bodova. Sportek trenutno ima audit score od 81 bod
+što ga pozicionira kao "Good" dobavljača (kategorije: Excellent > 90,
+Good 80-89, Acceptable 70-79, Needs Improvement < 70).
+
+11.2 Nenajavljeni auditi
+
+Crocs zadržava pravo nenajavljenog audita u bilo kojem momentu. Sportek
+mora osigurati da su svi procesi, dokumentacija i radni uslovi uvijek u
+skladu sa zahtjevima, a ne samo tokom planiranih audita.
+
+11.3 Korektivne akcije nakon audita
+
+Za svaki nalaz audita sa ocjenom "Needs Improvement" ili "Non-Compliant":
+
+- Korektivna akcija mora biti definirana u roku od 14 dana
+- Implementacija u roku od 60 dana
+- Dokaz implementacije (fotografije, dokumenti, testovi) dostaviti Crocs-u
+- Verifikacija na sljedećem auditu ili remote verifikacija
+
+================================================================================
+12. HISTORIJA REVIZIJA
+================================================================================
+
+Rev. 01 (01.04.2024) - Inicijalno izdanje
+Rev. 02 (01.08.2024) - Dodane LiteRide insole specifikacije
+Rev. 03 (01.12.2024) - Ažurirani AQL nivoi, dodane specifikacije za Bayaband
+Rev. 04 (05.02.2026) - Ažurirani procesni parametri za Croslite, dodana
+                        sekcija o paletizaciji, ažurirani volumeni i ciljevi
+                        za 2026, revidirani sustainability zahtjevi
+
+================================================================================
+NAPOMENA: Ovaj dokument je vlasništvo Sportek d.o.o. Banja Luka.
+Sadrži povjerljive informacije o Crocs programu. Distribucija izvan
+kompanije je strogo zabranjena bez pisane saglasnosti Crocs Inc.
+Za pitanja kontaktirati: crocs.program@sportek.ba
+================================================================================
