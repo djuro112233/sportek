@@ -1,0 +1,407 @@
+================================================================================
+                           SPORTEK d.o.o. BANJA LUKA
+                      Internalni dokument — POVJERLJIVO
+================================================================================
+
+Dokument:       SIGURNOSNE PROCEDURE
+Oznaka:         HSE-001
+Revizija:       4.0
+Datum revizije: 15. januar 2026.
+Odobrio:        Direktor proizvodnje / HSE Manager
+Distribucija:   Svi zaposlenici proizvodnog pogona, skladišta i administracije
+Status:         AKTIVAN
+
+================================================================================
+                         SADRŽAJ DOKUMENTA
+================================================================================
+
+1.  Opšte smjernice za zaštitu na radu
+2.  Lična zaštitna oprema (LZO) po zonama
+    2.1  Zona A — Proizvodna hala (linije L1–L8)
+    2.2  Zona B — Skladište hemikalija
+    2.3  Zona C — Skladište gotovih proizvoda
+3.  Prva pomoć
+4.  Zaštita od požara
+5.  Postupanje u slučaju hemijskog incidenta
+6.  Rukovanje ljepilima (PU-400 i HM-200)
+7.  Boje i pigmenti — upravljanje i usklađenost
+8.  Ergonomija i organizacija rada
+9.  Evidencija, izvještavanje i pregled procedura
+10. Završne odredbe
+
+================================================================================
+1. OPŠTE SMJERNICE ZA ZAŠTITU NA RADU
+================================================================================
+
+1.1  Svi zaposlenici kompanije Sportek d.o.o. Banja Luka dužni su da prođu
+     kompletnu obuku iz oblasti zaštite na radu i zaštite zdravlja PRIJE
+     početka rada na bilo kojoj poziciji u proizvodnom pogonu, skladištu
+     ili pratećim prostorima. Obuka uključuje teorijski dio, praktičnu
+     demonstraciju korištenja lične zaštitne opreme, upoznavanje sa
+     evakuacionim planovima i postupanje u slučaju vanrednih situacija.
+
+1.2  Godišnja obnova obuke je obavezna za sve zaposlenike bez izuzetka.
+     Obnova obuke se organizuje u januaru svake kalendarske godine, a
+     evidencija o pohađanju se čuva u kadrovskoj službi i kod HSE managera.
+     Zaposlenici koji ne prođu godišnju obnovu obuke ne smiju nastaviti
+     rad dok ne ispune ovu obavezu.
+
+1.3  Lična zaštitna oprema (LZO) je obavezna u svim proizvodnim prostorima
+     kompanije Sportek d.o.o. Banja Luka. Vrsta i nivo zaštitne opreme
+     zavise od zone rada i specifičnih rizika koji su prisutni na svakom
+     radnom mjestu. Detaljni zahtjevi za LZO po zonama navedeni su u
+     poglavlju 2 ovog dokumenta.
+
+1.4  Svaki zaposlenik je dužan da prije početka smjene vizuelno provjeri
+     ispravnost svoje lične zaštitne opreme. Oštećena ili neispravna oprema
+     se odmah prijavljuje nadređenom i zamjenjuje novom opremom iz skladišta
+     LZO. Rad sa neispravnom zaštitnom opremom je strogo zabranjen.
+
+1.5  Posjetioci i vanjski saradnici koji ulaze u proizvodne prostore moraju
+     biti u pratnji ovlaštenog zaposlenika i moraju nositi minimalnu zaštitnu
+     opremu koja odgovara zoni u koju ulaze. Posjetiocima se zaštitna oprema
+     izdaje na recepciji proizvodnog pogona.
+
+================================================================================
+2. LIČNA ZAŠTITNA OPREMA (LZO) PO ZONAMA
+================================================================================
+
+--------------------------------------------------------------------------------
+2.1  ZONA A — Proizvodna hala (linije L1–L8)
+--------------------------------------------------------------------------------
+
+Zona A obuhvata kompletnu proizvodnu halu sa osam proizvodnih linija označenih
+od L1 do L8. Ova zona predstavlja primarni proizvodni prostor kompanije Sportek
+d.o.o. u kojem se odvijaju procesi krojenja, šivanja, ljepljenja, montaže i
+završne obrade sportske opreme i obuće.
+
+Obavezna lična zaštitna oprema za Zonu A:
+
+a) Sigurnosne cipele sa čeličnom kapicom (standard EN ISO 20345, kategorija S3)
+   obavezne su za sve zaposlenike koji ulaze u proizvodni prostor, bez obzira
+   na njihovu poziciju ili zadatak. Cipele moraju biti u ispravnom stanju,
+   sa neoštećenim đonom i pravilno vezanim pertlama.
+
+b) Zaštitne naočale su obavezne pri radu na svim mašinama za rezanje materijala.
+   Ovo uključuje automatske i poluautomatske mašine za rezanje tekstila, kože
+   i sintetičkih materijala na linijama L1 do L4. Zaštitne naočale moraju
+   zadovoljavati standard EN 166 i moraju imati bočnu zaštitu.
+
+c) Zaštitne rukavice za hemikalije obavezne su pri svim procesima ljepljenja
+   koji se izvode na linijama L5 do L8. Rukavice moraju biti otporne na
+   prodiranje hemikalija koje se koriste u procesima ljepljenja (poliuretanska
+   i hot-melt ljepila) i moraju zadovoljavati standard EN 374. Zamjena
+   rukavica vrši se prema uputstvima proizvođača ili odmah po oštećenju.
+
+d) Zaštita za sluh (čepići za uši ili antifoni) obavezna je na svim radnim
+   mjestima gdje nivo buke prelazi 85 dB(A). Mjerenje nivoa buke vrši se
+   kvartalno na svim proizvodnim linijama. Mape buke su istaknute na vidnom
+   mjestu u proizvodnoj hali i označavaju zone u kojima je zaštita sluha
+   obavezna. Zaposlenici na pozicijama uz mašine za presovanje, štancanje
+   i ultrazvučno varenje posebno su izloženi povišenim nivoima buke.
+
+--------------------------------------------------------------------------------
+2.2  ZONA B — Skladište hemikalija
+--------------------------------------------------------------------------------
+
+Zona B obuhvata skladište hemikalija u kojem se čuvaju ljepila, rastvarači,
+sredstva za čišćenje, boje, pigmenti i ostali hemijski preparati koji se
+koriste u proizvodnom procesu. Ova zona predstavlja prostor sa povišenim
+rizikom i zahtijeva posebne mjere zaštite.
+
+Obavezna lična zaštitna oprema za Zonu B:
+
+a) Komplet hemijska zaštita koji uključuje:
+   - Hemijski otporne rukavice (standard EN 374, kategorija III)
+   - Zaštitne naočale sa potpunim brtvljenjem ili zaštitni vizir
+     (standard EN 166, oznaka otpornosti na hemikalije)
+   - Hemijski otporna pregača (PVC ili gumena pregača koja pokriva
+     tijelo od grudnog koša do ispod koljena)
+
+b) Respirator klase FFP2 (standard EN 149) obavezan je pri rukovanju
+   isparavajućim ljepilima, otvaranju kontejnera sa rastvaračima i svim
+   aktivnostima pri kojima dolazi do oslobađanja para hemikalija.
+   Respiratori su za jednokratnu upotrebu i zamjenjuju se nakon svake
+   smjene ili ranije ukoliko zaposlenik osjeti prodiranje mirisa kroz
+   respirator.
+
+c) Pristup Zoni B dozvoljen je isključivo ovlaštenim osobama. Ovlaštenje
+   za pristup hemijskom skladištu izdaje HSE manager u pisanoj formi
+   nakon što zaposlenik uspješno prođe specijalizovanu obuku za rukovanje
+   hemikalijama. Spisak ovlaštenih osoba nalazi se na ulazu u Zonu B i
+   ažurira se po potrebi, a najmanje jednom godišnje.
+
+--------------------------------------------------------------------------------
+2.3  ZONA C — Skladište gotovih proizvoda
+--------------------------------------------------------------------------------
+
+Zona C obuhvata skladište gotovih proizvoda u kojem se čuvaju finalni
+proizvodi prije isporuke kupcima. U ovoj zoni se koriste viljuškari i
+paletni transporteri za manipulaciju robom.
+
+Obavezna lična zaštitna oprema za Zonu C:
+
+a) Sigurnosne cipele sa čeličnom kapicom (standard EN ISO 20345, kategorija S3)
+   obavezne su za sve osobe koje ulaze u prostor skladišta gotovih proizvoda.
+
+b) Sigurnosni prsluk visoke vidljivosti (klasa 2, standard EN ISO 20471)
+   obavezan je za sve osobe koje se kreću u prostorima gdje operišu viljuškari.
+   Prsluk mora biti ispravan, čist i pravilno zakopčan tokom cijelog boravka
+   u Zoni C.
+
+================================================================================
+3. PRVA POMOĆ
+================================================================================
+
+3.1  Na svakoj proizvodnoj liniji (L1–L8) mora biti postavljen komplet prve
+     pomoći (First Aid kit) koji je opremljen u skladu sa važećim propisima
+     o zaštiti na radu. Sadržaj kompleta prve pomoći provjerava se mjesečno
+     od strane zadužene osobe. Evidencija o mjesečnim provjerama vodi se u
+     posebnom obrascu koji se čuva kod HSE managera.
+
+3.2  Minimalno dvije (2) osobe certificirane za pružanje prve pomoći moraju
+     biti prisutne u svakoj smjeni. Certifikat za prvu pomoć izdaje ovlaštena
+     institucija i obnavlja se svake dvije godine. Spisak certificiranih osoba
+     sa kontakt informacijama istaknut je na vidnom mjestu u proizvodnoj hali,
+     na ulazu u svaku zonu i u kancelarijama.
+
+3.3  Automatski eksterni defibrilator (AED) postavljen je na dvije lokacije
+     u prostorima kompanije Sportek d.o.o. Banja Luka:
+     - Lokacija 1: Ulaz u proizvodnu halu (glavni koridor)
+     - Lokacija 2: Administrativne kancelarije (prizemlje)
+     AED uređaji se provjeravaju kvartalno prema uputstvima proizvođača.
+     Sve certificirane osobe za prvu pomoć moraju proći obuku za korištenje
+     AED uređaja.
+
+================================================================================
+4. ZAŠTITA OD POŽARA
+================================================================================
+
+4.1  Sistem za dojavu požara (fire alarm) instaliran je u svim prostorima
+     kompanije i obuhvata detektore dima i detektore topline raspoređene
+     prema projektu protivpožarne zaštite. Sistem se testira mjesečno, a
+     kompletna revizija sistema vrši se jednom godišnje od strane ovlaštenog
+     servisera.
+
+4.2  Automatski sprinkler sistem instaliran je u hemijskom skladištu (Zona B)
+     kao dodatna mjera zaštite od požara s obzirom na prirodu uskladištenih
+     materijala. Sprinkler sistem se testira kvartalno.
+
+4.3  Prenosivi vatrogasni aparati tipa ABC postavljeni su na svakih 20 metara
+     duž svih koridora u proizvodnoj hali, skladištima i administrativnim
+     prostorima. Vatrogasni aparati se vizuelno provjeravaju mjesečno, a
+     servisiraju jednom godišnje od strane ovlaštenog servisera. Svi
+     vatrogasni aparati moraju imati važeću naljepnicu o izvršenom servisu.
+
+4.4  Evakuacioni plan istaknut je na svakom izlazu iz objekta i na svim
+     vidnim mjestima unutar proizvodnih i skladišnih prostora. Evakuacioni
+     plan sadrži oznake evakuacionih puteva, lokacije vatrogasnih aparata,
+     zbornog mjesta i kontakt brojeve hitnih službi. Svi zaposlenici moraju
+     biti upoznati sa evakuacionim planom.
+
+4.5  Kvartalna vježba evakuacije organizuje se četiri puta godišnje (u martu,
+     junu, septembru i decembru). Učešće u vježbi evakuacije je obavezno za
+     sve zaposlenike prisutne u objektu u trenutku održavanja vježbe.
+     Rezultati vježbe dokumentuju se i analiziraju, a uočeni nedostaci se
+     otklanjaju u najkraćem mogućem roku.
+
+================================================================================
+5. POSTUPANJE U SLUČAJU HEMIJSKOG INCIDENTA
+================================================================================
+
+5.1  Sigurnosno-tehnički listovi (Safety Data Sheets — SDS) za sve hemikalije
+     koje se koriste u proizvodnom procesu moraju biti dostupni na svakom
+     radnom mjestu gdje se rukuje hemikalijama. SDS dokumenti se čuvaju u
+     posebnim registratorima na vidnom i lako dostupnom mjestu. Zaposlenici
+     su dužni da se upoznaju sa SDS dokumentima za hemikalije sa kojima
+     rade.
+
+5.2  Komplet za sanaciju prosipanja hemikalija (spill kit) mora biti dostupan
+     u Zoni B (skladište hemikalija) i u svim dijelovima proizvodne hale gdje
+     se koriste hemikalije. Spill kit sadrži absorbente, neutralizatore,
+     zaštitne vreće za odlaganje kontaminiranog materijala i sredstva za
+     označavanje kontaminirane zone.
+
+5.3  U slučaju kontakta hemikalije sa kožom ili odjećom zaposlenika,
+     kontaminirana odjeća se mora skinuti odmah. Kontaminirano područje
+     kože ispira se tekućom vodom u trajanju od minimalno 15 minuta.
+     Ukoliko hemikalija dospije u oči, oči se ispiraju na stanici za
+     ispiranje očiju u kontinuitetu od minimalno 15 minuta, a zaposlenik
+     se odmah upućuje na ljekarski pregled.
+
+5.4  U slučaju hemijskog incidenta bilo koje vrste, zaposlenici su dužni
+     odmah obavijestiti:
+     - HSE managera kompanije Sportek d.o.o. (interni kontakt na listi
+       kontakata istaknutoj u svakoj zoni)
+     - Hitnu medicinsku pomoć na broj 124
+     Svaki hemijski incident se evidentira u registru incidenata i
+     podliježe detaljnoj istrazi od strane HSE odjela.
+
+================================================================================
+6. RUKOVANJE LJEPILIMA PU-400 I HM-200
+================================================================================
+
+6.1  Poliuretansko ljepilo PU-400 i hot-melt ljepilo HM-200 su dva primarna
+     ljepila koja se koriste u proizvodnom procesu kompanije Sportek d.o.o.
+     Banja Luka. Oba ljepila zahtijevaju posebno rukovanje i skladištenje
+     u skladu sa sigurnosnim zahtjevima i preporukama proizvođača.
+
+6.2  Uslovi skladištenja:
+     - Temperatura skladištenja: 15°C do 25°C
+     - Prostor mora biti suh i zaštićen od direktnog sunčevog svjetla
+     - Ljepila se moraju čuvati daleko od izvora topline, otvorenog plamena
+       i jakih oksidanasa
+     - Kontejneri moraju biti pravilno zatvoreni kada se ljepilo ne koristi
+     - Skladištenje na paletama, nikada direktno na podu
+
+6.3  Ventilacija u zoni ljepljenja:
+     Minimalno 10 izmjena zraka po satu mora biti obezbijeđeno u svim
+     zonama gdje se vrši proces ljepljenja. Ventilacioni sistem se
+     provjerava mjesečno, a mjerenje protoka zraka vrši se kvartalno
+     od strane ovlaštene institucije. Rezultati mjerenja se dokumentuju
+     i čuvaju kod HSE managera.
+
+6.4  Rok trajanja:
+     Rok trajanja ljepila PU-400 i HM-200 je 12 mjeseci od datuma
+     proizvodnje. Ljepila kojima je istekao rok trajanja ne smiju se
+     koristiti u proizvodnom procesu. Evidencija o datumima prijema i
+     rokovima trajanja vodi se u sistemu upravljanja zalihama. Kontrola
+     rokova vrši se mjesečno.
+
+6.5  Odlaganje otpadnih ljepila:
+     Otpadna ljepila, prazna pakovanja i kontaminirani materijali odlažu
+     se u skladu sa važećim Pravilnikom o upravljanju opasnim otpadom.
+     Za odlaganje se koriste posebno označeni kontejneri za opasni otpad.
+     Odvoz opasnog otpada vrši ovlašteni sakupljač prema ugovoru sa
+     kompanijom Sportek d.o.o.
+
+================================================================================
+7. BOJE I PIGMENTI — UPRAVLJANJE I USKLAĐENOST
+================================================================================
+
+7.1  Sve boje i pigmenti koji se koriste u proizvodnom procesu kompanije
+     Sportek d.o.o. moraju biti u potpunosti usklađeni sa REACH regulativom
+     (Uredba Evropskog parlamenta i Vijeća (EZ) br. 1907/2006). Nabavka
+     boja i pigmenata vrši se isključivo od odobrenih dobavljača koji su
+     prošli kvalifikacioni postupak i nalaze se na listi odobrenih
+     dobavljača kompanije.
+
+7.2  Strogo je zabranjeno korištenje boja i pigmenata koji sadrže teške
+     metale (olovo, kadmijum, živa, heksavalentni hrom i dr.) u bilo
+     kojem dijelu proizvodnog procesa. Svaka nova partija boja i pigmenata
+     podliježe ulaznoj kontroli koja uključuje provjeru certifikata
+     usklađenosti i, po potrebi, laboratorijsku analizu.
+
+7.3  Mjesečna evidencija potrošnje boja i pigmenata vodi se u sistemu
+     upravljanja zalihama. Evidencija uključuje podatke o vrsti, količini,
+     dobavljaču, broju partije i datumu upotrebe. Ovi podaci su dostupni
+     HSE manageru i odjelu za kvalitet za potrebe praćenja i izvještavanja.
+
+================================================================================
+8. ERGONOMIJA I ORGANIZACIJA RADA
+================================================================================
+
+8.1  Rotacija pozicija na proizvodnim linijama vrši se svaka dva (2) sata
+     kako bi se smanjio rizik od povreda uzrokovanih ponavljajućim pokretima
+     i statičkim opterećenjem. Raspored rotacije utvrđuje voditelj smjene
+     na početku svake smjene i evidentira se u dnevnom izvještaju proizvodnje.
+
+8.2  Pauza u trajanju od 15 minuta obavezna je nakon svaka dva (2) sata
+     kontinuiranog rada. Pauze se organizuju po grupama kako bi se osigurao
+     kontinuitet proizvodnog procesa. Zaposlenici su dužni da koriste pauze
+     u predviđenom trajanju i da se pridržavaju rasporeda pauza koji utvrdi
+     voditelj smjene.
+
+8.3  Na svim inspekcijskim stanicama (stanice za kontrolu kvaliteta) moraju
+     biti postavljeni ergonomski stolci koji omogućavaju pravilno sjedenje i
+     podešavanje visine. Stolci moraju imati podešavanje visine sjedišta,
+     podešavanje naslona za leđa i oslonac za stopala ukoliko je potrebno.
+     Ispravnost ergonomskih stolaca provjerava se mjesečno.
+
+8.4  Maksimalna dozvoljena težina za ručno podizanje tereta:
+     - Žene: maksimalno 15 kg
+     - Muškarci: maksimalno 25 kg
+     Za terete koji prelaze ove limite obavezno je korištenje mehaničkih
+     pomagala (viljuškari, paletni transporteri, dizalice ili kolica).
+     Zaposlenici su dužni da se pridržavaju pravilne tehnike podizanja
+     tereta koja je obrađena tokom obuke iz zaštite na radu. Podizanje
+     tereta sa tla uvijek se vrši savijanjem koljena, a nikada savijanjem
+     leđa.
+
+8.5  Radno okruženje na proizvodnim linijama mora biti adekvatno osvjetljeno
+     u skladu sa važećim standardima. Temperatura u proizvodnim prostorima
+     održava se u rasponu od 18°C do 26°C. Zaposlenici koji primijete
+     neadekvatne uslove rada dužni su da to prijave voditelju smjene.
+
+================================================================================
+9. EVIDENCIJA, IZVJEŠTAVANJE I PREGLED PROCEDURA
+================================================================================
+
+9.1  Svaka nesreća na radu, bez obzira na težinu, mora se evidentirati u
+     registru nesreća na radu. Evidencija uključuje datum, vrijeme, lokaciju,
+     opis događaja, podatke o povrijeđenom zaposleniku, vrstu povrede i
+     preduzete mjere. Nesreća se prijavljuje nadređenom odmah po nastanku,
+     a pisani izvještaj se dostavlja HSE manageru u roku od 24 sata.
+
+9.2  Svaki događaj koji je mogao rezultirati nesrećom ali nije (near-miss)
+     takođe se evidentira u posebnom registru. Prijavljivanje near-miss
+     događaja se podstiče jer predstavlja ključni element prevencije budućih
+     nesreća. Zaposlenici ne smiju trpjeti negativne posljedice zbog
+     prijavljivanja near-miss događaja.
+
+9.3  Mjesečni HSE izvještaj priprema HSE manager i dostavlja ga direktoru
+     proizvodnje i upravi kompanije. Izvještaj sadrži pregled svih nesreća,
+     near-miss događaja, rezultate inspekcija, status korektivnih mjera,
+     podatke o obukama i ostale relevantne informacije o zdravlju, sigurnosti
+     i zaštiti okoliša u proizvodnom pogonu.
+
+9.4  Godišnji pregled svih sigurnosnih procedura vrši se jednom godišnje,
+     najkasnije do kraja januara tekuće godine za prethodnu godinu. Pregled
+     obuhvata analizu efikasnosti postojećih procedura, identifikaciju
+     potreba za izmjenama i dopunama, te usklađivanje sa novim zakonskim
+     propisima i standardima. Rezultati godišnjeg pregleda dokumentuju se
+     i koriste kao osnov za reviziju procedura.
+
+================================================================================
+10. ZAVRŠNE ODREDBE
+================================================================================
+
+10.1 Ovaj dokument stupa na snagu danom odobrenja od strane direktora
+     proizvodnje i HSE managera. Svi zaposlenici kompanije Sportek d.o.o.
+     Banja Luka dužni su da se upoznaju sa sadržajem ovog dokumenta i da
+     se pridržavaju svih procedura i smjernica navedenih u njemu.
+
+10.2 Nepoštivanje sigurnosnih procedura definisanih ovim dokumentom
+     predstavlja tešku povredu radne obaveze i može rezultirati
+     disciplinskim mjerama u skladu sa Pravilnikom o radu kompanije
+     Sportek d.o.o. Banja Luka i važećim zakonskim propisima.
+
+10.3 Svaki zaposlenik ima pravo i obavezu da prijavi bilo koji uvjet ili
+     postupak koji smatra nesigurnim. Prijave se upućuju neposrednom
+     nadređenom, HSE manageru ili putem anonimne kutije za prijedloge
+     koja se nalazi na ulazu u proizvodni pogon.
+
+10.4 Za sva pitanja u vezi sa ovim dokumentom zaposlenici se mogu obratiti
+     HSE manageru kompanije Sportek d.o.o. Banja Luka.
+
+================================================================================
+                         EVIDENCIJA O UPOZNAVANJU
+================================================================================
+
+Potpisom potvrđujem da sam upoznat/a sa sadržajem dokumenta SIGURNOSNE
+PROCEDURE HSE-001, Revizija 4.0, te da ću se pridržavati svih navedenih
+procedura i smjernica.
+
+Rb.  | Ime i prezime | Pozicija | Datum | Potpis
+-----|---------------|----------|-------|-------
+  1. |               |          |       |
+  2. |               |          |       |
+  3. |               |          |       |
+  4. |               |          |       |
+  5. |               |          |       |
+
+================================================================================
+Sportek d.o.o. Banja Luka — Sva prava zadržana
+Ovaj dokument je vlasništvo kompanije Sportek d.o.o. i ne smije se
+umnožavati, distribuirati ili koristiti bez pisanog odobrenja uprave.
+================================================================================
