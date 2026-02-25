@@ -1,0 +1,49 @@
+{
+  "current_costs_eur": {
+    "management_answering_questions": {
+      "people": 5,
+      "hours_per_day": 1.5,
+      "rate_eur_h": 15,
+      "annual_cost": 29700.0
+    },
+    "qc_manager_clarifications": {
+      "people": 1,
+      "hours_per_day": 1.0,
+      "rate_eur_h": 18,
+      "annual_cost": 4752.0
+    },
+    "procedure_errors_rework_scrap": 15000,
+    "onboarding_new_workers": {
+      "new_hires_per_year": 10,
+      "days_per_hire": 10,
+      "hours_per_day": 8,
+      "rate_eur_h": 12,
+      "annual_cost": 9600
+    },
+    "annual_total": 59052.0
+  },
+  "ai_system": {
+    "auto_answer_pct": 80,
+    "avg_response_time_sec": 3,
+    "management_load_reduction_pct": 60,
+    "error_reduction_pct": 40,
+    "onboarding_days_before": 10,
+    "onboarding_days_after": 4,
+    "software_cost_annual": 12000
+  },
+  "annual_savings_eur": {
+    "management_time_saved": 17820.0,
+    "qc_manager_time_saved": 2851.2,
+    "error_reduction": 6000.0,
+    "onboarding_acceleration": 5760.0,
+    "gross_annual_saving": 32431.2,
+    "minus_software_cost": -12000,
+    "net_annual_saving": 20431.2
+  },
+  "roi_summary": {
+    "payback_period_months": 4.4,
+    "roi_3_year_pct": 170.3,
+    "total_saving_3_years_eur": 61293.6,
+    "software_investment_3_years_eur": 36000
+  }
+}
