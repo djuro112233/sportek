@@ -1,0 +1,41 @@
+{
+  "data_inputs": {
+    "total_export_value_eur": 11626688.82,
+    "total_shipments": 2000,
+    "source": "data/supply_chain/purchase_orders.csv"
+  },
+  "current_costs_eur": {
+    "compliance_workers": 2,
+    "salary_per_worker_month": 1800,
+    "annual_salary_total": 43200,
+    "external_broker_annual": 12000,
+    "classification_error_rate_pct": 3.0,
+    "annual_error_penalties": 25000,
+    "annual_total": 80200
+  },
+  "ai_system": {
+    "auto_classification_pct": 95,
+    "ai_error_rate_pct": 2.0,
+    "workers_retained": 1,
+    "annual_salary_after": 21600,
+    "software_cost_annual": 24000,
+    "annual_running_cost": 45600
+  },
+  "annual_savings_eur": {
+    "salary_reduction": 21600,
+    "error_reduction": 8333.33,
+    "fta_optimisation_3pct": 348800.66,
+    "fta_calculation_base": 11626688.82,
+    "gross_annual_saving": 378733.99,
+    "minus_software_cost": -24000,
+    "net_annual_saving": 354733.99,
+    "dpp_penalty_avoidance_2027": 75000.0,
+    "net_annual_with_dpp_2027": 429733.99
+  },
+  "roi_summary": {
+    "payback_period_months": 0.8,
+    "roi_3_year_pct": 1582.2,
+    "total_saving_3_years_eur": 1139201.97,
+    "software_investment_3_years_eur": 72000
+  }
+}
