@@ -1,0 +1,41 @@
+[
+  {
+    "hs_code": "640411",
+    "destination": "DE",
+    "value_eur": 50000,
+    "mfn_rate_pct": 16.9,
+    "preferential_rate_pct": 0.0,
+    "fta": "SAA EU-BiH",
+    "duty_eur": 0.0,
+    "vat_rate_pct": 19.0,
+    "vat_eur": 9500.0,
+    "total_landed_cost_eur": 59500.0,
+    "savings_vs_mfn_eur": 8450.0
+  },
+  {
+    "hs_code": "640411",
+    "destination": "US",
+    "value_eur": 50000,
+    "mfn_rate_pct": 20.0,
+    "preferential_rate_pct": 20.0,
+    "fta": "No FTA (MFN)",
+    "duty_eur": 10000.0,
+    "vat_rate_pct": 0.0,
+    "vat_eur": 0.0,
+    "total_landed_cost_eur": 60000.0,
+    "savings_vs_mfn_eur": 0.0
+  },
+  {
+    "hs_code": "640610",
+    "destination": "RS",
+    "value_eur": 20000,
+    "mfn_rate_pct": 2.0,
+    "preferential_rate_pct": 0.0,
+    "fta": "CEFTA 2006",
+    "duty_eur": 0.0,
+    "vat_rate_pct": 20.0,
+    "vat_eur": 4000.0,
+    "total_landed_cost_eur": 24000.0,
+    "savings_vs_mfn_eur": 400.0
+  }
+]

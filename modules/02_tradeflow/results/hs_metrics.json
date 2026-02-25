@@ -1,0 +1,7 @@
+{
+  "accuracy": 1.0,
+  "top3_accuracy": 1.0,
+  "total_classes": 10,
+  "train_size": 240,
+  "test_size": 60
+}
