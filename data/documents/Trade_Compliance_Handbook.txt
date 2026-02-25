@@ -1,0 +1,611 @@
+================================================================================
+SPORTEK d.o.o. Banja Luka
+PRIRUČNIK ZA CARINSKU USKLAĐENOST I TRGOVINSKU REGULATIVU
+================================================================================
+
+Dokument:       TRD-COM-009
+Naziv:          Priručnik za carinsku klasifikaciju, pravila o porijeklu i
+                trgovinsku usklađenost
+Revizija:       Rev. 04
+Datum izdanja:  01.06.2024.
+Datum revizije: 01.02.2026.
+Pripremio:      Samir Hadžić, menadžer za vanjsku trgovinu
+Odobrio:        Aleksandra Đurić, direktorica za strateška partnerstva
+Klasifikacija:  INTERNO - POVJERLJIVO
+
+================================================================================
+SADRŽAJ
+================================================================================
+
+1. Uvod i značaj carinske usklađenosti
+2. Harmonizovani sistem (HS) - Poglavlje 64
+3. Pravila klasifikacije obuće
+4. Sporazum o stabilizaciji i pridruživanju (SAA/EU)
+5. CEFTA sporazum
+6. EFTA sporazum
+7. Pravila o porijeklu robe
+8. Dokumentacija za izvoz
+9. EU digitalni pasoš proizvoda (DPP)
+10. CBAM — mehanizam za ugljičnu granicu
+11. Sankcionisane liste i screening partnera
+12. Odgovornosti i kontakti
+13. Historija revizija
+
+================================================================================
+1. UVOD I ZNAČAJ CARINSKE USKLAĐENOSTI
+================================================================================
+
+Sportek d.o.o. je izvozno orijentisana kompanija koja izvozi gotove proizvode
+i komponente obuće u više od 20 zemalja širom svijeta. Naši ključni izvozni
+partneri su globalni brendovi Nike, Crocs i Decathlon čiji su distribucioni
+centri locirani u različitim zemljama Evrope, Azije i Amerike.
+
+Pravilna carinska klasifikacija, korektno utvrđivanje porijekla robe i
+usklađenost sa svim primjenjivim trgovinskim propisima su od ključnog
+značaja za poslovanje Sportek-a iz sljedećih razloga:
+
+a) Finansijski aspekt:
+   - Pogrešna klasifikacija može rezultirati preplačenim ili nedovoljno
+     plaćenim carinama, što u oba slučaja predstavlja problem
+   - Korištenje preferencijalnih carinskih stopa kroz sporazume o slobodnoj
+     trgovini donosi značajne uštede našim kupcima
+   - Kazne za neusklađenost mogu biti značajne — do 10% vrijednosti robe
+
+b) Pravni aspekt:
+   - Bosna i Hercegovina je potpisnica brojnih međunarodnih sporazuma
+     koji definišu obaveze u trgovini
+   - EU regulativa sve više utiče na naše poslovanje kroz zahtjeve brendova
+   - Nepoštivanje sankcija može rezultirati krivičnim postupkom
+
+c) Poslovni aspekt:
+   - Brendovi zahtijevaju potpunu usklađenost svojih dobavljača
+   - Kašnjenja na carini usporavljaju isporuku i utiču na odnos sa kupcima
+   - Reputacioni rizik — neusklađenost može rezultirati gubitkom klijenta
+
+Ovaj priručnik je obavezan referentni dokument za sve zaposlene uključene
+u proces izvoza, nabavke, planiranja proizvodnje i finansija. Svako
+nerazumijevanje ili nedoumica mora biti razriješena konsultacijom sa
+menadžerom za vanjsku trgovinu prije poduzimanja bilo kakve akcije.
+
+================================================================================
+2. HARMONIZOVANI SISTEM (HS) - POGLAVLJE 64
+================================================================================
+
+2.1 Opšte o HS sistemu
+------------------------
+
+Harmonizovani sistem naziva i šifarskih oznaka robe (HS) je međunarodni
+standard za klasifikaciju robe u trgovini, kojeg održava Svjetska carinska
+organizacija (WCO). HS sistem koristi šestocifreni kod za identifikaciju
+proizvoda, pri čemu pojedine zemlje dodaju dodatne cifre za detaljniju
+klasifikaciju.
+
+Obuća i njeni dijelovi klasificirani su u Poglavlje 64 HS sistema. Ovo
+poglavlje je ključno za poslovanje Sportek-a i svi zaposleni uključeni
+u izvoz moraju poznavati njegovu strukturu.
+
+2.2 Struktura Poglavlja 64
+-----------------------------
+
+Poglavlje 64 obuhvata sljedeće tarifne brojeve:
+
+6401 — Vodootporna obuća sa gornjim dijelom od gume ili plastike:
+  Gornji dio nije pričvršćen za đon šivanjem, zakivanjem, zavrtnjima,
+  čepovima ili sličnim postupcima. Obuhvata čizme za kišu, ribarske čizme,
+  industrijske vodootporne čizme.
+
+6402 — Ostala obuća sa gornjim dijelom od gume ili plastike:
+  Obuća sa gornjim dijelom od plastičnih materijala koja ne spada u 6401.
+  KLJUČNO ZA SPORTEK: Tarifni podbroj 6402.99 obuhvata Crocs proizvode
+  (Classic Clog i slični modeli sa Croslite gornjim dijelom).
+
+6403 — Obuća sa gornjim dijelom od kože:
+  Obuhvata obuću sa gornjim dijelom od prirodne kože. Sportek trenutno
+  ne proizvodi proizvode u ovoj kategoriji, ali je važno razumjeti ovu
+  kategoriju za pravilnu klasifikaciju mješovitih materijala.
+
+6404 — Obuća sa gornjim dijelom od tekstilnog materijala:
+  KLJUČNO ZA SPORTEK: Ovo je primarna tarifna pozicija za Nike Flyknit
+  i Decathlon proizvode.
+  - 6404.11 — Sportska obuća sa gornjim dijelom od tekstila: uključuje
+    patike, tenisice, obuću za trčanje, košarkaške patike i slično.
+    Đon mora biti dizajniran za sportsku aktivnost.
+  - 6404.19 — Ostala obuća sa gornjim dijelom od tekstila: obuća koja
+    nije sportska (casual, radna, itd.)
+
+6405 — Ostala obuća:
+  Obuća koja ne spada ni u jednu od prethodnih kategorija.
+
+6406 — Dijelovi obuće:
+  KLJUČNO ZA SPORTEK: Ova pozicija obuhvata komponente koje Sportek
+  izvozi kao poluproizvode.
+  - 6406.10 — Gornji dijelovi obuće i njihovi dijelovi (osim ukruta):
+    Flyknit upper komponente koje se izvode kao poluproizvod za finalnu
+    montažu u drugoj fabrici.
+  - 6406.20 — Đonovi i petice od gume ili plastike: Đonovi koje Sportek
+    nabavlja ili proizvodi.
+  - 6406.90 — Ostali dijelovi: ulošci, podstave, ojačanja, itd.
+
+================================================================================
+3. PRAVILA KLASIFIKACIJE OBUĆE
+================================================================================
+
+3.1 Određivanje materijala gornjeg dijela
+-------------------------------------------
+
+Ključno pravilo za klasifikaciju obuće u Poglavlje 64 je materijal gornjeg
+dijela (upper). Gornji dio je definisan kao dio obuće koji pokriva i
+zaštićuje gornju stranu stopala i eventualno gležanj ili dio noge.
+
+Pravila za određivanje materijala gornjeg dijela:
+- Ako je gornji dio od jednog materijala — klasifikacija je jasna
+- Ako gornji dio sadrži više materijala — primjenjuje se pravilo
+  najveće vanjske površine
+
+3.2 Pravilo najveće površine
+------------------------------
+
+Kada gornji dio obuće sadrži dva ili više materijala (tekstil, koža,
+plastika), klasifikacija se vrši prema materijalu koji zauzima najveću
+površinu vanjskog dijela gornjeg dijela obuće.
+
+Primjer: Nike Flyknit model sa:
+- Flyknit tekstil: 75% površine gornjeg dijela
+- Sintetički overlay: 15% površine
+- TPU elementi: 10% površine
+Klasifikacija: 6404.11 (tekstilni gornji dio, sportska obuća)
+
+Primjer: Crocs Classic Clog:
+- Croslite (plastični materijal): 100% gornjeg dijela
+Klasifikacija: 6402.99 (plastični gornji dio, ostala obuća)
+
+3.3 Sportska vs. ostala obuća
+-------------------------------
+
+Za razlikovanje sportske obuće (6404.11) od ostale (6404.19), đon mora
+biti dizajniran za sportsku aktivnost. Karakteristike sportskog đona:
+- Profil đona prilagođen specifičnom sportu (trčanje, košarka, fudbal)
+- Amortizacioni sistem (Air, React, Boost, EVA)
+- Materijal đona prilagođen sportskoj površini
+- Fleksibilne zone za prirodan pokret stopala
+
+Ako postoji nedoumica, konzultovati menadžera za vanjsku trgovinu koji
+će kontaktirati carinskog savjetnika.
+
+================================================================================
+4. SPORAZUM O STABILIZACIJI I PRIDRUŽIVANJU (SAA/EU)
+================================================================================
+
+4.1 Opšte o SAA sporazumu
+---------------------------
+
+Bosna i Hercegovina je potpisala Sporazum o stabilizaciji i pridruživanju
+(SAA) sa Evropskom unijom koji je stupio na snagu 2015. godine. Ovaj
+sporazum osigurava bescarinski pristup za proizvode sa porijeklom iz BiH
+na tržište EU, i obratno, pod određenim uslovima.
+
+Za Sportek d.o.o. ovo je najvažniji trgovinski sporazum jer većina naše
+proizvodnje ide prema kupcima u EU zemljama (Nike distribucioni centar u
+Belgiji, Crocs u Holandiji, Decathlon u Francuskoj).
+
+4.2 Uslovi za korištenje preferencijalnog tretmana
+-----------------------------------------------------
+
+Da bi Sportek mogao koristiti bescarinski izvoz u EU, moraju biti
+ispunjeni sljedeći uslovi:
+- Proizvod mora imati porijeklo iz BiH prema pravilima o porijeklu
+  definisanim u Protokolu uz SAA sporazum
+- Mora biti izdat EUR.1 certifikat o kretanju robe od strane
+  Spoljnotrgovinske/Vanjskotrgovinske komore BiH
+- Direktan transport — roba mora biti transportovana direktno iz BiH
+  u EU bez značajne prerade u tranzitnim zemljama
+
+4.3 EUR.1 certifikat
+----------------------
+
+EUR.1 je službeni dokument koji potvrđuje porijeklo robe i omogućava
+primjenu preferencijalnih carinskih stopa. Postupak izdavanja:
+1. Sportek priprema zahtjev za izdavanje EUR.1 sa svom pratećom
+   dokumentacijom (kalkulacija porijekla, supplier declarations)
+2. Zahtjev se podnosi nadležnoj Spoljnotrgovinskoj komori BiH
+3. Komora provjerava dokumentaciju i ovjerava EUR.1
+4. Ovjereni EUR.1 se prilaže uz robu pri izvozu
+
+EUR.1 mora biti izdat prije ili na dan izvoza. Naknadno izdavanje je
+moguće samo u izuzetnim slučajevima i uz obrazloženje.
+
+4.4 Kumulacija porijekla
+--------------------------
+
+SAA sporazum omogućava dijagonalnu kumulaciju porijekla sa:
+- EU zemljama
+- Zemljama CEFTA sporazuma
+- Turskom (bilateralni sporazum)
+
+Kumulacija znači da se materijali sa porijeklom iz ovih zemalja mogu
+smatrati materijalima sa porijeklom iz BiH pri utvrđivanju porijekla
+gotovog proizvoda. Ovo je izuzetno važno za Sportek jer značajan dio
+sirovina (yarn, đonovi, ljepila) nabavljamo iz EU i Turske.
+
+================================================================================
+5. CEFTA SPORAZUM
+================================================================================
+
+5.1 Opšte
+-----------
+
+CEFTA (Central European Free Trade Agreement) 2006 je sporazum o slobodnoj
+trgovini koji obuhvata zemlje Zapadnog Balkana:
+- Bosna i Hercegovina
+- Republika Srbija (RS)
+- Crna Gora (ME)
+- Republika Sjeverna Makedonija (MK)
+- Kosovo*
+- Republika Albanija (AL)
+- Republika Moldova (MD)
+
+5.2 Preferencijalni tretman
+------------------------------
+
+CEFTA sporazum osigurava bescarinski tretman za robu sa porijeklom iz
+zemalja potpisnica. Za Sportek ovo je relevantno za:
+- Izvoz u Srbiju — sirovine i poluproizvodi za partnerske fabrike
+- Izvoz u Crnu Goru — gotovi proizvodi za lokalno tržište
+- Uvoz sirovina iz Srbije i Makedonije
+
+5.3 Dokumentacija
+-------------------
+
+Za korištenje CEFTA preferencija koristi se:
+- EUR.1 certifikat — za pošiljke vrijednosti iznad 6.000 EUR
+- Izjava o porijeklu na fakturi — za pošiljke do 6.000 EUR ili za
+  ovlaštene izvoznike bez ograničenja vrijednosti
+
+Format izjave na fakturi (na engleskom):
+"The exporter of the products covered by this document (customs authorization
+No. ... ) declares that, except where otherwise clearly indicated, these
+products are of ... preferential origin."
+
+================================================================================
+6. EFTA SPORAZUM
+================================================================================
+
+Bosna i Hercegovina ima sporazum o slobodnoj trgovini sa EFTA zemljama:
+- Švicarska (CH)
+- Norveška (NO)
+- Island (IS)
+- Lihtenštajn (LI)
+
+Sporazum osigurava bescarinski tretman za industrijsku robu, uključujući
+obuću, pod uslovima sličnim SAA sporazumu. Dokumentacija je identična —
+EUR.1 certifikat sa pravilima o porijeklu.
+
+Za Sportek je ovaj sporazum relevantan za izvoz prema Decathlon
+distribuciji u Švicarskoj i eventualne buduće kupce u skandinavskim
+zemljama. Obim izvoza u EFTA je trenutno manji u odnosu na EU, ali
+se očekuje rast.
+
+================================================================================
+7. PRAVILA O PORIJEKLU ROBE
+================================================================================
+
+7.1 Zašto su pravila o porijeklu važna
+-----------------------------------------
+
+Pravila o porijeklu definišu uslove pod kojima se proizvod može smatrati
+proizvodom sa porijeklom iz BiH. Samo proizvodi koji ispunjavaju ove uslove
+mogu koristiti preferencijalni (bescarinski) tretman pri izvozu. Bez
+preferencijalnog tretmana, naši kupci bi plaćali standardne carinske stope
+(tipično 8-17% za obuću u EU), što bi značajno uticalo na
+konkurentnost Sportek-a.
+
+7.2 Osnovna pravila
+---------------------
+
+Za obuću iz Poglavlja 64, postoje dva alternativna pravila za sticanje
+porijekla:
+
+PRAVILO 1 — Promjena tarifnog broja (CTH):
+Svi materijali bez porijekla iz BiH moraju biti klasificirani u drugom
+tarifnom broju (četvorocifreni HS kod) od gotovog proizvoda. Drugim
+riječima, sirovine moraju proći dovoljnu preradu da se klasifikacija
+promijeni.
+
+Primjer: Sportek uvozi yarn (5402 — sintetički filament) i proizvodi
+Flyknit upper (6406.10 — dijelovi obuće). Yarn je u Poglavlju 54, upper
+u Poglavlju 64 — tarifni broj se promijenio, uslov je ispunjen.
+
+PRAVILO 2 — Vrijednosni kriterij:
+Vrijednost svih materijala bez porijekla iz BiH ne smije prelaziti 50%
+ex-works cijene gotovog proizvoda.
+
+Primjer: Ex-works cijena para obuće = 40 EUR. Materijali bez porijekla
+(yarn iz Japana, đon iz Vijetnama) = 18 EUR. 18/40 = 45% < 50% — uslov
+je ispunjen.
+
+NAPOMENA: Dovoljno je ispuniti jedno od dva pravila. Sportek tipično koristi
+Pravilo 1 (CTH) jer je jednostavnije za dokazivanje i manje osjetljivo na
+promjene cijena.
+
+7.3 Kalkulacija porijekla
+---------------------------
+
+Za svaki proizvod koji se izvozi uz EUR.1 certifikat, Sportek mora imati
+dokumentovanu kalkulaciju porijekla koja dokazuje ispunjavanje pravila.
+Kalkulacija sadrži:
+- Opis gotovog proizvoda i njegov HS kod
+- Listu svih materijala sa: opisom, HS kodom, porijeklom, vrijednošću
+- Dokaz o ispunjavanju CTH pravila ili vrijednosnog kriterija
+- Opis proizvodnog procesa (prerada koja je izvršena u BiH)
+- Potpis odgovorne osobe i datum
+
+Kalkulacije se čuvaju minimalno 5 godina i moraju biti dostupne carinskim
+organima na zahtjev.
+
+7.4 Supplier declarations
+---------------------------
+
+Za materijale koji se nabavljaju iz EU ili drugih zemalja sa kojima BiH
+ima sporazum o slobodnoj trgovini, dobavljač mora dostaviti Supplier
+Declaration (izjava dobavljača o porijeklu). Ova izjava potvrđuje
+porijeklo materijala i omogućava primjenu kumulacije.
+
+Sportek redovno traži i arhivira Supplier Declarations od svih ključnih
+dobavljača. Izjave se obnavljaju godišnje ili pri promjeni uslova.
+
+================================================================================
+8. DOKUMENTACIJA ZA IZVOZ
+================================================================================
+
+8.1 Obavezni dokumenti za svaku pošiljku
+-------------------------------------------
+
+Za svaki izvoz iz Sportek-a priprema se sljedeći set dokumenata:
+
+a) Komercijalna faktura (Commercial Invoice) — 3 primjerka:
+   - Puni naziv i adresa prodavca (Sportek) i kupca
+   - Broj fakture, datum, valuta
+   - Detaljan opis robe — naziv, model, stil, količina, jedinična cijena
+   - Ukupna vrijednost, Incoterms paritet, način plaćanja
+   - HS kod za svaku stavku
+   - Zemlja porijekla
+   - Težina (neto i bruto)
+
+b) Packing lista (Packing List) — 3 primjerka:
+   - Detaljan opis pakovanja — broj kutija/kartona/paleta
+   - Sadržaj svakog paketa — model, veličina, količina, boja
+   - Dimenzije i težina svakog paketa
+   - Ukupna težina i zapremina pošiljke
+
+c) EUR.1 certifikat o kretanju robe:
+   - Za pošiljke u EU, CEFTA i EFTA zemlje
+   - Izdaje Spoljnotrgovinska komora BiH
+   - Original prati robu, kopija ostaje u arhivi Sportek-a
+
+d) CMR (međunarodni tovarni list za drumski transport):
+   - Popunjava špediter/prevoznik
+   - Sportek potvrđuje podatke o robi
+   - 3 primjerka: pošiljalac, prevoznik, primalac
+
+e) Fitosanitarni certifikat (kada je potreban):
+   - Za pošiljke koje sadrže materijale prirodnog porijekla (koža, drvo)
+   - Izdaje nadležna fitosanitarna inspekcija
+   - Trenutno nije potreban za većinu Sportek proizvoda
+
+f) Certificate of Conformity (potvrda o usklađenosti):
+   - Za proizvode koji moraju zadovoljavati specifične standarde (CE
+     oznaka za EU tržište, specifični zahtjevi brendova)
+   - Izdaje Sportek QC odjel ili ovlašteno tijelo
+
+8.2 Postupak pripreme dokumentacije
+--------------------------------------
+
+1. Planer izvoza priprema draft komercijalne fakture i packing liste
+   na osnovu otpremnog naloga
+2. Menadžer za vanjsku trgovinu provjerava HS kodove i porijeklo
+3. Finansije provjeravaju cijene i uslove plaćanja
+4. Menadžer za vanjsku trgovinu podnosi zahtjev za EUR.1 komori
+5. Kompletna dokumentacija se dostavlja špediteru minimalno 2 radna
+   dana prije planiranog utovara
+6. Kopije svih dokumenata se arhiviraju u elektronskom i štampanom obliku
+
+================================================================================
+9. EU DIGITALNI PASOŠ PROIZVODA (DPP)
+================================================================================
+
+9.1 Šta je DPP
+-----------------
+
+Evropska unija uvodi Digitalni pasoš proizvoda (Digital Product Passport —
+DPP) kao dio Strategije za održive i cirkularne tekstile. DPP će biti
+obavezan za tekstilne proizvode i obuću koji se plasiraju na EU tržište,
+sa očekivanim stupanjem na snagu u periodu 2027/2028.
+
+DPP je digitalni zapis koji prati proizvod kroz cijeli životni ciklus —
+od sirovina do kraja upotrebe. Pristupa mu se putem QR koda ili NFC
+taga na proizvodu.
+
+9.2 Sadržaj DPP-a
+--------------------
+
+DPP za obuću će morati sadržavati sljedeće informacije:
+- Materijalni sastav: svi materijali korišteni u proizvodu sa procentima
+- Porijeklo: zemlja proizvodnje svake komponente
+- Carbon footprint: emisije CO2 po proizvodu (u kg CO2e)
+- Reciklabilnost: informacije o mogućnosti recikliranja i upute za
+  pravilno odlaganje
+- Trajnost: rezultati testova trajnosti (abrazija, savijanje, itd.)
+- Hemijski sastav: potvrda o usklađenosti sa REACH regulativom
+- Supply chain transparentnost: informacije o dobavljačima
+
+9.3 Priprema Sportek-a za DPP
+---------------------------------
+
+Sportek proaktivno priprema sisteme i procese za DPP zahtjeve:
+
+a) Već implementirano:
+   - Kompletna evidencija materijalnog sastava za sve proizvode
+   - REACH usklađenost za sve materijale
+   - Traceability od sirovine do gotovog proizvoda (u razvoju)
+
+b) U toku:
+   - Implementacija sistema za praćenje carbon footprint po proizvodu
+   - Digitalizacija supply chain podataka
+   - Razvoj QR kod infrastrukture za proizvode
+
+c) Planirano:
+   - Integracija sa Nike/Crocs/Decathlon DPP platformama
+   - Puni DPP compliance do Q2 2027
+
+Odgovornost za DPP pripremu je podijeljena: IT odjel za tehničku
+infrastrukturu, QC za podatke o kvalitetu i materijalima, nabavka za
+supply chain podatke, i menadžer za vanjsku trgovinu za koordinaciju.
+
+================================================================================
+10. CBAM — MEHANIZAM ZA UGLJIČNU GRANICU
+================================================================================
+
+10.1 Šta je CBAM
+-------------------
+
+Carbon Border Adjustment Mechanism (CBAM) je EU mehanizam koji ima za cilj
+izjednačavanje cijene ugljika za uvozne proizvode sa cijenom unutar EU
+Emissions Trading System (ETS). CBAM je stupio na snagu u tranzicijskoj
+fazi 2023. godine sa punom primjenom od 2026.
+
+10.2 Relevantnost za Sportek
+-------------------------------
+
+CBAM se primarno primjenjuje na industrijske materijale: čelik, aluminijum,
+cement, električna energija, đubriva i vodonik. Tekstil i obuća trenutno
+NISU direktno obuhvaćeni CBAM-om.
+
+Međutim, Sportek mora pratiti razvoj CBAM-a iz sljedećih razloga:
+- EU razmatra proširenje CBAM-a na dodatne sektore, uključujući potencijalno
+  tekstil i obuću u budućnosti
+- Brendovi sve više zahtijevaju evidenciju ugljičnog otiska od dobavljača
+- Proaktivna priprema daje konkurentsku prednost
+
+10.3 Aktivnosti Sportek-a vezane za CBAM/carbon footprint
+-----------------------------------------------------------
+
+a) Evidencija energije po jedinici proizvoda:
+   - Monitoring potrošnje električne energije po proizvodnoj liniji
+   - Kalkulacija kWh po paru obuće za svaki model
+   - Mjesečno izvještavanje
+
+b) Embedded emissions:
+   - Procjena emisija CO2 iz proizvodnog procesa (Scope 1 i 2)
+   - Prikupljanje podataka o emisijama od dobavljača (Scope 3)
+   - Razvoj metodologije za izračun carbon footprint po proizvodu
+
+c) Kvartalni reporting:
+   - Interni kvartalni izvještaj o emisijama i potrošnji energije
+   - Podaci se dijele sa brendovima na zahtjev
+   - Priprema za potencijalne buduće regulatorne zahtjeve
+
+================================================================================
+11. SANKCIONISANE LISTE I SCREENING PARTNERA
+================================================================================
+
+11.1 Obaveza provjere
+-----------------------
+
+Sportek d.o.o. je obavezan provjeriti sve poslovne partnere (kupce,
+dobavljače, transportere, posrednike) protiv sankcionisanih lista prije
+uspostavljanja poslovnog odnosa i periodično tokom trajanja odnosa.
+
+Relevantne sankcionisane liste:
+- EU Consolidated Financial Sanctions List — lista osoba i entiteta pod
+  EU sankcijama (zamrzavanje sredstava, zabrana putovanja)
+- EU Dual-Use Export Controls — kontrola izvoza robe dvostruke namjene
+- US OFAC Specially Designated Nationals (SDN) List — lista osoba i
+  entiteta pod US sankcijama
+- US Bureau of Industry and Security (BIS) Entity List — liste za
+  kontrolu izvoza
+- UN Security Council Sanctions — lista UN sankcija
+
+11.2 Postupak screeninga
+--------------------------
+
+a) Novi partner:
+   - Prije potpisivanja bilo kakvog ugovora ili slanja ponude
+   - Menadžer za vanjsku trgovinu provjerava naziv kompanije, adresu,
+     direktore i vlasnike protiv svih relevantnih lista
+   - Koristi se specijalizirani softver za screening ili online baze
+   - Rezultat provjere se dokumentuje i čuva u dosijeu partnera
+
+b) Postojeći partneri:
+   - Periodična provjera svakih 6 mjeseci
+   - Dodatna provjera pri promjeni vlasništva ili upravljanja partnera
+   - Automatske notifikacije o promjenama na sankcionisanim listama
+
+c) Postupak u slučaju pozitivnog rezultata (hit):
+   - Momentalno zaustavljanje svih transakcija sa dotičnim partnerom
+   - Obavještavanje uprave i pravnog savjetnika
+   - Analiza da li se radi o stvarnom podudaranju ili false positive
+   - Ako je stvarno podudaranje — prekid poslovnog odnosa i prijava
+     nadležnim organima
+   - Dokumentacija kompletnog postupka
+
+11.3 Odgovornost
+------------------
+
+Menadžer za vanjsku trgovinu je primarno odgovoran za screening poslovnih
+partnera. Finansijski odjel vrši dodatnu provjeru pri procesiranju
+plaćanja. Uprava je obavezna osigurati resurse i procese za efikasan
+screening.
+
+Svi zaposleni su obavezni prijaviti sumnjive aktivnosti ili zahtjeve
+koji bi mogli ukazivati na kršenje sankcija (neobični zahtjevi za
+plaćanje, zahtjevi za preusmjeravanje robe, skrivanje identiteta
+krajnjeg korisnika).
+
+================================================================================
+12. ODGOVORNOSTI I KONTAKTI
+================================================================================
+
+Funkcija                    Odgovornost
+---------------------------------------------------------------------------
+Menadžer za vanjsku         HS klasifikacija, EUR.1, pravila o porijeklu,
+trgovinu (Samir Hadžić)     screening partnera, DPP koordinacija
+
+Direktorica za strateška    Odobravanje sporazuma, eskalacija, brend
+partnerstva (A. Đurić)      komunikacija
+
+Financije                   Fakturiranje, plaćanja, provjera vrijednosti
+
+Nabavka                     Supplier declarations, podaci o porijeklu
+                            materijala, DPP supply chain podaci
+
+QC odjel                    Certificate of conformity, materijalni
+                            podaci za DPP
+
+IT odjel                    DPP tehnička infrastruktura, screening
+                            softver
+
+Eksterni kontakti:
+- Spoljnotrgovinska komora BiH — izdavanje EUR.1 certifikata
+- Carinski savjetnik: [ime firme], Banja Luka
+- Špediterska firma: [ime firme], Banja Luka
+- Nike Trade Compliance: nike.tradecompliance@nike.com
+- Crocs Import Department: imports@crocs.com
+
+================================================================================
+13. HISTORIJA REVIZIJA
+================================================================================
+
+Rev.  Datum         Opis izmjene                           Autor
+---------------------------------------------------------------------------
+01    01.06.2024.   Inicijalno izdanje                     S. Hadžić
+02    01.10.2024.   Dodane EFTA sekcije                    S. Hadžić
+03    01.06.2025.   Dodane DPP i CBAM sekcije              S. Hadžić
+04    01.02.2026.   Ažurirani DPP rokovi, sankcionisane    S. Hadžić
+                    liste, CEFTA detalji
+
+================================================================================
+KRAJ DOKUMENTA
+Dokument TRD-COM-009, Rev. 04
+Sportek d.o.o. Banja Luka
+Klasifikacija: INTERNO - POVJERLJIVO
+================================================================================
