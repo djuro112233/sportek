@@ -1,0 +1,707 @@
+================================================================================
+SPORTEK d.o.o. Banja Luka
+EKOLOŠKA POLITIKA I PLAN ZAŠTITE ŽIVOTNE SREDINE
+================================================================================
+
+Dokument:       ENV-POL-010
+Naziv:          Ekološka politika pogona, ciljevi i plan implementacije
+Revizija:       Rev. 03
+Datum izdanja:  01.04.2024.
+Datum revizije: 20.01.2026.
+Pripremio:      Amar Selimović, HSE menadžer
+Odobrio:        Dejan Tomić, generalni direktor
+Klasifikacija:  INTERNO
+
+================================================================================
+SADRŽAJ
+================================================================================
+
+1. Opredijeljenost i vizija
+2. Ciljevi — energetska efikasnost 2026
+3. Ciljevi — upravljanje otpadom 2026
+4. Ciljevi — upravljanje vodama 2026
+5. Upravljanje hemikalijama
+6. Monitoring i izvještavanje
+7. Odgovornosti
+8. Upravljanje otpadom — detaljna procedura
+9. ISO 14001 certifikacija
+10. Carbon footprint metodologija
+11. Edukacija i svijest zaposlenih
+12. Historija revizija
+
+================================================================================
+1. OPREDIJELJENOST I VIZIJA
+================================================================================
+
+Sportek d.o.o. Banja Luka se opredijeljuje za kontinuirano smanjenje
+ekološkog utjecaja svojih proizvodnih aktivnosti na životnu sredinu. Ova
+opredijeljenost nije samo izraz korporativne odgovornosti već i poslovna
+nužnost u industriji obuće gdje globalni brendovi partneri — Nike, Crocs
+i Decathlon — postavljaju sve strožije zahtjeve za ekološku održivost
+svojih dobavljača.
+
+Nike Move to Zero inicijativa cilja na nula otpada i nula emisija
+ugljika. Crocs Comfort Without Carbon program fokusira se na smanjenje
+ugljičnog otiska. Decathlon Transition Plan zahtijeva mjerljiva
+poboljšanja u oblasti energije, otpada i vode od svih dobavljača. Sportek
+kao dobavljač mora ne samo ispunjavati ove zahtjeve već i proaktivno
+raditi na unapređenju ekoloških performansi kako bi održao i unaprijedio
+svoju konkurentsku poziciju.
+
+Vizija: Do 2030. godine Sportek d.o.o. će biti vodeća eco-conscious
+fabrika obuće u regiji Zapadnog Balkana, sa certifikovanim sistemom
+upravljanja životnom sredinom, mjerljivim smanjenjem emisija i otpada,
+i potpunom transparentnošću u ekološkom izvještavanju prema brendovima
+i zainteresovanim stranama.
+
+Principi ekološke politike:
+- Poštivanje svih primjenjivih zakona i propisa o zaštiti životne sredine
+- Prevencija zagađenja — prioritet sprečavanja nad naknadnim rješavanjem
+- Kontinuirano poboljšanje ekoloških performansi mjereno ključnim
+  indikatorima (KPI)
+- Transparentnost — redovno izvještavanje brendova i zainteresovanih strana
+- Uključivanje svih zaposlenih — ekološka odgovornost je obaveza svakog
+  zaposlenika
+- Saradnja sa dobavljačima na unapređenju ekoloških praksi u cijelom
+  lancu snabdijevanja
+- Investiranje u čiste tehnologije i obnovljive izvore energije
+
+================================================================================
+2. CILJEVI — ENERGETSKA EFIKASNOST 2026
+================================================================================
+
+2.1 Smanjenje potrošnje energije po paru
+-------------------------------------------
+
+Cilj: Smanjiti potrošnju električne energije po paru proizvedene obuće
+za 10% u odnosu na baznu 2025. godinu.
+
+Bazna vrijednost (2025): 2.8 kWh/par (prosjek svih linija i modela)
+Ciljna vrijednost (2026): 2.52 kWh/par
+
+Mjere za postizanje cilja:
+- Optimizacija proizvodnog rasporeda za minimiziranje praznog hoda mašina
+- Zamjena starijih kompresora novim energetski efikasnim modelima (VSD
+  kompresori) — planirano Q2 2026
+- Ugradnja frekventnih regulatora na ventilacioni sistem — planirano Q1 2026
+- Optimizacija HVAC sistema za proizvodnu halu — podešavanje setpoint
+  temperatura prema sezonskim zahtjevima
+- Automatsko gašenje osvjetljenja i mašina van radnog vremena —
+  implementacija timer sistema
+
+2.2 Solarni sistem 100 kW
+----------------------------
+
+Plan: Instalacija fotonaponskog solarnog sistema snage 100 kW na krovu
+proizvodne hale i skladišta.
+
+Specifikacije:
+- Snaga: 100 kWp (kilovat peak)
+- Tip panela: monokristalni silikon, efikasnost min 21%
+- Procijenjenja godišnja proizvodnja: 120,000 kWh
+- Pokrivanje: procjena 15-18% ukupne potrošnje električne energije pogona
+- Investicija: procjena 120,000-140,000 EUR
+- ROI: 5-7 godina
+- Rok: Instalacija planirana Q3 2026, puštanje u rad Q4 2026
+
+Status: Završena studija izvodljivosti i statička analiza krova. Prikupljanje
+ponuda od instalaterskih firmi u toku. Pribavljanje građevinske dozvole u
+procesu.
+
+Očekivani uticaj na carbon footprint: Smanjenje Scope 2 emisija za
+procijenjenih 50-60 tona CO2 godišnje (zavisno od emission factora za
+BiH elektroenergetski miks).
+
+2.3 LED osvjetljenje
+----------------------
+
+Plan: Kompletna zamjena konvencionalnog osvjetljenja LED tehnologijom u
+svim prostorima pogona.
+
+Status: 80% završeno (proizvodna hala, skladište, kancelarije)
+Preostalo: parking, vanjska rasvjeta, pomoćne prostorije — planirano
+Q1 2026
+
+Uštede od dosadašnje zamjene: Smanjenje potrošnje za osvjetljenje za 55%,
+što je ekvivalentno uštedi od približno 35,000 kWh godišnje.
+
+Dodatna prednost LED osvjetljenja: Kvalitetnija rasvjeta u QC zonama sa
+temperature boje 5000-5500K i CRI > 90, što poboljšava preciznost vizuelne
+inspekcije i smanjuje zamor očiju kod inspektora.
+
+2.4 Monitoring potrošnje po liniji
+-------------------------------------
+
+Plan: Implementacija sistema za monitoring potrošnje električne energije
+po proizvodnoj liniji u realnom vremenu.
+
+Status: Instalirani pametni brojila na 6 od 12 linija. Preostale linije
+planirane za Q2 2026.
+
+Sistem omogućava:
+- Real-time praćenje potrošnje kWh po liniji
+- Kalkulacija kWh po paru za svaki model i brend
+- Identifikacija linija sa neefikasnom potrošnjom
+- Automatski alarmi za abnormalnu potrošnju
+- Mjesečno i kvartalno izvještavanje
+
+Podaci se prikazuju na dashboardu dostupnom šefovima linija i menadžmentu,
+čime se podstiče konkurencija između linija za što nižu potrošnju.
+
+================================================================================
+3. CILJEVI — UPRAVLJANJE OTPADOM 2026
+================================================================================
+
+3.1 Smanjenje ukupnog otpada
+-------------------------------
+
+Cilj: Smanjiti ukupnu količinu generisanog otpada za 15% u odnosu na
+baznu 2025. godinu.
+
+Bazna vrijednost (2025): 4.2 kg otpada po 100 pari proizvedene obuće
+Ciljna vrijednost (2026): 3.57 kg po 100 pari
+
+Mjere:
+- Optimizacija krojnih šablona za minimiziranje otpadnog materijala —
+  korištenje CAD software-a za nesting optimizaciju
+- Smanjenje škarta kroz poboljšanje first-pass-yield (FPY) — cilj FPY
+  97% (sa trenutnih 95.2%)
+- Prelazak na pakovanje sa manje materijala — eliminacija nepotrebnih
+  unutarnjih omota i separator folija
+- Rad sa dobavljačima na smanjenju ambalažnog otpada — zahtjev za
+  povratnu ambalažu za kolute prede
+
+3.2 Povećanje stope reciklaže
+-------------------------------
+
+Cilj: Povećati stopu reciklaže sa 45% na 60% ukupnog otpada.
+
+Mjere:
+- Unaprijeđena separacija otpada na izvoru (detaljnije u sekciji 8)
+- Edukacija zaposlenih o pravilnoj separaciji
+- Partnerstvo sa reciklerom tekstilnog otpada — ugovor potpisan sa
+  firmom EcoTextil d.o.o. Zenica za preuzimanje i reciklažu tekstilnog
+  otpada
+- Istraživanje mogućnosti reciklaže EVA foam otpada — kontakt sa dva
+  potencijalna partnera, pilot projekat planiran Q2 2026
+- Kompostiranje organskog otpada iz kantina — implementirano
+
+3.3 Eliminacija jednokratne plastike
+---------------------------------------
+
+Cilj: Potpuna eliminacija jednokratne plastike iz pogona do kraja 2026.
+
+Mjere već implementirane:
+- Zamjena plastičnih čaša staklenim u kantini i kuhinjama (završeno)
+- Zamjena plastičnih kesa papirnim za internu upotrebu (završeno)
+- Dozatori vode umjesto plastičnih boca (završeno)
+
+Planirano:
+- Zamjena plastičnog stretch filma za paletizaciju biodegradabilnim
+  alternativama — testiranje u toku
+- Zamjena plastičnih vezica u proizvodnji reusable alternativama
+- Eliminacija jednokratnih plastičnih rukavica — prelazak na višekratne
+  gdje je primjenjivo
+
+3.4 Partnerstvo sa reciklerom tekstilnog otpada
+---------------------------------------------------
+
+Sportek je potpisao ugovor o saradnji sa EcoTextil d.o.o. Zenica za
+upravljanje tekstilnim otpadom iz proizvodnje. Detalji partnerstva:
+- EcoTextil preuzima sav tekstilni otpad (yarn otpad, odrezci pletiva,
+  neusaglašeni proizvodi)
+- Preuzimanje jednom sedmično ili po potrebi
+- EcoTextil vrši mehaničku reciklažu — usitnjavanje i pretvaranje u
+  izolacioni materijal ili industrijsku krpu
+- Sportek ne plaća naknadu za preuzimanje (neutralan trošak)
+- Kvartalni izvještaj o količinama i načinu reciklaže
+
+================================================================================
+4. CILJEVI — UPRAVLJANJE VODAMA 2026
+================================================================================
+
+4.1 Smanjenje potrošnje vode
+-------------------------------
+
+Cilj: Smanjiti ukupnu potrošnju vode za 10% u odnosu na baznu 2025. godinu.
+
+Bazna vrijednost (2025): 850 m3/mjesec (prosjek)
+Ciljna vrijednost (2026): 765 m3/mjesec
+
+Mjere:
+- Ugradnja štedljivih slavina i WC cisterni u sanitarnim čvorovima
+  (završeno, ušteda 15% na sanitarnoj vodi)
+- Optimizacija procesa čišćenja opreme — korištenje manjih količina
+  vode sa većom efikasnošću
+- Popravka svih curenja u vodovodnoj instalaciji — program identifikacije
+  i popravke u toku
+- Korištenje kišnice za pranje vanjskih površina i zalijevanje zelenih
+  površina — planirana instalacija rezervoara Q2 2026
+
+4.2 Reciklaža vode u zoni bojenja
+------------------------------------
+
+Sportek koristi vodu u procesu bojenja i pranja tekstilnih komponenti u
+manjem obimu. Plan za reciklažu vode u ovoj zoni:
+- Instalacija sistema za filtraciju i recirkulaciju otpadne vode iz
+  procesa bojenja
+- Cilj: reciklaža 60% vode korištene u procesu bojenja
+- Investicija: procjena 25,000 EUR
+- ROI: 3-4 godine (ušteda na vodi i troškovima otpadne vode)
+- Status: tehničke specifikacije u pripremi, tender planiran Q2 2026
+
+4.3 Monitoring potrošnje vode
+-------------------------------
+
+Instalirani vodomjeri na ključnim tačkama:
+- Glavni ulaz vode u pogon
+- Proizvodna hala
+- Zona bojenja
+- Sanitarni čvorovi i kantina
+- Sistem hlađenja
+
+Mjesečno očitavanje i izvještavanje. Cilj je implementirati real-time
+monitoring sličan sistemu za električnu energiju do Q4 2026.
+
+================================================================================
+5. UPRAVLJANJE HEMIKALIJAMA
+================================================================================
+
+5.1 REACH usklađenost
+-----------------------
+
+Cilj: 100% REACH usklađenost svih hemikalija korištenih u proizvodnom
+procesu.
+
+Status: POSTIGNUTO. Sve hemikalije korištene u Sportek pogonu su
+provjerene i usklađene sa EU REACH regulativom (Registration, Evaluation,
+Authorisation and Restriction of Chemicals). Ovo uključuje:
+- Ljepila (adhesives) — svi tipovi su REACH compliant
+- Aktivatori i primeri — verifikovano sa dobavljačima
+- Sredstva za čišćenje — zamijenjeni svi koji nisu usklađeni
+- Boje i pigmenti — REACH compliant, dokumentacija na snazi
+- Ulja za mašine — verifikovano
+
+Za svaku hemikaliju se čuva Safety Data Sheet (SDS) na bosanskom i
+engleskom jeziku. SDS-ovi su dostupni na svakom radnom mjestu gdje se
+hemikalija koristi, u elektronskom i štampanom obliku.
+
+5.2 Eliminacija VOC rastvarača
+---------------------------------
+
+Cilj: Eliminacija svih VOC (Volatile Organic Compounds) rastvarača iz
+proizvodnog procesa do kraja 2026. godine.
+
+VOC rastvarači se trenutno koriste u:
+- Lijepila na bazi rastvarača za spajanje đona i gornjeg dijela —
+  postepena zamjena vodenim adhezivima u toku
+- Čistila za pripremu površina prije lijepljenja — alternativni
+  vodeni sistemi u testiranju
+- Aktivatori za adhezive — vodene alternative dostupne za većinu primjena
+
+Plan zamjene:
+- Q1 2026: Zamjena rastvaračkih čistila vodenim (završeno 70%)
+- Q2 2026: Zamjena rastvaračkih aktivatora vodenim
+- Q3 2026: Zamjena svih preostalih rastvaračkih ljepila vodenim adhezivima
+- Q4 2026: Verifikacija i finalizacija — cilj 100% VOC-free
+
+Izazovi:
+- Vodeni adhezivi zahtijevaju duže vrijeme sušenja, što utiče na
+  proizvodni takt
+- Neki brendovi zahtijevaju specifična testiranja novih ljepila prije
+  odobrenja (Nike bond strength test)
+- Troškovi vodenih adheziva su 15-20% viši od rastvaračkih
+
+Status Nike odobrenja: Test uzorci sa vodenim adhezivima poslani Nike
+laboratoriju. Rezultati bond strength testa očekivani Q1 2026.
+
+5.3 Prelazak na vodene adhezive
+----------------------------------
+
+Vodeni adhezivi (water-based adhesives) su ključ za eliminaciju VOC-a
+iz proizvodnog procesa. Sportek testira i implementira vodene adhezive
+od vodećih dobavljača:
+
+Henkel Aquence — primarna zamjena za rastvaračke adhezive:
+- Tip: PU disperzija na vodenoj bazi
+- Primjena: spoj gornji dio - đon, montaža
+- Bond strength: >3.5 N/mm (zadovoljava Nike minimum 3.0 N/mm)
+- VOC sadržaj: < 5 g/L (vs. 400-600 g/L za rastvaračke)
+- Status testiranja: završeno za Decathlon, u toku za Nike i Crocs
+
+Prijelazni period: Do kompletnog prelaska na vodene adhezive, Sportek
+koristi hibridni pristup — vodeni adhezivi za modele gdje su odobreni,
+rastvarački za preostale. Ventilacija u zoni lijepljenja je pojačana
+i svi radnici koriste odgovarajuću LZO (maske sa filterom za organske
+pare).
+
+================================================================================
+6. MONITORING I IZVJEŠTAVANJE
+================================================================================
+
+6.1 Mjesečni monitoring
+--------------------------
+
+Svake mjesec se mjere i evidentiraju sljedeći parametri po proizvodnoj
+liniji:
+
+Parametar               Jedinica        Izvor podataka
+---------------------------------------------------------------------------
+Potrošnja el. energije  kWh             Pametna brojila po liniji
+Potrošnja vode          m3              Vodomjeri
+Otpad ukupno            kg              Evidencija vaganja
+Otpad tekstilni         kg              Evidencija vaganja
+Otpad plastika          kg              Evidencija vaganja
+Otpad papir/karton      kg              Evidencija vaganja
+Otpad opasni            kg              Evidencija opasnog otpada
+Reciklirani otpad       kg              Potvrde od reciklera
+Potrošnja hemikalija    kg/L            Skladišna evidencija
+Broj proizvedenih pari  kom             Proizvodni izvještaj
+
+Iz ovih podataka se kalkulišu KPI:
+- kWh/par
+- m3 vode / 100 pari
+- kg otpada / 100 pari
+- % reciklaže
+- kg hemikalija / 100 pari
+
+6.2 Kvartalni ekološki izvještaj
+----------------------------------
+
+HSE menadžer priprema kvartalni ekološki izvještaj koji sadrži:
+- Pregled KPI za kvartal sa trendom u poređenju sa prethodnim kvartalima
+- Status implementacije planiranih mjera
+- Analiza odstupanja od ciljeva i korektivne akcije
+- Potrošnja hemikalija sa REACH statusom
+- Incidents i ekološki relevantni događaji
+- Plan za naredni kvartal
+
+Izvještaj se prezentira na kvartalnom sastanku menadžmenta i dostavlja
+svim šefovima odjela.
+
+6.3 Godišnji sustainability report
+-------------------------------------
+
+Jednom godišnje Sportek priprema sveobuhvatni izvještaj o održivosti
+koji se dostavlja brendovima partnerima. Izvještaj obuhvata:
+- Kompletne godišnje podatke o energiji, vodi, otpadu, hemikalijama
+- Napredak u odnosu na postavljene ciljeve
+- Carbon footprint pogona (Scope 1 i 2, Scope 3 u razvoju)
+- Investicije u ekološka poboljšanja
+- Planovi za narednu godinu
+- Usklađenost sa brend specifičnim zahtjevima (Nike FY targets, Crocs
+  sustainability scorecard, Decathlon environmental rating)
+
+Format izvještaja je usklađen sa zahtjevima brendova. Nike koristi
+Higg FEM (Facility Environmental Module) format, dok Crocs i Decathlon
+imaju vlastite template-e.
+
+6.4 Carbon footprint po proizvodu
+------------------------------------
+
+Carbon footprint po proizvodu je u razvoju i predstavlja jedan od
+najvažnijih budućih zahtjeva brendova i EU DPP regulativa. Trenutno
+se radi na:
+- Definisanju metodologije prema GHG Protocol i ISO 14067
+- Prikupljanju podataka o emisijama iz proizvodnog procesa
+- Prikupljanju podataka od dobavljača o ugljičnom otisku materijala
+- Razvoju kalkulacionog modela
+
+Cilj: Imati funkcionalan sistem za izračun carbon footprint po proizvodu
+do Q4 2026, sa pilot kalkulacijama za 5 ključnih modela.
+
+================================================================================
+7. ODGOVORNOSTI
+================================================================================
+
+Uspješna implementacija ekološke politike zahtijeva angažman svih nivoa
+organizacije. Odgovornosti su raspoređene kako slijedi:
+
+7.1 HSE menadžer (Amar Selimović) — Koordinacija
+----------------------------------------------------
+
+- Koordinacija implementacije ekološke politike i planova
+- Monitoring ekoloških KPI i priprema izvještaja
+- Organizacija edukacija i kampanja podizanja svijesti
+- Komunikacija sa regulatornim organima i inspekcijama
+- Upravljanje procesom ISO 14001 certifikacije
+- Praćenje zakonske regulative i ažuriranje internih procedura
+- Carbon footprint metodologija i izračuni
+
+7.2 Direktor proizvodnje (Dragan Simić) — Implementacija
+-----------------------------------------------------------
+
+- Implementacija energetski efikasnih praksi na proizvodnim linijama
+- Osiguranje pravilne separacije otpada u proizvodnom procesu
+- Podrška prelaska na vodene adhezive i eliminaciju VOC-a
+- Optimizacija proizvodnih procesa za smanjenje škarta
+- Osiguranje da svi operateri poštuju ekološke procedure
+
+7.3 Menadžer nabavke — Eco materijali
+-----------------------------------------
+
+- Nabavka ekološki prihvatljivih materijala (rPET, vodeni adhezivi)
+- Zahtijevanje REACH dokumentacije od svih dobavljača
+- Traženje Supplier Declarations za carbon footprint podatke
+- Evaluacija dobavljača po ekološkim kriterijima
+- Organizacija povratne ambalaže sa dobavljačima
+
+7.4 Svi zaposleni — Separacija i svijest
+-------------------------------------------
+
+- Pravilna separacija otpada na radnom mjestu prema oznakama na
+  kontejnerima
+- Racionalno korištenje energije — gašenje svjetla i mašina kada
+  se ne koriste
+- Racionalno korištenje vode
+- Prijavljivanje ekoloških incidenata (curenje hemikalija, izlijevanje)
+- Učešće u edukacijama i kampanjama
+
+================================================================================
+8. UPRAVLJANJE OTPADOM — DETALJNA PROCEDURA
+================================================================================
+
+8.1 Kategorije otpada i separacija
+-------------------------------------
+
+Sav otpad generisan u pogonu Sportek d.o.o. mora biti separiran na izvoru
+prema sljedećim kategorijama:
+
+a) Tekstilni otpad (ZELENI kontejner):
+   - Otpadna preda sa SHIMA SEIKI mašina
+   - Odrezci pletiva iz procesa krojenja
+   - Neusaglašeni pleteni proizvodi koji se ne mogu popraviti
+   - Otpadni konac iz šivaćih mašina
+   Postupanje: Prikupljanje u označene zelene kontejnere na svakoj liniji.
+   Preuzimanje od strane EcoTextil d.o.o. jednom sedmično. Vaganje prije
+   preuzimanja i evidencija u obrascu ENV-WST-001.
+
+b) Papir i karton (PLAVI kontejner):
+   - Kartonske kutije od pakovanja materijala i gotovih proizvoda
+   - Papir iz kancelarija i proizvodne dokumentacije
+   - Etikete i naljepnice (papirne)
+   Postupanje: Karton saviti i staviti u plavi kontejner. Preuzimanje od
+   strane komunalnog reciklera dva puta mjesečno.
+
+c) Plastika — separirana po vrsti (ŽUTI kontejner sa oznakama):
+   - PET: plastične trake, folije za pakovanje
+   - LDPE: stretch folija, plastične kese
+   - HDPE: plastični kontejneri, kanisteri (čisti, isprani)
+   Postupanje: Separacija po oznaci na kontejneru. Preuzimanje od strane
+   licenciranog sakupljača jednom mjesečno.
+
+d) Opasni otpad (CRVENI kontejner — posebno skladištenje):
+   - Ostaci rastvaračkih ljepila i aktivatora
+   - Kontaminirane krpe i rukavice (hemikalije)
+   - Prazni kanisteri od hemikalija (koji se ne mogu reciklirati)
+   - Istrošeni uljni filteri iz mašina
+   - Fluorescentne cijevi (stare, zamijenjene LED-om)
+   Postupanje: Posebno zatvoreno skladište sa ventilacijom i sekundarnom
+   zaštitom od izlijevanja. Preuzimanje od strane licenciranog sakupljača
+   opasnog otpada (EcoSafe d.o.o. Sarajevo) kvartalno ili po potrebi.
+   Obavezna dokumentacija: prateći list za opasni otpad.
+
+e) Metal (SIVI kontejner):
+   - Istrošene iglice iz SHIMA SEIKI mašina
+   - Metalni dijelovi iz održavanja mašina
+   - Metalna ambalaža
+   Postupanje: Prikupljanje u sivi metalni kontejner. Preuzimanje od
+   strane sakupljača sekundarnih sirovina po potrebi (tipično kvartalno).
+
+8.2 Evidencija otpada
+-----------------------
+
+Za svaku kategoriju otpada vodi se evidencija koja sadrži:
+- Datum vaganja/preuzimanja
+- Kategorija otpada
+- Količina (kg)
+- Naziv sakupljača/reciklera
+- Broj pratećeg lista (za opasni otpad)
+- Potpis odgovornog lica
+
+Mjesečni zbir se unosi u ekološki monitoring sistem i koristi za
+kalkulaciju KPI.
+
+================================================================================
+9. ISO 14001 CERTIFIKACIJA
+================================================================================
+
+9.1 Plan certifikacije
+-------------------------
+
+Sportek d.o.o. je u procesu pripreme za ISO 14001:2015 certifikaciju
+sistema upravljanja životnom sredinom. ISO 14001 je međunarodni standard
+koji definiše zahtjeve za sistem upravljanja životnom sredinom (Environmental
+Management System — EMS).
+
+Planirani rok za certifikacioni audit: Q4 2026.
+
+9.2 Faze pripreme
+--------------------
+
+Faza 1 — Gap analiza (završeno Q3 2025):
+- Angažovan eksterni konsultant za procjenu usklađenosti sa ISO 14001
+- Identifikovane oblasti koje zahtijevaju poboljšanje
+- Kreiran akcioni plan sa rokovima
+
+Faza 2 — Dokumentacija (u toku, rok Q2 2026):
+- Izrada EMS priručnika
+- Definisanje ekoloških aspekata i uticaja za sve procese
+- Kreiranje procedura za upravljanje značajnim ekološkim aspektima
+- Postavljanje mjerljivih ciljeva i programa upravljanja
+- Dokumentovanje postupaka za vanredne situacije
+
+Faza 3 — Implementacija (planirana Q2-Q3 2026):
+- Implementacija svih procedura u praksi
+- Obuka svih zaposlenih o EMS zahtjevima
+- Interni auditi — minimum 2 kruga
+- Management review — preispitivanje od strane rukovodstva
+- Korektivne akcije na osnovu internih audita
+
+Faza 4 — Certifikacioni audit (planirana Q4 2026):
+- Stage 1 audit — pregled dokumentacije
+- Korektivne akcije (ako su potrebne)
+- Stage 2 audit — provjera implementacije na terenu
+- Izdavanje certifikata (ako su svi zahtjevi ispunjeni)
+
+9.3 Očekivane koristi
+-----------------------
+
+- Usklađenost sa zahtjevima brendova — Nike i Crocs preferiraju
+  dobavljače sa ISO 14001 certifikatom
+- Sistematičan pristup upravljanju životnom sredinom
+- Smanjenje rizika od ekoloških incidenata i kazni
+- Poboljšana efikasnost korištenja resursa i smanjenje troškova
+- Pozitivan uticaj na reputaciju kompanije
+- Priprema za buduće strožije regulatorne zahtjeve (EU DPP, CBAM)
+
+================================================================================
+10. CARBON FOOTPRINT METODOLOGIJA
+================================================================================
+
+10.1 Opšte
+-----------
+
+Carbon footprint (ugljični otisak) predstavlja ukupnu količinu emisija
+gasova sa efektom staklene bašte (GHG) uzrokovanih direktno i indirektno
+aktivnostima organizacije ili proizvodom, izraženu u ekvivalentima
+ugljik-dioksida (CO2e).
+
+Sportek implementira metodologiju za mjerenje carbon footprint na dva
+nivoa: organizacioni (cijeli pogon) i nivo proizvoda (po paru obuće).
+
+10.2 Scope 1 — Direktne emisije
+----------------------------------
+
+Scope 1 obuhvata direktne emisije GHG iz izvora koje kompanija kontroliše:
+
+Izvor                        Metoda mjerenja          Status
+---------------------------------------------------------------------------
+Prirodni gas (grijanje)      Fakture + emission factor Implementirano
+Dizel (agregat, transport)   Potrošnja + emission f.   Implementirano
+Rashladni gasovi (HVAC)      Evidencija punjenja       Implementirano
+VOC emisije iz ljepila       Procjena na osnovu SDS    U toku
+
+Ukupne Scope 1 emisije Sportek-a za 2025: procjena 180 tona CO2e/godišnje.
+
+10.3 Scope 2 — Emisije od kupljene energije
+----------------------------------------------
+
+Scope 2 obuhvata indirektne emisije od kupljene električne energije i
+toplinske energije:
+
+Izvor                        Metoda mjerenja          Status
+---------------------------------------------------------------------------
+Električna energija          Fakture + grid emission   Implementirano
+                             factor za BiH
+Toplinska energija           Ne koristi se             N/A
+
+Emission factor za BiH elektroenergetski miks: procjena 0.65 kg CO2/kWh
+(visok udio termoelektrana u BiH). Ovo čini električnu energiju dominantnim
+izvorom emisija za Sportek.
+
+Ukupne Scope 2 emisije: procjena 520 tona CO2e/godišnje.
+
+Solarni sistem planiran za 2026. će smanjiti Scope 2 za procijenjenih
+50-60 tona CO2e/godišnje.
+
+10.4 Scope 3 — Emisije iz lanca snabdijevanja
+-------------------------------------------------
+
+Scope 3 obuhvata sve ostale indirektne emisije iz lanca vrijednosti
+kompanije. Ovo je najkompleksniji ali i najznačajniji dio carbon footprint
+jer tipično čini 70-80% ukupnih emisija u industriji obuće.
+
+Kategorija                   Status
+---------------------------------------------------------------------------
+Kupljeni materijali          Prikupljanje podataka od dobavljača
+Transport sirovina           Procjena na osnovu udaljenosti i načina
+                             transporta
+Transport gotovih proizvoda  Podaci od špeditera
+Putovanja zaposlenih         Evidencija putnih naloga
+Otpad iz proizvodnje         Na osnovu količina i metoda odlaganja
+Korištenje proizvoda         Nije primjenjivo (obuća ne troši energiju)
+End-of-life proizvoda        Procjena na osnovu materijalnog sastava
+
+Status: Scope 3 metodologija je u ranoj fazi implementacije. Primarni
+fokus je na kategoriji kupljenih materijala jer ona čini najveći dio
+Scope 3 emisija. Sportek je počeo tražiti carbon footprint podatke od
+ključnih dobavljača (Toray, Hyosung, dobavljači đonova i ljepila).
+
+Cilj: Kompletna Scope 3 kalkulacija za top 5 modela do Q4 2026.
+
+================================================================================
+11. EDUKACIJA I SVIJEST ZAPOSLENIH
+================================================================================
+
+11.1 Program edukacije
+-------------------------
+
+Ekološka svijest zaposlenih je ključna za uspješnu implementaciju ekološke
+politike. Sportek provodi sljedeće edukativne aktivnosti:
+
+a) Uvodna ekološka obuka (svi novi zaposleni):
+   - U okviru onboarding programa (Dan 2)
+   - Osnove ekološke politike, separacija otpada, štednja energije i vode
+   - Trajanje: 30 minuta
+
+b) Godišnja ekološka obuka (svi zaposleni):
+   - Prezentacija godišnjih ekoloških rezultata i ciljeva
+   - Novosti u ekološkoj regulativi i zahtjevima brendova
+   - Praktični savjeti za smanjenje utjecaja na radnom mjestu
+   - Trajanje: 1 sat
+
+c) Specijalizovane obuke:
+   - Upravljanje opasnim otpadom — za radnike koji rade sa hemikalijama
+   - Energetski menadžment — za šefove linija
+   - Carbon footprint — za menadžment i planing tim
+
+11.2 Kampanje podizanja svijesti
+-----------------------------------
+
+HSE menadžer organizuje periodične kampanje:
+- Sedmica životne sredine (juni) — posebne aktivnosti, takmičenja između
+  linija za najmanje otpada
+- Označavanje radnih mjesta — jasne upute za separaciju, štednju energije
+- Info panoi u zajedničkim prostorima — ekološki KPI, savjeti, napredak
+- Sistem za prijedloge — zaposleni mogu predložiti ekološka poboljšanja
+  putem kutije prijedloga ili elektronskog sistema
+
+================================================================================
+12. HISTORIJA REVIZIJA
+================================================================================
+
+Rev.  Datum         Opis izmjene                           Autor
+---------------------------------------------------------------------------
+01    01.04.2024.   Inicijalno izdanje                     A. Selimović
+02    01.10.2024.   Dodane sekcije otpad i hemikalije      A. Selimović
+03    20.01.2026.   Ažurirani ciljevi 2026, dodan carbon   A. Selimović
+                    footprint, ISO 14001 plan, DPP
+                    poveznica, solarni sistem
+
+================================================================================
+KRAJ DOKUMENTA
+Dokument ENV-POL-010, Rev. 03
+Sportek d.o.o. Banja Luka
+Klasifikacija: INTERNO
+================================================================================

@@ -1,0 +1,694 @@
+================================================================================
+SPORTEK d.o.o. Banja Luka
+ONBOARDING PROGRAM - PROIZVODNI RADNICI
+================================================================================
+
+Dokument:       HR-ONB-008
+Naziv:          Program uvođenja u posao za nove proizvodne radnike
+Revizija:       Rev. 03
+Datum izdanja:  01.03.2024.
+Datum revizije: 15.01.2026.
+Pripremila:     Maja Petrović, HR menadžerka
+Odobrio:        Dragan Simić, direktor proizvodnje
+Klasifikacija:  INTERNO
+
+================================================================================
+SADRŽAJ
+================================================================================
+
+1. Uvod i svrha programa
+2. Pregled onboarding procesa
+3. Dan 1-2: Orijentacija i sigurnosna obuka
+4. Dan 3-4: Upoznavanje sa proizvodima i kvalitetom
+5. Dan 5-7: Uvođenje na radno mjesto
+6. Dan 8-9: Kvalitet i procedure
+7. Dan 10: Završna evaluacija
+8. Minimalni uslovi za samostalan rad
+9. Kontinuirani razvoj i napredovanje
+10. Mentorski program
+11. Obrasci i dokumentacija
+12. Historija revizija
+
+================================================================================
+1. UVOD I SVRHA PROGRAMA
+================================================================================
+
+Onboarding program za proizvodne radnike Sportek d.o.o. je strukturiran
+proces uvođenja u posao koji traje 10 radnih dana (dvije radne sedmice).
+Program je dizajniran da novom radniku pruži sve potrebne znanja, vještine
+i informacije za siguran i kvalitetan rad na proizvodnoj liniji.
+
+Svrha programa je višestruka:
+- Osigurati da svaki novi radnik razumije sigurnosne zahtjeve i procedure
+  prije početka rada na proizvodnoj liniji
+- Pružiti osnovna znanja o proizvodima, brendovima i standardima kvaliteta
+- Omogućiti postupno uvođenje na radno mjesto pod nadzorom iskusnog mentora
+- Verificirati da radnik posjeduje potrebne kompetencije za samostalan rad
+- Smanjiti stopu defekata vezanih za neiskustvo novih radnika
+- Povećati zadovoljstvo i zadržavanje novih zaposlenih
+
+Program se primjenjuje na sve nove proizvodne radnike bez obzira na
+prethodno radno iskustvo. Radnici sa iskustvom u industriji obuće mogu
+napredovati brže kroz program, ali moraju proći sve obavezne evaluacije.
+
+Za implementaciju programa odgovoran je HR odjel u saradnji sa
+proizvodnjom. Direktan nadzor nad novim radnikom tokom onboarding perioda
+ima dodijeljeni mentor. Troškovi programa (uključujući vrijeme mentora i
+materijale za obuku) su budžetirani u godišnjem HR planu.
+
+================================================================================
+2. PREGLED ONBOARDING PROCESA
+================================================================================
+
+2.1 Trajanje i struktura
+--------------------------
+
+Program traje 10 radnih dana i podijeljen je u pet faza:
+
+Faza 1: Orijentacija (Dan 1-2)
+- Upoznavanje sa kompanijom, kulturom i sigurnošću
+- Lokacija: sala za obuku, obilazak pogona
+
+Faza 2: Proizvodi i kvalitet (Dan 3-4)
+- Upoznavanje sa brendovima, proizvodima i osnovama kvaliteta
+- Lokacija: sala za obuku, QC laboratorij, proizvodna hala
+
+Faza 3: Radno mjesto (Dan 5-7)
+- Praktičan rad sa mentorom na dodijeljenoj liniji
+- Lokacija: dodijeljeno radno mjesto na proizvodnoj liniji
+
+Faza 4: Procedure i standardi (Dan 8-9)
+- Detaljno upoznavanje sa SOP-ovima i QC standardima
+- Lokacija: sala za obuku, radno mjesto
+
+Faza 5: Evaluacija (Dan 10)
+- Završni testovi i evaluacija spremnosti za samostalan rad
+- Lokacija: sala za obuku, radno mjesto
+
+2.2 Mentorski sistem
+----------------------
+
+Svaki novi radnik dobija dodijeljenog mentora koji je odgovoran za njegovo
+uvođenje u posao tokom kompletnog onboarding perioda i nastavlja pružati
+podršku u narednih 90 dana. Mentor mora imati minimalno 2 godine radnog
+staža u Sportek-u i uspješno završenu internu obuku za mentore.
+
+Mentor je prisutan uz novog radnika tokom svih aktivnosti od Dana 3 do
+Dana 10 i služi kao primarna kontakt osoba za sva pitanja. Detalji
+mentorskog programa opisani su u sekciji 10 ovog dokumenta.
+
+2.3 Dokumentacija prije prvog dana
+------------------------------------
+
+Prije dolaska novog radnika na prvi dan, HR odjel priprema:
+- Potpisani ugovor o radu
+- Identifikaciona kartica (ID badge) sa fotografijom
+- Pristupna kartica za pogon
+- Radna odjeća (2 kompleta)
+- Lična zaštitna oprema (LZO) — sigurnosne cipele, zaštitne naočale,
+  čepići za uši, rukavice (prema poziciji)
+- Folder za novog radnika sa svim relevantnim dokumentima
+- Informacija mentoru o dolasku novog radnika
+
+================================================================================
+3. DAN 1-2: ORIJENTACIJA I SIGURNOSNA OBUKA
+================================================================================
+
+3.1 Dan 1 — Jutro: Dobrodošlica i upoznavanje sa kompanijom
+--------------------------------------------------------------
+
+Trajanje: 08:00-12:00 (4 sata)
+Lokacija: Sala za obuku
+Voditelj: HR menadžerka
+
+Sadržaj:
+a) Dobrodošlica i administrativne formalnosti (1 sat):
+   - Predstavljanje HR tima i mentora
+   - Uručenje identifikacione i pristupne kartice
+   - Pregled ugovora o radu — radno vrijeme, odmori, beneficije
+   - Potpisivanje NDA (Non-Disclosure Agreement) — Sportek proizvodi za
+     globalne brendove i informacije o proizvodnim procesima, cijenama i
+     kapacitetima su povjerljive
+   - Potpisivanje izjave o prihvatanju internih pravilnika
+
+b) Prezentacija o kompaniji (1.5 sat):
+   - Historija Sportek d.o.o. — osnivanje, razvoj, ključni momenti
+   - Organizaciona struktura — uprava, odjeli, linije izvještavanja
+   - Lokacije i pogoni
+   - Ključni brendovi partneri: Nike, Crocs, Decathlon
+   - Misija, vizija i vrijednosti kompanije
+   - Pozicija Sportek-a na tržištu i planovi za budućnost
+
+c) Kultura i ponašanje na radnom mjestu (1.5 sat):
+   - Očekivanja od zaposlenih — tačnost, odgovornost, timski rad
+   - Komunikacija — kanali, hijerarhija, ko kome se obraća
+   - Pravilnik o radu — disciplinske mjere, apsentizam, korištenje telefona
+   - Prijava problema — incidenti, prijedlozi, pritužbe
+   - Sindikalni predstavnik i radnička prava
+
+3.2 Dan 1 — Poslijepodne: Obilazak pogona
+--------------------------------------------
+
+Trajanje: 13:00-16:00 (3 sata)
+Lokacija: Kompletan pogon
+Voditelj: Mentor i smjenski vodja
+
+Sadržaj:
+- Obilazak svih proizvodnih linija uz objašnjenje funkcije svake
+- Upoznavanje sa ključnim osobama — smjenski vodje, team leaderi, QC
+  inspektori
+- Lokacija bitnih tačaka: garderoba, kantine, toaleti, zona za odmor,
+  primera pomoć, vatrogasni aparati, evakuacioni izlazi
+- Upoznavanje sa radnim mjestom i neposrednim okruženjem
+- Praktična demonstracija korištenja pristupne kartice i evidencije
+  radnog vremena
+
+3.3 Dan 2 — Sigurnosna obuka HSE-001
+---------------------------------------
+
+Trajanje: 08:00-16:00 (7 sati sa pauzama)
+Lokacija: Sala za obuku i pogon
+Voditelj: HSE menadžer
+
+Sigurnosna obuka HSE-001 je OBAVEZNA za sve nove radnike. Nijedan radnik
+ne smije pristupiti proizvodnoj liniji bez uspješno završene ove obuke.
+
+Sadržaj obuke:
+
+a) Opšta sigurnost na radu (2 sata):
+   - Zakonski okvir — Zakon o zaštiti na radu, prava i obaveze radnika
+   - Identifikacija opasnosti u proizvodnom okruženju
+   - Korištenje lične zaštitne opreme (LZO) — praktična demonstracija
+     pravilnog oblačenja i provjere ispravnosti
+   - Signalizacija u pogonu — znakovi upozorenja, zabrana, obaveza, spasa
+   - Kretanje u pogonu — označene staze, zabranjena područja, transportna
+     pravila
+
+b) Požarna sigurnost (1.5 sat):
+   - Tipovi požara i sredstva za gašenje u proizvodnom okruženju
+   - Lokacija i korištenje vatrogasnih aparata — praktična vježba
+   - Evakuacioni plan — rute, zborišta, postupak
+   - Praktična evakuaciona vježba
+
+c) Sigurnost na mašinama (2 sata):
+   - Opšta pravila rada sa mašinama
+   - Emergency stop — lokacija i korištenje na svakoj vrsti mašine
+   - Zaštitni poklopci i sigurnosni sistemi
+   - Lockout/Tagout (LOTO) procedura — kada i kako
+   - Zabranjena ponašanja — skidanje zaštita, rad na mašini bez obuke,
+     improvizacija
+
+d) Prva pomoć i postupak u slučaju nesreće (1.5 sata):
+   - Osnovne tehnike prve pomoći — posjekotine, opekotine, udarci
+   - AED lokacija i osnove korištenja
+   - Prijavljivanje nesreća i ozljeda — obrazac HSE-INC-001
+   - Kontakti za hitne situacije
+
+Završni test HSE-001:
+- 30 pitanja sa višestrukim odgovorima
+- Prolazni prag: 100% (sigurnosna obuka ne dopušta grešku)
+- Ako radnik ne položi — ponavljanje obuke sljedeći radni dan
+- Certifikat o završenoj obuci se čuva u personalnom dosijeu
+
+Na kraju Dana 2 izdaje se kompletna lična zaštitna oprema:
+- Sigurnosne cipele (S1P kategorija) — 1 par
+- Zaštitne naočale — 1 kom
+- Čepići za uši (reusable) — 1 par
+- Zaštitne rukavice (prema poziciji) — 2 para
+- Prsluk visoke vidljivosti (za rad u skladištu) — ako primjenjivo
+
+Radnik potpisuje prijem LZO na obrascu HR-LZO-001 i obavezuje se da će
+opremu nositi u svim propisanim zonama.
+
+================================================================================
+4. DAN 3-4: UPOZNAVANJE SA PROIZVODIMA I KVALITETOM
+================================================================================
+
+4.1 Dan 3 — Brendovi i proizvodi
+-----------------------------------
+
+Trajanje: 08:00-16:00
+Lokacija: Sala za obuku i QC laboratorij
+Voditelj: QC menadžer i mentor
+
+a) Nike program (2.5 sata):
+   - Nike kao brend — standardi, očekivanja, kultura kvaliteta
+   - Nike proizvodi koje Sportek proizvodi — Flyknit upper, kompletne cipele
+   - Nike materijali — Flyknit yarn, React foam, Air jedinice
+   - Nike kvalitet standardi — SMSI sistem, AQL nivoi, ABC zone
+   - Primjeri prihvatljivih i neprihvatljivih proizvoda — fizički uzorci
+
+b) Crocs program (1.5 sat):
+   - Crocs kao brend i specifičnosti proizvodnje
+   - Tipovi proizvoda — Classic Clog, LiteRide, knit komponente
+   - Materijali — Croslite, tekstilne komponente
+   - Crocs kvalitet standardi i razlike u odnosu na Nike
+
+c) Decathlon program (1 sat):
+   - Decathlon brendovi — Kiprun, Kalenji, vlastita marka
+   - Tipovi proizvoda i materijala
+   - Decathlon kvalitet standardi — specifičnosti za value segment
+
+d) Praktično upoznavanje sa materijalima (2 sata):
+   - Fizičko upoznavanje sa svim tipovima materijala — opipavanje, vizualni
+     pregled, razlikovanje
+   - Yarn tipovi za Flyknit — Flyknit Yarn 2.0, Support Yarn, Stretch Yarn
+   - Foam materijali — EVA, React, Croslite
+   - Tekstili, koža, sintetički materijali
+   - Kako prepoznati pravilan od neispravnog materijala
+
+4.2 Dan 4 — Osnove kvaliteta
+-------------------------------
+
+Trajanje: 08:00-16:00
+Lokacija: Sala za obuku i proizvodna hala
+Voditelj: QC inspektor i mentor
+
+a) Šta je defekt — definicija i klasifikacija (2 sata):
+   - Definicija defekta prema ISO 2859 i brend standardima
+   - Klasifikacija: kritični, veliki (major), mali (minor)
+   - Kritični defekti — sigurnosni rizik, uvijek odbijanje
+   - Veliki defekti — funkcionalni problem ili izrazito vizuelni
+   - Mali defekti — kozmetički, ne utiču na funkciju
+
+b) Tipovi defekata u proizvodnji obuće (2 sata):
+   - Defekti pletenja: rupe, ispušteni bodovi, neravnomjerna gustina,
+     pruge, pogrešna boja, kontaminacija stranim vlaknima
+   - Defekti šivanja: preskočeni bodovi, krive šavove, neujednačena tenzija
+   - Defekti lijepljenja: slabo lijepljenje, vidljiv višak ljepila, mjehurovi
+   - Defekti materijala: mrlje, razlike u boji, oštećena vlakna
+   - Dimenzionalni defekti: pogrešna veličina, asimetrija lijeve/desne
+
+c) Praktična vježba: identifikacija defekata na uzorcima (3 sata):
+   - QC inspektor priprema set od 30 uzoraka sa različitim defektima
+   - Novi radnik treba identifikovati defekt, klasifikovati ga i opisati
+   - Diskusija o svakom uzorku — zašto je defekt, kako je nastao, kako
+     se može prevenirati
+   - Ova vježba se ne ocjenjuje ali služi kao priprema za završni test
+
+================================================================================
+5. DAN 5-7: UVOĐENJE NA RADNO MJESTO
+================================================================================
+
+5.1 Rad sa mentorom na dodijeljenoj liniji
+---------------------------------------------
+
+Tokom Dana 5-7 novi radnik radi direktno na svom radnom mjestu pod stalnim
+nadzorom mentora. Cilj je praktično ovladavanje svim aspektima pozicije
+na koju je raspoređen.
+
+5.2 Dan 5 — Opservacija i osnovni zadaci
+-------------------------------------------
+
+Trajanje: Puna smjena (8 sati)
+Lokacija: Dodijeljeno radno mjesto
+Voditelj: Mentor
+
+- Prvo poluvrijeme (4 sata): Opservacija mentora dok obavlja radne zadatke.
+  Mentor objašnjava svaki korak, razloge za svaku radnju i potencijalne
+  probleme. Novi radnik posmatra i postavlja pitanja.
+- Drugo poluvrijeme (4 sata): Novi radnik počinje obavljati jednostavnije
+  zadatke pod direktnim nadzorom mentora. Mentor koriguje i savjetuje u
+  realnom vremenu.
+
+5.3 Dan 6 — Praktičan rad pod nadzorom
+-----------------------------------------
+
+Trajanje: Puna smjena
+Lokacija: Dodijeljeno radno mjesto
+Voditelj: Mentor
+
+- Novi radnik obavlja sve zadatke svoje pozicije uz prisustvo mentora
+- Mentor intervenira samo kada je potrebno korigirati grešku ili spriječiti
+  defekt
+- Fokus na pravilnu ergonomiju i radni ritam
+- Upoznavanje sa mašinama specifičnim za poziciju:
+  * Za operatere SHIMA SEIKI: osnove upravljanja, yarn setup, monitoring
+  * Za operatere šivaćih mašina: podešavanje, zamjena konca, tenzija
+  * Za QC inspektore: korištenje mjernih instrumenata, dokumentacija
+  * Za radnike na montaži: lijepljenje, pressanje, finishing
+
+5.4 Dan 7 — Samostalni rad sa nadzorom
+-----------------------------------------
+
+Trajanje: Puna smjena
+Lokacija: Dodijeljeno radno mjesto
+Voditelj: Mentor (prisutan ali manje intervenira)
+
+- Novi radnik radi samostalno dok mentor posmatra sa distance
+- Mentor bilježi performanse: brzina, kvalitet, poštivanje procedura
+- Na kraju dana: feedback sesija — šta je dobro, šta treba poboljšati
+- Mentor popunjava obrazac MNT-EVL-001 (Mentor Daily Evaluation) za
+  svaki dan faze 3
+
+================================================================================
+6. DAN 8-9: KVALITET I PROCEDURE
+================================================================================
+
+6.1 Dan 8 — SOP-ovi i dokumentacija
+--------------------------------------
+
+Trajanje: 08:00-16:00
+Lokacija: Sala za obuku i radno mjesto
+Voditelj: QC menadžer i mentor
+
+a) SOP-ovi za svoju poziciju (3 sata):
+   - Detaljno čitanje i objašnjenje SOP-a koji se odnosi na poziciju
+     novog radnika
+   - Za operatere SHIMA SEIKI: SOP-PROD-003 (Setup mašina)
+   - Za QC inspektore: SOP-QC-001 (Inspekcija finalna)
+   - Za radnike na montaži: SOP-PROD-005 (Montaža i lijepljenje)
+   - Diskusija o svakom koraku — zašto je važan, šta se dešava ako se
+     preskoči
+   - Praktična demonstracija SOP-a na radnom mjestu
+
+b) QC standardi za brendove na svojoj liniji (2 sata):
+   - Specifični zahtjevi brenda koji se proizvodi na dodijeljenoj liniji
+   - AQL nivoi i inspekcijski planovi
+   - ABC zone i kriteriji za svaku zonu
+   - Tolerancije — dimenzionalne, vizuelne, funkcionalne
+   - Razlike između brendova — Nike ima strožije standarde od Decathlon-a
+
+c) Dokumentacija i prijavljivanje (2 sata):
+   - Kako popuniti proizvodni nalog
+   - Kako prijaviti defekt — obrazac, fotografija, klasifikacija
+   - Kako prijaviti kvar mašine
+   - Evidencija proizvodnje — količina, defekti, zastoji
+   - Korištenje tablet uređaja za elektronsku evidenciju (gdje je
+     implementirano)
+
+6.2 Dan 9 — Praktični test kvaliteta
+---------------------------------------
+
+Trajanje: 08:00-16:00
+Lokacija: Radno mjesto
+Voditelj: QC inspektor i mentor
+
+Praktični test kvaliteta simulira realne radne uslove:
+
+a) Priprema (1 sat):
+   - QC inspektor priprema set od 20 komada (miks dobrih i loših)
+   - Komadi su odabrani da pokrivaju najčešće tipove defekata za
+     specifičnu liniju i brend
+
+b) Test inspekcije (3 sata):
+   - Novi radnik pregleda svih 20 komada
+   - Za svaki komad mora donijeti odluku: PASS ili FAIL
+   - Za svaki FAIL mora identificirati tip defekta, klasifikaciju
+     (kritični/major/minor) i zonu (ABC)
+   - Popunjava standardni inspekcijski obrazac
+
+c) Evaluacija rezultata (2 sata):
+   - QC inspektor pregleda rezultate sa novim radnikom
+   - Diskusija o svakom komadu — posebno o onima koje je pogrešno
+     klasifikovao
+   - Objašnjenje pravilne klasifikacije i razloga
+
+d) Ponavljanje ako je potrebno (preostalo vrijeme):
+   - Ako je rezultat ispod 70%, ponavlja se obuka i test sljedećeg dana
+   - Fokus na specifične tipove defekata koje radnik ne prepoznaje
+
+================================================================================
+7. DAN 10: ZAVRŠNA EVALUACIJA
+================================================================================
+
+7.1 Praktični test na radnom mjestu
+--------------------------------------
+
+Trajanje: 08:00-12:00 (4 sata)
+Lokacija: Radno mjesto
+Evaluator: Mentor + QC inspektor + smjenski vođa
+
+Novi radnik radi samostalno na svom radnom mjestu tokom 4 sata dok ga
+evaluacioni tim posmatra i ocjenjuje prema sljedećim kriterijima:
+
+Kriterij                       Ocjena (1-5)    Min. prolazna
+---------------------------------------------------------------------------
+Poštivanje SOP-a               ___              3
+Kvalitet rada (defekt stopa)   ___              3
+Brzina rada (% od standarda)   ___              2 (min 60% brzine)
+Korištenje LZO                 ___              5 (obavezno)
+Organizacija radnog mjesta     ___              3
+Komunikacija sa kolegama       ___              3
+Samostalnost                   ___              3
+
+7.2 Pisani test
+-----------------
+
+Trajanje: 13:00-15:00 (2 sata)
+Lokacija: Sala za obuku
+Voditelj: HR menadžerka
+
+Pisani test obuhvata dva dijela:
+
+a) Sigurnost (15 pitanja):
+   - Korištenje LZO — kada, gdje, kako
+   - Emergency stop procedura
+   - Evakuacija — rute i zborišta
+   - Prijavljivanje nesreća
+   - Lockout/Tagout osnove
+   - Opasne supstance — postupanje
+   - Prolazni prag: 100% (pitanja sigurnosti ne dopuštaju grešku)
+
+b) Kvalitet (15 pitanja):
+   - Klasifikacija defekata
+   - ABC zone
+   - AQL nivoi za brend na svojoj liniji
+   - Prijavljivanje defekata
+   - Osnovni SOP koraci za svoju poziciju
+   - Prolazni prag: 70%
+
+7.3 Feedback mentora
+----------------------
+
+Trajanje: 15:00-15:30
+Mentor popunjava završni evaluacioni obrazac HR-MNT-EVL-FINAL koji
+sadrži:
+- Ukupnu ocjenu spremnosti novog radnika (Spreman / Uslovno spreman /
+  Nije spreman)
+- Najjače strane radnika
+- Oblasti za poboljšanje
+- Specifične preporuke za dalji razvoj
+- Preporučeni nivo nadzora za prvih 30 dana
+
+7.4 Plan razvoja 30/60/90 dana
+---------------------------------
+
+Trajanje: 15:30-16:00
+Na osnovu rezultata evaluacije, mentor i HR kreiraju individualni plan
+razvoja za novog radnika:
+
+30 dana:
+- Specifični ciljevi za poboljšanje identificiranih slabosti
+- Nivo nadzora — dnevna provjera mentora
+- Ciljana brzina rada — 75% standarda
+
+60 dana:
+- Proširenje odgovornosti — dodatni zadaci ili modeli
+- Nivo nadzora — sedmična provjera mentora
+- Ciljana brzina rada — 85% standarda
+
+90 dana:
+- Puna samostalnost na poziciji
+- Nivo nadzora — mjesečna provjera, standardni za poziciju
+- Ciljana brzina rada — 95% standarda
+- Finalna evaluacija i potvrda na poziciji
+
+================================================================================
+8. MINIMALNI USLOVI ZA SAMOSTALAN RAD
+================================================================================
+
+Novi radnik može početi sa samostalnim radom (uz smanjeni nadzor) samo ako
+ispunjava SVE sljedeće uslove:
+
+1. Sigurnosna obuka HSE-001: Završena sa 100% na testu
+   - Bez izuzetka — radnik koji nije položio sigurnosnu obuku ne smije
+     pristupiti proizvodnoj liniji
+
+2. Kvalitet test: Minimalna ocjena 70% na pisanom i praktičnom testu
+   - Ako je rezultat između 60-70%, radnik dobija dodatna 2 dana obuke
+     sa fokusom na kvalitet i ponavlja test
+   - Ako je rezultat ispod 60%, radnik prolazi kompletan Dan 3-4 ponovo
+
+3. Pozitivna ocjena mentora: Mentor mora ocijeniti radnika kao "Spreman"
+   ili "Uslovno spreman" na završnoj evaluaciji
+   - "Nije spreman" zahtijeva produžetak onboarding perioda za dodatnih
+     5 radnih dana sa novim planom obuke
+
+4. Potpisana izjava: Radnik potpisuje izjavu (obrazac HR-IZJ-001) da je:
+   - Razumio i prihvatio sve sigurnosne procedure
+   - Razumio standarde kvaliteta za svoju liniju i brend
+   - Upoznat sa SOP-ovima za svoju poziciju
+   - Svjestan da može tražiti pomoć mentora u bilo kojem trenutku
+   - Svjestan da nepoštivanje sigurnosnih procedura rezultira disciplinskim
+     postupkom
+
+Radnici koji ne ispune minimalne uslove nakon produženog onboarding perioda
+upućuju se na razgovor sa HR menadžerkom i direktorom proizvodnje za
+donošenje odluke o daljem statusu.
+
+================================================================================
+9. KONTINUIRANI RAZVOJ I NAPREDOVANJE
+================================================================================
+
+9.1 Redovne obuke
+--------------------
+
+Po završetku onboarding perioda, svaki proizvodni radnik uključen je u
+program kontinuiranog razvoja koji obuhvata:
+
+a) Mjesečni quality refresher (30 minuta):
+   - Pregled najčešćih defekata u prethodnom mjesecu
+   - Analiza reklamacija kupaca (ako su relevantne)
+   - Uvođenje novih standarda ili promjena
+   - Dijeljenje best practices
+   - Voditelj: QC menadžer ili QC inspektor
+
+b) Kvartalna sigurnosna obuka (1 sat):
+   - Podsjetnik na ključne sigurnosne procedure
+   - Analiza sigurnosnih incidenata u prethodnom kvartalu
+   - Sezonske specifičnosti (npr. rad u vrućim uslovima ljeti)
+   - Praktična vježba (evakuacija, prva pomoć, LOTO — rotaciono)
+   - Voditelj: HSE menadžer
+
+c) Godišnja recertifikacija:
+   - Kompletno ponavljanje pisanog testa (sigurnost + kvalitet)
+   - Praktična evaluacija na radnom mjestu
+   - Prolazni pragovi isti kao za onboarding
+   - Radnik koji ne položi recertifikaciju prolazi dodatnu obuku
+
+9.2 Napredovanje
+------------------
+
+Sportek d.o.o. promovira interno napredovanje i razvoj karijere. Putanja
+napredovanja za proizvodne radnike je:
+
+Nivo 1 — Operater:
+- Početna pozicija nakon onboarding-a
+- Fokus: ovladavanje jednom pozicijom/mašinom
+- Trajanje: 6-12 mjeseci
+- Kriteriji za napredovanje: konzistentna kvaliteta, brzina min 95%,
+  bez sigurnosnih incidenata, pozitivne evaluacije
+
+Nivo 2 — Team Lead:
+- Vodi mali tim od 3-5 operatera
+- Fokus: koordinacija, osnovno rješavanje problema, mentorstvo
+- Trajanje: 12-24 mjeseca
+- Dodatna obuka: Leadership basics, komunikacija, osnove planiranja
+- Dodatak na platu: 10% u odnosu na operatera
+
+Nivo 3 — Smjenski vođa:
+- Odgovoran za kompletnu smjenu na jednoj ili više linija
+- Fokus: upravljanje smjenom, kvalitet, produktivnost, sigurnost
+- Trajanje: 24+ mjeseci
+- Dodatna obuka: Upravljanje ljudima, lean manufacturing, QMS
+- Dodatak na platu: 25% u odnosu na operatera
+
+Nivo 4 — Supervisor:
+- Odgovoran za više linija ili kompletan odjel
+- Fokus: strateško upravljanje, analiza performansi, kontinuirano
+  poboljšanje
+- Dodatna obuka: Menadžment, Six Sigma Green Belt, napredni QMS
+- Dodatak na platu: 40% u odnosu na operatera
+
+Napredovanje se razmatra na godišnjem pregledu performansi ili ranije
+ako se ukaže potreba i kandidat ispunjava kriterije.
+
+================================================================================
+10. MENTORSKI PROGRAM
+================================================================================
+
+10.1 Izbor mentora
+--------------------
+
+Mentori se biraju na osnovu sljedećih kriterija:
+- Minimalno 2 godine radnog staža u Sportek-u
+- Ocjena performansi minimalno 4/5 u posljednje dvije godine
+- Dobra komunikacijske vještine — sposobnost jasnog objašnjavanja
+- Strpljenje i pozitivan stav prema novim kolegama
+- Nema disciplinskih mjera u posljednjih 12 mjeseci
+- Dobrovoljnost — mentor funkcija je dobrovoljna ali se podstiče
+
+Proces selekcije:
+1. Smjenski vođe predlažu kandidate za mentore
+2. HR menadžerka vodi intervju sa kandidatima
+3. Kandidati prolaze jednodnevnu obuku za mentore (MNT-TRN-MENTOR)
+4. Odobreni mentori se upisuju u registar mentora
+
+10.2 Dodatak na platu
+-----------------------
+
+Mentori primaju dodatak na platu od 5% za svaki mjesec u kojem aktivno
+mentorišu novog radnika. Dodatak se obračunava za kompletne onboarding
+periode (10 radnih dana) plus period praćenja (do 90 dana).
+
+10.3 Obaveze mentora
+----------------------
+
+Tokom onboarding perioda mentor je obavezan:
+- Biti prisutan uz novog radnika tokom svih aktivnosti od Dana 3 do Dana 10
+- Popunjavati dnevne evaluacione obrasce
+- Prijavljivati probleme ili zabrinutosti HR menadžerki
+- Pružati konstruktivan feedback novom radniku na kraju svakog dana
+- Popuniti završnu evaluaciju na Dan 10
+
+Tokom perioda praćenja (30/60/90 dana) mentor:
+- Provjerava novog radnika prema definisanom rasporedu
+- Odgovara na pitanja i pruža podršku
+- Učestvuje u evaluacijama na 30, 60 i 90 dana
+- Prijavjuje napredak ili probleme HR-u
+
+10.4 Evaluacija mentora
+-------------------------
+
+Kvalitet mentorskog rada evaluira se kvartalno na osnovu:
+- Feedback novih radnika (anonimna anketa)
+- Uspjeh novih radnika na evaluacijama
+- Stopa zadržavanja radnika koje je mentorizovao
+- Poštivanje procedura i dokumentacije
+
+Mentori sa konzistentno visokim ocjenama dobijaju priznanje na godišnjem
+nivou. Mentori sa niskim ocjenama prolaze dodatnu obuku ili se uklanjaju
+iz registra mentora.
+
+================================================================================
+11. OBRASCI I DOKUMENTACIJA
+================================================================================
+
+Svi obrasci korišteni u onboarding procesu:
+
+Obrazac             Naziv                              Odgovoran
+---------------------------------------------------------------------------
+HR-ONB-CHK-001     Onboarding checklist               HR
+HR-LZO-001         Prijem lične zaštitne opreme        HR / HSE
+HR-NDA-001         Izjava o povjerljivosti             HR
+HR-IZJ-001         Izjava o razumijevanju              HR
+HSE-TRN-001        Certifikat sigurnosne obuke         HSE
+MNT-EVL-001        Dnevna evaluacija mentora           Mentor
+HR-MNT-EVL-FINAL   Završna evaluacija mentora          Mentor
+HR-TST-QTY-001     Praktični test kvaliteta            QC
+HR-TST-WRT-001     Pisani test                         HR
+HR-DEV-30-60-90    Plan razvoja 30/60/90 dana          Mentor / HR
+
+Svi obrasci se čuvaju u personalnom dosijeu radnika (elektronski i
+štampani) minimalno za trajanja radnog odnosa plus 5 godina.
+
+================================================================================
+12. HISTORIJA REVIZIJA
+================================================================================
+
+Rev.  Datum         Opis izmjene                           Autor
+---------------------------------------------------------------------------
+01    01.03.2024.   Inicijalno izdanje                     M. Petrović
+02    01.09.2024.   Dodan mentorski program, ažurirani     M. Petrović
+                    testovi kvaliteta
+03    15.01.2026.   Ažurirani kriteriji evaluacije,        M. Petrović
+                    dodan plan 30/60/90, digitalna
+                    dokumentacija
+
+================================================================================
+KRAJ DOKUMENTA
+Dokument HR-ONB-008, Rev. 03
+Sportek d.o.o. Banja Luka
+Klasifikacija: INTERNO
+================================================================================

@@ -1,0 +1,624 @@
+================================================================================
+SPORTEK d.o.o. Banja Luka
+PLAN ODRŽAVANJA - SHIMA SEIKI MAŠINE
+================================================================================
+
+Dokument:       MNT-PLAN-007
+Naziv:          Plan preventivnog i korektivnog održavanja SHIMA SEIKI mašina
+Revizija:       Rev. 03
+Datum izdanja:  01.05.2024.
+Datum revizije: 05.02.2026.
+Pripremio:      Nikola Đukić, šef održavanja
+Odobrio:        Dragan Simić, direktor proizvodnje
+Klasifikacija:  INTERNO
+
+================================================================================
+SADRŽAJ
+================================================================================
+
+1. Uvod i svrha
+2. Inventar SHIMA SEIKI mašina
+3. Dnevno održavanje (operater)
+4. Sedmično održavanje (tehničar)
+5. Mjesečno održavanje (specijalizirani tehničar)
+6. Godišnje održavanje (SHIMA SEIKI servis)
+7. Evidencija kvarova i korektivno održavanje
+8. Upravljanje rezervnim dijelovima
+9. Sigurnosne napomene
+10. Kontakti i eskalacija
+11. Historija revizija
+
+================================================================================
+1. UVOD I SVRHA
+================================================================================
+
+Ovaj dokument definiše kompletni plan preventivnog i korektivnog održavanja
+za sve SHIMA SEIKI ravnopletačke mašine instalirane u pogonu Sportek d.o.o.
+Banja Luka. Plan je razvijen u skladu sa preporukama proizvođača SHIMA SEIKI
+Manufacturing Ltd. i prilagođen specifičnim uslovima rada u Sportek pogonu.
+
+Cilj plana održavanja je osigurati maksimalnu raspoloživost mašina (ciljana
+OEE vrijednost min 85%), minimizirati neplanirane zastoje, produžiti radni
+vijek opreme i osigurati konzistentnu kvalitetu proizvoda. Pravilno održavanje
+je direktno povezano sa kvalitetom pletenja, jer istrošene ili neispravne
+komponente mašine mogu uzrokovati defekte na pletenim proizvodima koji se
+ne mogu popraviti.
+
+Svi zaposleni uključeni u rad sa SHIMA SEIKI mašinama — operateri, tehničari
+i inženjeri — moraju biti upoznati sa relevantnim sekcijama ovog plana i
+pridržavati se definisanih procedura. Svako odstupanje od plana održavanja
+mora biti dokumentovano i odobreno od strane šefa održavanja.
+
+Plan se revidira minimalno jednom godišnje ili pri nabavci novih mašina,
+značajnim promjenama u proizvodnom procesu, ili na osnovu preporuka SHIMA
+SEIKI servisa. Šef održavanja je odgovoran za praćenje implementacije plana
+i izvještavanje o statusu na mjesečnim proizvodnim sastancima.
+
+================================================================================
+2. INVENTAR SHIMA SEIKI MAŠINA
+================================================================================
+
+2.1 Pregled inventara
+-----------------------
+
+Sportek d.o.o. trenutno raspolaže sa 12 SHIMA SEIKI ravnopletačkih mašina
+raspoređenih na proizvodne linije u 3D knit odjelu. Mašine su podijeljene
+u tri grupe prema modelu i generaciji.
+
+2.2 Grupa 1: SHIMA SEIKI SRY-123LP (SHIMA_01 do SHIMA_06)
+------------------------------------------------------------
+
+Identifikacija     Serijski broj    Linija     God. nabavke   Status
+---------------------------------------------------------------------------
+SHIMA_01           SRY-2021-0847    L1         2021           Aktivan
+SHIMA_02           SRY-2021-0848    L1         2021           Aktivan
+SHIMA_03           SRY-2021-0849    L1         2021           Aktivan
+SHIMA_04           SRY-2021-0850    L2         2021           Aktivan
+SHIMA_05           SRY-2021-0851    L2         2021           Aktivan
+SHIMA_06           SRY-2021-0852    L2         2021           Aktivan
+
+Model SRY-123LP je kompaktni ravnopletač sa radnom širinom 123 cm i
+integriranim sinker plate sistemom. Ove mašine su raspoređene na linije
+L1 i L2 koje primarno proizvode Nike Flyknit upper komponente. Mašine
+imaju mogućnost pletenja do 15 boja u jednom redu i maksimalnu brzinu
+od 1.2 m/s.
+
+2.3 Grupa 2: SHIMA SEIKI SWG-121SV (SHIMA_07 do SHIMA_09)
+------------------------------------------------------------
+
+Identifikacija     Serijski broj    Linija     God. nabavke   Status
+---------------------------------------------------------------------------
+SHIMA_07           SWG-2022-1234    L6         2022           Aktivan
+SHIMA_08           SWG-2022-1235    L6         2022           Aktivan
+SHIMA_09           SWG-2022-1236    L7         2022           Aktivan
+
+Model SWG-121SV je WholeGarment mašina sa mogućnošću pletenja kompletnih
+3D struktura bez potrebe za šivanjem. Koristi se na linijama L6 i L7
+za Crocs knit komponente i specijalne Nike modele. Radna širina 121 cm,
+do 8 boja u jednom redu, maksimalna brzina 1.0 m/s. Ove mašine imaju
+napredniji senzorski sistem u odnosu na SRY model.
+
+2.4 Grupa 3: SHIMA SEIKI MACH2XS (SHIMA_10 do SHIMA_12)
+----------------------------------------------------------
+
+Identifikacija     Serijski broj    Linija     God. nabavke   Status
+---------------------------------------------------------------------------
+SHIMA_10           MCH-2024-0567    L3         2024           Aktivan
+SHIMA_11           MCH-2024-0568    L5         2024           Aktivan
+SHIMA_12           MCH-2025-0102    L8         2025           Aktivan
+
+MACH2XS je najnovija generacija SHIMA SEIKI ravnopletača i predstavlja
+najsavremenije mašine u Sportek floti. Karakteristike uključuju brzinu
+pletenja do 1.6 m/s, do 18 boja u jednom redu, integriran AI sistem za
+detekciju defekata u realnom vremenu, naprednu dijagnostiku i IoT konekciju
+za daljinski monitoring. Ove mašine su raspoređene na razne linije i koriste
+se za najzahtjevnije proizvode. SHIMA_12 je najnovija mašina, instalirana
+u januaru 2025. godine.
+
+================================================================================
+3. DNEVNO ODRŽAVANJE (OPERATER)
+================================================================================
+
+Dnevno održavanje obavlja operater mašine na početku i kraju svake smjene.
+Ukupno predviđeno vrijeme: 10 minuta na početku smjene i 15 minuta na
+kraju smjene. Operater mora biti obučen i certificiran za dnevno održavanje
+prema internoj obuci MNT-TRN-001.
+
+3.1 Početak smjene (10 minuta)
+---------------------------------
+
+Aktivnosti koje operater obavlja prije pokretanja proizvodnje:
+
+a) Vizualna inspekcija mašine:
+   - Pregled opšteg stanja mašine — oštećenja, curenje ulja, labavi dijelovi
+   - Provjera da li su svi zaštitni poklopci na mjestu i ispravno zatvoreni
+   - Provjera yarn guide sistema na vidljiva oštećenja ili prljavštinu
+   - Provjera take-down mehanizma i valjaka za napetost pletiva
+
+b) Provjera nivoa ulja:
+   - Vizualna provjera nivoa ulja u centralnom sistemu za podmazivanje
+   - Nivo mora biti između oznaka MIN i MAX na staklu indikatoru
+   - Ako je nivo ispod MIN, dopuniti sa SHIMA SEIKI ulje Tip A i prijaviti
+     tehničaru održavanja
+
+c) Provjera yarn break senzora:
+   - Pokrenuti test program za yarn break senzore iz servisnog menija
+   - Svih 18 (SRY) / 16 (SWG) / 20 (MACH2XS) senzora mora reagovati
+   - Neispravne senzore prijaviti tehničaru održavanja
+   - NAPOMENA: Ne pokretati proizvodnju sa neispravnim yarn break senzorima
+
+d) Čišćenje komprimovanim zrakom:
+   - Koristeći pištolj za komprimirani zrak (max 2 bar), očistiti:
+     * Igleno ležište — ukloniti prašinu, vlakna i ostatke prede
+     * Yarn guide kanale — ukloniti nakupljenu prašinu
+     * Senzore — pažljivo očistiti optičke površine senzora
+   - UPOZORENJE: Pritisak ne smije prelaziti 2 bar. Veći pritisak može
+     oštetiti fine dijelove mašine, posebno senzore i iglice.
+
+e) Provjera take-down mehanizma:
+   - Vizualno provjeriti stanje valjaka za povlačenje pletiva
+   - Provjeriti tenziju take-down sistema pokretanjem kratkog test programa
+   - Ukoliko je tenzija neravnomjerna, prilagoditi prema parametrima iz
+     proizvodnog naloga
+
+3.2 Kraj smjene (15 minuta)
+------------------------------
+
+Aktivnosti koje operater obavlja po završetku proizvodnje:
+
+a) Uklanjanje ostataka:
+   - Ukloniti sve ostatke prede, odrezke i pletivo sa i oko mašine
+   - Očistiti pod oko mašine u radijusu od 1 metra
+   - Prazne kolute prede odložiti u za to predviđenu korpu
+   - Neiskorištene kolute prede vratiti u originalno pakovanje
+
+b) Čišćenje radne površine:
+   - Obrisati površine mašine čistom suhom krpom
+   - Očistiti yarn guide sistem od nakupljenih vlakana
+   - Provjeriti i očistiti senzorske površine
+
+c) Izvještaj o smjeni:
+   - Popuniti dnevni obrazac održavanja MNT-DLY-001
+   - Zabilježiti sve uočene probleme ili anomalije tokom smjene
+   - Navesti broj zaustavki mašine i razloge
+   - Predati izvještaj smjenskom vođi i ostaviti kopiju na mašini
+
+================================================================================
+4. SEDMIČNO ODRŽAVANJE (TEHNIČAR)
+================================================================================
+
+Sedmično održavanje obavlja tehničar održavanja (minimalno nivo Tehničar II)
+svake subote tokom planirane pauze u proizvodnji. Predviđeno vrijeme: 45-60
+minuta po mašini. Svih 12 mašina se servisira u jednom danu sa timom od
+3 tehničara (po 4 mašine).
+
+4.1 Podmazivanje
+------------------
+
+Podmazivanje se vrši isključivo sa SHIMA SEIKI ulje Tip A (Part No.
+SHM-OIL-A200). Korištenje bilo kojeg drugog ulja je strogo zabranjeno jer
+može uzrokovati oštećenje preciznih mehaničkih komponenti.
+
+Tačke podmazivanja:
+- Centralni sistem podmazivanja — dopuniti do MAX nivoa
+- Cam sistem — 3-5 kapi na svaku cam poziciju (ukupno 12 pozicija)
+- Yarn carrier vodilice — 2 kapi po vodilici
+- Take-down valjci — tanki sloj na ležajeve
+- Sinker plate vodilice — 2 kapi po vodilici
+
+NAPOMENA: Višak ulja je jednako štetan kao i nedostatak. Višak ulja može
+kontaminirati predu i uzrokovati mrlje na pletenim proizvodima.
+
+4.2 Zamjena iglica
+--------------------
+
+Iglice su potrošni dio mašine koji se redovno troši. Prosječna zamjena je
+2-5 iglica sedmično po mašini, zavisno od intenziteta korištenja i tipa
+prede. Tehničar provjerava sve iglice vizualno i pomoću lupe (10x).
+
+Znaci istrošenosti iglica:
+- Savijeni ili oštećeni kukice (hooks)
+- Istrošeni jezičci (latches) koji se ne zatvaraju pravilno
+- Korozija ili naslage na tijelu iglice
+- Vizuelno primjetno skraćenje u odnosu na novu iglicu
+
+Postupak zamjene:
+1. Identifikovati poziciju istrošene iglice
+2. Koristiti SHIMA SEIKI alat za vađenje iglica (Part No. SHM-TOOL-NR)
+3. Izvaditi istrošenu iglicu i provjeriti ležište
+4. Umetnuti novu iglicu istog tipa i veličine
+5. Provjeriti slobodan hod iglice u ležištu
+6. Zabilježiti poziciju i broj zamijenjenih iglica u evidenciju
+
+Tip iglice po modelu mašine:
+- SRY-123LP: SHIMA needle Type SN-70-45-080
+- SWG-121SV: SHIMA needle Type SN-70-45-075
+- MACH2XS: SHIMA needle Type SN-70-46-085
+
+4.3 Provjera senzora
+----------------------
+
+Kompletna provjera svih senzora na mašini:
+
+a) Yarn break senzori:
+   - Funkcionalni test svakog senzora — simulacija prekida prede
+   - Provjera osjetljivosti — podešavanje prema specifikaciji
+   - Čišćenje optičkih površina alkoholom (IPA 99%)
+
+b) Fabric senzori:
+   - Provjera detekcije pletiva — prisustvo/odsustvo
+   - Kalibracija osjetljivosti na debljinu pletiva
+   - Provjera alarma za fabric jam
+
+c) Sinker plate senzori:
+   - Funkcionalni test detekcije pozicije sinker plate
+   - Provjera alarma za sinker plate jam ili lom
+
+4.4 Kalibracija tenzije
+-------------------------
+
+Kalibracija tenzije prede je kritična za kvalitet pletenja. Neravnomjerna
+tenzija uzrokuje varijacije u gustini pletiva, neravne ivice i dimenzionalna
+odstupanja.
+
+Postupak kalibracije:
+1. Postaviti referentnu predu (Flyknit Yarn 2.0, bijela)
+2. Pokrenuti kalibracionu rutinu iz servisnog menija
+3. Mjeriti tenziju na svakom yarn feederu pomoću tenziometra (SHIMA SEIKI
+   Tension Meter TM-01)
+4. Podešavati disk tension kontrole do postizanja ciljane tenzije
+   (specifikacija u proizvodnom nalogu, tipično 0.5-1.5 cN)
+5. Dokumentovati izmjerene vrijednosti za svaki feeder
+
+4.5 Remeni i transmisije
+--------------------------
+
+Provjera stanja svih remena i transmisijskih elemenata:
+- Vizualna provjera remena na pukotine, habanje, istezanje
+- Provjera zatezanja remena prema specifikaciji proizvođača
+- Provjera ležajeva na buku i vibracije pri ručnom okretanju
+- Provjera lanaca (gdje su prisutni) na istezanje i podmazanost
+
+Zamjena remena se vrši preventivno svakih 12 mjeseci ili ranije ako se
+uoče znaci istrošenosti. Zamjenu remena obavlja specijalizirani tehničar
+(nivo Tehničar III ili viši).
+
+4.6 Backup programa
+---------------------
+
+Svake sedmice se vrši backup svih programa za pletenje pohranjenih na
+mašini na eksterni server (NAS uređaj u serverskoj sobi). Backup obuhvata:
+- Svi aktivni programi za pletenje (.sds format)
+- Parametri mašine i konfiguracija
+- Log datoteke sa greškama i alarmima
+- Brojači proizvodnje
+
+Backup se čuva minimalno 6 mjeseci. Procedura za restore u slučaju gubitka
+podataka je dokumentovana u uputstvu IT-PRO-003.
+
+================================================================================
+5. MJESEČNO ODRŽAVANJE (SPECIJALIZIRANI TEHNIČAR)
+================================================================================
+
+Mjesečno održavanje obavlja specijalizirani tehničar (nivo Tehničar III)
+ili inženjer održavanja. Predviđeno vrijeme: 2-3 sata po mašini. Mjesečno
+održavanje se planira prema rasporedu koji osigurava da se sve mašine
+servisiraju jednom mjesečno, sa minimalnim uticajem na proizvodnju.
+
+5.1 Kompletna inspekcija iglenog ležišta
+------------------------------------------
+
+Ova inspekcija je najdetaljnija provjera ključne komponente mašine:
+- Demontaža zaštitnih poklopaca iglenog ležišta
+- Vizualni pregled svih pozicija iglica (do 2640 pozicija na MACH2XS)
+- Mjerenje dubine iglenog kanala na 10 referentnih pozicija
+- Provjera sinker plate-ova na habanje i oštećenja
+- Čišćenje iglenog ležišta ultrazvučnim čistačem (za uklonjive dijelove)
+- Provjera cam sistema na habanje
+- Ponovno podmazivanje nakon čišćenja
+
+Kriteriji za zamjenu iglenog ležišta: dubina kanala izvan tolerancije
+(+0.02 mm), vidljiva korozija, mehanička oštećenja vodilica. Zamjenu
+iglenog ležišta obavlja isključivo SHIMA SEIKI ovlašteni serviser.
+
+5.2 Zamjena filtera kompresora
+---------------------------------
+
+Svaka mašina ima integrirani filter za komprimirani zrak koji štiti
+precizne komponente od čestica i vlage:
+- Ukloniti stari filter (Part No. SHM-FILT-AF10)
+- Očistiti kućište filtera
+- Instalirati novi filter i provjeriti zaptivanje
+- Provjeriti pritisak komprimiranog zraka nakon filtera (zahtjev: 4-6 bar)
+- Provjeriti funkcionisanje automatskog odvoda kondenzata
+
+5.3 Električne konekcije
+--------------------------
+
+Provjera svih električnih konekcija i kablovskih spojeva:
+- Vizualna provjera svih konektora na koroziju i mehanička oštećenja
+- Provjera napajanja (napon, frekvencija) na glavnom priključku
+- Provjera uzemljenja mašine mjerenjem otpora (zahtjev: < 1 Ohm)
+- Provjera stanja kablova za podatke (ethernet, USB, serijski)
+- Termovizijski pregled razvodne kutije za identifikaciju pregrijavanja
+
+5.4 Firmware update
+---------------------
+
+Provjera dostupnosti firmware update-a za kontroler mašine:
+- Pristupiti SHIMA SEIKI partnerskom portalu za provjeru novih verzija
+- Ako je dostupan update, koordinirati sa SHIMA SEIKI Europa za odobrenje
+- Backup postojećeg firmware-a prije update-a
+- Instalacija update-a prema SHIMA SEIKI uputstvu
+- Funkcionalni test nakon update-a — pokrenuti standardni test program
+
+NAPOMENA: Firmware update se ne instalira automatski. Svaki update mora
+biti odobren od strane šefa održavanja i testiran na jednoj mašini prije
+primjene na ostale.
+
+5.5 Kalibracija stitch density
+---------------------------------
+
+Precizna kalibracija gustine pletenja je ključna za dimenzionalnu tačnost
+proizvoda:
+- Pokrenuti kalibracioni program (standardni uzorak 10x10 cm)
+- Mjeriti gustinu pletenja (wales/cm i courses/cm) na 5 pozicija
+- Uporediti sa referentnim vrijednostima za svaki tip prede
+- Podešavati stitch cam poziciju dok se ne postigne ciljna gustina
+- Dokumentovati kalibracione vrijednosti u kalibracioni zapisnik
+
+5.6 Test sigurnosnih sistema
+-------------------------------
+
+Obavezni mjesečni test svih sigurnosnih sistema na mašini:
+
+a) Emergency stop (E-stop):
+   - Testirati svaki E-stop taster (tipično 2 po mašini)
+   - Mašina se mora zaustaviti u manje od 0.5 sekundi
+   - Provjeriti da se mašina ne može pokrenuti dok E-stop nije resetiran
+
+b) Zaštitni poklopci (guard):
+   - Provjeriti da se mašina zaustavlja pri otvaranju zaštitnog poklopca
+   - Provjeriti ispravnost sigurnosnih prekidača (interlock)
+   - Mašina se ne smije moći pokrenuti sa otvorenim poklopcem
+
+c) Light curtain (MACH2XS):
+   - Testirati svjetlosnu barijeru simulacijom prekida
+   - Mašina se mora zaustaviti momentalno
+
+Rezultati testa se dokumentuju u obrascu MNT-SAF-001. Neispravni
+sigurnosni sistemi zahtijevaju momentalno zaustavljanje mašine do popravke.
+Rad na mašini sa neispravnim sigurnosnim sistemima je strogo zabranjen.
+
+================================================================================
+6. GODIŠNJE ODRŽAVANJE (SHIMA SEIKI SERVIS)
+================================================================================
+
+Godišnje održavanje obavlja ovlašteni SHIMA SEIKI servisni tim. Ovo je
+najopsežnija servisna intervencija koja traje 1-2 dana po mašini. Godišnje
+održavanje se planira unaprijed u koordinaciji sa SHIMA SEIKI Europa.
+
+6.1 Kompletni overhaul
+------------------------
+
+SHIMA SEIKI servisni inženjer obavlja kompletni overhaul mašine koji
+obuhvata:
+- Demontažu i inspekciju svih ključnih mehaničkih sklopova
+- Mjerenje habanja na svim kritičnim komponentama
+- Zamjenu svih komponenti koje su izvan tolerancija
+- Kompletno čišćenje i podmazivanje
+- Provjeru i podešavanje svih mehaničkih parametara
+- Inspekciju elektromotora i pogonskog sistema
+
+6.2 Zamjena potrošnih dijelova
+--------------------------------
+
+Sljedeći dijelovi se zamjenjuju preventivno tokom godišnjeg servisa,
+neovisno o njihovom trenutnom stanju:
+- Komplet iglica (sve pozicije)
+- Sinker plate-ovi
+- Remeni pogona (svi)
+- Filteri (ulje, zrak, komprimirani zrak)
+- Brtve i zaptivke na hidrauličkom sistemu
+- Yarn guide vodilice sa vidljivim habanjem
+- Ležajevi na yarn carrier sistemu
+
+6.3 Rekalibracija
+-------------------
+
+Kompletna rekalibracija svih parametara mašine prema tvorničkim
+specifikacijama:
+- Geometrija iglenog ležišta
+- Stitch cam pozicije
+- Yarn tenzija na svim feeder pozicijama
+- Take-down tenzija
+- Brzina pletenja
+- Svi senzori (yarn break, fabric, sinker plate, pozicija)
+
+6.4 Software update
+---------------------
+
+Instalacija najnovije verzije SHIMA SEIKI software-a:
+- SDS-ONE APEX4 design software
+- Machine controller firmware
+- Diagnostic software
+- IoT modul software (MACH2XS)
+
+6.5 Certifikat
+----------------
+
+Po završetku godišnjeg servisa, SHIMA SEIKI servisni inženjer izdaje
+certifikat o izvršenom servisu koji potvrđuje da je mašina u ispravnom
+stanju i da zadovoljava sve tvorničke specifikacije. Certifikat se čuva u
+dosijeu mašine i kopija se dostavlja šefu održavanja i direktoru proizvodnje.
+
+6.6 Kontakt SHIMA SEIKI Europa
+---------------------------------
+
+Za planiranje godišnjeg servisa i sve tehničke upite:
+- SHIMA SEIKI Europe Ltd.
+- Lokacija: Milano, Italija
+- Servisni telefon: +39 02 XXXX XXXX
+- E-mail: service.europe@shimaseiki.com
+- Radno vrijeme servisa: pon-pet 08:00-17:00 CET
+- Hitni servis: dostupan 24/7, odgovor u roku od 4 sata
+
+================================================================================
+7. EVIDENCIJA KVAROVA I KOREKTIVNO ODRŽAVANJE
+================================================================================
+
+7.1 Prijavljivanje kvara
+--------------------------
+
+Svaki kvar ili neplanirana zaustavljanje mašine mora se prijaviti i
+evidentirati. Operater koji uoči kvar obavještava smjenskog vođu i
+tehničara održavanja, te popunjava obrazac MNT-BRK-001 (Breakdown Report).
+
+Obrazac sadrži sljedeće podatke:
+- Datum i vrijeme nastanka kvara
+- Identifikacija mašine (SHIMA_01 do SHIMA_12)
+- Detaljan opis kvara i simptoma
+- Uzrok kvara (ako je poznat) — mehanički, električni, softverski, operaterska
+  greška, materijal, nepoznat
+- Vrijeme početka popravke i vrijeme završetka
+- Ukupno vrijeme zastoja (downtime) u minutama
+- Dijelovi korišteni za popravku (Part No., količina)
+- Ime tehničara koji je izvršio popravku
+- Verifikacija — potvrda da mašina radi ispravno nakon popravke
+
+7.2 Analiza kvarova
+---------------------
+
+Šef održavanja mjesečno analizira sve prijavljene kvarove i kreira mjesečni
+izvještaj održavanja (MNT-RPT-M) koji uključuje:
+- Ukupan broj kvarova po mašini i ukupno za odjel
+- Ukupno vrijeme zastoja po mašini i ukupno
+- MTBF (Mean Time Between Failures) za svaku mašinu
+- MTTR (Mean Time To Repair) za svaku mašinu
+- Top 5 najčešćih uzroka kvarova
+- Pareto analiza kvarova
+- Trendovi u poređenju sa prethodnim mjesecima
+- Preporuke za poboljšanje i preventivne mjere
+
+Mjesečni izvještaj se prezentira na proizvodnom sastanku i dostavlja
+direktoru proizvodnje. Značajna odstupanja od ciljanih KPI vrijednosti
+zahtijevaju akcioni plan sa rokovima i odgovornim osobama.
+
+7.3 Kategorizacija kvarova
+----------------------------
+
+Kvarovi se kategorizuju prema prioritetu:
+
+Prioritet 1 (Kritičan): Mašina potpuno neoperativna, sigurnosni problem.
+Rok za početak popravke: odmah. Rok za rješenje: 4 sata.
+
+Prioritet 2 (Visok): Mašina radi sa smanjenim kapacitetom ili kvalitetom.
+Rok za početak popravke: 2 sata. Rok za rješenje: 8 sati.
+
+Prioritet 3 (Srednji): Mašina radi normalno ali identifikovan problem koji
+može eskalirati. Rok za početak popravke: 24 sata. Rok za rješenje: 48 sati.
+
+Prioritet 4 (Nizak): Kozmetički problem ili poboljšanje. Planirati za
+naredni planirani zastoj.
+
+================================================================================
+8. UPRAVLJANJE REZERVNIM DIJELOVIMA
+================================================================================
+
+8.1 Minimalne zalihe
+----------------------
+
+Za osiguranje brze reakcije na kvarove, definirane su minimalne zalihe
+kritičnih rezervnih dijelova:
+
+Dio                          Part No.           Min zaliha    Lokacija
+---------------------------------------------------------------------------
+Iglice SRY tip               SN-70-45-080       500 kom       Skladište MNT
+Iglice SWG tip               SN-70-45-075       200 kom       Skladište MNT
+Iglice MACH2XS tip           SN-70-46-085       300 kom       Skladište MNT
+Yarn break senzori           SHM-SENS-YB12      10 kom        Skladište MNT
+Fabric senzori               SHM-SENS-FB08      5 kom         Skladište MNT
+Remeni pogonski (set)        SHM-BELT-SET-A     5 setova      Skladište MNT
+Ulje Tip A (20L)             SHM-OIL-A200       20 litara     Skladište MNT
+Filter kompresora            SHM-FILT-AF10      12 kom        Skladište MNT
+Sinker plate-ovi             SHM-SNK-PL-70      50 kom        Skladište MNT
+Yarn guide vodilice          SHM-YG-STD-12      20 kom        Skladište MNT
+
+8.2 Naručivanje
+-----------------
+
+Kada zaliha bilo kojeg dijela padne na minimalni nivo, tehničar održavanja
+kreira zahtjev za nabavku. Narudžba se šalje SHIMA SEIKI Europa ili
+ovlaštenom distributeru. Lead time za standardne dijelove je 2-4 sedmice,
+za specijalne dijelove 6-8 sedmica.
+
+Za hitne narudžbe dostupna je ekspresna isporuka (1-3 radna dana) uz
+dodatni trošak. Hitne narudžbe moraju biti odobrene od strane šefa
+održavanja ili direktora proizvodnje.
+
+8.3 Evidencija
+----------------
+
+Svi rezervni dijelovi se evidentiraju u sistemu za upravljanje održavanjem
+(CMMS) koji prati:
+- Trenutne zalihe i lokaciju
+- Historiju potrošnje
+- Prosječnu mjesečnu potrošnju
+- Lead time dobavljača
+- Cijenu i ukupnu vrijednost zaliha
+
+================================================================================
+9. SIGURNOSNE NAPOMENE
+================================================================================
+
+Rad na održavanju SHIMA SEIKI mašina zahtijeva poštivanje strogih
+sigurnosnih procedura:
+
+- Prije početka bilo kakvog rada na mašini obavezno je primijeniti
+  Lockout/Tagout (LOTO) proceduru prema HSE-PRO-005
+- Obavezna lična zaštitna oprema: zaštitne naočale, zaštitne rukavice,
+  antistatička obuća
+- Zabranjena je improvizacija dijelova ili korištenje neoriginalnih dijelova
+  bez odobrenja šefa održavanja
+- Električne intervencije obavlja isključivo ovlašteni elektro tehničar
+- Rad na visini (iznad 1.5 m) zahtijeva upotrebu platforme ili ljestvi
+  sa osiguranjem
+- U slučaju nesreće ili ozljede, primijeniti postupak prema HSE-EMG-001
+
+================================================================================
+10. KONTAKTI I ESKALACIJA
+================================================================================
+
+Nivo 1 — Operater mašine:
+Dnevno održavanje, prijava kvara smjenskom vođi
+
+Nivo 2 — Tehničar održavanja (Nikola Đukić, šef održavanja):
+Sedmično održavanje, korektivno održavanje Prioritet 2-4
+
+Nivo 3 — Specijalizirani tehničar / Inženjer:
+Mjesečno održavanje, korektivno održavanje Prioritet 1
+
+Nivo 4 — SHIMA SEIKI Europa (servisni odjel):
+Godišnje održavanje, kvarovi koji zahtijevaju specijalističku podršku
+
+Eskalacija: Ako kvar Prioriteta 1 nije riješen u roku od 4 sata, eskalira
+se na Nivo 4. Za kvarove na MACH2XS mašinama, SHIMA SEIKI nudi daljinsku
+dijagnostiku putem IoT konekcije koja može ubrzati identifikaciju problema.
+
+================================================================================
+11. HISTORIJA REVIZIJA
+================================================================================
+
+Rev.  Datum         Opis izmjene                           Autor
+---------------------------------------------------------------------------
+01    01.05.2024.   Inicijalno izdanje                     N. Đukić
+02    15.11.2024.   Dodane MACH2XS mašine (SHIMA_10,11)   N. Đukić
+03    05.02.2026.   Dodana SHIMA_12, ažurirani min.        N. Đukić
+                    zalihe, IoT dijagnostika MACH2XS
+
+================================================================================
+KRAJ DOKUMENTA
+Dokument MNT-PLAN-007, Rev. 03
+Sportek d.o.o. Banja Luka
+Klasifikacija: INTERNO
+================================================================================

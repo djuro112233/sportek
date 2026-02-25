@@ -1,0 +1,580 @@
+================================================================================
+SPORTEK d.o.o. Banja Luka
+SPECIFIKACIJA MATERIJALA - FLYKNIT YARN SISTEM
+================================================================================
+
+Dokument:       MAT-SPEC-006
+Naziv:          Specifikacija Flyknit yarn sistema za 3D knit proizvodnju
+Revizija:       Rev. 04
+Datum izdanja:  15.04.2024.
+Datum revizije: 10.01.2026.
+Pripremio:      Jelena Marković, inženjerka materijala
+Odobrio:        Dragan Simić, direktor proizvodnje
+Klasifikacija:  INTERNO - POVJERLJIVO
+
+================================================================================
+SADRŽAJ
+================================================================================
+
+1. Uvod i svrha dokumenta
+2. Opis Flyknit yarn sistema
+3. Flyknit Yarn 2.0 - primarna preda
+4. Support Yarn - strukturalna preda
+5. Stretch Yarn - elastična preda
+6. Skladištenje i čuvanje materijala
+7. Ulazna kontrola kvaliteta
+8. Rukovanje materijalima
+9. Postupak reklamacije
+10. Tabela dobavljača i narudžbine
+11. Historija revizija
+
+================================================================================
+1. UVOD I SVRHA DOKUMENTA
+================================================================================
+
+Ovaj dokument definiše kompletne tehničke specifikacije za sve tipove prede
+koji se koriste u Flyknit proizvodnom sistemu u pogonu Sportek d.o.o. Banja
+Luka. Flyknit sistem predstavlja naprednu tehnologiju pletenja gornjih dijelova
+obuće (upper) koja je razvijena od strane Nike Inc. i koja se u pogonu Sportek
+realizuje na SHIMA SEIKI ravnopletačkim mašinama.
+
+Svrha dokumenta je da osigura jednoobrazno razumijevanje tehničkih parametara
+materijala kod svih zaposlenih uključenih u proces nabavke, skladištenja,
+kontrole kvaliteta i proizvodnje. Dokument služi kao referentna tačka za
+ulaznu kontrolu materijala, rješavanje problema u proizvodnji vezanih za
+kvalitet prede, te komunikaciju sa dobavljačima i Nike timom za kvalitet.
+
+Sve specifikacije navedene u ovom dokumentu su usaglašene sa Nike Material
+Specifications (NMS) standardima i odobrene od strane Nike Manufacturing
+Engineering tima. Bilo kakvo odstupanje od navedenih specifikacija zahtijeva
+pisanu saglasnost Nike Materials Engineering odjela.
+
+Dokument se revidira minimalno jednom godišnje, ili pri svakoj promjeni
+specifikacija od strane Nike-a, uvođenju novog tipa prede, promjeni
+dobavljača, ili identifikaciji problema u proizvodnji vezanog za materijale.
+Svaka revizija mora biti odobrena od strane direktora proizvodnje i
+proslijeđena svim relevantnim odjelima.
+
+================================================================================
+2. OPIS FLYKNIT YARN SISTEMA
+================================================================================
+
+Nike Flyknit je patentirani sistem preciznog pletenja koji omogućava izradu
+kompletnog gornjeg dijela obuće (upper) u jednom komadu na ravnopletačkoj
+mašini. Za razliku od konvencionalnih metoda proizvodnje obuće koje zahtijevaju
+krojenje i šivanje desetina zasebnih dijelova, Flyknit tehnologija koristi
+različite tipove prede i varijacije u gustini pletenja da postigne različite
+karakteristike materijala na različitim zonama obuće.
+
+U pogonu Sportek d.o.o. Flyknit proizvodnja se realizuje na SHIMA SEIKI
+mašinama koje su programirane pomoću SDS-ONE APEX4 dizajn sistema. Svaki
+Flyknit upper koristi kombinaciju tri osnovna tipa prede, pri čemu se
+specifična kombinacija i raspored definišu za svaki model obuće zasebno
+putem programa za pletenje.
+
+Ključna prednost Flyknit sistema je mogućnost preciznog mapiranja karakteristika
+materijala prema zahtjevima svake zone obuće. Na primjer, zona pete (heel)
+zahtijeva veću krutost i podršku, zona prstiju (toe box) zahtijeva otpornost
+na habanje, dok zona oko gležnja (collar) zahtijeva elastičnost i udobnost.
+Ovo se postiže kombinacijom različitih tipova prede i varijacijom parametara
+pletenja.
+
+Flyknit sistem koji Sportek koristi baziran je na tri kategorije prede:
+- Flyknit Yarn 2.0 (primarna preda) - koristi se za najveći dio upper-a
+- Support Yarn (strukturalna preda) - koristi se za zone koje zahtijevaju
+  pojačanu krutost i podršku
+- Stretch Yarn (elastična preda) - koristi se za zone koje zahtijevaju
+  visoku elastičnost
+
+Svaka od ovih prede ima precizno definirane tehničke specifikacije koje su
+detaljno opisane u narednim sekcijama. Korištenje bilo kojeg materijala koji
+ne odgovara ovim specifikacijama strogo je zabranjeno bez prethodnog odobrenja
+Nike Materials Engineering tima.
+
+================================================================================
+3. FLYKNIT YARN 2.0 - PRIMARNA PREDA
+================================================================================
+
+3.1 Opšte karakteristike
+-------------------------
+
+Flyknit Yarn 2.0 je primarna preda koja čini osnovu svakog Flyknit upper-a.
+Ova preda je dizajnirana da pruži optimalan balans između čvrstoće,
+fleksibilnosti, lakoće i estetskog izgleda. Koristi se na svim zonama
+upper-a osim onih koje zahtijevaju specifičnu pojačanu krutost ili elastičnost.
+
+3.2 Sastav vlakana
+-------------------
+
+Flyknit Yarn 2.0 ima sljedeći sastav vlakana:
+- Polyester (PET): 60% — Pruža čvrstoću, otpornost na habanje, stabilnost
+  dimenzija, otpornost na UV zračenje i vlagu. Koristi se reciklirani polyester
+  (rPET) u skladu sa Nike Move to Zero inicijativom.
+- Elastane (Spandex): 30% — Osigurava elastičnost, povratnu deformaciju
+  (recovery) i udobnost pri nošenju. Ravnomjerno je raspoređen kroz
+  strukturu prede za konzistentnu elastičnost.
+- Nylon (PA 6.6): 10% — Doprinosi otpornosti na abraziju i povećava
+  ukupnu izdržljivost prede. Posebno značajan za zone izložene habanju.
+
+3.3 Tehničke specifikacije
+---------------------------
+
+Parametar                    Specifikacija          Tolerancija
+---------------------------------------------------------------------------
+Linearna gustina (Dtex)      150/48                 ±5%
+Broj filamenata              48                     -
+Čvrstoća (tenacity)          min 4.5 cN/dtex       -
+Elongation at break          25-35%                 -
+Twist (uvijanje)             S-twist, 300-350 T/m   ±5%
+Toplinska stabilnost         do 180°C / 30 sec      -
+Skupljanje na 150°C          max 3.5%               -
+Otpornost na abraziju        min 20,000 ciklusa     Martindale metoda
+Moisture regain              max 0.4%               -
+
+3.4 Dobavljač i certifikati
+----------------------------
+
+Primarni dobavljač Flyknit Yarn 2.0 je Toray Industries, Inc. iz Japana,
+jedan od vodećih globalnih proizvođača tehničkih vlakana i tekstila. Toray
+je Nike-ov strateški partner za razvoj Flyknit tehnologije i jedini odobreni
+dobavljač za ovu predu.
+
+Podaci o dobavljaču:
+- Kompanija: Toray Industries, Inc.
+- Sjedište: Tokyo, Japan
+- Kontakt za Sportek: Toray Europe GmbH, Frankfurt, Njemačka
+- Lead time: 8-12 sedmica (standardne boje), 14-16 sedmica (specijalne boje)
+- Minimalna količina narudžbe (MOQ): 50 kg po boji
+- Pakovanje: kolut 5 kg, karton 20 kg (4 koluta)
+
+Certifikati koje preda mora posjedovati:
+- OEKO-TEX Standard 100, Class I — Potvrda da materijal ne sadrži štetne
+  supstance, najstrožija klasa primjenjiva za proizvode u kontaktu sa kožom.
+- bluesign APPROVED — Potvrda da je cijeli proizvodni proces usklađen sa
+  najvišim ekološkim i sigurnosnim standardima, uključujući kontrolu
+  kemikalija, emisija i potrošnje resursa.
+- GRS (Global Recycled Standard) — Za rPET komponentu, potvrda recikliranog
+  sadržaja i odgovornog upravljanja proizvodnim procesom.
+
+3.5 Paleta boja
+----------------
+
+Standardna Flyknit Yarn 2.0 paleta obuhvata 48 boja koje su definirane u
+Nike Color System (NCS) katalogu. Svaka boja ima jedinstveni NCS kod,
+Pantone ekvivalent i Lab vrijednosti za instrumentalnu kontrolu.
+
+Boje su grupisane u kategorije:
+- Neutralne (12 boja): bijela, crna, siva (3 nijanse), bež, navy, tamno braon,
+  slonovača, antracit, grafitna, srebrno siva
+- Sportske (18 boja): crvena (3 nijanse), plava (3), zelena (2), žuta (2),
+  narandžasta (2), pink (2), ljubičasta (2), tirkizna, koralna
+- Sezonske (18 boja): mijenjaju se dva puta godišnje prema Nike sezonskim
+  kolekcijama (Spring/Summer i Fall/Winter)
+
+Za specijalne boje izvan standardne palete potrebna je narudžba sa minimalnom
+količinom od 100 kg i lead time od 14-16 sedmica. Sve specijalne boje moraju
+biti odobrene od Nike Color Engineering tima prije narudžbe.
+
+================================================================================
+4. SUPPORT YARN - STRUKTURALNA PREDA
+================================================================================
+
+4.1 Opšte karakteristike
+-------------------------
+
+Support Yarn je strukturalna preda koja se koristi za zone obuće koje
+zahtijevaju povećanu krutost, stabilnost oblika i otpornost na deformaciju.
+Tipične zone primjene uključuju petu (heel counter area), prednji dio
+(toe box), bočne strane obuće (lateral/medial sides) i zonu šniranja
+(eyelet area).
+
+Ova preda se plete u kombinaciji sa Flyknit Yarn 2.0 na istoj mašini,
+pri čemu program za pletenje definiše tačne zone u kojima se Support Yarn
+aktivira. Na taj način se postiže seamless integracija strukturalnih zona
+u ukupnu konstrukciju upper-a.
+
+4.2 Sastav vlakana
+-------------------
+
+Support Yarn se sastoji od:
+- Nylon 6.6 (PA 6.6): 100% — Izabran zbog izuzetne čvrstoće, krutosti,
+  otpornosti na habanje i dobre dimenzionalne stabilnosti. Nylon 6.6
+  pruža značajno veću krutost u poređenju sa polyester-om, što je ključno
+  za strukturalne zone obuće.
+
+4.3 Tehničke specifikacije
+---------------------------
+
+Parametar                    Specifikacija          Tolerancija
+---------------------------------------------------------------------------
+Linearna gustina (Dtex)      220/68                 ±5%
+Broj filamenata              68                     -
+Čvrstoća (tenacity)          min 6.0 cN/dtex       -
+Elongation at break          18-25%                 -
+Twist (uvijanje)             S-twist, 250-300 T/m   ±5%
+Toplinska stabilnost         do 200°C / 30 sec      -
+Skupljanje na 150°C          max 2.5%               -
+Otpornost na abraziju        min 30,000 ciklusa     Martindale metoda
+Moisture regain              max 4.0%               -
+Krutost (stiffness)          min 15 cN              ASTM D4032
+
+Support Yarn ima značajno veću linearnu gustinu (220 vs 150 Dtex) i krutost
+u odnosu na Flyknit Yarn 2.0, što rezultira čvršćom strukturom pletiva na
+zonama gdje se koristi. Veći broj filamenata (68 vs 48) doprinosi glatkoćoj
+površini i boljoj pokrivenosti.
+
+4.4 Dobavljač
+--------------
+
+- Kompanija: Hyosung TNC Co., Ltd.
+- Sjedište: Seoul, Južna Koreja
+- Kontakt za Sportek: Hyosung Europe, Milano, Italija
+- Lead time: 6-10 sedmica
+- MOQ: 30 kg po boji
+- Pakovanje: kolut 3 kg, karton 18 kg (6 koluta)
+- Certifikati: OEKO-TEX Standard 100 Class I, bluesign APPROVED
+
+Paleta boja za Support Yarn obuhvata 24 boje koje su usklađene sa Flyknit
+Yarn 2.0 paletom. Budući da se Support Yarn koristi uglavnom u strukturalnim
+zonama koje su manje vidljive, paleta je ograničena na najčešće korištene boje.
+
+================================================================================
+5. STRETCH YARN - ELASTIČNA PREDA
+================================================================================
+
+5.1 Opšte karakteristike
+-------------------------
+
+Stretch Yarn je elastična preda specijalno dizajnirana za zone obuće koje
+zahtijevaju visoku elastičnost, udobnost pri oblačenju i skidanju obuće, te
+sposobnost prilagođavanja obliku stopala. Tipične zone primjene uključuju
+kragnu (collar), jezičak (tongue), zone savijanja (flex zones) na prednjem
+dijelu obuće i područja oko gležnja.
+
+Ova preda ima core-spun strukturu u kojoj elastično jezgro od spandex-a
+pruža elastičnost, dok polyester omot osigurava zaštitu jezgra i kompatibilnost
+sa procesom pletenja na SHIMA SEIKI mašinama. Ovakva struktura omogućava
+elongaciju od 200-300%, što je značajno više od ostalih prede u Flyknit
+sistemu.
+
+5.2 Sastav vlakana
+-------------------
+
+Stretch Yarn ima core-spun strukturu:
+- Jezgro (core): Spandex (elastane) — Pruža elastičnost i sposobnost povratne
+  deformacije. Jezgro čini približno 20-25% ukupne mase prede.
+- Omot (cover): Polyester (PET) — Zaštita spandex jezgra od mehaničkih
+  oštećenja tokom pletenja, UV zračenja i toplote. Omot čini 75-80% mase.
+
+5.3 Tehničke specifikacije
+---------------------------
+
+Parametar                    Specifikacija          Tolerancija
+---------------------------------------------------------------------------
+Linearna gustina (Dtex)      110/36                 ±5%
+Broj filamenata              36 (omot)              -
+Čvrstoća (tenacity)          min 2.5 cN/dtex       -
+Elongation at break          200-300%               -
+Recovery (povratna def.)     min 95% @ 100% ext.    -
+Twist (uvijanje)             S-twist, 400-450 T/m   ±5%
+Toplinska stabilnost         do 150°C / 30 sec      -
+Skupljanje na 130°C          max 5.0%               -
+Set temperature              130-140°C              -
+
+NAPOMENA: Stretch Yarn ima nižu toplinsku stabilnost od ostalih prede u
+sistemu. Ovo se mora uzeti u obzir pri steam setting procesu i svim
+termičkim obradama. Prekoračenje temperature od 150°C može rezultirati
+trajnim oštećenjem spandex jezgra i gubitkom elastičnosti.
+
+5.4 Dobavljač
+--------------
+
+- Kompanija: Toray Industries, Inc.
+- Sjedište: Tokyo, Japan
+- Kontakt: Toray Europe GmbH, Frankfurt, Njemačka
+- Lead time: 10-14 sedmica
+- MOQ: 20 kg po boji
+- Pakovanje: kolut 2 kg, karton 16 kg (8 koluta)
+- Certifikati: OEKO-TEX Standard 100 Class I, bluesign APPROVED
+
+Paleta boja za Stretch Yarn obuhvata 16 osnovnih boja. Budući da se Stretch
+Yarn koristi pretežno u collar i tongue zonama, paleta je ograničena na
+najčešće potrebne boje koje odgovaraju ukupnoj estetici modela.
+
+================================================================================
+6. SKLADIŠTENJE I ČUVANJE MATERIJALA
+================================================================================
+
+6.1 Uslovi skladištenja
+-------------------------
+
+Pravilno skladištenje prede je kritično za očuvanje tehničkih karakteristika
+materijala i osiguranje konzistentnog kvaliteta proizvodnje. Svi tipovi
+Flyknit prede moraju se čuvati pod sljedećim uslovima:
+
+Parametar                    Zahtjev                 Alarm granica
+---------------------------------------------------------------------------
+Temperatura                  20-25°C                 <18°C ili >28°C
+Relativna vlažnost (RH)      45-65%                  <40% ili >70%
+Direktna sunčeva svjetlost   Zabranjena              -
+Fluorescentno osvjetljenje   Prihvatljivo             -
+Blizina izvora toplote       Min 2 metra             -
+Blizina hemikalija           Zabranjena u istoj zoni  -
+
+Skladište za predu mora biti opremljeno termohigrometrom sa kontinuiranim
+zapisom podataka. Podaci se čitaju i evidentiraju dnevno od strane
+skladišnog radnika. Svako odstupanje od dozvoljenih granica mora se
+prijaviti šefu skladišta i QC odjelu u roku od jednog sata.
+
+6.2 Rok trajanja i rotacija
+-----------------------------
+
+Rok trajanja za sve tipove Flyknit prede je 24 mjeseca od datuma proizvodnje,
+pod uslovom da se materijal čuva pod propisanim uslovima. Datum proizvodnje
+je naveden na etiketi svakog koluta i na pratećoj dokumentaciji.
+
+Obavezna je primjena FIFO (First In, First Out) principa rotacije zaliha.
+Svaki prijem materijala se evidentira u WMS sistemu sa datumom prijema i
+datumom proizvodnje. Sistem automatski upozorava na materijale kojima
+preostaje manje od 3 mjeseca do isteka roka.
+
+Materijal kojem je istekao rok trajanja se ne smije koristiti u proizvodnji
+bez prethodnog retestiranja i odobrenja od strane QC menadžera. Retestiranje
+obuhvata provjeru čvrstoće, elongacije, boje i vizuelni pregled.
+
+6.3 Organizacija skladišta
+----------------------------
+
+Preda se skladišti na regale u originalnom pakovanju. Organizacija je
+sljedeća:
+- Regali A1-A10: Flyknit Yarn 2.0 — organizovano po bojama, abecedni red
+  NCS kodova
+- Regali B1-B5: Support Yarn — organizovano po bojama
+- Regali C1-C3: Stretch Yarn — organizovano po bojama
+- Regal D1: materijali za retestiranje ili karantin
+- Regal D2: uzorci i referentni materijali
+
+Svaka lokacija na regalu je označena identifikacionom karticom koja sadrži:
+tip prede, boju, NCS kod, lot number, datum prijema i količinu.
+
+================================================================================
+7. ULAZNA KONTROLA KVALITETA
+================================================================================
+
+Svaka isporuka prede mora proći kompletnu ulaznu kontrolu kvaliteta prije
+nego što se materijal pusti u proizvodnju. Ulazna kontrola se obavlja u
+QC laboratoriju i uključuje sljedeće testove:
+
+7.1 Vizuelna inspekcija
+-------------------------
+
+Vizuelna inspekcija se vrši na svakom kolutu u isporuci. Kontrola obuhvata:
+- Provjera boje: vizualno poređenje sa referentnim uzorkom pod standardnim
+  D65 osvjetljenjem. Svaka primjetna razlika u boji se dokumentuje i
+  označeni kolut se stavlja u karantin do instrumentalne potvrde.
+- Provjera čistoće: identifikacija stranih vlakana, nečistoća, ulja ili
+  bilo kakvih kontaminanata na predi. Kontaminirani kolut se odvaja i
+  pokreće reklamacija.
+- Provjera namotaja: ravnomjernost namotaja, prisustvo čvorova, labavi
+  krajevi ili oštećenja koluta. Loš namotaj može uzrokovati probleme pri
+  pletenju na SHIMA SEIKI mašinama.
+- Provjera pakovanja: integritet originalnog pakovanja, prisustvo etiketa
+  i prateće dokumentacije.
+
+7.2 Test tenzije
+-----------------
+
+Test tenzije se vrši na tri uzorka po kolutu koristeći USTER Tensorapid
+uređaj. Za svaki uzorak se mjere čvrstoća (tenacity) u cN/dtex, elongation
+at break u procentima i modul elastičnosti.
+
+Rezultati moraju biti unutar specifikacija navedenih u sekcijama 3, 4 i 5
+ovog dokumenta za odgovarajući tip prede. Ako bilo koji od tri uzorka ne
+zadovoljava specifikaciju, testira se dodatnih pet uzoraka sa istog koluta.
+Ako i jedan od dodatnih uzoraka ne zadovoljava, kompletan kolut se odbija.
+
+7.3 Dtex verifikacija
+-----------------------
+
+Verifikacija linearne gustine (Dtex) vrši se vaganjem precizno odmjerene
+dužine prede. Postupak:
+1. Odmotati 100 metara prede sa koluta koristeći Wrap Reel uređaj
+2. Izvagati odmotanu predu na analitičkoj vagi (preciznost 0.001 g)
+3. Izračunati Dtex: masa (g) × 100 = Dtex vrijednost
+4. Ponoviti mjerenje tri puta i izračunati srednju vrijednost
+5. Srednja vrijednost mora biti unutar ±5% od nominalne specifikacije
+
+Primjer za Flyknit Yarn 2.0 (nominalno 150 Dtex):
+- Donja granica: 142.5 Dtex
+- Gornja granica: 157.5 Dtex
+
+7.4 Kontrola boje - spektrofotometar
+--------------------------------------
+
+Instrumentalna kontrola boje je obavezna za svaku isporuku i vrši se pomoću
+X-Rite CI64 spektrofotometra. Mjerenje se vrši na namotanom uzorku prede
+pod standardiziranim uslovima (D65 iluminant, 10° observer, SCI mode).
+
+Kriterij prihvatljivosti: Delta E (CIE Lab) < 0.5 u odnosu na referentni
+uzorak odobrenu od strane Nike Color Engineering tima.
+
+Postupak mjerenja:
+1. Pripremiti uzorak namotavanjem prede na bijeli kartonski nosač u jednom
+   smjeru, bez praznina
+2. Izvršiti minimum 4 mjerenja na različitim pozicijama uzorka
+3. Izračunati srednju vrijednost L*, a*, b* i Delta E
+4. Dokumentovati rezultate u QC zapisnik sa fotografijom ekrana
+
+Ako je Delta E između 0.5 i 1.0, materijal se stavlja u karantin i šalje
+se izvještaj Nike Color Engineering timu na odluku. Ako je Delta E > 1.0,
+materijal se automatski odbija i pokreće se reklamacija.
+
+7.5 Dokumentacija ulazne kontrole
+-----------------------------------
+
+Za svaku isporuku se popunjava obrazac QC-INC-001 (Incoming Material
+Inspection Report) koji sadrži:
+- Datum prijema i datum kontrole
+- Broj narudžbenice i dostavnice
+- Tip prede, boja, lot number, količina
+- Rezultati svih testova sa mjernim vrijednostima
+- Status: PRIHVAĆENO / USLOVNO PRIHVAĆENO / ODBIJENO
+- Potpis QC inspektora i datum
+
+Obrazac se čuva u elektronskom i štampanom obliku minimalno 5 godina.
+
+================================================================================
+8. RUKOVANJE MATERIJALIMA
+================================================================================
+
+8.1 Opšta pravila rukovanja
+-----------------------------
+
+Pravilno rukovanje predom je jednako važno kao i pravilno skladištenje.
+Nepropisno rukovanje može rezultirati kontaminacijom, mehaničkim oštećenjem
+vlakana ili promjenom boje, što direktno utiče na kvalitet gotovog proizvoda.
+
+Osnovna pravila rukovanja:
+- Obavezno nošenje čistih pamučnih rukavica pri svakom kontaktu sa predom.
+  Masnoća i znoj sa kože mogu uzrokovati mrlje, promjenu boje i slabljenje
+  vlakana. Rukavice se mijenjaju minimalno dva puta u smjeni.
+- Zabranjen kontakt prede sa vlažnim površinama. Vlaga može uzrokovati
+  bubrenje vlakana, promjenu tenzionih karakteristika i razvoj plijesni
+  u skladištu.
+- Transport prede unutar pogona vrši se isključivo u originalnom pakovanju
+  ili u za to predviđenim zatvorenim kontejnerima. Otvoreni koluti se ne
+  smiju prenositi kroz proizvodne zone bez zaštite.
+- Preda se ne smije postavljati direktno na pod, metalne površine ili u
+  blizini izvora toplote, hemikalija ili boja.
+- Pri postavljanju prede na SHIMA SEIKI mašinu, operater mora provjeriti
+  čistoću yarn guide sistema i osigurati da nema oštrih rubova koji bi
+  mogli oštetiti predu.
+
+8.2 Postupak izdavanja iz skladišta
+-------------------------------------
+
+Izdavanje prede iz skladišta vrši se isključivo na osnovu proizvodnog naloga
+i zahtjevnice za materijal (obrazac MAT-REQ-001). Postupak:
+1. Planer proizvodnje kreira zahtjevnicu sa količinama po bojama i tipu prede
+2. Skladištar provjerava raspoloživost i primjenjuje FIFO princip
+3. QC inspektor potvrđuje da materijal ima važeći status ulazne kontrole
+4. Skladištar izdaje materijal i evidentira u WMS sistemu
+5. Materijal se transportuje do proizvodne linije u zatvorenim kontejnerima
+
+8.3 Povrat neiskorištenog materijala
+--------------------------------------
+
+Neiskorišteni materijal sa proizvodne linije se vraća u skladište istog dana.
+Koluti moraju biti uredno namotani, zaštićeni originalnim pakovanjem i
+popraćeni povratnicom (obrazac MAT-RET-001). Skladištar evidentira povrat
+i smješta materijal na odgovarajuću lokaciju u regalu.
+
+================================================================================
+9. POSTUPAK REKLAMACIJE
+================================================================================
+
+9.1 Pokretanje reklamacije
+----------------------------
+
+Reklamacija se pokreće kada ulazna kontrola ili proizvodnja identifikuju
+materijal koji ne zadovoljava specifikacije. Postupak reklamacije obuhvata:
+
+1. Identifikacija problema: QC inspektor ili operater identifikuje problem
+   sa materijalom (odstupanje u boji, tenziji, Dtex-u, kontaminacija,
+   mehanička oštećenja, ili drugi nedostatak).
+
+2. Dokumentacija: Za svaku reklamaciju se obavezno priprema:
+   - Fotografija defekta/problema (minimalno 3 fotografije iz različitih
+     uglova, rezolucija min 5 MP)
+   - Fizički uzorak materijala (minimalno 5 metara prede sa identifikovanim
+     problemom)
+   - Lot number sa etikete koluta
+   - Rezultati testova koji pokazuju odstupanje od specifikacije
+   - Broj narudžbenice i datum prijema materijala
+
+3. Popunjavanje obrasca: QC inspektor popunjava obrazac QC-RCL-001
+   (Material Reclamation Form) koji sadrži sve gore navedene podatke
+   plus opis problema i procijenjeni uticaj na proizvodnju.
+
+9.2 Rok za reklamaciju
+------------------------
+
+Rok za podnošenje reklamacije dobavljaču je 14 kalendarskih dana od datuma
+prijema materijala u skladište Sportek d.o.o. Za reklamacije koje se odnose
+na skrivene nedostatke koji se mogu otkriti tek tokom proizvodnog procesa,
+rok je 14 dana od datuma identifikacije problema, ali ne duže od 60 dana
+od datuma prijema.
+
+Reklamacija se šalje dobavljaču putem e-maila na registrovanu kontakt adresu
+sa priloženim obrascem, fotografijama i test rezultatima. Kopija se šalje
+Nike Materials Engineering timu za informaciju.
+
+9.3 Očekivani odgovor dobavljača
+----------------------------------
+
+Dobavljač je obavezan da odgovori na reklamaciju u roku od 5 radnih dana sa
+inicijalnom potvrdom prijema i planom rješavanja. Konačno rješenje (zamjena
+materijala, kredit ili korekcija) mora biti dogovoreno u roku od 30 dana.
+
+Ako dobavljač ne odgovori u definisanom roku, Sportek eskalira slučaj putem
+Nike Materials Engineering tima. Ponavljajuće reklamacije (3 ili više za
+isti tip problema u periodu od 12 mjeseci) rezultiraju pokretanjem procesa
+evaluacije dobavljača i potencijalnom promjenom dobavljača.
+
+================================================================================
+10. TABELA DOBAVLJAČA I NARUDŽBINE
+================================================================================
+
+Tip prede         Dobavljač          Kontakt region    MOQ      Lead time
+---------------------------------------------------------------------------
+Flyknit Yarn 2.0  Toray Industries   Europa (Frankfurt) 50 kg   8-12 sed.
+Support Yarn      Hyosung TNC        Europa (Milano)    30 kg   6-10 sed.
+Stretch Yarn      Toray Industries   Europa (Frankfurt) 20 kg   10-14 sed.
+
+Narudžbe se kreiraju na osnovu MRP plana koji se ažurira sedmično. Minimalna
+sigurnosna zaliha za svaki tip prede je dvosedmična potrošnja na osnovu
+aktuelnog plana proizvodnje. Narudžbe se šalju dobavljačima putem EDI sistema
+ili e-mailom na registrovane kontakt adrese.
+
+Za hitne narudžbe (lead time kraći od standardnog) postoji mogućnost
+ekspresne isporuke uz dodatni trošak od 15-25% na cijenu materijala.
+Ekspresne narudžbe moraju biti odobrene od strane direktora nabavke.
+
+================================================================================
+11. HISTORIJA REVIZIJA
+================================================================================
+
+Rev.  Datum         Opis izmjene                           Autor
+---------------------------------------------------------------------------
+01    15.04.2024.   Inicijalno izdanje                     J. Marković
+02    01.08.2024.   Dodana sekcija Stretch Yarn            J. Marković
+03    15.03.2025.   Ažurirani Delta E kriteriji            J. Marković
+04    10.01.2026.   Ažurirani dobavljači i certifikati,    J. Marković
+                    dodani GRS certifikati za rPET
+
+================================================================================
+KRAJ DOKUMENTA
+Dokument MAT-SPEC-006, Rev. 04
+Sportek d.o.o. Banja Luka
+Klasifikacija: INTERNO - POVJERLJIVO
+================================================================================
