@@ -1,0 +1,5009 @@
+{
+  "days_ahead": 30,
+  "total_at_risk": 500,
+  "high_risk": 500,
+  "medium_risk": 0,
+  "total_order_value_eur": 6396112.91,
+  "risks": [
+    {
+      "material_id": "MAT_0203",
+      "material_name": "Shoe Box 310x210 Kraft M",
+      "current_stock": 126,
+      "days_until_stockout": 0.4,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 9661,
+      "estimated_cost": 6762.7
+    },
+    {
+      "material_id": "MAT_0095",
+      "material_name": "Shoe Box 310x210 Kraft Eco",
+      "current_stock": 131,
+      "days_until_stockout": 0.5,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 9734,
+      "estimated_cost": 5061.68
+    },
+    {
+      "material_id": "MAT_0225",
+      "material_name": "Shoe Box 330x230 White S",
+      "current_stock": 191,
+      "days_until_stockout": 0.5,
+      "lead_time_days": 5,
+      "risk_level": "high",
+      "recommended_order_qty": 10153,
+      "estimated_cost": 7513.22
+    },
+    {
+      "material_id": "MAT_0464",
+      "material_name": "TPU Film Clear 0.3mm Narrow",
+      "current_stock": 17,
+      "days_until_stockout": 0.5,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 845,
+      "estimated_cost": 6692.4
+    },
+    {
+      "material_id": "MAT_0128",
+      "material_name": "Shoe Box 310x210 Kraft L",
+      "current_stock": 193,
+      "days_until_stockout": 0.6,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 8814,
+      "estimated_cost": 6169.8
+    },
+    {
+      "material_id": "MAT_0401",
+      "material_name": "Flat Laces 120cm Moss",
+      "current_stock": 153,
+      "days_until_stockout": 0.6,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 6886,
+      "estimated_cost": 6335.12
+    },
+    {
+      "material_id": "MAT_0417",
+      "material_name": "Shoe Box 310x210 Kraft HD",
+      "current_stock": 223,
+      "days_until_stockout": 0.6,
+      "lead_time_days": 2,
+      "risk_level": "high",
+      "recommended_order_qty": 10492,
+      "estimated_cost": 6505.04
+    },
+    {
+      "material_id": "MAT_0040",
+      "material_name": "Shoe Box 330x230 White Eco",
+      "current_stock": 128,
+      "days_until_stockout": 0.7,
+      "lead_time_days": 5,
+      "risk_level": "high",
+      "recommended_order_qty": 6755,
+      "estimated_cost": 4998.7
+    },
+    {
+      "material_id": "MAT_0163",
+      "material_name": "Shoe Box 310x210 Kraft XL",
+      "current_stock": 174,
+      "days_until_stockout": 0.7,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 9199,
+      "estimated_cost": 5059.45
+    },
+    {
+      "material_id": "MAT_0373",
+      "material_name": "Shoe Box 310x210 Kraft v2",
+      "current_stock": 107,
+      "days_until_stockout": 0.7,
+      "lead_time_days": 4,
+      "risk_level": "high",
+      "recommended_order_qty": 6912,
+      "estimated_cost": 3801.6
+    },
+    {
+      "material_id": "MAT_0421",
+      "material_name": "Shoe Box 310x210 Kraft S",
+      "current_stock": 189,
+      "days_until_stockout": 0.7,
+      "lead_time_days": 2,
+      "risk_level": "high",
+      "recommended_order_qty": 8484,
+      "estimated_cost": 6023.64
+    },
+    {
+      "material_id": "MAT_0445",
+      "material_name": "Shoe Box 310x210 Kraft Ultra",
+      "current_stock": 294,
+      "days_until_stockout": 0.7,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 10148,
+      "estimated_cost": 7103.6
+    },
+    {
+      "material_id": "MAT_0005",
+      "material_name": "EVA Foam Sheet 12mm",
+      "current_stock": 79,
+      "days_until_stockout": 0.8,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 1889,
+      "estimated_cost": 9955.03
+    },
+    {
+      "material_id": "MAT_0034",
+      "material_name": "Shoe Box 330x230 White Lite",
+      "current_stock": 104,
+      "days_until_stockout": 0.8,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 5433,
+      "estimated_cost": 4400.73
+    },
+    {
+      "material_id": "MAT_0080",
+      "material_name": "Shoe Box 310x210 Kraft Wide",
+      "current_stock": 214,
+      "days_until_stockout": 0.8,
+      "lead_time_days": 4,
+      "risk_level": "high",
+      "recommended_order_qty": 10063,
+      "estimated_cost": 5132.13
+    },
+    {
+      "material_id": "MAT_0141",
+      "material_name": "Flat Laces 120cm Wide",
+      "current_stock": 99,
+      "days_until_stockout": 0.8,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 5243,
+      "estimated_cost": 4141.97
+    },
+    {
+      "material_id": "MAT_0345",
+      "material_name": "Shoe Box 330x230 White XL",
+      "current_stock": 272,
+      "days_until_stockout": 0.8,
+      "lead_time_days": 4,
+      "risk_level": "high",
+      "recommended_order_qty": 8718,
+      "estimated_cost": 6887.22
+    },
+    {
+      "material_id": "MAT_0412",
+      "material_name": "Shoe Box 310x210 Kraft Lite",
+      "current_stock": 216,
+      "days_until_stockout": 0.8,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 8951,
+      "estimated_cost": 5728.64
+    },
+    {
+      "material_id": "MAT_0361",
+      "material_name": "Shoe Box 330x230 White Ultra",
+      "current_stock": 108,
+      "days_until_stockout": 0.9,
+      "lead_time_days": 4,
+      "risk_level": "high",
+      "recommended_order_qty": 5727,
+      "estimated_cost": 3951.63
+    },
+    {
+      "material_id": "MAT_0440",
+      "material_name": "TPU Film Clear 0.3mm HD",
+      "current_stock": 41,
+      "days_until_stockout": 0.9,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 1027,
+      "estimated_cost": 8174.92
+    },
+    {
+      "material_id": "MAT_0496",
+      "material_name": "Flat Laces 120cm Pro",
+      "current_stock": 168,
+      "days_until_stockout": 0.9,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 6906,
+      "estimated_cost": 5179.5
+    },
+    {
+      "material_id": "MAT_0018",
+      "material_name": "Shoe Box 310x210 Kraft",
+      "current_stock": 391,
+      "days_until_stockout": 1.0,
+      "lead_time_days": 4,
+      "risk_level": "high",
+      "recommended_order_qty": 11063,
+      "estimated_cost": 6416.54
+    },
+    {
+      "material_id": "MAT_0056",
+      "material_name": "Flat Laces 120cm Eco",
+      "current_stock": 120,
+      "days_until_stockout": 1.0,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 4652,
+      "estimated_cost": 4512.44
+    },
+    {
+      "material_id": "MAT_0057",
+      "material_name": "Round Laces 110cm v3",
+      "current_stock": 77,
+      "days_until_stockout": 1.0,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 4092,
+      "estimated_cost": 3478.2
+    },
+    {
+      "material_id": "MAT_0144",
+      "material_name": "Flat Laces 120cm Navy",
+      "current_stock": 210,
+      "days_until_stockout": 1.0,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 6557,
+      "estimated_cost": 5901.3
+    },
+    {
+      "material_id": "MAT_0220",
+      "material_name": "Shoe Box 330x230 White v2",
+      "current_stock": 294,
+      "days_until_stockout": 1.0,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 8872,
+      "estimated_cost": 5944.24
+    },
+    {
+      "material_id": "MAT_0323",
+      "material_name": "TPU Film Clear 0.3mm Rust",
+      "current_stock": 25,
+      "days_until_stockout": 1.0,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 670,
+      "estimated_cost": 7081.9
+    },
+    {
+      "material_id": "MAT_0451",
+      "material_name": "Shoe Box 330x230 White M",
+      "current_stock": 349,
+      "days_until_stockout": 1.0,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 8594,
+      "estimated_cost": 7304.9
+    },
+    {
+      "material_id": "MAT_0029",
+      "material_name": "Shoe Box 330x230 White",
+      "current_stock": 420,
+      "days_until_stockout": 1.1,
+      "lead_time_days": 4,
+      "risk_level": "high",
+      "recommended_order_qty": 10045,
+      "estimated_cost": 7031.5
+    },
+    {
+      "material_id": "MAT_0150",
+      "material_name": "EVA Foam Sheet 12mm v3",
+      "current_stock": 104,
+      "days_until_stockout": 1.1,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 1913,
+      "estimated_cost": 8780.67
+    },
+    {
+      "material_id": "MAT_0259",
+      "material_name": "Shoe Box 330x230 White L",
+      "current_stock": 391,
+      "days_until_stockout": 1.1,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 9552,
+      "estimated_cost": 6877.44
+    },
+    {
+      "material_id": "MAT_0360",
+      "material_name": "TPU Film Clear 0.3mm Ultra",
+      "current_stock": 54,
+      "days_until_stockout": 1.1,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 1050,
+      "estimated_cost": 8872.5
+    },
+    {
+      "material_id": "MAT_0367",
+      "material_name": "Shoe Box 310x210 Kraft v3",
+      "current_stock": 142,
+      "days_until_stockout": 1.1,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 6550,
+      "estimated_cost": 3733.5
+    },
+    {
+      "material_id": "MAT_0450",
+      "material_name": "Round Laces 110cm Beige",
+      "current_stock": 107,
+      "days_until_stockout": 1.1,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 4414,
+      "estimated_cost": 3928.46
+    },
+    {
+      "material_id": "MAT_0067",
+      "material_name": "Shoe Box 330x230 White Narrow",
+      "current_stock": 253,
+      "days_until_stockout": 1.2,
+      "lead_time_days": 3,
+      "risk_level": "high",
+      "recommended_order_qty": 7211,
+      "estimated_cost": 5264.03
+    },
+    {
+      "material_id": "MAT_0164",
+      "material_name": "EVA Foam Sheet 8mm S",
+      "current_stock": 85,
+      "days_until_stockout": 1.2,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 1694,
+      "estimated_cost": 7758.52
+    },
+    {
+      "material_id": "MAT_0261",
+      "material_name": "TPU Film Matte 0.3mm Wide",
+      "current_stock": 63,
+      "days_until_stockout": 1.2,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 1066,
+      "estimated_cost": 8901.1
+    },
+    {
+      "material_id": "MAT_0413",
+      "material_name": "TPU Film Clear 0.3mm Pro",
+      "current_stock": 33,
+      "days_until_stockout": 1.2,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 691,
+      "estimated_cost": 7400.61
+    },
+    {
+      "material_id": "MAT_0498",
+      "material_name": "Round Laces 110cm Pro",
+      "current_stock": 132,
+      "days_until_stockout": 1.2,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 4828,
+      "estimated_cost": 4007.24
+    },
+    {
+      "material_id": "MAT_0013",
+      "material_name": "PU Adhesive PU-400",
+      "current_stock": 45,
+      "days_until_stockout": 1.3,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 632,
+      "estimated_cost": 9808.64
+    },
+    {
+      "material_id": "MAT_0031",
+      "material_name": "EVA Foam Sheet 12mm v2",
+      "current_stock": 85,
+      "days_until_stockout": 1.3,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 1650,
+      "estimated_cost": 7408.5
+    },
+    {
+      "material_id": "MAT_0032",
+      "material_name": "Flat Laces 120cm Charcoal",
+      "current_stock": 99,
+      "days_until_stockout": 1.3,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 4300,
+      "estimated_cost": 3311.0
+    },
+    {
+      "material_id": "MAT_0074",
+      "material_name": "Shoe Box 310x210 Kraft Narrow",
+      "current_stock": 213,
+      "days_until_stockout": 1.3,
+      "lead_time_days": 4,
+      "risk_level": "high",
+      "recommended_order_qty": 7399,
+      "estimated_cost": 3995.46
+    },
+    {
+      "material_id": "MAT_0282",
+      "material_name": "NFC Tag NTAG213 XL",
+      "current_stock": 200,
+      "days_until_stockout": 1.3,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 8189,
+      "estimated_cost": 3521.27
+    },
+    {
+      "material_id": "MAT_0297",
+      "material_name": "Shoe Box 330x230 White Pro",
+      "current_stock": 440,
+      "days_until_stockout": 1.3,
+      "lead_time_days": 5,
+      "risk_level": "high",
+      "recommended_order_qty": 8964,
+      "estimated_cost": 6902.28
+    },
+    {
+      "material_id": "MAT_0078",
+      "material_name": "Shoe Box 330x230 White HD",
+      "current_stock": 316,
+      "days_until_stockout": 1.4,
+      "lead_time_days": 4,
+      "risk_level": "high",
+      "recommended_order_qty": 7467,
+      "estimated_cost": 5450.91
+    },
+    {
+      "material_id": "MAT_0086",
+      "material_name": "EVA Foam Sheet 6mm S",
+      "current_stock": 121,
+      "days_until_stockout": 1.4,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 1920,
+      "estimated_cost": 7987.2
+    },
+    {
+      "material_id": "MAT_0250",
+      "material_name": "Hot Melt HM-200 Narrow",
+      "current_stock": 15,
+      "days_until_stockout": 1.4,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 293,
+      "estimated_cost": 6859.13
+    },
+    {
+      "material_id": "MAT_0006",
+      "material_name": "TPU Film Clear 0.3mm",
+      "current_stock": 92,
+      "days_until_stockout": 1.5,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 1087,
+      "estimated_cost": 10239.54
+    },
+    {
+      "material_id": "MAT_0084",
+      "material_name": "Heel Counter Moulded M",
+      "current_stock": 122,
+      "days_until_stockout": 1.5,
+      "lead_time_days": 20,
+      "risk_level": "high",
+      "recommended_order_qty": 2113,
+      "estimated_cost": 6909.51
+    },
+    {
+      "material_id": "MAT_0136",
+      "material_name": "PU Adhesive PU-400 S",
+      "current_stock": 23,
+      "days_until_stockout": 1.5,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 380,
+      "estimated_cost": 7208.6
+    },
+    {
+      "material_id": "MAT_0202",
+      "material_name": "PU Adhesive PU-400 Pro",
+      "current_stock": 72,
+      "days_until_stockout": 1.5,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 675,
+      "estimated_cost": 12703.5
+    },
+    {
+      "material_id": "MAT_0265",
+      "material_name": "Rubber Sole Sheet EVA-RB v3",
+      "current_stock": 63,
+      "days_until_stockout": 1.5,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 740,
+      "estimated_cost": 10352.6
+    },
+    {
+      "material_id": "MAT_0304",
+      "material_name": "TPU Film Matte 0.3mm Plum",
+      "current_stock": 75,
+      "days_until_stockout": 1.5,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 943,
+      "estimated_cost": 9675.18
+    },
+    {
+      "material_id": "MAT_0332",
+      "material_name": "Flat Laces 120cm Olive",
+      "current_stock": 273,
+      "days_until_stockout": 1.5,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 6586,
+      "estimated_cost": 5071.22
+    },
+    {
+      "material_id": "MAT_0436",
+      "material_name": "NFC Tag NTAG213 Narrow",
+      "current_stock": 327,
+      "days_until_stockout": 1.5,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 8990,
+      "estimated_cost": 4405.1
+    },
+    {
+      "material_id": "MAT_0022",
+      "material_name": "Polyester Core Thread T-60",
+      "current_stock": 84,
+      "days_until_stockout": 1.6,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 1289,
+      "estimated_cost": 7643.77
+    },
+    {
+      "material_id": "MAT_0156",
+      "material_name": "Round Laces 110cm Ultra",
+      "current_stock": 224,
+      "days_until_stockout": 1.6,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 4969,
+      "estimated_cost": 5068.38
+    },
+    {
+      "material_id": "MAT_0232",
+      "material_name": "EVA Foam Sheet 6mm Ultra",
+      "current_stock": 123,
+      "days_until_stockout": 1.6,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 1891,
+      "estimated_cost": 7526.18
+    },
+    {
+      "material_id": "MAT_0275",
+      "material_name": "EVA Foam Sheet 6mm L",
+      "current_stock": 149,
+      "days_until_stockout": 1.6,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 2171,
+      "estimated_cost": 7815.6
+    },
+    {
+      "material_id": "MAT_0316",
+      "material_name": "TPU Film Clear 0.3mm Sage",
+      "current_stock": 79,
+      "days_until_stockout": 1.6,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 1033,
+      "estimated_cost": 8480.93
+    },
+    {
+      "material_id": "MAT_0335",
+      "material_name": "TPU Film Matte 0.3mm v3",
+      "current_stock": 44,
+      "days_until_stockout": 1.6,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 713,
+      "estimated_cost": 6901.84
+    },
+    {
+      "material_id": "MAT_0353",
+      "material_name": "EVA Foam Sheet 6mm HD",
+      "current_stock": 68,
+      "days_until_stockout": 1.6,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 1431,
+      "estimated_cost": 5480.73
+    },
+    {
+      "material_id": "MAT_0382",
+      "material_name": "NFC Tag NTAG213 L",
+      "current_stock": 247,
+      "days_until_stockout": 1.6,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 8355,
+      "estimated_cost": 3342.0
+    },
+    {
+      "material_id": "MAT_0050",
+      "material_name": "Flat Laces 120cm Slate",
+      "current_stock": 131,
+      "days_until_stockout": 1.7,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 3980,
+      "estimated_cost": 3621.8
+    },
+    {
+      "material_id": "MAT_0076",
+      "material_name": "Thermoplastic Stiffener 1.2mm v3",
+      "current_stock": 74,
+      "days_until_stockout": 1.7,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 1515,
+      "estimated_cost": 5181.3
+    },
+    {
+      "material_id": "MAT_0123",
+      "material_name": "Shoe Box 330x230 White v3",
+      "current_stock": 390,
+      "days_until_stockout": 1.7,
+      "lead_time_days": 4,
+      "risk_level": "high",
+      "recommended_order_qty": 8246,
+      "estimated_cost": 5112.52
+    },
+    {
+      "material_id": "MAT_0256",
+      "material_name": "TPU Film Clear 0.3mm S",
+      "current_stock": 71,
+      "days_until_stockout": 1.7,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 912,
+      "estimated_cost": 8408.64
+    },
+    {
+      "material_id": "MAT_0327",
+      "material_name": "Flat Laces 120cm XL",
+      "current_stock": 408,
+      "days_until_stockout": 1.7,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 7217,
+      "estimated_cost": 5917.94
+    },
+    {
+      "material_id": "MAT_0293",
+      "material_name": "Heel Counter Moulded L",
+      "current_stock": 141,
+      "days_until_stockout": 1.8,
+      "lead_time_days": 21,
+      "risk_level": "high",
+      "recommended_order_qty": 2217,
+      "estimated_cost": 6584.49
+    },
+    {
+      "material_id": "MAT_0433",
+      "material_name": "Shoe Box 310x210 Kraft Pro",
+      "current_stock": 274,
+      "days_until_stockout": 1.8,
+      "lead_time_days": 4,
+      "risk_level": "high",
+      "recommended_order_qty": 6187,
+      "estimated_cost": 4454.64
+    },
+    {
+      "material_id": "MAT_0461",
+      "material_name": "TPU Film Clear 0.3mm Grey",
+      "current_stock": 36,
+      "days_until_stockout": 1.8,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 609,
+      "estimated_cost": 5992.56
+    },
+    {
+      "material_id": "MAT_0038",
+      "material_name": "Polyester Core Thread T-60 Wide",
+      "current_stock": 115,
+      "days_until_stockout": 1.9,
+      "lead_time_days": 21,
+      "risk_level": "high",
+      "recommended_order_qty": 1470,
+      "estimated_cost": 7570.5
+    },
+    {
+      "material_id": "MAT_0142",
+      "material_name": "Flat Laces 120cm Ultra",
+      "current_stock": 131,
+      "days_until_stockout": 1.9,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 4015,
+      "estimated_cost": 3091.55
+    },
+    {
+      "material_id": "MAT_0191",
+      "material_name": "TPU Film Clear 0.3mm Plum",
+      "current_stock": 53,
+      "days_until_stockout": 1.9,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 702,
+      "estimated_cost": 7272.72
+    },
+    {
+      "material_id": "MAT_0222",
+      "material_name": "EVA Foam Sheet 12mm Ultra",
+      "current_stock": 119,
+      "days_until_stockout": 1.9,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 1518,
+      "estimated_cost": 7453.38
+    },
+    {
+      "material_id": "MAT_0273",
+      "material_name": "TPU Film Matte 0.3mm Beige",
+      "current_stock": 95,
+      "days_until_stockout": 1.9,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 1067,
+      "estimated_cost": 8728.06
+    },
+    {
+      "material_id": "MAT_0446",
+      "material_name": "Heel Counter Moulded Pro",
+      "current_stock": 145,
+      "days_until_stockout": 1.9,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 2213,
+      "estimated_cost": 6351.31
+    },
+    {
+      "material_id": "MAT_0047",
+      "material_name": "EVA Foam Sheet 6mm M",
+      "current_stock": 129,
+      "days_until_stockout": 2.0,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 1691,
+      "estimated_cost": 7017.65
+    },
+    {
+      "material_id": "MAT_0125",
+      "material_name": "Polyester Core Thread T-60 Lite",
+      "current_stock": 123,
+      "days_until_stockout": 2.0,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 1412,
+      "estimated_cost": 7751.88
+    },
+    {
+      "material_id": "MAT_0165",
+      "material_name": "TPU Film Clear 0.3mm Teal",
+      "current_stock": 60,
+      "days_until_stockout": 2.0,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 725,
+      "estimated_cost": 7561.75
+    },
+    {
+      "material_id": "MAT_0169",
+      "material_name": "Rubber Sole Sheet EVA-RB XL",
+      "current_stock": 74,
+      "days_until_stockout": 2.0,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 738,
+      "estimated_cost": 9151.2
+    },
+    {
+      "material_id": "MAT_0215",
+      "material_name": "TPU Film Matte 0.3mm Pro",
+      "current_stock": 87,
+      "days_until_stockout": 2.0,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 937,
+      "estimated_cost": 8376.78
+    },
+    {
+      "material_id": "MAT_0244",
+      "material_name": "Round Laces 110cm Charcoal",
+      "current_stock": 156,
+      "days_until_stockout": 2.0,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 3741,
+      "estimated_cost": 3853.23
+    },
+    {
+      "material_id": "MAT_0247",
+      "material_name": "NFC Tag NTAG213 S",
+      "current_stock": 682,
+      "days_until_stockout": 2.0,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 10988,
+      "estimated_cost": 5713.76
+    },
+    {
+      "material_id": "MAT_0415",
+      "material_name": "NFC Tag NTAG213 Lite",
+      "current_stock": 363,
+      "days_until_stockout": 2.0,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 8136,
+      "estimated_cost": 4149.36
+    },
+    {
+      "material_id": "MAT_0425",
+      "material_name": "Flat Laces 120cm v2",
+      "current_stock": 164,
+      "days_until_stockout": 2.0,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 4053,
+      "estimated_cost": 3647.7
+    },
+    {
+      "material_id": "MAT_0441",
+      "material_name": "TPU Film Matte 0.3mm Narrow",
+      "current_stock": 95,
+      "days_until_stockout": 2.0,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 1016,
+      "estimated_cost": 8442.96
+    },
+    {
+      "material_id": "MAT_0477",
+      "material_name": "EVA Foam Sheet 8mm Eco",
+      "current_stock": 166,
+      "days_until_stockout": 2.0,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 1863,
+      "estimated_cost": 8029.53
+    },
+    {
+      "material_id": "MAT_0060",
+      "material_name": "Flat Laces 120cm Cream",
+      "current_stock": 346,
+      "days_until_stockout": 2.1,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 6079,
+      "estimated_cost": 4863.2
+    },
+    {
+      "material_id": "MAT_0120",
+      "material_name": "Round Laces 110cm HD",
+      "current_stock": 240,
+      "days_until_stockout": 2.1,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 5165,
+      "estimated_cost": 4028.7
+    },
+    {
+      "material_id": "MAT_0122",
+      "material_name": "Croslite Pellets Batch v2",
+      "current_stock": 109,
+      "days_until_stockout": 2.1,
+      "lead_time_days": 28,
+      "risk_level": "high",
+      "recommended_order_qty": 1369,
+      "estimated_cost": 10844.86
+    },
+    {
+      "material_id": "MAT_0166",
+      "material_name": "TPU Film Clear 0.3mm Lite",
+      "current_stock": 60,
+      "days_until_stockout": 2.1,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 761,
+      "estimated_cost": 6947.93
+    },
+    {
+      "material_id": "MAT_0226",
+      "material_name": "PU Adhesive PU-400 M",
+      "current_stock": 68,
+      "days_until_stockout": 2.1,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 556,
+      "estimated_cost": 10513.96
+    },
+    {
+      "material_id": "MAT_0039",
+      "material_name": "EVA Foam Sheet 12mm Lite",
+      "current_stock": 222,
+      "days_until_stockout": 2.2,
+      "lead_time_days": 11,
+      "risk_level": "high",
+      "recommended_order_qty": 1788,
+      "estimated_cost": 10406.16
+    },
+    {
+      "material_id": "MAT_0071",
+      "material_name": "Shoe Box 330x230 White Wide",
+      "current_stock": 778,
+      "days_until_stockout": 2.2,
+      "lead_time_days": 5,
+      "risk_level": "high",
+      "recommended_order_qty": 9181,
+      "estimated_cost": 6977.56
+    },
+    {
+      "material_id": "MAT_0170",
+      "material_name": "Thermoplastic Stiffener 1.2mm Eco",
+      "current_stock": 86,
+      "days_until_stockout": 2.2,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 1496,
+      "estimated_cost": 4757.28
+    },
+    {
+      "material_id": "MAT_0181",
+      "material_name": "Rubber Sole Sheet EVA-RB Wide",
+      "current_stock": 138,
+      "days_until_stockout": 2.2,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 883,
+      "estimated_cost": 13015.42
+    },
+    {
+      "material_id": "MAT_0198",
+      "material_name": "EVA Foam Sheet 8mm Pro",
+      "current_stock": 236,
+      "days_until_stockout": 2.2,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 2211,
+      "estimated_cost": 8667.12
+    },
+    {
+      "material_id": "MAT_0255",
+      "material_name": "NFC Tag NTAG213 v3",
+      "current_stock": 584,
+      "days_until_stockout": 2.2,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 10625,
+      "estimated_cost": 4568.75
+    },
+    {
+      "material_id": "MAT_0277",
+      "material_name": "TPU Film Matte 0.3mm S",
+      "current_stock": 116,
+      "days_until_stockout": 2.2,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 990,
+      "estimated_cost": 9771.3
+    },
+    {
+      "material_id": "MAT_0408",
+      "material_name": "Round Laces 110cm L",
+      "current_stock": 314,
+      "days_until_stockout": 2.2,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 5014,
+      "estimated_cost": 5314.84
+    },
+    {
+      "material_id": "MAT_0418",
+      "material_name": "NFC Tag NTAG213 Beige",
+      "current_stock": 652,
+      "days_until_stockout": 2.2,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 11173,
+      "estimated_cost": 4916.12
+    },
+    {
+      "material_id": "MAT_0444",
+      "material_name": "TPU Film Matte 0.3mm Sage",
+      "current_stock": 84,
+      "days_until_stockout": 2.2,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 820,
+      "estimated_cost": 8454.2
+    },
+    {
+      "material_id": "MAT_0479",
+      "material_name": "NFC Tag NTAG213 Sand",
+      "current_stock": 363,
+      "days_until_stockout": 2.2,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 8164,
+      "estimated_cost": 3755.44
+    },
+    {
+      "material_id": "MAT_0007",
+      "material_name": "TPU Film Matte 0.3mm",
+      "current_stock": 87,
+      "days_until_stockout": 2.3,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 860,
+      "estimated_cost": 8058.2
+    },
+    {
+      "material_id": "MAT_0210",
+      "material_name": "Rubber Sole Sheet EVA-RB S",
+      "current_stock": 153,
+      "days_until_stockout": 2.3,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 877,
+      "estimated_cost": 13935.53
+    },
+    {
+      "material_id": "MAT_0423",
+      "material_name": "TPU Film Matte 0.3mm Eco",
+      "current_stock": 93,
+      "days_until_stockout": 2.3,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 854,
+      "estimated_cost": 8770.58
+    },
+    {
+      "material_id": "MAT_0030",
+      "material_name": "EVA Foam Sheet 6mm",
+      "current_stock": 198,
+      "days_until_stockout": 2.4,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 2004,
+      "estimated_cost": 7555.08
+    },
+    {
+      "material_id": "MAT_0130",
+      "material_name": "Rubber Sole Sheet EVA-RB Eco",
+      "current_stock": 152,
+      "days_until_stockout": 2.4,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 838,
+      "estimated_cost": 13709.68
+    },
+    {
+      "material_id": "MAT_0205",
+      "material_name": "Heel Counter Moulded v2",
+      "current_stock": 160,
+      "days_until_stockout": 2.4,
+      "lead_time_days": 21,
+      "risk_level": "high",
+      "recommended_order_qty": 1922,
+      "estimated_cost": 6457.92
+    },
+    {
+      "material_id": "MAT_0262",
+      "material_name": "Rubber Sole Sheet CR v3",
+      "current_stock": 158,
+      "days_until_stockout": 2.4,
+      "lead_time_days": 17,
+      "risk_level": "high",
+      "recommended_order_qty": 997,
+      "estimated_cost": 13908.15
+    },
+    {
+      "material_id": "MAT_0283",
+      "material_name": "Round Laces 110cm Coral",
+      "current_stock": 139,
+      "days_until_stockout": 2.4,
+      "lead_time_days": 17,
+      "risk_level": "high",
+      "recommended_order_qty": 3478,
+      "estimated_cost": 3095.42
+    },
+    {
+      "material_id": "MAT_0432",
+      "material_name": "PU Adhesive PU-400 XL",
+      "current_stock": 40,
+      "days_until_stockout": 2.4,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 477,
+      "estimated_cost": 6491.97
+    },
+    {
+      "material_id": "MAT_0458",
+      "material_name": "TPU Film Clear 0.3mm Ivory",
+      "current_stock": 93,
+      "days_until_stockout": 2.4,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 870,
+      "estimated_cost": 7977.9
+    },
+    {
+      "material_id": "MAT_0473",
+      "material_name": "Hot Melt HM-200 Lite",
+      "current_stock": 56,
+      "days_until_stockout": 2.4,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 428,
+      "estimated_cost": 9822.6
+    },
+    {
+      "material_id": "MAT_0486",
+      "material_name": "NFC Tag NTAG213 Plum",
+      "current_stock": 313,
+      "days_until_stockout": 2.4,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 7760,
+      "estimated_cost": 3104.0
+    },
+    {
+      "material_id": "MAT_0131",
+      "material_name": "Rubber Sole Sheet EVA-RB L",
+      "current_stock": 182,
+      "days_until_stockout": 2.5,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 994,
+      "estimated_cost": 13220.2
+    },
+    {
+      "material_id": "MAT_0143",
+      "material_name": "Round Laces 110cm Grey",
+      "current_stock": 148,
+      "days_until_stockout": 2.5,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 3624,
+      "estimated_cost": 2971.68
+    },
+    {
+      "material_id": "MAT_0148",
+      "material_name": "Silica Gel 3g Sachet Wide",
+      "current_stock": 1549,
+      "days_until_stockout": 2.5,
+      "lead_time_days": 31,
+      "risk_level": "high",
+      "recommended_order_qty": 60967,
+      "estimated_cost": 1829.01
+    },
+    {
+      "material_id": "MAT_0160",
+      "material_name": "Round Laces 110cm Narrow",
+      "current_stock": 178,
+      "days_until_stockout": 2.5,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 3539,
+      "estimated_cost": 3609.78
+    },
+    {
+      "material_id": "MAT_0264",
+      "material_name": "Heel Counter Moulded HD",
+      "current_stock": 159,
+      "days_until_stockout": 2.5,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 1901,
+      "estimated_cost": 6045.18
+    },
+    {
+      "material_id": "MAT_0333",
+      "material_name": "Nylon Bonded Thread T-70 Eco",
+      "current_stock": 47,
+      "days_until_stockout": 2.5,
+      "lead_time_days": 30,
+      "risk_level": "high",
+      "recommended_order_qty": 703,
+      "estimated_cost": 4928.03
+    },
+    {
+      "material_id": "MAT_0487",
+      "material_name": "TPU Film Matte 0.3mm Cream",
+      "current_stock": 103,
+      "days_until_stockout": 2.5,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 828,
+      "estimated_cost": 9041.76
+    },
+    {
+      "material_id": "MAT_0499",
+      "material_name": "EVA Foam Sheet 8mm Lite",
+      "current_stock": 204,
+      "days_until_stockout": 2.5,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 1761,
+      "estimated_cost": 8294.31
+    },
+    {
+      "material_id": "MAT_0035",
+      "material_name": "Hot Melt HM-200 S",
+      "current_stock": 46,
+      "days_until_stockout": 2.6,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 383,
+      "estimated_cost": 8560.05
+    },
+    {
+      "material_id": "MAT_0140",
+      "material_name": "Rubber Sole Sheet CR Lite",
+      "current_stock": 191,
+      "days_until_stockout": 2.6,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 974,
+      "estimated_cost": 13674.96
+    },
+    {
+      "material_id": "MAT_0294",
+      "material_name": "Tissue Paper White 50x75 Lite",
+      "current_stock": 2234,
+      "days_until_stockout": 2.6,
+      "lead_time_days": 30,
+      "risk_level": "high",
+      "recommended_order_qty": 44345,
+      "estimated_cost": 3547.6
+    },
+    {
+      "material_id": "MAT_0376",
+      "material_name": "Rubber Sole Sheet EVA-RB Lite",
+      "current_stock": 99,
+      "days_until_stockout": 2.6,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 705,
+      "estimated_cost": 9841.8
+    },
+    {
+      "material_id": "MAT_0037",
+      "material_name": "Rubber Sole Sheet CR Eco",
+      "current_stock": 101,
+      "days_until_stockout": 2.7,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 715,
+      "estimated_cost": 9702.55
+    },
+    {
+      "material_id": "MAT_0094",
+      "material_name": "Heel Counter Moulded Eco",
+      "current_stock": 161,
+      "days_until_stockout": 2.7,
+      "lead_time_days": 17,
+      "risk_level": "high",
+      "recommended_order_qty": 1985,
+      "estimated_cost": 5518.3
+    },
+    {
+      "material_id": "MAT_0196",
+      "material_name": "Rubber Sole Sheet CR XL",
+      "current_stock": 164,
+      "days_until_stockout": 2.7,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 926,
+      "estimated_cost": 11825.02
+    },
+    {
+      "material_id": "MAT_0276",
+      "material_name": "PU Adhesive PU-400 L",
+      "current_stock": 105,
+      "days_until_stockout": 2.7,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 688,
+      "estimated_cost": 10333.76
+    },
+    {
+      "material_id": "MAT_0286",
+      "material_name": "Thermoplastic Stiffener 1.2mm v2",
+      "current_stock": 232,
+      "days_until_stockout": 2.7,
+      "lead_time_days": 11,
+      "risk_level": "high",
+      "recommended_order_qty": 1987,
+      "estimated_cost": 7808.91
+    },
+    {
+      "material_id": "MAT_0319",
+      "material_name": "EVA Foam Sheet 12mm M",
+      "current_stock": 198,
+      "days_until_stockout": 2.7,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 1495,
+      "estimated_cost": 9029.8
+    },
+    {
+      "material_id": "MAT_0379",
+      "material_name": "Rubber Sole Sheet EVA-RB v2",
+      "current_stock": 206,
+      "days_until_stockout": 2.7,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 1241,
+      "estimated_cost": 18117.14
+    },
+    {
+      "material_id": "MAT_0429",
+      "material_name": "Flat Laces 120cm Teal",
+      "current_stock": 538,
+      "days_until_stockout": 2.7,
+      "lead_time_days": 11,
+      "risk_level": "high",
+      "recommended_order_qty": 7041,
+      "estimated_cost": 5210.34
+    },
+    {
+      "material_id": "MAT_0435",
+      "material_name": "NFC Tag NTAG213 Cream",
+      "current_stock": 290,
+      "days_until_stockout": 2.7,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 6283,
+      "estimated_cost": 3078.67
+    },
+    {
+      "material_id": "MAT_0437",
+      "material_name": "Round Laces 110cm Ivory",
+      "current_stock": 247,
+      "days_until_stockout": 2.7,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 3900,
+      "estimated_cost": 4212.0
+    },
+    {
+      "material_id": "MAT_0097",
+      "material_name": "Rubber Sole Sheet CR Wide",
+      "current_stock": 134,
+      "days_until_stockout": 2.8,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 820,
+      "estimated_cost": 10684.6
+    },
+    {
+      "material_id": "MAT_0190",
+      "material_name": "Rubber Sole Sheet CR S",
+      "current_stock": 61,
+      "days_until_stockout": 2.8,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 545,
+      "estimated_cost": 7373.85
+    },
+    {
+      "material_id": "MAT_0320",
+      "material_name": "Flat Laces 120cm L",
+      "current_stock": 191,
+      "days_until_stockout": 2.8,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 3963,
+      "estimated_cost": 3130.77
+    },
+    {
+      "material_id": "MAT_0338",
+      "material_name": "EVA Foam Sheet 12mm L",
+      "current_stock": 86,
+      "days_until_stockout": 2.8,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 963,
+      "estimated_cost": 5874.3
+    },
+    {
+      "material_id": "MAT_0363",
+      "material_name": "Hot Melt HM-200 v2",
+      "current_stock": 74,
+      "days_until_stockout": 2.8,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 440,
+      "estimated_cost": 10775.6
+    },
+    {
+      "material_id": "MAT_0419",
+      "material_name": "TPU Film Clear 0.3mm L",
+      "current_stock": 75,
+      "days_until_stockout": 2.8,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 797,
+      "estimated_cost": 6176.75
+    },
+    {
+      "material_id": "MAT_0462",
+      "material_name": "Polyester Core Thread T-60 Pro",
+      "current_stock": 113,
+      "days_until_stockout": 2.8,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 1052,
+      "estimated_cost": 6932.68
+    },
+    {
+      "material_id": "MAT_0089",
+      "material_name": "EVA Foam Sheet 6mm XL",
+      "current_stock": 198,
+      "days_until_stockout": 2.9,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 1939,
+      "estimated_cost": 6398.7
+    },
+    {
+      "material_id": "MAT_0113",
+      "material_name": "Rubber Sole Sheet EVA-RB M",
+      "current_stock": 214,
+      "days_until_stockout": 2.9,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 1060,
+      "estimated_cost": 12561.0
+    },
+    {
+      "material_id": "MAT_0179",
+      "material_name": "PU Adhesive PU-400 Lite",
+      "current_stock": 137,
+      "days_until_stockout": 2.9,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 765,
+      "estimated_cost": 11207.25
+    },
+    {
+      "material_id": "MAT_0245",
+      "material_name": "Polyester Core Thread T-60 HD",
+      "current_stock": 188,
+      "days_until_stockout": 2.9,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 1519,
+      "estimated_cost": 7686.14
+    },
+    {
+      "material_id": "MAT_0291",
+      "material_name": "Rubber Sole Sheet EVA-RB Pro",
+      "current_stock": 69,
+      "days_until_stockout": 2.9,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 515,
+      "estimated_cost": 8497.5
+    },
+    {
+      "material_id": "MAT_0309",
+      "material_name": "EVA Foam Sheet 12mm Narrow",
+      "current_stock": 251,
+      "days_until_stockout": 2.9,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 1841,
+      "estimated_cost": 8523.83
+    },
+    {
+      "material_id": "MAT_0328",
+      "material_name": "TPU Film Matte 0.3mm L",
+      "current_stock": 123,
+      "days_until_stockout": 2.9,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 841,
+      "estimated_cost": 9326.69
+    },
+    {
+      "material_id": "MAT_0483",
+      "material_name": "Flat Laces 120cm Beige",
+      "current_stock": 633,
+      "days_until_stockout": 2.9,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 6217,
+      "estimated_cost": 6341.34
+    },
+    {
+      "material_id": "MAT_0010",
+      "material_name": "Rubber Sole Sheet CR",
+      "current_stock": 218,
+      "days_until_stockout": 3.0,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 1047,
+      "estimated_cost": 12731.52
+    },
+    {
+      "material_id": "MAT_0043",
+      "material_name": "PU Adhesive PU-400 Ultra",
+      "current_stock": 63,
+      "days_until_stockout": 3.0,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 464,
+      "estimated_cost": 8249.92
+    },
+    {
+      "material_id": "MAT_0054",
+      "material_name": "EVA Foam Sheet 8mm Ultra",
+      "current_stock": 391,
+      "days_until_stockout": 3.0,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 2280,
+      "estimated_cost": 10328.4
+    },
+    {
+      "material_id": "MAT_0068",
+      "material_name": "Flat Laces 120cm v3",
+      "current_stock": 518,
+      "days_until_stockout": 3.0,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 5990,
+      "estimated_cost": 5271.2
+    },
+    {
+      "material_id": "MAT_0194",
+      "material_name": "Rubber Sole Sheet CR Narrow",
+      "current_stock": 190,
+      "days_until_stockout": 3.0,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 972,
+      "estimated_cost": 12023.64
+    },
+    {
+      "material_id": "MAT_0209",
+      "material_name": "NFC Tag NTAG213 Navy",
+      "current_stock": 269,
+      "days_until_stockout": 3.0,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 6490,
+      "estimated_cost": 2531.1
+    },
+    {
+      "material_id": "MAT_0253",
+      "material_name": "Croslite Pellets Batch XL",
+      "current_stock": 204,
+      "days_until_stockout": 3.0,
+      "lead_time_days": 27,
+      "risk_level": "high",
+      "recommended_order_qty": 1726,
+      "estimated_cost": 16913.82
+    },
+    {
+      "material_id": "MAT_0281",
+      "material_name": "Thermoplastic Stiffener 1.2mm S",
+      "current_stock": 109,
+      "days_until_stockout": 3.0,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 1360,
+      "estimated_cost": 4828.0
+    },
+    {
+      "material_id": "MAT_0308",
+      "material_name": "Hot Melt HM-200 v3",
+      "current_stock": 39,
+      "days_until_stockout": 3.0,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 341,
+      "estimated_cost": 6946.17
+    },
+    {
+      "material_id": "MAT_0469",
+      "material_name": "Flat Laces 120cm HD",
+      "current_stock": 461,
+      "days_until_stockout": 3.0,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 5383,
+      "estimated_cost": 5221.51
+    },
+    {
+      "material_id": "MAT_0053",
+      "material_name": "TPU Film Matte 0.3mm Lite",
+      "current_stock": 148,
+      "days_until_stockout": 3.1,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 937,
+      "estimated_cost": 9351.26
+    },
+    {
+      "material_id": "MAT_0137",
+      "material_name": "Hot Melt HM-200 XL",
+      "current_stock": 37,
+      "days_until_stockout": 3.1,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 322,
+      "estimated_cost": 6797.42
+    },
+    {
+      "material_id": "MAT_0184",
+      "material_name": "Round Laces 110cm Eco",
+      "current_stock": 396,
+      "days_until_stockout": 3.1,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 4858,
+      "estimated_cost": 4809.42
+    },
+    {
+      "material_id": "MAT_0356",
+      "material_name": "Round Laces 110cm S",
+      "current_stock": 524,
+      "days_until_stockout": 3.1,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 5745,
+      "estimated_cost": 5400.3
+    },
+    {
+      "material_id": "MAT_0405",
+      "material_name": "Round Laces 110cm v2",
+      "current_stock": 629,
+      "days_until_stockout": 3.1,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 6499,
+      "estimated_cost": 5784.11
+    },
+    {
+      "material_id": "MAT_0414",
+      "material_name": "Flyknit Yarn 2.0 Black Narrow",
+      "current_stock": 311,
+      "days_until_stockout": 3.1,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 3746,
+      "estimated_cost": 71091.49
+    },
+    {
+      "material_id": "MAT_0431",
+      "material_name": "EVA Foam Sheet 6mm Pro",
+      "current_stock": 96,
+      "days_until_stockout": 3.1,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 1245,
+      "estimated_cost": 4544.25
+    },
+    {
+      "material_id": "MAT_0470",
+      "material_name": "PU Adhesive PU-400 Eco",
+      "current_stock": 46,
+      "days_until_stockout": 3.1,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 408,
+      "estimated_cost": 6703.44
+    },
+    {
+      "material_id": "MAT_0024",
+      "material_name": "Heel Counter Moulded",
+      "current_stock": 300,
+      "days_until_stockout": 3.2,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 2489,
+      "estimated_cost": 6819.86
+    },
+    {
+      "material_id": "MAT_0025",
+      "material_name": "Croslite Pellets Batch",
+      "current_stock": 220,
+      "days_until_stockout": 3.2,
+      "lead_time_days": 34,
+      "risk_level": "high",
+      "recommended_order_qty": 2166,
+      "estimated_cost": 17717.88
+    },
+    {
+      "material_id": "MAT_0062",
+      "material_name": "PU Adhesive PU-400 Wide",
+      "current_stock": 140,
+      "days_until_stockout": 3.2,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 662,
+      "estimated_cost": 12127.84
+    },
+    {
+      "material_id": "MAT_0110",
+      "material_name": "Round Laces 110cm M",
+      "current_stock": 623,
+      "days_until_stockout": 3.2,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 5890,
+      "estimated_cost": 5948.9
+    },
+    {
+      "material_id": "MAT_0279",
+      "material_name": "TPU Film Clear 0.3mm Slate",
+      "current_stock": 190,
+      "days_until_stockout": 3.2,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 1084,
+      "estimated_cost": 9929.44
+    },
+    {
+      "material_id": "MAT_0370",
+      "material_name": "Tissue Paper White 50x75 Narrow",
+      "current_stock": 1679,
+      "days_until_stockout": 3.2,
+      "lead_time_days": 30,
+      "risk_level": "high",
+      "recommended_order_qty": 37172,
+      "estimated_cost": 2602.04
+    },
+    {
+      "material_id": "MAT_0028",
+      "material_name": "Round Laces 110cm",
+      "current_stock": 537,
+      "days_until_stockout": 3.3,
+      "lead_time_days": 7,
+      "risk_level": "high",
+      "recommended_order_qty": 5749,
+      "estimated_cost": 5174.1
+    },
+    {
+      "material_id": "MAT_0051",
+      "material_name": "PU Adhesive PU-400 Narrow",
+      "current_stock": 151,
+      "days_until_stockout": 3.4,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 696,
+      "estimated_cost": 11790.24
+    },
+    {
+      "material_id": "MAT_0061",
+      "material_name": "Flyknit Yarn 2.0 White Sand",
+      "current_stock": 119,
+      "days_until_stockout": 3.4,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 1180,
+      "estimated_cost": 22199.56
+    },
+    {
+      "material_id": "MAT_0249",
+      "material_name": "Thermoplastic Stiffener 1.2mm Lite",
+      "current_stock": 158,
+      "days_until_stockout": 3.4,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 1560,
+      "estimated_cost": 5382.0
+    },
+    {
+      "material_id": "MAT_0399",
+      "material_name": "NFC Tag NTAG213 Teal",
+      "current_stock": 1192,
+      "days_until_stockout": 3.4,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 11470,
+      "estimated_cost": 5505.6
+    },
+    {
+      "material_id": "MAT_0478",
+      "material_name": "NFC Tag NTAG213 Ultra",
+      "current_stock": 608,
+      "days_until_stockout": 3.4,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 8819,
+      "estimated_cost": 3703.98
+    },
+    {
+      "material_id": "MAT_0033",
+      "material_name": "Polyester Mesh 300D Narrow",
+      "current_stock": 319,
+      "days_until_stockout": 3.5,
+      "lead_time_days": 42,
+      "risk_level": "high",
+      "recommended_order_qty": 3613,
+      "estimated_cost": 13331.97
+    },
+    {
+      "material_id": "MAT_0180",
+      "material_name": "Carbon Fiber Plate 1.0mm HD",
+      "current_stock": 42,
+      "days_until_stockout": 3.5,
+      "lead_time_days": 38,
+      "risk_level": "high",
+      "recommended_order_qty": 428,
+      "estimated_cost": 22566.45
+    },
+    {
+      "material_id": "MAT_0241",
+      "material_name": "TPU Film Matte 0.3mm v2",
+      "current_stock": 95,
+      "days_until_stockout": 3.5,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 757,
+      "estimated_cost": 6517.77
+    },
+    {
+      "material_id": "MAT_0392",
+      "material_name": "Metal Eyelets 8mm Nickel XL",
+      "current_stock": 1815,
+      "days_until_stockout": 3.5,
+      "lead_time_days": 40,
+      "risk_level": "high",
+      "recommended_order_qty": 29316,
+      "estimated_cost": 3224.76
+    },
+    {
+      "material_id": "MAT_0090",
+      "material_name": "Hot Melt HM-200 L",
+      "current_stock": 58,
+      "days_until_stockout": 3.6,
+      "lead_time_days": 8,
+      "risk_level": "high",
+      "recommended_order_qty": 388,
+      "estimated_cost": 7531.08
+    },
+    {
+      "material_id": "MAT_0219",
+      "material_name": "TPU Film Matte 0.3mm Ultra",
+      "current_stock": 73,
+      "days_until_stockout": 3.6,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 601,
+      "estimated_cost": 6082.12
+    },
+    {
+      "material_id": "MAT_0307",
+      "material_name": "NFC Tag NTAG213 v2",
+      "current_stock": 810,
+      "days_until_stockout": 3.6,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 8743,
+      "estimated_cost": 4633.79
+    },
+    {
+      "material_id": "MAT_0105",
+      "material_name": "EVA Foam Sheet 6mm v2",
+      "current_stock": 192,
+      "days_until_stockout": 3.7,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 1574,
+      "estimated_cost": 6028.42
+    },
+    {
+      "material_id": "MAT_0111",
+      "material_name": "Round Laces 110cm Slate",
+      "current_stock": 398,
+      "days_until_stockout": 3.7,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 4395,
+      "estimated_cost": 4526.85
+    },
+    {
+      "material_id": "MAT_0189",
+      "material_name": "Silica Gel 3g Sachet Eco",
+      "current_stock": 2604,
+      "days_until_stockout": 3.7,
+      "lead_time_days": 34,
+      "risk_level": "high",
+      "recommended_order_qty": 65069,
+      "estimated_cost": 1952.07
+    },
+    {
+      "material_id": "MAT_0231",
+      "material_name": "Rubber Sole Sheet CR L",
+      "current_stock": 95,
+      "days_until_stockout": 3.7,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 622,
+      "estimated_cost": 7638.16
+    },
+    {
+      "material_id": "MAT_0260",
+      "material_name": "TPU Film Matte 0.3mm HD",
+      "current_stock": 78,
+      "days_until_stockout": 3.7,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 675,
+      "estimated_cost": 5683.5
+    },
+    {
+      "material_id": "MAT_0268",
+      "material_name": "Tissue Paper White 50x75 Ultra",
+      "current_stock": 3002,
+      "days_until_stockout": 3.7,
+      "lead_time_days": 35,
+      "risk_level": "high",
+      "recommended_order_qty": 40503,
+      "estimated_cost": 3645.27
+    },
+    {
+      "material_id": "MAT_0270",
+      "material_name": "NFC Tag NTAG213 HD",
+      "current_stock": 549,
+      "days_until_stockout": 3.7,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 8273,
+      "estimated_cost": 3309.2
+    },
+    {
+      "material_id": "MAT_0299",
+      "material_name": "EVA Foam Sheet 8mm M",
+      "current_stock": 497,
+      "days_until_stockout": 3.7,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 2242,
+      "estimated_cost": 10985.8
+    },
+    {
+      "material_id": "MAT_0117",
+      "material_name": "EVA Foam Sheet 6mm Narrow",
+      "current_stock": 288,
+      "days_until_stockout": 3.8,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 1960,
+      "estimated_cost": 7075.6
+    },
+    {
+      "material_id": "MAT_0127",
+      "material_name": "Heel Counter Moulded Lite",
+      "current_stock": 411,
+      "days_until_stockout": 3.8,
+      "lead_time_days": 11,
+      "risk_level": "high",
+      "recommended_order_qty": 2577,
+      "estimated_cost": 7576.38
+    },
+    {
+      "material_id": "MAT_0152",
+      "material_name": "PU Adhesive PU-400 v3",
+      "current_stock": 49,
+      "days_until_stockout": 3.8,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 396,
+      "estimated_cost": 5991.48
+    },
+    {
+      "material_id": "MAT_0343",
+      "material_name": "Hot Melt HM-200 Eco",
+      "current_stock": 107,
+      "days_until_stockout": 3.8,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 450,
+      "estimated_cost": 11371.5
+    },
+    {
+      "material_id": "MAT_0416",
+      "material_name": "Heel Counter Moulded S",
+      "current_stock": 378,
+      "days_until_stockout": 3.8,
+      "lead_time_days": 20,
+      "risk_level": "high",
+      "recommended_order_qty": 2554,
+      "estimated_cost": 7074.58
+    },
+    {
+      "material_id": "MAT_0036",
+      "material_name": "Metal Eyelets 8mm Nickel L",
+      "current_stock": 2018,
+      "days_until_stockout": 3.9,
+      "lead_time_days": 30,
+      "risk_level": "high",
+      "recommended_order_qty": 30835,
+      "estimated_cost": 3083.5
+    },
+    {
+      "material_id": "MAT_0208",
+      "material_name": "Croslite Pellets Batch L",
+      "current_stock": 97,
+      "days_until_stockout": 3.9,
+      "lead_time_days": 34,
+      "risk_level": "high",
+      "recommended_order_qty": 780,
+      "estimated_cost": 7708.38
+    },
+    {
+      "material_id": "MAT_0240",
+      "material_name": "EVA Foam Sheet 8mm HD",
+      "current_stock": 333,
+      "days_until_stockout": 3.9,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 2067,
+      "estimated_cost": 7503.21
+    },
+    {
+      "material_id": "MAT_0280",
+      "material_name": "EVA Foam Sheet 12mm Pro",
+      "current_stock": 204,
+      "days_until_stockout": 3.9,
+      "lead_time_days": 11,
+      "risk_level": "high",
+      "recommended_order_qty": 1260,
+      "estimated_cost": 7534.8
+    },
+    {
+      "material_id": "MAT_0321",
+      "material_name": "Hot Melt HM-200 Pro",
+      "current_stock": 134,
+      "days_until_stockout": 3.9,
+      "lead_time_days": 11,
+      "risk_level": "high",
+      "recommended_order_qty": 515,
+      "estimated_cost": 12051.0
+    },
+    {
+      "material_id": "MAT_0344",
+      "material_name": "NFC Tag NTAG213 Sage",
+      "current_stock": 485,
+      "days_until_stockout": 3.9,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 6755,
+      "estimated_cost": 3377.5
+    },
+    {
+      "material_id": "MAT_0391",
+      "material_name": "EVA Foam Sheet 8mm XL",
+      "current_stock": 308,
+      "days_until_stockout": 3.9,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 1701,
+      "estimated_cost": 8470.98
+    },
+    {
+      "material_id": "MAT_0017",
+      "material_name": "NFC Tag NTAG213",
+      "current_stock": 1131,
+      "days_until_stockout": 4.0,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 10694,
+      "estimated_cost": 4812.3
+    },
+    {
+      "material_id": "MAT_0132",
+      "material_name": "Thermoplastic Stiffener 1.2mm XL",
+      "current_stock": 170,
+      "days_until_stockout": 4.0,
+      "lead_time_days": 20,
+      "risk_level": "high",
+      "recommended_order_qty": 1424,
+      "estimated_cost": 5382.72
+    },
+    {
+      "material_id": "MAT_0206",
+      "material_name": "Rubber Sole Sheet CR M",
+      "current_stock": 97,
+      "days_until_stockout": 4.0,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 592,
+      "estimated_cost": 7388.16
+    },
+    {
+      "material_id": "MAT_0258",
+      "material_name": "TPU Film Clear 0.3mm Wide",
+      "current_stock": 197,
+      "days_until_stockout": 4.0,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 1011,
+      "estimated_cost": 8846.25
+    },
+    {
+      "material_id": "MAT_0339",
+      "material_name": "Flat Laces 120cm Sage",
+      "current_stock": 331,
+      "days_until_stockout": 4.0,
+      "lead_time_days": 9,
+      "risk_level": "high",
+      "recommended_order_qty": 4197,
+      "estimated_cost": 3609.42
+    },
+    {
+      "material_id": "MAT_0447",
+      "material_name": "EVA Foam Sheet 12mm S",
+      "current_stock": 278,
+      "days_until_stockout": 4.0,
+      "lead_time_days": 17,
+      "risk_level": "high",
+      "recommended_order_qty": 1598,
+      "estimated_cost": 7990.0
+    },
+    {
+      "material_id": "MAT_0058",
+      "material_name": "Polyester Core Thread T-60 M",
+      "current_stock": 184,
+      "days_until_stockout": 4.1,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 1277,
+      "estimated_cost": 6436.08
+    },
+    {
+      "material_id": "MAT_0138",
+      "material_name": "Heel Counter Moulded Narrow",
+      "current_stock": 211,
+      "days_until_stockout": 4.1,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 1899,
+      "estimated_cost": 4899.42
+    },
+    {
+      "material_id": "MAT_0228",
+      "material_name": "Flat Laces 120cm Ivory",
+      "current_stock": 321,
+      "days_until_stockout": 4.1,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 4272,
+      "estimated_cost": 3332.16
+    },
+    {
+      "material_id": "MAT_0322",
+      "material_name": "Flyknit Yarn 2.0 White Rust",
+      "current_stock": 187,
+      "days_until_stockout": 4.1,
+      "lead_time_days": 44,
+      "risk_level": "high",
+      "recommended_order_qty": 1894,
+      "estimated_cost": 36571.21
+    },
+    {
+      "material_id": "MAT_0331",
+      "material_name": "Metal Eyelets 8mm Nickel Rust",
+      "current_stock": 2350,
+      "days_until_stockout": 4.1,
+      "lead_time_days": 34,
+      "risk_level": "high",
+      "recommended_order_qty": 29649,
+      "estimated_cost": 3557.88
+    },
+    {
+      "material_id": "MAT_0428",
+      "material_name": "EVA Foam Sheet 8mm Narrow",
+      "current_stock": 512,
+      "days_until_stockout": 4.1,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 2317,
+      "estimated_cost": 9847.25
+    },
+    {
+      "material_id": "MAT_0248",
+      "material_name": "Heel Counter Moulded XL",
+      "current_stock": 417,
+      "days_until_stockout": 4.2,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 2492,
+      "estimated_cost": 7251.72
+    },
+    {
+      "material_id": "MAT_0383",
+      "material_name": "Flyknit Yarn 2.0 Red Wide",
+      "current_stock": 225,
+      "days_until_stockout": 4.2,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 1834,
+      "estimated_cost": 31696.7
+    },
+    {
+      "material_id": "MAT_0420",
+      "material_name": "Nylon Bonded Thread T-70 Pro",
+      "current_stock": 185,
+      "days_until_stockout": 4.2,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 1493,
+      "estimated_cost": 10032.29
+    },
+    {
+      "material_id": "MAT_0455",
+      "material_name": "Metal Eyelets 8mm Nickel Ultra",
+      "current_stock": 1544,
+      "days_until_stockout": 4.2,
+      "lead_time_days": 43,
+      "risk_level": "high",
+      "recommended_order_qty": 24810,
+      "estimated_cost": 2729.1
+    },
+    {
+      "material_id": "MAT_0218",
+      "material_name": "Polyester Mesh 300D Teal",
+      "current_stock": 381,
+      "days_until_stockout": 4.3,
+      "lead_time_days": 43,
+      "risk_level": "high",
+      "recommended_order_qty": 3511,
+      "estimated_cost": 12813.69
+    },
+    {
+      "material_id": "MAT_0306",
+      "material_name": "Rubber Sole Sheet CR HD",
+      "current_stock": 315,
+      "days_until_stockout": 4.3,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 1069,
+      "estimated_cost": 12464.54
+    },
+    {
+      "material_id": "MAT_0409",
+      "material_name": "NFC Tag NTAG213 Eco",
+      "current_stock": 665,
+      "days_until_stockout": 4.3,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 8111,
+      "estimated_cost": 3487.73
+    },
+    {
+      "material_id": "MAT_0448",
+      "material_name": "TPU Film Clear 0.3mm Moss",
+      "current_stock": 73,
+      "days_until_stockout": 4.3,
+      "lead_time_days": 11,
+      "risk_level": "high",
+      "recommended_order_qty": 585,
+      "estimated_cost": 5300.1
+    },
+    {
+      "material_id": "MAT_0465",
+      "material_name": "Flat Laces 120cm Sand",
+      "current_stock": 635,
+      "days_until_stockout": 4.3,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 5472,
+      "estimated_cost": 4870.08
+    },
+    {
+      "material_id": "MAT_0014",
+      "material_name": "Hot Melt HM-200",
+      "current_stock": 163,
+      "days_until_stockout": 4.4,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 548,
+      "estimated_cost": 12302.6
+    },
+    {
+      "material_id": "MAT_0015",
+      "material_name": "Flat Laces 120cm",
+      "current_stock": 768,
+      "days_until_stockout": 4.4,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 6259,
+      "estimated_cost": 5132.38
+    },
+    {
+      "material_id": "MAT_0354",
+      "material_name": "Thermoplastic Stiffener 1.2mm Wide",
+      "current_stock": 171,
+      "days_until_stockout": 4.4,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 1428,
+      "estimated_cost": 4983.72
+    },
+    {
+      "material_id": "MAT_0474",
+      "material_name": "Round Laces 110cm Cream",
+      "current_stock": 553,
+      "days_until_stockout": 4.4,
+      "lead_time_days": 11,
+      "risk_level": "high",
+      "recommended_order_qty": 4926,
+      "estimated_cost": 4630.44
+    },
+    {
+      "material_id": "MAT_0079",
+      "material_name": "Flyknit Yarn 2.0 Red L",
+      "current_stock": 216,
+      "days_until_stockout": 4.5,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 1614,
+      "estimated_cost": 34840.91
+    },
+    {
+      "material_id": "MAT_0081",
+      "material_name": "EVA Foam Sheet 6mm Eco",
+      "current_stock": 408,
+      "days_until_stockout": 4.5,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 2127,
+      "estimated_cost": 7721.01
+    },
+    {
+      "material_id": "MAT_0087",
+      "material_name": "TPU Film Matte 0.3mm Navy",
+      "current_stock": 194,
+      "days_until_stockout": 4.5,
+      "lead_time_days": 11,
+      "risk_level": "high",
+      "recommended_order_qty": 902,
+      "estimated_cost": 8704.3
+    },
+    {
+      "material_id": "MAT_0088",
+      "material_name": "Hot Melt HM-200 Wide",
+      "current_stock": 85,
+      "days_until_stockout": 4.5,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 414,
+      "estimated_cost": 8358.66
+    },
+    {
+      "material_id": "MAT_0254",
+      "material_name": "Flat Laces 120cm Coral",
+      "current_stock": 575,
+      "days_until_stockout": 4.5,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 4833,
+      "estimated_cost": 4833.0
+    },
+    {
+      "material_id": "MAT_0269",
+      "material_name": "Polyester Core Thread T-60 XL",
+      "current_stock": 162,
+      "days_until_stockout": 4.5,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 1053,
+      "estimated_cost": 6244.29
+    },
+    {
+      "material_id": "MAT_0023",
+      "material_name": "Thermoplastic Stiffener 1.2mm",
+      "current_stock": 363,
+      "days_until_stockout": 4.6,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 2065,
+      "estimated_cost": 6979.7
+    },
+    {
+      "material_id": "MAT_0246",
+      "material_name": "TPU Film Clear 0.3mm Eco",
+      "current_stock": 96,
+      "days_until_stockout": 4.6,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 599,
+      "estimated_cost": 6403.31
+    },
+    {
+      "material_id": "MAT_0271",
+      "material_name": "Heel Counter Moulded Wide",
+      "current_stock": 241,
+      "days_until_stockout": 4.6,
+      "lead_time_days": 20,
+      "risk_level": "high",
+      "recommended_order_qty": 1709,
+      "estimated_cost": 5554.25
+    },
+    {
+      "material_id": "MAT_0300",
+      "material_name": "TPU Film Clear 0.3mm Beige",
+      "current_stock": 101,
+      "days_until_stockout": 4.6,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 712,
+      "estimated_cost": 5646.16
+    },
+    {
+      "material_id": "MAT_0426",
+      "material_name": "Flyknit Yarn 2.0 Black Beige",
+      "current_stock": 129,
+      "days_until_stockout": 4.6,
+      "lead_time_days": 53,
+      "risk_level": "high",
+      "recommended_order_qty": 1393,
+      "estimated_cost": 28166.46
+    },
+    {
+      "material_id": "MAT_0454",
+      "material_name": "NFC Tag NTAG213 Rust",
+      "current_stock": 1239,
+      "days_until_stockout": 4.6,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 9570,
+      "estimated_cost": 5167.8
+    },
+    {
+      "material_id": "MAT_0242",
+      "material_name": "TPU Film Clear 0.3mm v3",
+      "current_stock": 93,
+      "days_until_stockout": 4.7,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 584,
+      "estimated_cost": 6260.48
+    },
+    {
+      "material_id": "MAT_0059",
+      "material_name": "Carbon Fiber Plate 1.0mm M",
+      "current_stock": 101,
+      "days_until_stockout": 4.8,
+      "lead_time_days": 51,
+      "risk_level": "high",
+      "recommended_order_qty": 998,
+      "estimated_cost": 46107.6
+    },
+    {
+      "material_id": "MAT_0099",
+      "material_name": "Polyester Mesh 150D Teal",
+      "current_stock": 252,
+      "days_until_stockout": 4.8,
+      "lead_time_days": 47,
+      "risk_level": "high",
+      "recommended_order_qty": 2258,
+      "estimated_cost": 7385.3
+    },
+    {
+      "material_id": "MAT_0182",
+      "material_name": "TPU Film Matte 0.3mm XL",
+      "current_stock": 62,
+      "days_until_stockout": 4.8,
+      "lead_time_days": 10,
+      "risk_level": "high",
+      "recommended_order_qty": 485,
+      "estimated_cost": 4893.65
+    },
+    {
+      "material_id": "MAT_0201",
+      "material_name": "Tissue Paper White 50x75 S",
+      "current_stock": 1830,
+      "days_until_stockout": 4.8,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 26265,
+      "estimated_cost": 2626.5
+    },
+    {
+      "material_id": "MAT_0227",
+      "material_name": "Flat Laces 120cm Lite",
+      "current_stock": 620,
+      "days_until_stockout": 4.8,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 4809,
+      "estimated_cost": 4857.09
+    },
+    {
+      "material_id": "MAT_0263",
+      "material_name": "Polyester Mesh 300D Charcoal",
+      "current_stock": 417,
+      "days_until_stockout": 4.8,
+      "lead_time_days": 47,
+      "risk_level": "high",
+      "recommended_order_qty": 3783,
+      "estimated_cost": 12863.22
+    },
+    {
+      "material_id": "MAT_0317",
+      "material_name": "Flyknit Yarn 2.0 White Grey",
+      "current_stock": 135,
+      "days_until_stockout": 4.8,
+      "lead_time_days": 35,
+      "risk_level": "high",
+      "recommended_order_qty": 876,
+      "estimated_cost": 16799.76
+    },
+    {
+      "material_id": "MAT_0394",
+      "material_name": "NFC Tag NTAG213 M",
+      "current_stock": 1155,
+      "days_until_stockout": 4.8,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 10379,
+      "estimated_cost": 4255.39
+    },
+    {
+      "material_id": "MAT_0460",
+      "material_name": "Rubber Sole Sheet CR v2",
+      "current_stock": 181,
+      "days_until_stockout": 4.8,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 729,
+      "estimated_cost": 9506.16
+    },
+    {
+      "material_id": "MAT_0091",
+      "material_name": "Hot Melt HM-200 HD",
+      "current_stock": 138,
+      "days_until_stockout": 4.9,
+      "lead_time_days": 11,
+      "risk_level": "high",
+      "recommended_order_qty": 465,
+      "estimated_cost": 10974.0
+    },
+    {
+      "material_id": "MAT_0055",
+      "material_name": "Polyester Mesh 150D Beige",
+      "current_stock": 674,
+      "days_until_stockout": 5.0,
+      "lead_time_days": 50,
+      "risk_level": "high",
+      "recommended_order_qty": 6203,
+      "estimated_cost": 22081.61
+    },
+    {
+      "material_id": "MAT_0193",
+      "material_name": "NFC Tag NTAG213 Wide",
+      "current_stock": 808,
+      "days_until_stockout": 5.1,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 7751,
+      "estimated_cost": 3720.48
+    },
+    {
+      "material_id": "MAT_0070",
+      "material_name": "Silica Gel 3g Sachet XL",
+      "current_stock": 5989,
+      "days_until_stockout": 5.2,
+      "lead_time_days": 41,
+      "risk_level": "high",
+      "recommended_order_qty": 83350,
+      "estimated_cost": 2500.5
+    },
+    {
+      "material_id": "MAT_0112",
+      "material_name": "Metal Eyelets 8mm Nickel Grey",
+      "current_stock": 2241,
+      "days_until_stockout": 5.2,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 23758,
+      "estimated_cost": 3326.12
+    },
+    {
+      "material_id": "MAT_0153",
+      "material_name": "Polyester Mesh 300D Pro",
+      "current_stock": 177,
+      "days_until_stockout": 5.2,
+      "lead_time_days": 31,
+      "risk_level": "high",
+      "recommended_order_qty": 1196,
+      "estimated_cost": 5190.64
+    },
+    {
+      "material_id": "MAT_0330",
+      "material_name": "PU Adhesive PU-400 HD",
+      "current_stock": 126,
+      "days_until_stockout": 5.2,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 537,
+      "estimated_cost": 8162.4
+    },
+    {
+      "material_id": "MAT_0375",
+      "material_name": "Flyknit Yarn 2.0 Black Ultra",
+      "current_stock": 462,
+      "days_until_stockout": 5.2,
+      "lead_time_days": 55,
+      "risk_level": "high",
+      "recommended_order_qty": 4556,
+      "estimated_cost": 76086.87
+    },
+    {
+      "material_id": "MAT_0234",
+      "material_name": "Round Laces 110cm XL",
+      "current_stock": 317,
+      "days_until_stockout": 5.3,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 3771,
+      "estimated_cost": 2903.67
+    },
+    {
+      "material_id": "MAT_0236",
+      "material_name": "Flyknit Yarn 2.0 Red Cream",
+      "current_stock": 186,
+      "days_until_stockout": 5.3,
+      "lead_time_days": 47,
+      "risk_level": "high",
+      "recommended_order_qty": 1504,
+      "estimated_cost": 32722.69
+    },
+    {
+      "material_id": "MAT_0381",
+      "material_name": "TPU Film Matte 0.3mm Teal",
+      "current_stock": 139,
+      "days_until_stockout": 5.3,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 727,
+      "estimated_cost": 6521.19
+    },
+    {
+      "material_id": "MAT_0073",
+      "material_name": "NFC Tag NTAG213 Slate",
+      "current_stock": 1247,
+      "days_until_stockout": 5.4,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 9573,
+      "estimated_cost": 4403.58
+    },
+    {
+      "material_id": "MAT_0121",
+      "material_name": "Round Laces 110cm Wide",
+      "current_stock": 1054,
+      "days_until_stockout": 5.4,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 5921,
+      "estimated_cost": 5980.21
+    },
+    {
+      "material_id": "MAT_0133",
+      "material_name": "TPU Film Clear 0.3mm Sand",
+      "current_stock": 237,
+      "days_until_stockout": 5.4,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 970,
+      "estimated_cost": 8283.8
+    },
+    {
+      "material_id": "MAT_0158",
+      "material_name": "Polyester Mesh 150D Moss",
+      "current_stock": 777,
+      "days_until_stockout": 5.4,
+      "lead_time_days": 34,
+      "risk_level": "high",
+      "recommended_order_qty": 4311,
+      "estimated_cost": 15863.38
+    },
+    {
+      "material_id": "MAT_0221",
+      "material_name": "Flyknit Yarn 2.0 Black Cream",
+      "current_stock": 305,
+      "days_until_stockout": 5.4,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 1869,
+      "estimated_cost": 31898.71
+    },
+    {
+      "material_id": "MAT_0315",
+      "material_name": "Metal Eyelets 8mm Nickel Coral",
+      "current_stock": 1888,
+      "days_until_stockout": 5.4,
+      "lead_time_days": 33,
+      "risk_level": "high",
+      "recommended_order_qty": 21360,
+      "estimated_cost": 2990.4
+    },
+    {
+      "material_id": "MAT_0347",
+      "material_name": "Tissue Paper White 50x75 M",
+      "current_stock": 2242,
+      "days_until_stockout": 5.4,
+      "lead_time_days": 30,
+      "risk_level": "high",
+      "recommended_order_qty": 32774,
+      "estimated_cost": 2294.18
+    },
+    {
+      "material_id": "MAT_0369",
+      "material_name": "Carbon Fiber Plate 1.0mm v2",
+      "current_stock": 59,
+      "days_until_stockout": 5.4,
+      "lead_time_days": 38,
+      "risk_level": "high",
+      "recommended_order_qty": 372,
+      "estimated_cost": 16276.08
+    },
+    {
+      "material_id": "MAT_0045",
+      "material_name": "Polyester Core Thread T-60 S",
+      "current_stock": 297,
+      "days_until_stockout": 5.5,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 1331,
+      "estimated_cost": 7400.36
+    },
+    {
+      "material_id": "MAT_0064",
+      "material_name": "Rubber Sole Sheet CR Ultra",
+      "current_stock": 247,
+      "days_until_stockout": 5.5,
+      "lead_time_days": 17,
+      "risk_level": "high",
+      "recommended_order_qty": 806,
+      "estimated_cost": 10195.9
+    },
+    {
+      "material_id": "MAT_0116",
+      "material_name": "Heel Counter Moulded Ultra",
+      "current_stock": 474,
+      "days_until_stockout": 5.5,
+      "lead_time_days": 19,
+      "risk_level": "high",
+      "recommended_order_qty": 2511,
+      "estimated_cost": 6252.39
+    },
+    {
+      "material_id": "MAT_0172",
+      "material_name": "Tissue Paper White 50x75 L",
+      "current_stock": 1717,
+      "days_until_stockout": 5.5,
+      "lead_time_days": 31,
+      "risk_level": "high",
+      "recommended_order_qty": 25153,
+      "estimated_cost": 2263.77
+    },
+    {
+      "material_id": "MAT_0298",
+      "material_name": "EVA Foam Sheet 8mm v2",
+      "current_stock": 719,
+      "days_until_stockout": 5.5,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 2485,
+      "estimated_cost": 9616.95
+    },
+    {
+      "material_id": "MAT_0311",
+      "material_name": "TPU Film Matte 0.3mm M",
+      "current_stock": 131,
+      "days_until_stockout": 5.5,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 705,
+      "estimated_cost": 6211.05
+    },
+    {
+      "material_id": "MAT_0475",
+      "material_name": "Round Laces 110cm Lite",
+      "current_stock": 894,
+      "days_until_stockout": 5.5,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 5454,
+      "estimated_cost": 5454.0
+    },
+    {
+      "material_id": "MAT_0463",
+      "material_name": "Flat Laces 120cm Grey",
+      "current_stock": 652,
+      "days_until_stockout": 5.6,
+      "lead_time_days": 12,
+      "risk_level": "high",
+      "recommended_order_qty": 4621,
+      "estimated_cost": 4621.0
+    },
+    {
+      "material_id": "MAT_0083",
+      "material_name": "Tissue Paper White 50x75 Wide",
+      "current_stock": 2365,
+      "days_until_stockout": 5.7,
+      "lead_time_days": 44,
+      "risk_level": "high",
+      "recommended_order_qty": 32814,
+      "estimated_cost": 2296.98
+    },
+    {
+      "material_id": "MAT_0085",
+      "material_name": "EVA Foam Sheet 12mm Wide",
+      "current_stock": 290,
+      "days_until_stockout": 5.7,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 1270,
+      "estimated_cost": 7327.9
+    },
+    {
+      "material_id": "MAT_0092",
+      "material_name": "NFC Tag NTAG213 Coral",
+      "current_stock": 1520,
+      "days_until_stockout": 5.7,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 9935,
+      "estimated_cost": 4868.15
+    },
+    {
+      "material_id": "MAT_0174",
+      "material_name": "Flyknit Yarn 2.0 Blue L",
+      "current_stock": 170,
+      "days_until_stockout": 5.7,
+      "lead_time_days": 41,
+      "risk_level": "high",
+      "recommended_order_qty": 1096,
+      "estimated_cost": 21116.07
+    },
+    {
+      "material_id": "MAT_0340",
+      "material_name": "EVA Foam Sheet 6mm Wide",
+      "current_stock": 308,
+      "days_until_stockout": 5.7,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 1715,
+      "estimated_cost": 5745.25
+    },
+    {
+      "material_id": "MAT_0351",
+      "material_name": "TPU Film Clear 0.3mm v2",
+      "current_stock": 178,
+      "days_until_stockout": 5.7,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 745,
+      "estimated_cost": 7591.55
+    },
+    {
+      "material_id": "MAT_0385",
+      "material_name": "Silica Gel 3g Sachet Lite",
+      "current_stock": 6790,
+      "days_until_stockout": 5.7,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 85333,
+      "estimated_cost": 2559.99
+    },
+    {
+      "material_id": "MAT_0442",
+      "material_name": "Nylon Bonded Thread T-70 v3",
+      "current_stock": 324,
+      "days_until_stockout": 5.7,
+      "lead_time_days": 28,
+      "risk_level": "high",
+      "recommended_order_qty": 1328,
+      "estimated_cost": 9484.06
+    },
+    {
+      "material_id": "MAT_0093",
+      "material_name": "Nylon Bonded Thread T-70 Ultra",
+      "current_stock": 122,
+      "days_until_stockout": 5.8,
+      "lead_time_days": 32,
+      "risk_level": "high",
+      "recommended_order_qty": 813,
+      "estimated_cost": 4715.4
+    },
+    {
+      "material_id": "MAT_0235",
+      "material_name": "Thermoplastic Stiffener 1.2mm Narrow",
+      "current_stock": 307,
+      "days_until_stockout": 5.8,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 1644,
+      "estimated_cost": 5885.52
+    },
+    {
+      "material_id": "MAT_0491",
+      "material_name": "NFC Tag NTAG213 Pro",
+      "current_stock": 1802,
+      "days_until_stockout": 5.8,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 11231,
+      "estimated_cost": 5053.95
+    },
+    {
+      "material_id": "MAT_0396",
+      "material_name": "Nylon Bonded Thread T-70 v2",
+      "current_stock": 246,
+      "days_until_stockout": 6.0,
+      "lead_time_days": 27,
+      "risk_level": "high",
+      "recommended_order_qty": 986,
+      "estimated_cost": 7592.2
+    },
+    {
+      "material_id": "MAT_0102",
+      "material_name": "EVA Foam Sheet 12mm XL",
+      "current_stock": 376,
+      "days_until_stockout": 6.1,
+      "lead_time_days": 13,
+      "risk_level": "high",
+      "recommended_order_qty": 1577,
+      "estimated_cost": 7175.35
+    },
+    {
+      "material_id": "MAT_0223",
+      "material_name": "Rubber Sole Sheet EVA-RB Narrow",
+      "current_stock": 435,
+      "days_until_stockout": 6.1,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 1009,
+      "estimated_cost": 12834.48
+    },
+    {
+      "material_id": "MAT_0212",
+      "material_name": "Thermoplastic Stiffener 1.2mm L",
+      "current_stock": 231,
+      "days_until_stockout": 6.2,
+      "lead_time_days": 17,
+      "risk_level": "high",
+      "recommended_order_qty": 1403,
+      "estimated_cost": 4812.29
+    },
+    {
+      "material_id": "MAT_0359",
+      "material_name": "Flat Laces 120cm Narrow",
+      "current_stock": 499,
+      "days_until_stockout": 6.2,
+      "lead_time_days": 14,
+      "risk_level": "high",
+      "recommended_order_qty": 4412,
+      "estimated_cost": 3309.0
+    },
+    {
+      "material_id": "MAT_0434",
+      "material_name": "Flyknit Yarn 2.0 Blue Teal",
+      "current_stock": 255,
+      "days_until_stockout": 6.2,
+      "lead_time_days": 46,
+      "risk_level": "high",
+      "recommended_order_qty": 1683,
+      "estimated_cost": 33977.75
+    },
+    {
+      "material_id": "MAT_0161",
+      "material_name": "Hot Melt HM-200 M",
+      "current_stock": 208,
+      "days_until_stockout": 6.3,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 528,
+      "estimated_cost": 11404.8
+    },
+    {
+      "material_id": "MAT_0266",
+      "material_name": "EVA Foam Sheet 8mm L",
+      "current_stock": 478,
+      "days_until_stockout": 6.4,
+      "lead_time_days": 17,
+      "risk_level": "high",
+      "recommended_order_qty": 1845,
+      "estimated_cost": 7416.9
+    },
+    {
+      "material_id": "MAT_0411",
+      "material_name": "Round Laces 110cm Sand",
+      "current_stock": 456,
+      "days_until_stockout": 6.4,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 3713,
+      "estimated_cost": 3490.22
+    },
+    {
+      "material_id": "MAT_0069",
+      "material_name": "Thermoplastic Stiffener 1.2mm M",
+      "current_stock": 530,
+      "days_until_stockout": 6.6,
+      "lead_time_days": 21,
+      "risk_level": "high",
+      "recommended_order_qty": 1952,
+      "estimated_cost": 7476.16
+    },
+    {
+      "material_id": "MAT_0072",
+      "material_name": "Flyknit Yarn 2.0 Volt Moss",
+      "current_stock": 339,
+      "days_until_stockout": 6.6,
+      "lead_time_days": 47,
+      "risk_level": "high",
+      "recommended_order_qty": 2123,
+      "estimated_cost": 35627.3
+    },
+    {
+      "material_id": "MAT_0389",
+      "material_name": "Carbon Fiber Plate 1.0mm v3",
+      "current_stock": 53,
+      "days_until_stockout": 6.6,
+      "lead_time_days": 42,
+      "risk_level": "high",
+      "recommended_order_qty": 293,
+      "estimated_cost": 11427.01
+    },
+    {
+      "material_id": "MAT_0066",
+      "material_name": "Metal Eyelets 8mm Nickel HD",
+      "current_stock": 3049,
+      "days_until_stockout": 6.7,
+      "lead_time_days": 35,
+      "risk_level": "high",
+      "recommended_order_qty": 26392,
+      "estimated_cost": 3167.04
+    },
+    {
+      "material_id": "MAT_0135",
+      "material_name": "Heel Counter Moulded v3",
+      "current_stock": 235,
+      "days_until_stockout": 6.7,
+      "lead_time_days": 15,
+      "risk_level": "high",
+      "recommended_order_qty": 1476,
+      "estimated_cost": 4324.68
+    },
+    {
+      "material_id": "MAT_0197",
+      "material_name": "Round Laces 110cm Rust",
+      "current_stock": 1166,
+      "days_until_stockout": 6.7,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 5448,
+      "estimated_cost": 5829.36
+    },
+    {
+      "material_id": "MAT_0336",
+      "material_name": "EVA Foam Sheet 8mm Wide",
+      "current_stock": 256,
+      "days_until_stockout": 6.7,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 1182,
+      "estimated_cost": 5862.72
+    },
+    {
+      "material_id": "MAT_0149",
+      "material_name": "EVA Foam Sheet 12mm HD",
+      "current_stock": 648,
+      "days_until_stockout": 6.8,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 1769,
+      "estimated_cost": 9906.4
+    },
+    {
+      "material_id": "MAT_0004",
+      "material_name": "EVA Foam Sheet 8mm",
+      "current_stock": 757,
+      "days_until_stockout": 6.9,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 2191,
+      "estimated_cost": 9158.38
+    },
+    {
+      "material_id": "MAT_0147",
+      "material_name": "Croslite Pellets Batch M",
+      "current_stock": 344,
+      "days_until_stockout": 6.9,
+      "lead_time_days": 29,
+      "risk_level": "high",
+      "recommended_order_qty": 1156,
+      "estimated_cost": 11099.52
+    },
+    {
+      "material_id": "MAT_0274",
+      "material_name": "Flyknit Yarn 2.0 Red Moss",
+      "current_stock": 173,
+      "days_until_stockout": 6.9,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 831,
+      "estimated_cost": 14328.16
+    },
+    {
+      "material_id": "MAT_0492",
+      "material_name": "Round Laces 110cm Moss",
+      "current_stock": 1184,
+      "days_until_stockout": 6.9,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 6059,
+      "estimated_cost": 5150.15
+    },
+    {
+      "material_id": "MAT_0098",
+      "material_name": "Thermoplastic Stiffener 1.2mm Ultra",
+      "current_stock": 390,
+      "days_until_stockout": 7.0,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 1579,
+      "estimated_cost": 6473.9
+    },
+    {
+      "material_id": "MAT_0195",
+      "material_name": "Polyester Core Thread T-60 Narrow",
+      "current_stock": 434,
+      "days_until_stockout": 7.0,
+      "lead_time_days": 17,
+      "risk_level": "high",
+      "recommended_order_qty": 1393,
+      "estimated_cost": 8121.19
+    },
+    {
+      "material_id": "MAT_0402",
+      "material_name": "NFC Tag NTAG213 Ivory",
+      "current_stock": 2241,
+      "days_until_stockout": 7.0,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 10934,
+      "estimated_cost": 5357.66
+    },
+    {
+      "material_id": "MAT_0124",
+      "material_name": "Nylon Bonded Thread T-70 M",
+      "current_stock": 215,
+      "days_until_stockout": 7.2,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 929,
+      "estimated_cost": 6939.63
+    },
+    {
+      "material_id": "MAT_0103",
+      "material_name": "Carbon Fiber Plate 1.0mm XL",
+      "current_stock": 66,
+      "days_until_stockout": 7.3,
+      "lead_time_days": 50,
+      "risk_level": "high",
+      "recommended_order_qty": 396,
+      "estimated_cost": 15210.48
+    },
+    {
+      "material_id": "MAT_0337",
+      "material_name": "Round Laces 110cm Plum",
+      "current_stock": 1493,
+      "days_until_stockout": 7.3,
+      "lead_time_days": 16,
+      "risk_level": "high",
+      "recommended_order_qty": 6227,
+      "estimated_cost": 5977.92
+    },
+    {
+      "material_id": "MAT_0443",
+      "material_name": "Flyknit Yarn 2.0 Black Pro",
+      "current_stock": 221,
+      "days_until_stockout": 7.4,
+      "lead_time_days": 42,
+      "risk_level": "high",
+      "recommended_order_qty": 1075,
+      "estimated_cost": 22409.25
+    },
+    {
+      "material_id": "MAT_0109",
+      "material_name": "Nylon Bonded Thread T-70 Wide",
+      "current_stock": 233,
+      "days_until_stockout": 7.5,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 1000,
+      "estimated_cost": 5660.0
+    },
+    {
+      "material_id": "MAT_0348",
+      "material_name": "Polyester Mesh 300D Cream",
+      "current_stock": 497,
+      "days_until_stockout": 7.5,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 2020,
+      "estimated_cost": 7554.43
+    },
+    {
+      "material_id": "MAT_0011",
+      "material_name": "Rubber Sole Sheet EVA-RB",
+      "current_stock": 466,
+      "days_until_stockout": 7.6,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 889,
+      "estimated_cost": 12517.12
+    },
+    {
+      "material_id": "MAT_0366",
+      "material_name": "Nylon Bonded Thread T-70 L",
+      "current_stock": 175,
+      "days_until_stockout": 7.6,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 760,
+      "estimated_cost": 5517.6
+    },
+    {
+      "material_id": "MAT_0101",
+      "material_name": "Flyknit Yarn 2.0 White Narrow",
+      "current_stock": 739,
+      "days_until_stockout": 7.7,
+      "lead_time_days": 35,
+      "risk_level": "high",
+      "recommended_order_qty": 2727,
+      "estimated_cost": 56555.91
+    },
+    {
+      "material_id": "MAT_0497",
+      "material_name": "Flat Laces 120cm M",
+      "current_stock": 1211,
+      "days_until_stockout": 7.9,
+      "lead_time_days": 18,
+      "risk_level": "high",
+      "recommended_order_qty": 5965,
+      "estimated_cost": 4712.35
+    },
+    {
+      "material_id": "MAT_0019",
+      "material_name": "Tissue Paper White 50x75",
+      "current_stock": 5958,
+      "days_until_stockout": 8.0,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 41281,
+      "estimated_cost": 3302.48
+    },
+    {
+      "material_id": "MAT_0075",
+      "material_name": "Polyester Core Thread T-60 Ultra",
+      "current_stock": 265,
+      "days_until_stockout": 8.0,
+      "lead_time_days": 19,
+      "risk_level": "high",
+      "recommended_order_qty": 979,
+      "estimated_cost": 6157.91
+    },
+    {
+      "material_id": "MAT_0104",
+      "material_name": "Polyester Core Thread T-60 L",
+      "current_stock": 352,
+      "days_until_stockout": 8.0,
+      "lead_time_days": 20,
+      "risk_level": "high",
+      "recommended_order_qty": 1076,
+      "estimated_cost": 7467.44
+    },
+    {
+      "material_id": "MAT_0362",
+      "material_name": "Polyester Mesh 150D Eco",
+      "current_stock": 565,
+      "days_until_stockout": 8.2,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 2070,
+      "estimated_cost": 6085.8
+    },
+    {
+      "material_id": "MAT_0001",
+      "material_name": "Flyknit Yarn 2.0 Black",
+      "current_stock": 750,
+      "days_until_stockout": 8.3,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 2591,
+      "estimated_cost": 49637.81
+    },
+    {
+      "material_id": "MAT_0476",
+      "material_name": "Flyknit Yarn 2.0 Black HD",
+      "current_stock": 637,
+      "days_until_stockout": 8.3,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 2924,
+      "estimated_cost": 61322.57
+    },
+    {
+      "material_id": "MAT_0146",
+      "material_name": "Polyester Mesh 150D XL",
+      "current_stock": 1293,
+      "days_until_stockout": 8.4,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 4892,
+      "estimated_cost": 16634.16
+    },
+    {
+      "material_id": "MAT_0296",
+      "material_name": "Flyknit Yarn 2.0 Blue Beige",
+      "current_stock": 486,
+      "days_until_stockout": 8.4,
+      "lead_time_days": 51,
+      "risk_level": "high",
+      "recommended_order_qty": 2549,
+      "estimated_cost": 49125.01
+    },
+    {
+      "material_id": "MAT_0485",
+      "material_name": "Polyester Core Thread T-60 v3",
+      "current_stock": 370,
+      "days_until_stockout": 8.4,
+      "lead_time_days": 20,
+      "risk_level": "high",
+      "recommended_order_qty": 1130,
+      "estimated_cost": 7107.7
+    },
+    {
+      "material_id": "MAT_0314",
+      "material_name": "Metal Eyelets 8mm Nickel Pro",
+      "current_stock": 4157,
+      "days_until_stockout": 8.5,
+      "lead_time_days": 42,
+      "risk_level": "high",
+      "recommended_order_qty": 27215,
+      "estimated_cost": 3265.8
+    },
+    {
+      "material_id": "MAT_0334",
+      "material_name": "Polyester Mesh 150D Lite",
+      "current_stock": 1127,
+      "days_until_stockout": 8.5,
+      "lead_time_days": 30,
+      "risk_level": "high",
+      "recommended_order_qty": 2999,
+      "estimated_cost": 9476.52
+    },
+    {
+      "material_id": "MAT_0449",
+      "material_name": "Thermoplastic Stiffener 1.2mm HD",
+      "current_stock": 716,
+      "days_until_stockout": 8.5,
+      "lead_time_days": 21,
+      "risk_level": "high",
+      "recommended_order_qty": 1946,
+      "estimated_cost": 7881.3
+    },
+    {
+      "material_id": "MAT_0155",
+      "material_name": "Nylon Bonded Thread T-70 HD",
+      "current_stock": 419,
+      "days_until_stockout": 8.6,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 1400,
+      "estimated_cost": 9532.64
+    },
+    {
+      "material_id": "MAT_0167",
+      "material_name": "Flyknit Yarn 2.0 Volt M",
+      "current_stock": 198,
+      "days_until_stockout": 8.6,
+      "lead_time_days": 48,
+      "risk_level": "high",
+      "recommended_order_qty": 936,
+      "estimated_cost": 18199.37
+    },
+    {
+      "material_id": "MAT_0237",
+      "material_name": "Croslite Pellets Batch Lite",
+      "current_stock": 612,
+      "days_until_stockout": 8.6,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 2024,
+      "estimated_cost": 18009.15
+    },
+    {
+      "material_id": "MAT_0371",
+      "material_name": "Polyester Mesh 150D Ultra",
+      "current_stock": 533,
+      "days_until_stockout": 8.6,
+      "lead_time_days": 32,
+      "risk_level": "high",
+      "recommended_order_qty": 1958,
+      "estimated_cost": 5776.1
+    },
+    {
+      "material_id": "MAT_0177",
+      "material_name": "Flyknit Yarn 2.0 Volt HD",
+      "current_stock": 408,
+      "days_until_stockout": 8.7,
+      "lead_time_days": 55,
+      "risk_level": "high",
+      "recommended_order_qty": 2242,
+      "estimated_cost": 38652.08
+    },
+    {
+      "material_id": "MAT_0387",
+      "material_name": "Tissue Paper White 50x75 XL",
+      "current_stock": 2715,
+      "days_until_stockout": 8.7,
+      "lead_time_days": 31,
+      "risk_level": "high",
+      "recommended_order_qty": 26679,
+      "estimated_cost": 2134.32
+    },
+    {
+      "material_id": "MAT_0100",
+      "material_name": "Flyknit Yarn 2.0 Red S",
+      "current_stock": 292,
+      "days_until_stockout": 8.8,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 1234,
+      "estimated_cost": 22007.57
+    },
+    {
+      "material_id": "MAT_0126",
+      "material_name": "Flyknit Yarn 2.0 Volt L",
+      "current_stock": 537,
+      "days_until_stockout": 8.8,
+      "lead_time_days": 46,
+      "risk_level": "high",
+      "recommended_order_qty": 2346,
+      "estimated_cost": 49082.5
+    },
+    {
+      "material_id": "MAT_0302",
+      "material_name": "Flyknit Yarn 2.0 Volt Coral",
+      "current_stock": 228,
+      "days_until_stockout": 8.8,
+      "lead_time_days": 51,
+      "risk_level": "high",
+      "recommended_order_qty": 1133,
+      "estimated_cost": 20250.89
+    },
+    {
+      "material_id": "MAT_0016",
+      "material_name": "Metal Eyelets 8mm Nickel",
+      "current_stock": 4772,
+      "days_until_stockout": 8.9,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 28631,
+      "estimated_cost": 3435.72
+    },
+    {
+      "material_id": "MAT_0427",
+      "material_name": "Flyknit Yarn 2.0 Blue Narrow",
+      "current_stock": 366,
+      "days_until_stockout": 8.9,
+      "lead_time_days": 55,
+      "risk_level": "high",
+      "recommended_order_qty": 1946,
+      "estimated_cost": 40120.33
+    },
+    {
+      "material_id": "MAT_0313",
+      "material_name": "Polyester Mesh 150D L",
+      "current_stock": 1186,
+      "days_until_stockout": 9.0,
+      "lead_time_days": 50,
+      "risk_level": "high",
+      "recommended_order_qty": 5588,
+      "estimated_cost": 20843.61
+    },
+    {
+      "material_id": "MAT_0403",
+      "material_name": "Flyknit Yarn 2.0 Black Lite",
+      "current_stock": 343,
+      "days_until_stockout": 9.0,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 1183,
+      "estimated_cost": 21169.24
+    },
+    {
+      "material_id": "MAT_0009",
+      "material_name": "Polyester Mesh 300D",
+      "current_stock": 914,
+      "days_until_stockout": 9.2,
+      "lead_time_days": 38,
+      "risk_level": "high",
+      "recommended_order_qty": 2962,
+      "estimated_cost": 11225.22
+    },
+    {
+      "material_id": "MAT_0065",
+      "material_name": "Polyester Mesh 150D Olive",
+      "current_stock": 801,
+      "days_until_stockout": 9.2,
+      "lead_time_days": 42,
+      "risk_level": "high",
+      "recommended_order_qty": 2958,
+      "estimated_cost": 9643.73
+    },
+    {
+      "material_id": "MAT_0154",
+      "material_name": "Flyknit Yarn 2.0 Red Narrow",
+      "current_stock": 401,
+      "days_until_stockout": 9.3,
+      "lead_time_days": 40,
+      "risk_level": "high",
+      "recommended_order_qty": 1370,
+      "estimated_cost": 27394.0
+    },
+    {
+      "material_id": "MAT_0178",
+      "material_name": "Polyester Mesh 150D S",
+      "current_stock": 1365,
+      "days_until_stockout": 9.3,
+      "lead_time_days": 30,
+      "risk_level": "high",
+      "recommended_order_qty": 3164,
+      "estimated_cost": 9017.97
+    },
+    {
+      "material_id": "MAT_0489",
+      "material_name": "Flyknit Yarn 2.0 White Ivory",
+      "current_stock": 661,
+      "days_until_stockout": 9.4,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 2150,
+      "estimated_cost": 34537.03
+    },
+    {
+      "material_id": "MAT_0187",
+      "material_name": "Silica Gel 3g Sachet M",
+      "current_stock": 5976,
+      "days_until_stockout": 9.5,
+      "lead_time_days": 41,
+      "risk_level": "high",
+      "recommended_order_qty": 53571,
+      "estimated_cost": 2142.84
+    },
+    {
+      "material_id": "MAT_0272",
+      "material_name": "Polyester Mesh 300D XL",
+      "current_stock": 636,
+      "days_until_stockout": 9.5,
+      "lead_time_days": 50,
+      "risk_level": "high",
+      "recommended_order_qty": 2802,
+      "estimated_cost": 12554.75
+    },
+    {
+      "material_id": "MAT_0257",
+      "material_name": "Silica Gel 3g Sachet v2",
+      "current_stock": 6938,
+      "days_until_stockout": 9.6,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 57394,
+      "estimated_cost": 2295.76
+    },
+    {
+      "material_id": "MAT_0145",
+      "material_name": "Flyknit Yarn 2.0 Red Pro",
+      "current_stock": 522,
+      "days_until_stockout": 9.7,
+      "lead_time_days": 55,
+      "risk_level": "high",
+      "recommended_order_qty": 2523,
+      "estimated_cost": 43012.04
+    },
+    {
+      "material_id": "MAT_0204",
+      "material_name": "Croslite Pellets Batch v3",
+      "current_stock": 456,
+      "days_until_stockout": 9.7,
+      "lead_time_days": 28,
+      "risk_level": "high",
+      "recommended_order_qty": 1006,
+      "estimated_cost": 8530.88
+    },
+    {
+      "material_id": "MAT_0481",
+      "material_name": "Flyknit Yarn 2.0 Red Charcoal",
+      "current_stock": 225,
+      "days_until_stockout": 9.8,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 699,
+      "estimated_cost": 14667.81
+    },
+    {
+      "material_id": "MAT_0493",
+      "material_name": "Flyknit Yarn 2.0 Black Navy",
+      "current_stock": 902,
+      "days_until_stockout": 9.8,
+      "lead_time_days": 50,
+      "risk_level": "high",
+      "recommended_order_qty": 3819,
+      "estimated_cost": 66226.66
+    },
+    {
+      "material_id": "MAT_0318",
+      "material_name": "Croslite Pellets Batch Ultra",
+      "current_stock": 270,
+      "days_until_stockout": 10.0,
+      "lead_time_days": 34,
+      "risk_level": "high",
+      "recommended_order_qty": 824,
+      "estimated_cost": 5982.24
+    },
+    {
+      "material_id": "MAT_0003",
+      "material_name": "Flyknit Yarn 2.0 Volt",
+      "current_stock": 674,
+      "days_until_stockout": 10.1,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 2425,
+      "estimated_cost": 45465.0
+    },
+    {
+      "material_id": "MAT_0063",
+      "material_name": "Croslite Pellets Batch HD",
+      "current_stock": 611,
+      "days_until_stockout": 10.2,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 1616,
+      "estimated_cost": 14771.15
+    },
+    {
+      "material_id": "MAT_0217",
+      "material_name": "Polyester Mesh 300D v3",
+      "current_stock": 894,
+      "days_until_stockout": 10.2,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 3176,
+      "estimated_cost": 13752.51
+    },
+    {
+      "material_id": "MAT_0341",
+      "material_name": "Metal Eyelets 8mm Nickel Narrow",
+      "current_stock": 3849,
+      "days_until_stockout": 10.2,
+      "lead_time_days": 41,
+      "risk_level": "high",
+      "recommended_order_qty": 25010,
+      "estimated_cost": 2751.1
+    },
+    {
+      "material_id": "MAT_0388",
+      "material_name": "Nylon Bonded Thread T-70 S",
+      "current_stock": 245,
+      "days_until_stockout": 10.2,
+      "lead_time_days": 25,
+      "risk_level": "high",
+      "recommended_order_qty": 798,
+      "estimated_cost": 5482.26
+    },
+    {
+      "material_id": "MAT_0021",
+      "material_name": "Nylon Bonded Thread T-70",
+      "current_stock": 465,
+      "days_until_stockout": 10.3,
+      "lead_time_days": 40,
+      "risk_level": "high",
+      "recommended_order_qty": 1388,
+      "estimated_cost": 9300.27
+    },
+    {
+      "material_id": "MAT_0404",
+      "material_name": "Flyknit Yarn 2.0 Red XL",
+      "current_stock": 227,
+      "days_until_stockout": 10.3,
+      "lead_time_days": 53,
+      "risk_level": "high",
+      "recommended_order_qty": 969,
+      "estimated_cost": 19639.6
+    },
+    {
+      "material_id": "MAT_0398",
+      "material_name": "Flyknit Yarn 2.0 Blue v2",
+      "current_stock": 354,
+      "days_until_stockout": 10.4,
+      "lead_time_days": 55,
+      "risk_level": "high",
+      "recommended_order_qty": 1563,
+      "estimated_cost": 26477.22
+    },
+    {
+      "material_id": "MAT_0490",
+      "material_name": "Flyknit Yarn 2.0 White v2",
+      "current_stock": 1056,
+      "days_until_stockout": 10.8,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 2582,
+      "estimated_cost": 47012.76
+    },
+    {
+      "material_id": "MAT_0495",
+      "material_name": "Flyknit Yarn 2.0 Volt Beige",
+      "current_stock": 647,
+      "days_until_stockout": 10.8,
+      "lead_time_days": 52,
+      "risk_level": "high",
+      "recommended_order_qty": 2554,
+      "estimated_cost": 42238.2
+    },
+    {
+      "material_id": "MAT_0390",
+      "material_name": "Carbon Fiber Plate 1.0mm Narrow",
+      "current_stock": 113,
+      "days_until_stockout": 11.3,
+      "lead_time_days": 54,
+      "risk_level": "high",
+      "recommended_order_qty": 441,
+      "estimated_cost": 20364.75
+    },
+    {
+      "material_id": "MAT_0046",
+      "material_name": "Metal Eyelets 8mm Nickel v3",
+      "current_stock": 2915,
+      "days_until_stockout": 11.5,
+      "lead_time_days": 34,
+      "risk_level": "high",
+      "recommended_order_qty": 21488,
+      "estimated_cost": 2148.8
+    },
+    {
+      "material_id": "MAT_0151",
+      "material_name": "Metal Eyelets 8mm Nickel Sage",
+      "current_stock": 1808,
+      "days_until_stockout": 11.5,
+      "lead_time_days": 38,
+      "risk_level": "high",
+      "recommended_order_qty": 16927,
+      "estimated_cost": 1692.7
+    },
+    {
+      "material_id": "MAT_0285",
+      "material_name": "Flyknit Yarn 2.0 Volt Teal",
+      "current_stock": 390,
+      "days_until_stockout": 11.5,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 872,
+      "estimated_cost": 19116.43
+    },
+    {
+      "material_id": "MAT_0290",
+      "material_name": "Nylon Bonded Thread T-70 XL",
+      "current_stock": 576,
+      "days_until_stockout": 11.5,
+      "lead_time_days": 32,
+      "risk_level": "high",
+      "recommended_order_qty": 1238,
+      "estimated_cost": 7366.1
+    },
+    {
+      "material_id": "MAT_0052",
+      "material_name": "Silica Gel 3g Sachet Narrow",
+      "current_stock": 12087,
+      "days_until_stockout": 11.6,
+      "lead_time_days": 30,
+      "risk_level": "high",
+      "recommended_order_qty": 79769,
+      "estimated_cost": 2393.07
+    },
+    {
+      "material_id": "MAT_0305",
+      "material_name": "Tissue Paper White 50x75 Pro",
+      "current_stock": 3982,
+      "days_until_stockout": 11.8,
+      "lead_time_days": 35,
+      "risk_level": "high",
+      "recommended_order_qty": 26141,
+      "estimated_cost": 2352.69
+    },
+    {
+      "material_id": "MAT_0358",
+      "material_name": "Polyester Mesh 150D M",
+      "current_stock": 1259,
+      "days_until_stockout": 11.8,
+      "lead_time_days": 33,
+      "risk_level": "high",
+      "recommended_order_qty": 2518,
+      "estimated_cost": 7755.44
+    },
+    {
+      "material_id": "MAT_0042",
+      "material_name": "Flyknit Yarn 2.0 Blue Cream",
+      "current_stock": 393,
+      "days_until_stockout": 11.9,
+      "lead_time_days": 35,
+      "risk_level": "high",
+      "recommended_order_qty": 798,
+      "estimated_cost": 15321.3
+    },
+    {
+      "material_id": "MAT_0230",
+      "material_name": "Polyester Mesh 300D Ultra",
+      "current_stock": 1168,
+      "days_until_stockout": 11.9,
+      "lead_time_days": 41,
+      "risk_level": "high",
+      "recommended_order_qty": 2967,
+      "estimated_cost": 11393.28
+    },
+    {
+      "material_id": "MAT_0346",
+      "material_name": "Metal Eyelets 8mm Nickel Navy",
+      "current_stock": 2738,
+      "days_until_stockout": 11.9,
+      "lead_time_days": 38,
+      "risk_level": "high",
+      "recommended_order_qty": 18703,
+      "estimated_cost": 2244.36
+    },
+    {
+      "material_id": "MAT_0439",
+      "material_name": "Silica Gel 3g Sachet S",
+      "current_stock": 8951,
+      "days_until_stockout": 11.9,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 58691,
+      "estimated_cost": 2347.64
+    },
+    {
+      "material_id": "MAT_0471",
+      "material_name": "Flyknit Yarn 2.0 Red Eco",
+      "current_stock": 428,
+      "days_until_stockout": 11.9,
+      "lead_time_days": 42,
+      "risk_level": "high",
+      "recommended_order_qty": 1128,
+      "estimated_cost": 22910.8
+    },
+    {
+      "material_id": "MAT_0188",
+      "material_name": "Flyknit Yarn 2.0 Blue v3",
+      "current_stock": 769,
+      "days_until_stockout": 12.0,
+      "lead_time_days": 50,
+      "risk_level": "high",
+      "recommended_order_qty": 2515,
+      "estimated_cost": 48094.45
+    },
+    {
+      "material_id": "MAT_0243",
+      "material_name": "Flyknit Yarn 2.0 Blue XL",
+      "current_stock": 473,
+      "days_until_stockout": 12.1,
+      "lead_time_days": 42,
+      "risk_level": "high",
+      "recommended_order_qty": 1212,
+      "estimated_cost": 22545.06
+    },
+    {
+      "material_id": "MAT_0397",
+      "material_name": "Metal Eyelets 8mm Nickel Teal",
+      "current_stock": 3645,
+      "days_until_stockout": 12.1,
+      "lead_time_days": 43,
+      "risk_level": "high",
+      "recommended_order_qty": 21431,
+      "estimated_cost": 2571.72
+    },
+    {
+      "material_id": "MAT_0355",
+      "material_name": "Flyknit Yarn 2.0 Red Olive",
+      "current_stock": 292,
+      "days_until_stockout": 12.2,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 672,
+      "estimated_cost": 13063.68
+    },
+    {
+      "material_id": "MAT_0438",
+      "material_name": "Flyknit Yarn 2.0 Blue S",
+      "current_stock": 304,
+      "days_until_stockout": 12.2,
+      "lead_time_days": 44,
+      "risk_level": "high",
+      "recommended_order_qty": 827,
+      "estimated_cost": 17257.4
+    },
+    {
+      "material_id": "MAT_0008",
+      "material_name": "Polyester Mesh 150D",
+      "current_stock": 1814,
+      "days_until_stockout": 12.3,
+      "lead_time_days": 41,
+      "risk_level": "high",
+      "recommended_order_qty": 4431,
+      "estimated_cost": 14533.02
+    },
+    {
+      "material_id": "MAT_0374",
+      "material_name": "Flyknit Yarn 2.0 Blue Slate",
+      "current_stock": 575,
+      "days_until_stockout": 12.5,
+      "lead_time_days": 52,
+      "risk_level": "high",
+      "recommended_order_qty": 1879,
+      "estimated_cost": 32580.13
+    },
+    {
+      "material_id": "MAT_0384",
+      "material_name": "Flyknit Yarn 2.0 Blue Lite",
+      "current_stock": 836,
+      "days_until_stockout": 12.5,
+      "lead_time_days": 41,
+      "risk_level": "high",
+      "recommended_order_qty": 1991,
+      "estimated_cost": 40516.85
+    },
+    {
+      "material_id": "MAT_0129",
+      "material_name": "Flyknit Yarn 2.0 Volt Sand",
+      "current_stock": 531,
+      "days_until_stockout": 12.6,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 1156,
+      "estimated_cost": 18806.49
+    },
+    {
+      "material_id": "MAT_0171",
+      "material_name": "Metal Eyelets 8mm Nickel Wide",
+      "current_stock": 4185,
+      "days_until_stockout": 12.6,
+      "lead_time_days": 34,
+      "risk_level": "high",
+      "recommended_order_qty": 22470,
+      "estimated_cost": 2696.4
+    },
+    {
+      "material_id": "MAT_0183",
+      "material_name": "Polyester Mesh 300D S",
+      "current_stock": 571,
+      "days_until_stockout": 12.7,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 1462,
+      "estimated_cost": 5614.08
+    },
+    {
+      "material_id": "MAT_0211",
+      "material_name": "Croslite Pellets Batch S",
+      "current_stock": 722,
+      "days_until_stockout": 12.7,
+      "lead_time_days": 34,
+      "risk_level": "high",
+      "recommended_order_qty": 1278,
+      "estimated_cost": 10735.2
+    },
+    {
+      "material_id": "MAT_0077",
+      "material_name": "Flyknit Yarn 2.0 Volt XL",
+      "current_stock": 732,
+      "days_until_stockout": 12.8,
+      "lead_time_days": 44,
+      "risk_level": "high",
+      "recommended_order_qty": 1846,
+      "estimated_cost": 34529.55
+    },
+    {
+      "material_id": "MAT_0139",
+      "material_name": "Polyester Mesh 300D Coral",
+      "current_stock": 1059,
+      "days_until_stockout": 12.8,
+      "lead_time_days": 48,
+      "risk_level": "high",
+      "recommended_order_qty": 3032,
+      "estimated_cost": 9794.33
+    },
+    {
+      "material_id": "MAT_0252",
+      "material_name": "Flyknit Yarn 2.0 White Olive",
+      "current_stock": 1284,
+      "days_until_stockout": 12.8,
+      "lead_time_days": 40,
+      "risk_level": "high",
+      "recommended_order_qty": 2834,
+      "estimated_cost": 54101.06
+    },
+    {
+      "material_id": "MAT_0026",
+      "material_name": "Flyknit Yarn 2.0 Red",
+      "current_stock": 801,
+      "days_until_stockout": 12.9,
+      "lead_time_days": 42,
+      "risk_level": "high",
+      "recommended_order_qty": 1878,
+      "estimated_cost": 34478.24
+    },
+    {
+      "material_id": "MAT_0393",
+      "material_name": "Flyknit Yarn 2.0 White Ultra",
+      "current_stock": 910,
+      "days_until_stockout": 13.0,
+      "lead_time_days": 51,
+      "risk_level": "high",
+      "recommended_order_qty": 2753,
+      "estimated_cost": 59028.61
+    },
+    {
+      "material_id": "MAT_0457",
+      "material_name": "Polyester Mesh 300D HD",
+      "current_stock": 1308,
+      "days_until_stockout": 13.0,
+      "lead_time_days": 33,
+      "risk_level": "high",
+      "recommended_order_qty": 2133,
+      "estimated_cost": 9044.77
+    },
+    {
+      "material_id": "MAT_0108",
+      "material_name": "Flyknit Yarn 2.0 Black Charcoal",
+      "current_stock": 971,
+      "days_until_stockout": 13.1,
+      "lead_time_days": 40,
+      "risk_level": "high",
+      "recommended_order_qty": 2076,
+      "estimated_cost": 43996.8
+    },
+    {
+      "material_id": "MAT_0395",
+      "material_name": "Polyester Mesh 300D L",
+      "current_stock": 1603,
+      "days_until_stockout": 13.1,
+      "lead_time_days": 33,
+      "risk_level": "high",
+      "recommended_order_qty": 2554,
+      "estimated_cost": 11338.43
+    },
+    {
+      "material_id": "MAT_0041",
+      "material_name": "Metal Eyelets 8mm Nickel Charcoal",
+      "current_stock": 7267,
+      "days_until_stockout": 13.2,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 26801,
+      "estimated_cost": 3752.14
+    },
+    {
+      "material_id": "MAT_0456",
+      "material_name": "Polyester Mesh 300D Olive",
+      "current_stock": 1147,
+      "days_until_stockout": 13.2,
+      "lead_time_days": 40,
+      "risk_level": "high",
+      "recommended_order_qty": 2436,
+      "estimated_cost": 7964.41
+    },
+    {
+      "material_id": "MAT_0430",
+      "material_name": "Tissue Paper White 50x75 v3",
+      "current_stock": 6270,
+      "days_until_stockout": 13.3,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 30904,
+      "estimated_cost": 2781.36
+    },
+    {
+      "material_id": "MAT_0288",
+      "material_name": "Polyester Mesh 300D v2",
+      "current_stock": 1097,
+      "days_until_stockout": 13.4,
+      "lead_time_days": 44,
+      "risk_level": "high",
+      "recommended_order_qty": 2612,
+      "estimated_cost": 9274.38
+    },
+    {
+      "material_id": "MAT_0325",
+      "material_name": "Flyknit Yarn 2.0 Volt Rust",
+      "current_stock": 683,
+      "days_until_stockout": 13.4,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 1676,
+      "estimated_cost": 33901.43
+    },
+    {
+      "material_id": "MAT_0488",
+      "material_name": "Flyknit Yarn 2.0 Blue Grey",
+      "current_stock": 522,
+      "days_until_stockout": 13.4,
+      "lead_time_days": 50,
+      "risk_level": "high",
+      "recommended_order_qty": 1479,
+      "estimated_cost": 25031.45
+    },
+    {
+      "material_id": "MAT_0020",
+      "material_name": "Silica Gel 3g Sachet",
+      "current_stock": 14626,
+      "days_until_stockout": 13.5,
+      "lead_time_days": 44,
+      "risk_level": "high",
+      "recommended_order_qty": 81243,
+      "estimated_cost": 2437.29
+    },
+    {
+      "material_id": "MAT_0048",
+      "material_name": "Croslite Pellets Batch Wide",
+      "current_stock": 338,
+      "days_until_stockout": 13.5,
+      "lead_time_days": 31,
+      "risk_level": "high",
+      "recommended_order_qty": 696,
+      "estimated_cost": 6556.32
+    },
+    {
+      "material_id": "MAT_0162",
+      "material_name": "Carbon Fiber Plate 1.0mm Eco",
+      "current_stock": 217,
+      "days_until_stockout": 13.6,
+      "lead_time_days": 43,
+      "risk_level": "high",
+      "recommended_order_qty": 491,
+      "estimated_cost": 23470.3
+    },
+    {
+      "material_id": "MAT_0173",
+      "material_name": "Flyknit Yarn 2.0 Red v3",
+      "current_stock": 516,
+      "days_until_stockout": 13.6,
+      "lead_time_days": 38,
+      "risk_level": "high",
+      "recommended_order_qty": 972,
+      "estimated_cost": 18170.79
+    },
+    {
+      "material_id": "MAT_0422",
+      "material_name": "Metal Eyelets 8mm Nickel Beige",
+      "current_stock": 2748,
+      "days_until_stockout": 13.6,
+      "lead_time_days": 42,
+      "risk_level": "high",
+      "recommended_order_qty": 18307,
+      "estimated_cost": 2013.77
+    },
+    {
+      "material_id": "MAT_0159",
+      "material_name": "Carbon Fiber Plate 1.0mm Lite",
+      "current_stock": 260,
+      "days_until_stockout": 13.7,
+      "lead_time_days": 46,
+      "risk_level": "high",
+      "recommended_order_qty": 638,
+      "estimated_cost": 31855.34
+    },
+    {
+      "material_id": "MAT_0229",
+      "material_name": "Nylon Bonded Thread T-70 Lite",
+      "current_stock": 768,
+      "days_until_stockout": 13.7,
+      "lead_time_days": 31,
+      "risk_level": "high",
+      "recommended_order_qty": 1211,
+      "estimated_cost": 8440.67
+    },
+    {
+      "material_id": "MAT_0452",
+      "material_name": "Flyknit Yarn 2.0 Black M",
+      "current_stock": 1081,
+      "days_until_stockout": 13.7,
+      "lead_time_days": 41,
+      "risk_level": "high",
+      "recommended_order_qty": 2252,
+      "estimated_cost": 39146.71
+    },
+    {
+      "material_id": "MAT_0482",
+      "material_name": "Polyester Mesh 300D Slate",
+      "current_stock": 809,
+      "days_until_stockout": 13.9,
+      "lead_time_days": 38,
+      "risk_level": "high",
+      "recommended_order_qty": 1565,
+      "estimated_cost": 6760.8
+    },
+    {
+      "material_id": "MAT_0301",
+      "material_name": "Flyknit Yarn 2.0 Volt Grey",
+      "current_stock": 684,
+      "days_until_stockout": 14.0,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 1185,
+      "estimated_cost": 25646.59
+    },
+    {
+      "material_id": "MAT_0380",
+      "material_name": "Metal Eyelets 8mm Nickel Sand",
+      "current_stock": 7081,
+      "days_until_stockout": 14.0,
+      "lead_time_days": 38,
+      "risk_level": "high",
+      "recommended_order_qty": 26652,
+      "estimated_cost": 3464.76
+    },
+    {
+      "material_id": "MAT_0044",
+      "material_name": "Polyester Mesh 150D Navy",
+      "current_stock": 787,
+      "days_until_stockout": 14.1,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 1803,
+      "estimated_cost": 6581.32
+    },
+    {
+      "material_id": "MAT_0207",
+      "material_name": "Nylon Bonded Thread T-70 Narrow",
+      "current_stock": 408,
+      "days_until_stockout": 14.1,
+      "lead_time_days": 38,
+      "risk_level": "high",
+      "recommended_order_qty": 904,
+      "estimated_cost": 5848.88
+    },
+    {
+      "material_id": "MAT_0175",
+      "material_name": "Flyknit Yarn 2.0 White S",
+      "current_stock": 969,
+      "days_until_stockout": 14.2,
+      "lead_time_days": 53,
+      "risk_level": "high",
+      "recommended_order_qty": 2727,
+      "estimated_cost": 55691.47
+    },
+    {
+      "material_id": "MAT_0386",
+      "material_name": "Flyknit Yarn 2.0 White Teal",
+      "current_stock": 1057,
+      "days_until_stockout": 14.3,
+      "lead_time_days": 43,
+      "risk_level": "high",
+      "recommended_order_qty": 2216,
+      "estimated_cost": 42493.29
+    },
+    {
+      "material_id": "MAT_0406",
+      "material_name": "Silica Gel 3g Sachet L",
+      "current_stock": 14808,
+      "days_until_stockout": 14.3,
+      "lead_time_days": 38,
+      "risk_level": "high",
+      "recommended_order_qty": 79426,
+      "estimated_cost": 2382.78
+    },
+    {
+      "material_id": "MAT_0480",
+      "material_name": "Metal Eyelets 8mm Nickel Cream",
+      "current_stock": 8437,
+      "days_until_stockout": 14.3,
+      "lead_time_days": 35,
+      "risk_level": "high",
+      "recommended_order_qty": 31234,
+      "estimated_cost": 3435.74
+    },
+    {
+      "material_id": "MAT_0459",
+      "material_name": "Polyester Mesh 300D Navy",
+      "current_stock": 979,
+      "days_until_stockout": 14.6,
+      "lead_time_days": 35,
+      "risk_level": "high",
+      "recommended_order_qty": 1755,
+      "estimated_cost": 6967.35
+    },
+    {
+      "material_id": "MAT_0168",
+      "material_name": "Polyester Mesh 300D Plum",
+      "current_stock": 1788,
+      "days_until_stockout": 14.7,
+      "lead_time_days": 32,
+      "risk_level": "high",
+      "recommended_order_qty": 2249,
+      "estimated_cost": 9895.6
+    },
+    {
+      "material_id": "MAT_0107",
+      "material_name": "Flyknit Yarn 2.0 White v3",
+      "current_stock": 977,
+      "days_until_stockout": 14.8,
+      "lead_time_days": 55,
+      "risk_level": "high",
+      "recommended_order_qty": 2744,
+      "estimated_cost": 47558.72
+    },
+    {
+      "material_id": "MAT_0200",
+      "material_name": "Flyknit Yarn 2.0 Black Sand",
+      "current_stock": 1314,
+      "days_until_stockout": 14.8,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 2261,
+      "estimated_cost": 47226.02
+    },
+    {
+      "material_id": "MAT_0342",
+      "material_name": "Flyknit Yarn 2.0 Black Eco",
+      "current_stock": 1150,
+      "days_until_stockout": 14.9,
+      "lead_time_days": 44,
+      "risk_level": "high",
+      "recommended_order_qty": 2333,
+      "estimated_cost": 39712.77
+    },
+    {
+      "material_id": "MAT_0365",
+      "material_name": "Flyknit Yarn 2.0 White Navy",
+      "current_stock": 1453,
+      "days_until_stockout": 15.1,
+      "lead_time_days": 46,
+      "risk_level": "high",
+      "recommended_order_qty": 3084,
+      "estimated_cost": 51972.14
+    },
+    {
+      "material_id": "MAT_0027",
+      "material_name": "Flyknit Yarn 2.0 Blue",
+      "current_stock": 819,
+      "days_until_stockout": 15.2,
+      "lead_time_days": 40,
+      "risk_level": "high",
+      "recommended_order_qty": 1405,
+      "estimated_cost": 26001.0
+    },
+    {
+      "material_id": "MAT_0453",
+      "material_name": "Flyknit Yarn 2.0 Black Slate",
+      "current_stock": 457,
+      "days_until_stockout": 15.2,
+      "lead_time_days": 38,
+      "risk_level": "high",
+      "recommended_order_qty": 718,
+      "estimated_cost": 15906.98
+    },
+    {
+      "material_id": "MAT_0494",
+      "material_name": "Tissue Paper White 50x75 Eco",
+      "current_stock": 6719,
+      "days_until_stockout": 15.3,
+      "lead_time_days": 35,
+      "risk_level": "high",
+      "recommended_order_qty": 31682,
+      "estimated_cost": 2534.56
+    },
+    {
+      "material_id": "MAT_0096",
+      "material_name": "Flyknit Yarn 2.0 Volt Eco",
+      "current_stock": 800,
+      "days_until_stockout": 15.4,
+      "lead_time_days": 46,
+      "risk_level": "high",
+      "recommended_order_qty": 1658,
+      "estimated_cost": 34515.4
+    },
+    {
+      "material_id": "MAT_0400",
+      "material_name": "Polyester Mesh 150D Coral",
+      "current_stock": 1706,
+      "days_until_stockout": 15.4,
+      "lead_time_days": 42,
+      "risk_level": "high",
+      "recommended_order_qty": 3090,
+      "estimated_cost": 8498.05
+    },
+    {
+      "material_id": "MAT_0467",
+      "material_name": "Metal Eyelets 8mm Nickel v2",
+      "current_stock": 7170,
+      "days_until_stockout": 15.5,
+      "lead_time_days": 34,
+      "risk_level": "high",
+      "recommended_order_qty": 27746,
+      "estimated_cost": 3052.06
+    },
+    {
+      "material_id": "MAT_0176",
+      "material_name": "Metal Eyelets 8mm Nickel Lite",
+      "current_stock": 3263,
+      "days_until_stockout": 15.6,
+      "lead_time_days": 35,
+      "risk_level": "high",
+      "recommended_order_qty": 17828,
+      "estimated_cost": 2139.36
+    },
+    {
+      "material_id": "MAT_0251",
+      "material_name": "Polyester Mesh 300D Wide",
+      "current_stock": 1944,
+      "days_until_stockout": 15.6,
+      "lead_time_days": 34,
+      "risk_level": "high",
+      "recommended_order_qty": 2442,
+      "estimated_cost": 9572.64
+    },
+    {
+      "material_id": "MAT_0352",
+      "material_name": "Flyknit Yarn 2.0 Volt Ivory",
+      "current_stock": 920,
+      "days_until_stockout": 15.6,
+      "lead_time_days": 50,
+      "risk_level": "high",
+      "recommended_order_qty": 2108,
+      "estimated_cost": 34525.76
+    },
+    {
+      "material_id": "MAT_0114",
+      "material_name": "Flyknit Yarn 2.0 Black v3",
+      "current_stock": 1145,
+      "days_until_stockout": 15.7,
+      "lead_time_days": 49,
+      "risk_level": "high",
+      "recommended_order_qty": 2527,
+      "estimated_cost": 51253.64
+    },
+    {
+      "material_id": "MAT_0239",
+      "material_name": "Flyknit Yarn 2.0 Black XL",
+      "current_stock": 1231,
+      "days_until_stockout": 15.8,
+      "lead_time_days": 47,
+      "risk_level": "high",
+      "recommended_order_qty": 2535,
+      "estimated_cost": 47474.93
+    },
+    {
+      "material_id": "MAT_0284",
+      "material_name": "Silica Gel 3g Sachet HD",
+      "current_stock": 17784,
+      "days_until_stockout": 15.8,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 82727,
+      "estimated_cost": 2481.81
+    },
+    {
+      "material_id": "MAT_0324",
+      "material_name": "Flyknit Yarn 2.0 Blue Wide",
+      "current_stock": 1081,
+      "days_until_stockout": 15.9,
+      "lead_time_days": 55,
+      "risk_level": "high",
+      "recommended_order_qty": 2753,
+      "estimated_cost": 59769.8
+    },
+    {
+      "material_id": "MAT_0192",
+      "material_name": "Flyknit Yarn 2.0 Blue Plum",
+      "current_stock": 834,
+      "days_until_stockout": 16.0,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 1149,
+      "estimated_cost": 20291.34
+    },
+    {
+      "material_id": "MAT_0372",
+      "material_name": "Carbon Fiber Plate 1.0mm Wide",
+      "current_stock": 208,
+      "days_until_stockout": 16.0,
+      "lead_time_days": 37,
+      "risk_level": "high",
+      "recommended_order_qty": 288,
+      "estimated_cost": 11631.71
+    },
+    {
+      "material_id": "MAT_0410",
+      "material_name": "Polyester Mesh 150D Rust",
+      "current_stock": 2118,
+      "days_until_stockout": 16.0,
+      "lead_time_days": 48,
+      "risk_level": "high",
+      "recommended_order_qty": 4389,
+      "estimated_cost": 15535.64
+    },
+    {
+      "material_id": "MAT_0002",
+      "material_name": "Flyknit Yarn 2.0 White",
+      "current_stock": 1594,
+      "days_until_stockout": 16.4,
+      "lead_time_days": 39,
+      "risk_level": "high",
+      "recommended_order_qty": 2302,
+      "estimated_cost": 43001.36
+    },
+    {
+      "material_id": "MAT_0326",
+      "material_name": "Metal Eyelets 8mm Nickel Ivory",
+      "current_stock": 7949,
+      "days_until_stockout": 16.6,
+      "lead_time_days": 41,
+      "risk_level": "high",
+      "recommended_order_qty": 28161,
+      "estimated_cost": 3097.71
+    },
+    {
+      "material_id": "MAT_0213",
+      "material_name": "Flyknit Yarn 2.0 Volt v3",
+      "current_stock": 1034,
+      "days_until_stockout": 16.7,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 1267,
+      "estimated_cost": 21951.37
+    },
+    {
+      "material_id": "MAT_0377",
+      "material_name": "Polyester Mesh 150D v3",
+      "current_stock": 734,
+      "days_until_stockout": 16.7,
+      "lead_time_days": 36,
+      "risk_level": "high",
+      "recommended_order_qty": 1715,
+      "estimated_cost": 4681.95
+    },
+    {
+      "material_id": "MAT_0378",
+      "material_name": "Polyester Mesh 300D Sand",
+      "current_stock": 1520,
+      "days_until_stockout": 16.7,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 2689,
+      "estimated_cost": 8954.04
+    },
+    {
+      "material_id": "MAT_0287",
+      "material_name": "Flyknit Yarn 2.0 White M",
+      "current_stock": 1574,
+      "days_until_stockout": 16.9,
+      "lead_time_days": 46,
+      "risk_level": "high",
+      "recommended_order_qty": 2822,
+      "estimated_cost": 57026.56
+    },
+    {
+      "material_id": "MAT_0216",
+      "material_name": "Carbon Fiber Plate 1.0mm L",
+      "current_stock": 103,
+      "days_until_stockout": 17.2,
+      "lead_time_days": 49,
+      "risk_level": "high",
+      "recommended_order_qty": 199,
+      "estimated_cost": 7687.6
+    },
+    {
+      "material_id": "MAT_0468",
+      "material_name": "Flyknit Yarn 2.0 Black Plum",
+      "current_stock": 535,
+      "days_until_stockout": 17.3,
+      "lead_time_days": 50,
+      "risk_level": "high",
+      "recommended_order_qty": 1056,
+      "estimated_cost": 22944.71
+    },
+    {
+      "material_id": "MAT_0350",
+      "material_name": "Metal Eyelets 8mm Nickel M",
+      "current_stock": 8579,
+      "days_until_stockout": 17.4,
+      "lead_time_days": 41,
+      "risk_level": "high",
+      "recommended_order_qty": 26334,
+      "estimated_cost": 3423.42
+    },
+    {
+      "material_id": "MAT_0224",
+      "material_name": "Flyknit Yarn 2.0 Volt S",
+      "current_stock": 897,
+      "days_until_stockout": 17.6,
+      "lead_time_days": 43,
+      "risk_level": "high",
+      "recommended_order_qty": 1358,
+      "estimated_cost": 22984.13
+    },
+    {
+      "material_id": "MAT_0424",
+      "material_name": "Flyknit Yarn 2.0 Red Slate",
+      "current_stock": 585,
+      "days_until_stockout": 17.7,
+      "lead_time_days": 46,
+      "risk_level": "high",
+      "recommended_order_qty": 975,
+      "estimated_cost": 19591.47
+    },
+    {
+      "material_id": "MAT_0199",
+      "material_name": "Polyester Mesh 150D Pro",
+      "current_stock": 1136,
+      "days_until_stockout": 17.8,
+      "lead_time_days": 43,
+      "risk_level": "high",
+      "recommended_order_qty": 1916,
+      "estimated_cost": 6092.88
+    },
+    {
+      "material_id": "MAT_0233",
+      "material_name": "Croslite Pellets Batch Narrow",
+      "current_stock": 959,
+      "days_until_stockout": 17.8,
+      "lead_time_days": 40,
+      "risk_level": "high",
+      "recommended_order_qty": 1265,
+      "estimated_cost": 11382.3
+    },
+    {
+      "material_id": "MAT_0407",
+      "material_name": "Flyknit Yarn 2.0 Volt Olive",
+      "current_stock": 1145,
+      "days_until_stockout": 17.9,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 1815,
+      "estimated_cost": 31691.65
+    },
+    {
+      "material_id": "MAT_0119",
+      "material_name": "Polyester Mesh 150D v2",
+      "current_stock": 1850,
+      "days_until_stockout": 18.0,
+      "lead_time_days": 46,
+      "risk_level": "high",
+      "recommended_order_qty": 3018,
+      "estimated_cost": 8481.42
+    },
+    {
+      "material_id": "MAT_0484",
+      "material_name": "Polyester Mesh 150D Sand",
+      "current_stock": 2010,
+      "days_until_stockout": 18.3,
+      "lead_time_days": 43,
+      "risk_level": "high",
+      "recommended_order_qty": 2854,
+      "estimated_cost": 8820.4
+    },
+    {
+      "material_id": "MAT_0049",
+      "material_name": "Flyknit Yarn 2.0 Volt Ultra",
+      "current_stock": 984,
+      "days_until_stockout": 18.6,
+      "lead_time_days": 41,
+      "risk_level": "high",
+      "recommended_order_qty": 1252,
+      "estimated_cost": 24294.62
+    },
+    {
+      "material_id": "MAT_0185",
+      "material_name": "Flyknit Yarn 2.0 Volt Pro",
+      "current_stock": 503,
+      "days_until_stockout": 18.6,
+      "lead_time_days": 54,
+      "risk_level": "high",
+      "recommended_order_qty": 992,
+      "estimated_cost": 18282.56
+    },
+    {
+      "material_id": "MAT_0310",
+      "material_name": "Polyester Mesh 150D Narrow",
+      "current_stock": 2567,
+      "days_until_stockout": 18.6,
+      "lead_time_days": 40,
+      "risk_level": "high",
+      "recommended_order_qty": 3116,
+      "estimated_cost": 11123.41
+    },
+    {
+      "material_id": "MAT_0500",
+      "material_name": "Flyknit Yarn 2.0 White Coral",
+      "current_stock": 1901,
+      "days_until_stockout": 18.6,
+      "lead_time_days": 48,
+      "risk_level": "high",
+      "recommended_order_qty": 3127,
+      "estimated_cost": 60910.06
+    },
+    {
+      "material_id": "MAT_0357",
+      "material_name": "Flyknit Yarn 2.0 Volt Lite",
+      "current_stock": 992,
+      "days_until_stockout": 18.7,
+      "lead_time_days": 42,
+      "risk_level": "high",
+      "recommended_order_qty": 1298,
+      "estimated_cost": 23197.05
+    },
+    {
+      "material_id": "MAT_0082",
+      "material_name": "Flyknit Yarn 2.0 White Wide",
+      "current_stock": 659,
+      "days_until_stockout": 18.8,
+      "lead_time_days": 40,
+      "risk_level": "high",
+      "recommended_order_qty": 782,
+      "estimated_cost": 16271.84
+    },
+    {
+      "material_id": "MAT_0289",
+      "material_name": "Flyknit Yarn 2.0 Red HD",
+      "current_stock": 527,
+      "days_until_stockout": 18.8,
+      "lead_time_days": 51,
+      "risk_level": "high",
+      "recommended_order_qty": 938,
+      "estimated_cost": 20633.22
+    },
+    {
+      "material_id": "MAT_0329",
+      "material_name": "Silica Gel 3g Sachet v3",
+      "current_stock": 16051,
+      "days_until_stockout": 18.8,
+      "lead_time_days": 43,
+      "risk_level": "high",
+      "recommended_order_qty": 72162,
+      "estimated_cost": 2164.86
+    },
+    {
+      "material_id": "MAT_0278",
+      "material_name": "Flyknit Yarn 2.0 Blue HD",
+      "current_stock": 722,
+      "days_until_stockout": 19.0,
+      "lead_time_days": 52,
+      "risk_level": "high",
+      "recommended_order_qty": 1305,
+      "estimated_cost": 21390.59
+    },
+    {
+      "material_id": "MAT_0106",
+      "material_name": "Flyknit Yarn 2.0 White Lite",
+      "current_stock": 783,
+      "days_until_stockout": 19.1,
+      "lead_time_days": 44,
+      "risk_level": "high",
+      "recommended_order_qty": 1072,
+      "estimated_cost": 17608.03
+    },
+    {
+      "material_id": "MAT_0368",
+      "material_name": "Flyknit Yarn 2.0 Volt Plum",
+      "current_stock": 960,
+      "days_until_stockout": 19.2,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 1353,
+      "estimated_cost": 25726.45
+    },
+    {
+      "material_id": "MAT_0295",
+      "material_name": "Carbon Fiber Plate 1.0mm Ultra",
+      "current_stock": 368,
+      "days_until_stockout": 19.4,
+      "lead_time_days": 46,
+      "risk_level": "high",
+      "recommended_order_qty": 530,
+      "estimated_cost": 20696.5
+    },
+    {
+      "material_id": "MAT_0466",
+      "material_name": "Metal Eyelets 8mm Nickel Eco",
+      "current_stock": 10542,
+      "days_until_stockout": 19.6,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 29904,
+      "estimated_cost": 3289.44
+    },
+    {
+      "material_id": "MAT_0364",
+      "material_name": "Flyknit Yarn 2.0 Blue Pro",
+      "current_stock": 1101,
+      "days_until_stockout": 19.7,
+      "lead_time_days": 47,
+      "risk_level": "high",
+      "recommended_order_qty": 1603,
+      "estimated_cost": 31731.48
+    },
+    {
+      "material_id": "MAT_0292",
+      "material_name": "Flyknit Yarn 2.0 Blue Charcoal",
+      "current_stock": 735,
+      "days_until_stockout": 19.9,
+      "lead_time_days": 47,
+      "risk_level": "high",
+      "recommended_order_qty": 1051,
+      "estimated_cost": 22014.22
+    },
+    {
+      "material_id": "MAT_0303",
+      "material_name": "Flyknit Yarn 2.0 Red M",
+      "current_stock": 1161,
+      "days_until_stockout": 20.0,
+      "lead_time_days": 53,
+      "risk_level": "high",
+      "recommended_order_qty": 1992,
+      "estimated_cost": 40811.98
+    },
+    {
+      "material_id": "MAT_0157",
+      "material_name": "Flyknit Yarn 2.0 Volt Narrow",
+      "current_stock": 1083,
+      "days_until_stockout": 20.1,
+      "lead_time_days": 44,
+      "risk_level": "high",
+      "recommended_order_qty": 1360,
+      "estimated_cost": 25537.04
+    },
+    {
+      "material_id": "MAT_0312",
+      "material_name": "Flyknit Yarn 2.0 Black S",
+      "current_stock": 1837,
+      "days_until_stockout": 20.2,
+      "lead_time_days": 46,
+      "risk_level": "high",
+      "recommended_order_qty": 2464,
+      "estimated_cost": 48937.03
+    },
+    {
+      "material_id": "MAT_0214",
+      "material_name": "Flyknit Yarn 2.0 Red Sage",
+      "current_stock": 716,
+      "days_until_stockout": 20.5,
+      "lead_time_days": 48,
+      "risk_level": "high",
+      "recommended_order_qty": 1009,
+      "estimated_cost": 19104.16
+    },
+    {
+      "material_id": "MAT_0349",
+      "material_name": "Flyknit Yarn 2.0 Volt v2",
+      "current_stock": 1205,
+      "days_until_stockout": 20.8,
+      "lead_time_days": 47,
+      "risk_level": "high",
+      "recommended_order_qty": 1595,
+      "estimated_cost": 27900.05
+    },
+    {
+      "material_id": "MAT_0267",
+      "material_name": "Flyknit Yarn 2.0 White L",
+      "current_stock": 2028,
+      "days_until_stockout": 20.9,
+      "lead_time_days": 45,
+      "risk_level": "high",
+      "recommended_order_qty": 2458,
+      "estimated_cost": 48110.89
+    },
+    {
+      "material_id": "MAT_0238",
+      "material_name": "Flyknit Yarn 2.0 Blue M",
+      "current_stock": 717,
+      "days_until_stockout": 21.7,
+      "lead_time_days": 52,
+      "risk_level": "high",
+      "recommended_order_qty": 1043,
+      "estimated_cost": 18426.44
+    },
+    {
+      "material_id": "MAT_0012",
+      "material_name": "Carbon Fiber Plate 1.0mm",
+      "current_stock": 395,
+      "days_until_stockout": 21.9,
+      "lead_time_days": 51,
+      "risk_level": "high",
+      "recommended_order_qty": 547,
+      "estimated_cost": 24336.03
+    },
+    {
+      "material_id": "MAT_0115",
+      "material_name": "Flyknit Yarn 2.0 Blue Ultra",
+      "current_stock": 1235,
+      "days_until_stockout": 22.5,
+      "lead_time_days": 50,
+      "risk_level": "high",
+      "recommended_order_qty": 1588,
+      "estimated_cost": 34432.88
+    },
+    {
+      "material_id": "MAT_0186",
+      "material_name": "Flyknit Yarn 2.0 Red v2",
+      "current_stock": 1397,
+      "days_until_stockout": 23.3,
+      "lead_time_days": 50,
+      "risk_level": "high",
+      "recommended_order_qty": 1682,
+      "estimated_cost": 31858.97
+    },
+    {
+      "material_id": "MAT_0472",
+      "material_name": "Flyknit Yarn 2.0 Black Olive",
+      "current_stock": 2278,
+      "days_until_stockout": 23.5,
+      "lead_time_days": 55,
+      "risk_level": "high",
+      "recommended_order_qty": 3191,
+      "estimated_cost": 66345.05
+    },
+    {
+      "material_id": "MAT_0134",
+      "material_name": "Flyknit Yarn 2.0 Red Ultra",
+      "current_stock": 1331,
+      "days_until_stockout": 23.8,
+      "lead_time_days": 55,
+      "risk_level": "high",
+      "recommended_order_qty": 1826,
+      "estimated_cost": 37297.13
+    },
+    {
+      "material_id": "MAT_0118",
+      "material_name": "Flyknit Yarn 2.0 White HD",
+      "current_stock": 2578,
+      "days_until_stockout": 24.3,
+      "lead_time_days": 53,
+      "risk_level": "high",
+      "recommended_order_qty": 3184,
+      "estimated_cost": 59188.7
+    }
+  ]
+}
