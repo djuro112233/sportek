@@ -1,0 +1,95 @@
+{
+  "downtime_predictor": {
+    "model": "RandomForest",
+    "target": "downtime_minutes",
+    "mae": 30.97,
+    "r2_score": 0.0904,
+    "train_size": 4352,
+    "test_size": 1088,
+    "feature_importance": {
+      "rolling_avg_downtime_7d": 0.5294,
+      "month": 0.1126,
+      "operator_count": 0.1014,
+      "day_of_week": 0.0869,
+      "line_enc": 0.0694,
+      "shift": 0.0603,
+      "brand_enc": 0.0399
+    }
+  },
+  "defect_predictor": {
+    "model": "GradientBoosting",
+    "target": "defect_rate",
+    "mae": 0.0192,
+    "r2_score": 0.0214,
+    "train_size": 4352,
+    "test_size": 1088,
+    "feature_importance": {
+      "brand_enc": 0.3095,
+      "downtime_minutes": 0.1991,
+      "shift": 0.1563,
+      "changeover_minutes": 0.1088,
+      "month": 0.0985,
+      "operator_count": 0.0827,
+      "line_enc": 0.0451
+    }
+  },
+  "anomaly_detector": {
+    "model": "IsolationForest",
+    "contamination": 0.05,
+    "total_records": 5440,
+    "anomalies_detected": 272,
+    "anomaly_pct": 5.0,
+    "top_5_anomalies": [
+      {
+        "date": "2026-02-04",
+        "line_id": "L5",
+        "brand": "Crocs",
+        "shift": 3,
+        "oee_score": 0.2698,
+        "downtime_minutes": 232,
+        "defect_qty": 0,
+        "anomaly_score": -0.13
+      },
+      {
+        "date": "2025-07-30",
+        "line_id": "L5",
+        "brand": "Nike",
+        "shift": 3,
+        "oee_score": 0.3107,
+        "downtime_minutes": 234,
+        "defect_qty": 0,
+        "anomaly_score": -0.1252
+      },
+      {
+        "date": "2025-12-03",
+        "line_id": "L6",
+        "brand": "Decathlon",
+        "shift": 3,
+        "oee_score": 0.3148,
+        "downtime_minutes": 230,
+        "defect_qty": 0,
+        "anomaly_score": -0.1246
+      },
+      {
+        "date": "2025-07-23",
+        "line_id": "L5",
+        "brand": "Crocs",
+        "shift": 3,
+        "oee_score": 0.2913,
+        "downtime_minutes": 211,
+        "defect_qty": 0,
+        "anomaly_score": -0.1174
+      },
+      {
+        "date": "2026-01-22",
+        "line_id": "L3",
+        "brand": "Nike",
+        "shift": 2,
+        "oee_score": 0.2546,
+        "downtime_minutes": 229,
+        "defect_qty": 1,
+        "anomaly_score": -0.1156
+      }
+    ]
+  }
+}
