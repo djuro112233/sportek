@@ -1,0 +1,143 @@
+{
+  "generated_at": "2026-02-25T20:38:49.815273",
+  "period": "2025-Q4",
+  "brands": {
+    "Nike": {
+      "smsi_score": 67.1,
+      "grade": "Bronze",
+      "trend": "declining",
+      "quality_score": 65.3,
+      "delivery_score": 78.6,
+      "sustainability_score": 52.1,
+      "innovation_score": 72.6,
+      "defect_rate": 0.0664,
+      "otd_pct": 75.8
+    },
+    "Crocs": {
+      "total_units": 54588,
+      "fpy": 0.9525,
+      "defect_rate": 0.0475,
+      "aql_status": "fail",
+      "otd_pct": 75.8,
+      "croslite_stock_days": 3.4
+    },
+    "Decathlon": {
+      "total_units": 48474,
+      "efficiency": 81.3,
+      "defect_rate": 0.0484,
+      "customer_satisfaction": 70.3,
+      "carbon_per_unit": 9.7,
+      "safety_incidents": 3
+    }
+  },
+  "kpi_summary": {
+    "total": 20,
+    "green": 8,
+    "yellow": 4,
+    "red": 8
+  },
+  "alerts": [
+    {
+      "kpi_id": "crocs_defect_rate",
+      "name": "Crocs Defect Rate",
+      "value": 0.0476,
+      "target": 0.035,
+      "status": "red",
+      "trend": "stable"
+    },
+    {
+      "kpi_id": "nike_defect_rate",
+      "name": "Nike Defect Rate",
+      "value": 0.067,
+      "target": 0.025,
+      "status": "red",
+      "trend": "stable"
+    },
+    {
+      "kpi_id": "on_time_delivery",
+      "name": "On-Time Delivery",
+      "value": 74.0,
+      "target": 95.0,
+      "status": "red",
+      "trend": "stable"
+    },
+    {
+      "kpi_id": "overall_defect_rate",
+      "name": "Overall Defect Rate",
+      "value": 0.0564,
+      "target": 0.03,
+      "status": "red",
+      "trend": "stable"
+    },
+    {
+      "kpi_id": "rework_rate",
+      "name": "Rework Rate",
+      "value": 0.362,
+      "target": 0.05,
+      "status": "red",
+      "trend": "stable"
+    },
+    {
+      "kpi_id": "smsi_score",
+      "name": "SMSI Score",
+      "value": 67.1,
+      "target": 80.0,
+      "status": "red",
+      "trend": "stable"
+    },
+    {
+      "kpi_id": "safety_incidents",
+      "name": "Safety Incidents",
+      "value": 14,
+      "target": 0,
+      "status": "red",
+      "trend": "stable"
+    },
+    {
+      "kpi_id": "scrap_rate",
+      "name": "Scrap Rate",
+      "value": 0.289,
+      "target": 0.02,
+      "status": "red",
+      "trend": "stable"
+    },
+    {
+      "kpi_id": "decathlon_defect_rate",
+      "name": "Decathlon Defect Rate",
+      "value": 0.0482,
+      "target": 0.04,
+      "status": "yellow",
+      "trend": "stable"
+    },
+    {
+      "kpi_id": "energy_per_unit_kwh",
+      "name": "Energy per Unit (kWh)",
+      "value": 2.51,
+      "target": 2.5,
+      "status": "yellow",
+      "trend": "stable"
+    },
+    {
+      "kpi_id": "first_pass_yield",
+      "name": "First Pass Yield",
+      "value": 94.4,
+      "target": 95.0,
+      "status": "yellow",
+      "trend": "stable"
+    },
+    {
+      "kpi_id": "oee_average",
+      "name": "OEE Average",
+      "value": 76.2,
+      "target": 80.0,
+      "status": "yellow",
+      "trend": "stable"
+    }
+  ],
+  "charts": [
+    "nike_smsi_radar.png",
+    "kpi_dashboard.png",
+    "brand_comparison.png",
+    "report_timeline.png"
+  ]
+}
