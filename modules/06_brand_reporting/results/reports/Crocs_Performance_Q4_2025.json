@@ -1,0 +1,86 @@
+{
+  "brand": "Crocs",
+  "period": "2025-Q4",
+  "production": {
+    "total_units": 54588,
+    "planned_vs_actual_pct": 81.4,
+    "top_models": [
+      {
+        "model": "LiteRide Insole Unit",
+        "units": 18744,
+        "oee_avg": 0.7792
+      },
+      {
+        "model": "Classic Clog Strap Assembly",
+        "units": 18069,
+        "oee_avg": 0.7747
+      },
+      {
+        "model": "Bayaband Slide Upper",
+        "units": 17775,
+        "oee_avg": 0.7668
+      }
+    ]
+  },
+  "quality": {
+    "fpy": 0.9525,
+    "defect_rate": 0.0475,
+    "top_defects": [
+      {
+        "type": "boja odstupa",
+        "count": 59
+      },
+      {
+        "type": "šav neravnomjeran",
+        "count": 53
+      },
+      {
+        "type": "ljepilo vidljivo",
+        "count": 46
+      },
+      {
+        "type": "materijal oštećen",
+        "count": 44
+      },
+      {
+        "type": "logo pozicija",
+        "count": 33
+      }
+    ],
+    "aql_status": "fail"
+  },
+  "delivery": {
+    "otd_pct": 75.8,
+    "avg_lead_time": 24.2
+  },
+  "inventory": {
+    "croslite_stock_days": 3.4,
+    "critical_materials": [
+      {
+        "material": "EVA Foam Sheet 12mm",
+        "stock": 79,
+        "reorder_point": 148
+      },
+      {
+        "material": "TPU Film Matte 0.3mm",
+        "stock": 87,
+        "reorder_point": 108
+      },
+      {
+        "material": "PU Adhesive PU-400",
+        "stock": 45,
+        "reorder_point": 66
+      },
+      {
+        "material": "Tissue Paper White 50x75",
+        "stock": 5958,
+        "reorder_point": 6685
+      },
+      {
+        "material": "Polyester Core Thread T-60",
+        "stock": 84,
+        "reorder_point": 143
+      }
+    ]
+  }
+}
