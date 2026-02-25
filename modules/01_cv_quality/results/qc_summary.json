@@ -1,0 +1,24 @@
+{
+  "total_inspections": 732700,
+  "total_defects": 5000,
+  "defect_rate_percent": 0.68,
+  "top_defect": {
+    "type": "šav neravnomjeran",
+    "count": 1060,
+    "percent": 21.2
+  },
+  "brand_defect_rates": {
+    "Crocs": 0.58,
+    "Decathlon": 0.58,
+    "Nike": 0.81
+  },
+  "detection_distribution": {
+    "final": 2545,
+    "inline": 1709,
+    "incoming": 407,
+    "customer_return": 339
+  },
+  "avg_inspection_time_seconds": 44.7,
+  "estimated_ai_speed_improvement": "10x",
+  "estimated_defect_reduction": "25%"
+}
