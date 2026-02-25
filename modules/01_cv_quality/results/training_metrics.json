@@ -1,0 +1,33 @@
+{
+  "best_model": "RandomForest",
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "train_size": 40,
+  "val_size": 10,
+  "feature_count": 62,
+  "all_models": {
+    "RandomForest": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "train_time_s": 0.17
+    },
+    "SVM_RBF": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "train_time_s": 0.0
+    },
+    "GradientBoosting": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "train_time_s": 0.09
+    }
+  }
+}
