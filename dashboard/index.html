@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPORTEK AI PLATFORMA — Executive Dashboard</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React 18 -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Recharts -->
+  <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            slate: {
+              800: '#1E293B',
+              850: '#172032',
+              900: '#0F172A',
+              950: '#0a1120',
+            },
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #0F172A; color: #F8FAFC; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    @keyframes countUp { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+    .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    .slide-in { animation: slideIn 0.3s ease-out forwards; }
+    .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+    .card {
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3), 0 2px 4px -2px rgba(0,0,0,0.2);
+    }
+    .card:hover {
+      border-color: #0891B2;
+      box-shadow: 0 8px 25px -5px rgba(8,145,178,0.15), 0 4px 10px -3px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+
+    .tab-btn { transition: all 0.2s ease; position: relative; }
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: #0891B2;
+      transition: width 0.3s ease;
+      border-radius: 1px;
+    }
+    .tab-btn.active::after { width: 60%; }
+    .tab-btn:hover::after { width: 40%; }
+    .tab-btn.active:hover::after { width: 60%; }
+
+    .gauge-bg { background: conic-gradient(from 180deg, #334155 0%, #334155 100%); }
+
+    .chat-bubble-user {
+      background: linear-gradient(135deg, #0891B2, #0e7490);
+      border-radius: 16px 16px 4px 16px;
+    }
+    .chat-bubble-ai {
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 16px 16px 16px 4px;
+    }
+
+    .mini-card {
+      background: linear-gradient(135deg, #1E293B, #172032);
+      border: 1px solid #334155;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+    .mini-card:hover { border-color: rgba(8,145,178,0.5); }
+
+    .recharts-default-tooltip {
+      background: #1E293B !important;
+      border: 1px solid #334155 !important;
+      border-radius: 8px !important;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5) !important;
+    }
+    .recharts-tooltip-item { color: #F8FAFC !important; }
+    .recharts-tooltip-label { color: #94A3B8 !important; }
+
+    .roi-box {
+      background: linear-gradient(135deg, rgba(8,145,178,0.1), rgba(16,185,129,0.08));
+      border: 1px solid rgba(8,145,178,0.3);
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const {
+      BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid,
+      Tooltip, Legend, ResponsiveContainer, ComposedChart, Area,
+      PieChart, Pie, Cell, RadarChart, Radar, PolarGrid,
+      PolarAngleAxis, PolarRadiusAxis, RadialBarChart, RadialBar,
+    } = Recharts;
+
+    // ── COLOUR PALETTE ──────────────────────────────────────────
+    const C = {
+      bg: '#0F172A', card: '#1E293B', border: '#334155',
+      teal: '#0891B2', tealLight: '#22d3ee', tealDark: '#0e7490',
+      green: '#10B981', yellow: '#F59E0B', red: '#EF4444',
+      white: '#F8FAFC', grey: '#94A3B8', greyDark: '#64748B',
+      orange: '#F97316', purple: '#8B5CF6', blue: '#3B82F6',
+    };
+
+    // ── ICONS (unicode) ─────────────────────────────────────────
+    const Icons = {
+      eye: '\uD83D\uDC41\uFE0F',
+      globe: '\uD83C\uDF10',
+      book: '\uD83D\uDCDA',
+      chart: '\uD83D\uDCC8',
+      gauge: '\u2699\uFE0F',
+      doc: '\uD83D\uDCCB',
+      check: '\u2713',
+      cross: '\u2717',
+      up: '\u2191',
+      down: '\u2193',
+      right: '\u2192',
+      star: '\u2605',
+      bolt: '\u26A1',
+      shield: '\uD83D\uDEE1\uFE0F',
+      factory: '\uD83C\uDFED',
+      search: '\uD83D\uDD0D',
+      clock: '\uD83D\uDD50',
+    };
+
+    // ── HEADER ──────────────────────────────────────────────────
+    function Header() {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('bs-BA', { day: '2-digit', month: 'long', year: 'numeric' });
+      const timeStr = now.toLocaleTimeString('bs-BA', { hour: '2-digit', minute: '2-digit' });
+      return (
+        <header className="fixed top-0 left-0 right-0 z-50" style={{ background: 'linear-gradient(180deg, #0a1120 0%, #0F172A 100%)', borderBottom: '1px solid #1E293B' }}>
+          <div className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold" style={{ background: 'linear-gradient(135deg, #0891B2, #0e7490)' }}>S</div>
+                  <h1 className="text-lg font-bold tracking-wide" style={{ color: C.white }}>
+                    SPORTEK <span style={{ color: C.teal }}>AI</span> PLATFORMA
+                  </h1>
+                </div>
+                <p className="text-xs mt-0.5 ml-10" style={{ color: C.greyDark }}>Zecchetto Group — Intelligent Manufacturing</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full pulse-dot" style={{ background: C.green }}></div>
+                <span className="text-xs font-medium" style={{ color: C.green }}>System Online</span>
+              </div>
+              <div className="px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(8,145,178,0.15)', color: C.teal, border: `1px solid rgba(8,145,178,0.3)` }}>
+                6 AI Modula Active
+              </div>
+              <div className="text-right">
+                <div className="text-xs font-medium" style={{ color: C.grey }}>{dateStr}</div>
+                <div className="text-xs" style={{ color: C.greyDark }}>{timeStr}</div>
+              </div>
+            </div>
+          </div>
+        </header>
+      );
+    }
+
+    // ── SUMMARY CARD ────────────────────────────────────────────
+    function SummaryCard({ title, value, unit, change, changeLabel, positive, icon, extra }) {
+      const changeColor = positive ? C.green : C.red;
+      const arrow = positive ? Icons.up : Icons.down;
+      return (
+        <div className="card p-5 fade-in">
+          <div className="flex items-start justify-between mb-3">
+            <span className="text-xs font-medium uppercase tracking-wider" style={{ color: C.grey }}>{title}</span>
+            <span className="text-lg">{icon}</span>
+          </div>
+          <div className="flex items-end gap-2 mb-2">
+            <span className="text-3xl font-bold" style={{ color: C.white }}>{value}</span>
+            {unit && <span className="text-sm font-medium mb-1" style={{ color: C.grey }}>{unit}</span>}
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: `${changeColor}20`, color: changeColor }}>
+              {arrow} {change}
+            </span>
+            {changeLabel && <span className="text-xs" style={{ color: C.greyDark }}>{changeLabel}</span>}
+          </div>
+          {extra && <div className="mt-3">{extra}</div>}
+        </div>
+      );
+    }
+
+    // ── EXECUTIVE SUMMARY ───────────────────────────────────────
+    function ExecutiveSummary() {
+      const oeePercent = 76.3;
+      const oeeTarget = 85;
+      return (
+        <div className="grid grid-cols-4 gap-4 mb-6 fade-in">
+          <SummaryCard
+            title="Dnevna Proizvodnja" value="2,340" unit="pari"
+            change="5.2%" changeLabel="vs prethodni dan" positive={true}
+            icon={Icons.factory}
+          />
+          <div className="card p-5 fade-in">
+            <div className="flex items-start justify-between mb-3">
+              <span className="text-xs font-medium uppercase tracking-wider" style={{ color: C.grey }}>OEE Prosjek</span>
+              <span className="text-lg">{Icons.gauge}</span>
+            </div>
+            <div className="flex items-end gap-2 mb-3">
+              <span className="text-3xl font-bold" style={{ color: C.white }}>{oeePercent}%</span>
+              <span className="text-sm font-medium mb-1" style={{ color: C.grey }}>/ {oeeTarget}%</span>
+            </div>
+            <div className="w-full h-2 rounded-full" style={{ background: C.border }}>
+              <div className="h-2 rounded-full" style={{ width: `${(oeePercent / oeeTarget) * 100}%`, background: `linear-gradient(90deg, ${C.teal}, ${C.tealLight})`, transition: 'width 1s ease' }}></div>
+            </div>
+            <div className="flex justify-between mt-1">
+              <span className="text-xs" style={{ color: C.greyDark }}>Trenutno</span>
+              <span className="text-xs" style={{ color: C.greyDark }}>Target {oeeTarget}%</span>
+            </div>
+          </div>
+          <SummaryCard
+            title="Defect Rate" value="3.2%" unit=""
+            change="0.8%" changeLabel="vs prethodni mjesec" positive={true}
+            icon={Icons.shield}
+          />
+          <div className="card p-5 fade-in group relative">
+            <div className="flex items-start justify-between mb-3">
+              <span className="text-xs font-medium uppercase tracking-wider" style={{ color: C.grey }}>Godisnje Ustede AI</span>
+              <span className="text-lg">{Icons.bolt}</span>
+            </div>
+            <div className="flex items-end gap-1 mb-2">
+              <span className="text-3xl font-bold" style={{ color: C.green }}>847,000</span>
+              <span className="text-sm font-medium mb-1" style={{ color: C.grey }}>EUR</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: `${C.green}20`, color: C.green }}>6 modula</span>
+              <span className="text-xs" style={{ color: C.greyDark }}>ukupan ROI</span>
+            </div>
+            <div className="absolute top-full left-0 right-0 mt-2 p-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10" style={{ background: '#0a1120', border: `1px solid ${C.border}` }}>
+              <div className="text-xs space-y-1" style={{ color: C.grey }}>
+                <div className="flex justify-between"><span>CV Quality</span><span style={{ color: C.green }}>99,271</span></div>
+                <div className="flex justify-between"><span>TradeFlow</span><span style={{ color: C.green }}>354,734</span></div>
+                <div className="flex justify-between"><span>Knowledge</span><span style={{ color: C.green }}>20,431</span></div>
+                <div className="flex justify-between"><span>Forecast</span><span style={{ color: C.green }}>168,200</span></div>
+                <div className="flex justify-between"><span>OEE Dashboard</span><span style={{ color: C.green }}>151,793</span></div>
+                <div className="flex justify-between"><span>Reporting</span><span style={{ color: C.green }}>52,571</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── TAB NAV ─────────────────────────────────────────────────
+    const TABS = [
+      { id: 'qc', label: 'QC Vision', icon: '\uD83D\uDC41\uFE0F' },
+      { id: 'trade', label: 'TradeFlow', icon: '\uD83C\uDF10' },
+      { id: 'knowledge', label: 'Knowledge', icon: '\uD83D\uDCDA' },
+      { id: 'forecast', label: 'Forecast', icon: '\uD83D\uDCC8' },
+      { id: 'oee', label: 'OEE', icon: '\u2699\uFE0F' },
+      { id: 'reporting', label: 'Reporting', icon: '\uD83D\uDCCB' },
+    ];
+
+    function TabNav({ active, onSelect }) {
+      return (
+        <div className="flex gap-1 p-1 rounded-xl mb-6" style={{ background: '#172032' }}>
+          {TABS.map(t => (
+            <button key={t.id}
+              className={`tab-btn flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${active === t.id ? 'active' : ''}`}
+              style={{
+                background: active === t.id ? C.card : 'transparent',
+                color: active === t.id ? C.teal : C.greyDark,
+                border: active === t.id ? `1px solid ${C.border}` : '1px solid transparent',
+              }}
+              onClick={() => onSelect(t.id)}
+            >
+              <span>{t.icon}</span>
+              <span>{t.label}</span>
+            </button>
+          ))}
+        </div>
+      );
+    }
+
+    // ── ROI BOX ─────────────────────────────────────────────────
+    function ROIBox({ saving, payback, roi }) {
+      return (
+        <div className="roi-box p-4">
+          <div className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: C.teal }}>ROI Analiza</div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <div className="text-xl font-bold" style={{ color: C.green }}>{saving}</div>
+              <div className="text-xs" style={{ color: C.grey }}>Godisnja usteda</div>
+            </div>
+            <div>
+              <div className="text-xl font-bold" style={{ color: C.tealLight }}>{payback}</div>
+              <div className="text-xs" style={{ color: C.grey }}>Payback</div>
+            </div>
+            <div>
+              <div className="text-xl font-bold" style={{ color: C.green }}>{roi}</div>
+              <div className="text-xs" style={{ color: C.grey }}>3yr ROI</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── MINI STAT CARD ──────────────────────────────────────────
+    function MiniStat({ label, value, sub, color }) {
+      return (
+        <div className="mini-card p-4 text-center">
+          <div className="text-2xl font-bold mb-1" style={{ color: color || C.tealLight }}>{value}</div>
+          <div className="text-xs font-medium" style={{ color: C.white }}>{label}</div>
+          {sub && <div className="text-xs mt-1" style={{ color: C.greyDark }}>{sub}</div>}
+        </div>
+      );
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // TAB 1 — QUALITY CONTROL
+    // ════════════════════════════════════════════════════════════
+    function TabQC() {
+      const paretoData = [
+        { name: 'Sav neravnomjeran', count: 1100, cumPct: 22 },
+        { name: 'Ljepilo vidljivo', count: 900, cumPct: 40 },
+        { name: 'Boja odstupa', count: 700, cumPct: 54 },
+        { name: 'Materijal ostecen', count: 600, cumPct: 66 },
+        { name: 'Dimenzija', count: 500, cumPct: 76 },
+        { name: '3D knit defekt', count: 450, cumPct: 85 },
+        { name: 'Logo pozicija', count: 400, cumPct: 93 },
+        { name: 'Djon odvajanje', count: 350, cumPct: 100 },
+      ];
+
+      const trendData = [
+        { m: 'Jan', Nike: 4.5, Crocs: 4.0, Decathlon: 3.8, Ukupno: 4.1 },
+        { m: 'Feb', Nike: 4.2, Crocs: 3.6, Decathlon: 3.5, Ukupno: 3.8 },
+        { m: 'Mar', Nike: 4.3, Crocs: 3.7, Decathlon: 3.6, Ukupno: 3.9 },
+        { m: 'Apr', Nike: 3.9, Crocs: 3.3, Decathlon: 3.2, Ukupno: 3.5 },
+        { m: 'Maj', Nike: 3.6, Crocs: 3.2, Decathlon: 3.0, Ukupno: 3.3 },
+        { m: 'Jun', Nike: 3.8, Crocs: 3.3, Decathlon: 3.1, Ukupno: 3.4 },
+        { m: 'Jul', Nike: 4.0, Crocs: 3.5, Decathlon: 3.2, Ukupno: 3.6 },
+        { m: 'Aug', Nike: 3.9, Crocs: 3.3, Decathlon: 3.2, Ukupno: 3.5 },
+        { m: 'Sep', Nike: 3.6, Crocs: 3.0, Decathlon: 2.9, Ukupno: 3.2 },
+        { m: 'Okt', Nike: 3.4, Crocs: 2.8, Decathlon: 2.7, Ukupno: 3.0 },
+        { m: 'Nov', Nike: 3.2, Crocs: 2.7, Decathlon: 2.6, Ukupno: 2.9 },
+        { m: 'Dec', Nike: 3.4, Crocs: 3.0, Decathlon: 2.8, Ukupno: 3.1 },
+      ];
+
+      const feed = [
+        { time: '14:32', line: 'L1', model: 'Dunk Low Textile', result: 'pass', confidence: 98.4 },
+        { time: '14:31', line: 'L3', model: 'Classic Clog Strap', result: 'fail', confidence: 94.1, defect: 'Sav neravnomjeran' },
+        { time: '14:29', line: 'L2', model: 'Pegasus 3D Knit', result: 'pass', confidence: 97.8 },
+        { time: '14:27', line: 'L6', model: 'Kalenji Trail Sole', result: 'pass', confidence: 96.2 },
+        { time: '14:25', line: 'L4', model: 'ZoomX Carbon Plate', result: 'fail', confidence: 91.3, defect: 'Ljepilo vidljivo' },
+        { time: '14:23', line: 'L1', model: 'Air Max Flyknit', result: 'pass', confidence: 99.1 },
+        { time: '14:21', line: 'L5', model: 'Bayaband Slide', result: 'pass', confidence: 95.7 },
+        { time: '14:19', line: 'L2', model: 'Vaporfly Mesh', result: 'fail', confidence: 88.6, defect: 'Boja odstupa' },
+      ];
+
+      return (
+        <div className="fade-in space-y-4">
+          {/* Top stats */}
+          <div className="grid grid-cols-3 gap-4">
+            <MiniStat label="Model Accuracy" value="94.2%" sub="ResNet50 + custom head" color={C.green} />
+            <MiniStat label="Inspections Today" value="847" sub="+12% vs prosjecno" color={C.tealLight} />
+            <MiniStat label="AI Speed" value="10x" sub="brze od manualne inspekcije" color={C.orange} />
+          </div>
+
+          {/* Charts row */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Pareto */}
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>Pareto Analiza Defekata</h3>
+              <ResponsiveContainer width="100%" height={280}>
+                <ComposedChart data={paretoData} margin={{ top: 5, right: 30, left: 0, bottom: 40 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="name" tick={{ fill: C.grey, fontSize: 9 }} angle={-30} textAnchor="end" />
+                  <YAxis yAxisId="left" tick={{ fill: C.grey, fontSize: 10 }} />
+                  <YAxis yAxisId="right" orientation="right" domain={[0, 100]} tick={{ fill: C.grey, fontSize: 10 }} unit="%" />
+                  <Tooltip contentStyle={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, color: C.white }} />
+                  <Bar yAxisId="left" dataKey="count" fill={C.teal} radius={[4, 4, 0, 0]} />
+                  <Line yAxisId="right" type="monotone" dataKey="cumPct" stroke={C.orange} strokeWidth={2} dot={{ fill: C.orange, r: 3 }} />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Trend */}
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>Defect Rate Trend (12 mjeseci)</h3>
+              <ResponsiveContainer width="100%" height={280}>
+                <LineChart data={trendData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="m" tick={{ fill: C.grey, fontSize: 10 }} />
+                  <YAxis tick={{ fill: C.grey, fontSize: 10 }} domain={[2, 5]} unit="%" />
+                  <Tooltip contentStyle={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, color: C.white }} />
+                  <Legend wrapperStyle={{ fontSize: 11, color: C.grey }} />
+                  <Line type="monotone" dataKey="Nike" stroke={C.teal} strokeWidth={2} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="Crocs" stroke={C.tealLight} strokeWidth={2} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="Decathlon" stroke={C.orange} strokeWidth={2} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="Ukupno" stroke={C.white} strokeWidth={3} dot={{ r: 4 }} strokeDasharray="5 5" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Bottom row: feed + ROI */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="col-span-2 card p-5">
+              <h3 className="text-sm font-semibold mb-3" style={{ color: C.white }}>Real-Time Inspection Feed</h3>
+              <div className="space-y-2 max-h-[260px] overflow-y-auto pr-2">
+                {feed.map((f, i) => (
+                  <div key={i} className="flex items-center gap-3 p-2 rounded-lg slide-in" style={{ background: '#172032', animationDelay: `${i * 0.05}s` }}>
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold" style={{ background: f.result === 'pass' ? `${C.green}20` : `${C.red}20`, color: f.result === 'pass' ? C.green : C.red }}>
+                      {f.result === 'pass' ? Icons.check : Icons.cross}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold" style={{ color: C.white }}>{f.model}</span>
+                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: `${C.teal}20`, color: C.teal }}>{f.line}</span>
+                      </div>
+                      {f.defect && <span className="text-xs" style={{ color: C.red }}>{f.defect}</span>}
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs font-mono" style={{ color: f.confidence > 95 ? C.green : C.yellow }}>{f.confidence}%</div>
+                      <div className="text-xs" style={{ color: C.greyDark }}>{f.time}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <ROIBox saving="99,271 EUR" payback="3.0 mj" roi="205%" />
+          </div>
+        </div>
+      );
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // TAB 2 — TRADEFLOW AI
+    // ════════════════════════════════════════════════════════════
+    function TabTrade() {
+      const [hsInput, setHsInput] = React.useState('Footwear with outer soles of rubber, uppers of textile, sports');
+      const [classified, setClassified] = React.useState(false);
+
+      const dutyData = [
+        { country: 'DE', mfn: 16.9, pref: 0, saving: 16.9 },
+        { country: 'FR', mfn: 16.9, pref: 0, saving: 16.9 },
+        { country: 'IT', mfn: 16.9, pref: 0, saving: 16.9 },
+        { country: 'US', mfn: 20.0, pref: 20.0, saving: 0 },
+        { country: 'UK', mfn: 16.9, pref: 16.9, saving: 0 },
+        { country: 'RS', mfn: 0, pref: 0, saving: 0 },
+        { country: 'TR', mfn: 16.9, pref: 8.5, saving: 8.4 },
+        { country: 'CH', mfn: 0, pref: 0, saving: 0 },
+      ];
+
+      const dppData = [
+        { brand: 'Nike', ready: 78, gap: 22 },
+        { brand: 'Crocs', ready: 65, gap: 35 },
+        { brand: 'Decathlon', ready: 71, gap: 29 },
+      ];
+
+      return (
+        <div className="fade-in space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <MiniStat label="HS Accuracy" value="96%" sub="AI klasifikacija" color={C.green} />
+            <MiniStat label="DPP Ready" value="73%" sub="EU Digital Product Passport" color={C.yellow} />
+            <MiniStat label="FTA Savings" value="348K EUR" sub="SAA BiH-EU ugovor" color={C.green} />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {/* HS Classifier demo */}
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>HS Classification Demo</h3>
+              <div className="space-y-3">
+                <textarea
+                  className="w-full p-3 rounded-lg text-sm resize-none focus:outline-none focus:ring-2"
+                  style={{ background: '#172032', border: `1px solid ${C.border}`, color: C.white, focusRingColor: C.teal }}
+                  rows={2} value={hsInput} onChange={e => { setHsInput(e.target.value); setClassified(false); }}
+                  placeholder="Opisi proizvod za klasifikaciju..."
+                />
+                <button
+                  className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all hover:opacity-90"
+                  style={{ background: `linear-gradient(135deg, ${C.teal}, ${C.tealDark})`, color: C.white }}
+                  onClick={() => setClassified(true)}
+                >
+                  {Icons.search} Classify
+                </button>
+                {classified && (
+                  <div className="fade-in p-4 rounded-lg space-y-3" style={{ background: '#172032', border: `1px solid ${C.border}` }}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs" style={{ color: C.grey }}>HS Code (6-digit)</span>
+                      <span className="text-lg font-bold font-mono" style={{ color: C.teal }}>6404.11</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs" style={{ color: C.grey }}>HS Code (10-digit)</span>
+                      <span className="text-sm font-mono" style={{ color: C.tealLight }}>6404.11.00.90</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs" style={{ color: C.grey }}>Confidence</span>
+                      <span className="text-sm font-bold" style={{ color: C.green }}>96.3%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs" style={{ color: C.grey }}>Duty (EU/SAA)</span>
+                      <span className="text-sm font-bold" style={{ color: C.green }}>0% (FTA)</span>
+                    </div>
+                    <div className="text-xs p-2 rounded" style={{ background: `${C.green}10`, color: C.green }}>
+                      {Icons.check} SAA BiH-EU sporazum: preferential rate 0%
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Duty chart */}
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>Carine po zemljama (MFN vs Preferential)</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={dutyData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="country" tick={{ fill: C.grey, fontSize: 11 }} />
+                  <YAxis tick={{ fill: C.grey, fontSize: 10 }} unit="%" />
+                  <Tooltip contentStyle={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, color: C.white }} />
+                  <Legend wrapperStyle={{ fontSize: 11, color: C.grey }} />
+                  <Bar dataKey="mfn" name="MFN Rate" fill={C.red} opacity={0.7} radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="pref" name="Preferential" fill={C.green} opacity={0.8} radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            {/* DPP Readiness */}
+            <div className="col-span-2 card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>DPP Readiness po brendu</h3>
+              <div className="space-y-4">
+                {dppData.map(d => (
+                  <div key={d.brand}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-medium" style={{ color: C.white }}>{d.brand}</span>
+                      <span className="text-sm font-bold" style={{ color: d.ready >= 75 ? C.green : C.yellow }}>{d.ready}%</span>
+                    </div>
+                    <div className="w-full h-4 rounded-full flex overflow-hidden" style={{ background: '#172032' }}>
+                      <div className="h-full rounded-l-full transition-all duration-700" style={{ width: `${d.ready}%`, background: d.brand === 'Nike' ? C.teal : d.brand === 'Crocs' ? C.tealLight : C.orange }}></div>
+                      <div className="h-full rounded-r-full" style={{ width: `${d.gap}%`, background: `${C.red}30` }}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 flex items-center gap-4">
+                <div className="flex items-center gap-3 p-3 rounded-lg flex-1" style={{ background: '#172032', border: `1px solid ${C.border}` }}>
+                  <div className="text-2xl font-bold" style={{ color: C.yellow }}>2,847</div>
+                  <div>
+                    <div className="text-xs font-medium" style={{ color: C.white }}>Tonnes CO2 (CBAM)</div>
+                    <div className="text-xs" style={{ color: C.greyDark }}>Carbon Border Adjustment</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ROIBox saving="354,734 EUR" payback="0.8 mj" roi="5,818%" />
+          </div>
+        </div>
+      );
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // TAB 3 — KNOWLEDGE GUARDIAN
+    // ════════════════════════════════════════════════════════════
+    function TabKnowledge() {
+      const chatPairs = [
+        {
+          q: 'Koji su koraci finalne inspekcije?',
+          a: 'Prema SOP-QC-001, finalna inspekcija uključuje: vizuelnu inspekciju gornjeg dijela pod LED osvjetljenjem, provjeru đona, dimenzionalnu kontrolu sa kaliparom, i NFC tag skeniranje.',
+          source: 'SOP_QC_Inspekcija_Final.txt',
+        },
+        {
+          q: 'Koji su Nike AQL nivoi?',
+          a: 'Nike zahtijeva AQL 1.5 za kritične defekte, 2.5 za veće, i 4.0 za manje defekte prema ISO 2859-1.',
+          source: 'Nike_Quality_Manual_2024.txt',
+        },
+        {
+          q: 'Kako se podešava SHIMA SEIKI?',
+          a: 'Setup procedura uključuje provjeru prede prema BOM, postavljanje tenzije 3-5g za Flyknit yarn, učitavanje programa na SDS-ONE APEX, i obavezni test run.',
+          source: 'SOP_3D_Knit_Setup.txt',
+        },
+      ];
+
+      const docUsage = [
+        { doc: 'SOP_QC_Inspekcija_Final', queries: 142 },
+        { doc: 'Nike_Quality_Manual_2024', queries: 118 },
+        { doc: 'SOP_3D_Knit_Setup', queries: 95 },
+        { doc: 'Decathlon_Sustainability', queries: 73 },
+        { doc: 'Crocs_Croslite_Spec', queries: 61 },
+      ];
+
+      return (
+        <div className="fade-in space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <MiniStat label="Documents" value="10" sub="SOP-ovi, manuali, specifikacije" color={C.tealLight} />
+            <MiniStat label="Chunks" value="247" sub="RAG vector embeddings" color={C.tealLight} />
+            <MiniStat label="Avg Response" value="0.8s" sub="retrieval + generation" color={C.green} />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {/* Chat demo */}
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>Knowledge Guardian Chat</h3>
+              <div className="space-y-3 max-h-[380px] overflow-y-auto pr-2">
+                {chatPairs.map((cp, i) => (
+                  <React.Fragment key={i}>
+                    {/* User */}
+                    <div className="flex justify-end slide-in" style={{ animationDelay: `${i * 0.15}s` }}>
+                      <div className="chat-bubble-user px-4 py-2.5 max-w-[85%]">
+                        <div className="text-sm" style={{ color: C.white }}>{cp.q}</div>
+                      </div>
+                    </div>
+                    {/* AI */}
+                    <div className="flex justify-start slide-in" style={{ animationDelay: `${i * 0.15 + 0.08}s` }}>
+                      <div className="chat-bubble-ai px-4 py-2.5 max-w-[85%]">
+                        <div className="text-sm mb-2" style={{ color: C.white }}>{cp.a}</div>
+                        <div className="flex items-center gap-1 text-xs" style={{ color: C.teal }}>
+                          <span>{Icons.doc}</span>
+                          <span>Izvor: {cp.source}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </React.Fragment>
+                ))}
+              </div>
+              <div className="mt-3 flex gap-2">
+                <input className="flex-1 p-2.5 rounded-lg text-sm focus:outline-none" style={{ background: '#172032', border: `1px solid ${C.border}`, color: C.white }} placeholder="Pitaj Knowledge Guardian..." disabled />
+                <button className="px-4 rounded-lg text-sm font-semibold" style={{ background: C.teal, color: C.white, opacity: 0.5 }} disabled>
+                  {Icons.right}
+                </button>
+              </div>
+            </div>
+
+            {/* Doc usage + ROI */}
+            <div className="space-y-4">
+              <div className="card p-5">
+                <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>Najpopularniji dokumenti</h3>
+                <ResponsiveContainer width="100%" height={200}>
+                  <BarChart data={docUsage} layout="vertical" margin={{ top: 0, right: 20, left: 10, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
+                    <XAxis type="number" tick={{ fill: C.grey, fontSize: 10 }} />
+                    <YAxis type="category" dataKey="doc" tick={{ fill: C.grey, fontSize: 9 }} width={160} />
+                    <Tooltip contentStyle={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, color: C.white }} />
+                    <Bar dataKey="queries" fill={C.teal} radius={[0, 6, 6, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <ROIBox saving="20,431 EUR" payback="4.4 mj" roi="143%" />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // TAB 4 — FORECAST (placeholder with real content)
+    // ════════════════════════════════════════════════════════════
+    function TabForecast() {
+      const forecastData = [
+        { m: 'Jan', actual: 62000, forecast: 61000 },
+        { m: 'Feb', actual: 58000, forecast: 59000 },
+        { m: 'Mar', actual: 65000, forecast: 64000 },
+        { m: 'Apr', actual: 70000, forecast: 69000 },
+        { m: 'Maj', actual: 68000, forecast: 67500 },
+        { m: 'Jun', actual: 72000, forecast: 71000 },
+        { m: 'Jul', actual: 67000, forecast: 68000 },
+        { m: 'Aug', actual: 63000, forecast: 64500 },
+        { m: 'Sep', actual: 74000, forecast: 73000 },
+        { m: 'Okt', actual: 76000, forecast: 75000 },
+        { m: 'Nov', actual: 71000, forecast: 72000 },
+        { m: 'Dec', actual: null, forecast: 78000 },
+      ];
+
+      const brandDemand = [
+        { brand: 'Nike', units: 298000, pct: 47 },
+        { brand: 'Crocs', units: 196000, pct: 31 },
+        { brand: 'Decathlon', units: 142000, pct: 22 },
+      ];
+      const brandColors = [C.teal, C.tealLight, C.orange];
+
+      return (
+        <div className="fade-in space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <MiniStat label="Forecast Accuracy" value="97.2%" sub="MAPE: 2.8%" color={C.green} />
+            <MiniStat label="Next Month" value="78K" sub="pairs predicted (Dec)" color={C.tealLight} />
+            <MiniStat label="Stockout Risk" value="3 items" sub="requiring attention" color={C.yellow} />
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div className="col-span-2 card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>Forecast vs Actual (12 mj)</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <ComposedChart data={forecastData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="m" tick={{ fill: C.grey, fontSize: 10 }} />
+                  <YAxis tick={{ fill: C.grey, fontSize: 10 }} />
+                  <Tooltip contentStyle={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, color: C.white }} />
+                  <Legend wrapperStyle={{ fontSize: 11, color: C.grey }} />
+                  <Bar dataKey="actual" name="Actual" fill={C.teal} opacity={0.7} radius={[4, 4, 0, 0]} />
+                  <Line type="monotone" dataKey="forecast" name="AI Forecast" stroke={C.orange} strokeWidth={2.5} dot={{ fill: C.orange, r: 4 }} strokeDasharray="5 5" />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="space-y-4">
+              <div className="card p-5">
+                <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>Demand po brendu</h3>
+                <div className="space-y-3">
+                  {brandDemand.map((b, i) => (
+                    <div key={b.brand}>
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm" style={{ color: C.white }}>{b.brand}</span>
+                        <span className="text-sm font-bold" style={{ color: brandColors[i] }}>{(b.units/1000).toFixed(0)}K ({b.pct}%)</span>
+                      </div>
+                      <div className="w-full h-3 rounded-full" style={{ background: '#172032' }}>
+                        <div className="h-full rounded-full" style={{ width: `${b.pct}%`, background: brandColors[i] }}></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <ROIBox saving="168,200 EUR" payback="1.3 mj" roi="1,803%" />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // TAB 5 — OEE
+    // ════════════════════════════════════════════════════════════
+    function TabOEE() {
+      const lineData = [
+        { line: 'L1', avail: 0.91, perf: 0.84, qual: 0.97, oee: 0.742 },
+        { line: 'L2', avail: 0.93, perf: 0.82, qual: 0.96, oee: 0.732 },
+        { line: 'L3', avail: 0.89, perf: 0.86, qual: 0.95, oee: 0.727 },
+        { line: 'L4', avail: 0.88, perf: 0.87, qual: 0.97, oee: 0.743 },
+        { line: 'L5', avail: 0.92, perf: 0.83, qual: 0.94, oee: 0.717 },
+        { line: 'L6', avail: 0.90, perf: 0.88, qual: 0.96, oee: 0.760 },
+      ];
+
+      const trendData = [
+        { m: 'Jan', oee: 73.1 }, { m: 'Feb', oee: 74.2 }, { m: 'Mar', oee: 73.8 },
+        { m: 'Apr', oee: 75.1 }, { m: 'Maj', oee: 76.0 }, { m: 'Jun', oee: 75.4 },
+        { m: 'Jul', oee: 76.8 }, { m: 'Aug', oee: 76.2 }, { m: 'Sep', oee: 77.3 },
+        { m: 'Okt', oee: 76.5 }, { m: 'Nov', oee: 76.1 }, { m: 'Dec', oee: 76.3 },
+      ];
+
+      return (
+        <div className="fade-in space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <MiniStat label="Factory OEE" value="76.3%" sub="Target: 85%" color={C.yellow} />
+            <MiniStat label="Best Line" value="L6 (76.0%)" sub="Najstabilnija" color={C.green} />
+            <MiniStat label="Anomalies" value="127" sub="Auto-detected" color={C.red} />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {/* Line comparison */}
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>OEE po liniji (A x P x Q)</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={lineData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="line" tick={{ fill: C.grey, fontSize: 11 }} />
+                  <YAxis tick={{ fill: C.grey, fontSize: 10 }} domain={[0, 1]} />
+                  <Tooltip contentStyle={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, color: C.white }} formatter={(v) => `${(v * 100).toFixed(1)}%`} />
+                  <Legend wrapperStyle={{ fontSize: 11, color: C.grey }} />
+                  <Bar dataKey="avail" name="Availability" fill={C.teal} radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="perf" name="Performance" fill={C.orange} radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="qual" name="Quality" fill={C.green} radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* OEE trend */}
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>OEE Trend (12 mj)</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <ComposedChart data={trendData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="m" tick={{ fill: C.grey, fontSize: 10 }} />
+                  <YAxis tick={{ fill: C.grey, fontSize: 10 }} domain={[70, 85]} unit="%" />
+                  <Tooltip contentStyle={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, color: C.white }} />
+                  <Area type="monotone" dataKey="oee" fill={C.teal} fillOpacity={0.15} stroke="none" />
+                  <Line type="monotone" dataKey="oee" name="OEE %" stroke={C.teal} strokeWidth={2.5} dot={{ fill: C.teal, r: 4 }} />
+                  {/* Target line at 85% */}
+                  <CartesianGrid y={85} />
+                </ComposedChart>
+              </ResponsiveContainer>
+              <div className="flex items-center justify-center gap-2 mt-2">
+                <div className="w-6 h-0.5" style={{ background: C.red }}></div>
+                <span className="text-xs" style={{ color: C.grey }}>Target: 85%</span>
+              </div>
+            </div>
+          </div>
+
+          <ROIBox saving="151,793 EUR" payback="1.9 mj" roi="1,797%" />
+        </div>
+      );
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // TAB 6 — REPORTING
+    // ════════════════════════════════════════════════════════════
+    function TabReporting() {
+      const kpis = [
+        { name: 'Overall Defect Rate', value: '5.64%', status: 'red', target: '<3%' },
+        { name: 'Nike Defect Rate', value: '6.70%', status: 'red', target: '<2.5%' },
+        { name: 'Crocs Defect Rate', value: '4.76%', status: 'red', target: '<3.5%' },
+        { name: 'On-Time Delivery', value: '74.0%', status: 'red', target: '>95%' },
+        { name: 'OEE Average', value: '76.2%', status: 'yellow', target: '>80%' },
+        { name: 'Customer Return Rate', value: '0.05%', status: 'green', target: '<1%' },
+        { name: 'First Pass Yield', value: '94.4%', status: 'yellow', target: '>95%' },
+        { name: 'SMSI Score', value: '67.1', status: 'red', target: '>80' },
+      ];
+      const statusColors = { green: C.green, yellow: C.yellow, red: C.red };
+
+      const smsiData = [
+        { axis: 'Quality', current: 65.3, target: 85 },
+        { axis: 'Delivery', current: 78.6, target: 90 },
+        { axis: 'Sustainability', current: 52.1, target: 75 },
+        { axis: 'Innovation', current: 72.6, target: 70 },
+      ];
+
+      const brandComp = [
+        { brand: 'Nike', defect: 6.6, otd: 75.8, fpy: 93.4, output: 90.9 },
+        { brand: 'Crocs', defect: 4.8, otd: 75.8, fpy: 95.2, output: 54.6 },
+        { brand: 'Decathlon', defect: 4.8, otd: 81.3, fpy: 95.2, output: 48.5 },
+      ];
+
+      return (
+        <div className="fade-in space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <MiniStat label="Nike SMSI Score" value="67.1" sub="Bronze | Declining" color={C.yellow} />
+            <MiniStat label="Active Alerts" value="12" sub="8 red, 4 yellow" color={C.red} />
+            <MiniStat label="Reports Generated" value="3" sub="Nike, Crocs, Decathlon" color={C.green} />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {/* KPI Grid */}
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>KPI Status Overview</h3>
+              <div className="space-y-2">
+                {kpis.map((k, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 rounded-lg" style={{ background: '#172032' }}>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2.5 h-2.5 rounded-full" style={{ background: statusColors[k.status] }}></div>
+                      <span className="text-xs font-medium" style={{ color: C.white }}>{k.name}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-mono font-bold" style={{ color: statusColors[k.status] }}>{k.value}</span>
+                      <span className="text-xs" style={{ color: C.greyDark }}>{k.target}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* SMSI Radar */}
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>Nike SMSI Radar</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <RadarChart data={smsiData}>
+                  <PolarGrid stroke="#334155" />
+                  <PolarAngleAxis dataKey="axis" tick={{ fill: C.grey, fontSize: 11 }} />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: C.greyDark, fontSize: 9 }} />
+                  <Radar name="Current" dataKey="current" stroke={C.teal} fill={C.teal} fillOpacity={0.3} strokeWidth={2} />
+                  <Radar name="Target" dataKey="target" stroke={C.green} fill={C.green} fillOpacity={0.1} strokeWidth={2} strokeDasharray="5 5" />
+                  <Legend wrapperStyle={{ fontSize: 11, color: C.grey }} />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            {/* Brand comparison */}
+            <div className="col-span-2 card p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: C.white }}>Brand Comparison — Q4 2025</h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={brandComp} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="brand" tick={{ fill: C.grey, fontSize: 11 }} />
+                  <YAxis tick={{ fill: C.grey, fontSize: 10 }} />
+                  <Tooltip contentStyle={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, color: C.white }} />
+                  <Legend wrapperStyle={{ fontSize: 11, color: C.grey }} />
+                  <Bar dataKey="defect" name="Defect %" fill={C.red} opacity={0.8} radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="fpy" name="FPY %" fill={C.green} opacity={0.8} radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="output" name="Output (K)" fill={C.teal} radius={[3, 3, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <ROIBox saving="52,571 EUR" payback="1.6 mj" roi="1,971%" />
+          </div>
+        </div>
+      );
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // APP
+    // ════════════════════════════════════════════════════════════
+    function App() {
+      const [activeTab, setActiveTab] = React.useState('qc');
+
+      const tabContent = {
+        qc: <TabQC />,
+        trade: <TabTrade />,
+        knowledge: <TabKnowledge />,
+        forecast: <TabForecast />,
+        oee: <TabOEE />,
+        reporting: <TabReporting />,
+      };
+
+      return (
+        <div className="min-h-screen" style={{ background: C.bg }}>
+          <Header />
+          <main className="max-w-[1600px] mx-auto px-6 pt-[76px] pb-8">
+            <ExecutiveSummary />
+            <TabNav active={activeTab} onSelect={setActiveTab} />
+            <div key={activeTab} className="fade-in">
+              {tabContent[activeTab]}
+            </div>
+          </main>
+          {/* Footer */}
+          <footer className="text-center py-4 border-t" style={{ borderColor: '#1E293B' }}>
+            <span className="text-xs" style={{ color: C.greyDark }}>
+              SPORTEK AI Platforma v2.0 — Powered by Claude AI — Sportek d.o.o. {'\u00A9'} 2025
+            </span>
+          </footer>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
