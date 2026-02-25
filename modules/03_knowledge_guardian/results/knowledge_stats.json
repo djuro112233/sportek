@@ -1,0 +1,16 @@
+{
+  "total_documents": 10,
+  "total_chunks": 74,
+  "total_queries": 100,
+  "avg_confidence": 0.48,
+  "avg_response_time_ms": 1.0,
+  "top_document": "Trade_Compliance_Handbook.txt",
+  "coverage_by_topic": {
+    "Compliance / Trade": 21,
+    "QC / Kvalitet": 18,
+    "Mašine / SHIMA SEIKI": 22,
+    "HR / Onboarding": 11,
+    "Materijali": 16,
+    "Sigurnost": 12
+  }
+}
