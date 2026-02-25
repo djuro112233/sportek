@@ -1,0 +1,59 @@
+{
+  "models": {
+    "holt_winters": {
+      "model": "holt_winters",
+      "mae": 2299.0,
+      "rmse": 2731.2,
+      "mape": 19.11
+    },
+    "random_forest": {
+      "model": "random_forest",
+      "mae": 322.4,
+      "rmse": 411.1,
+      "mape": 3.03,
+      "feature_importance": {
+        "ewm_mean_7": 0.4509,
+        "rolling_mean_7": 0.4068,
+        "is_high_season": 0.0802,
+        "rolling_mean_30": 0.0192,
+        "rolling_mean_14": 0.0176,
+        "lag_7": 0.0108,
+        "trend": 0.0044,
+        "week_of_year": 0.0029,
+        "quarter": 0.0025,
+        "month": 0.0022,
+        "lag_14": 0.0013,
+        "rolling_std_14": 0.0008,
+        "lag_30": 0.0005,
+        "day_of_week": 0.0,
+        "rolling_std_7": 0.0
+      }
+    },
+    "gradient_boosting": {
+      "model": "gradient_boosting",
+      "mae": 413.3,
+      "rmse": 480.6,
+      "mape": 3.8,
+      "feature_importance": {
+        "rolling_mean_7": 0.5224,
+        "ewm_mean_7": 0.4589,
+        "rolling_mean_14": 0.0065,
+        "trend": 0.0036,
+        "is_high_season": 0.0036,
+        "month": 0.0024,
+        "lag_14": 0.0008,
+        "lag_7": 0.0006,
+        "week_of_year": 0.0004,
+        "quarter": 0.0003,
+        "rolling_mean_30": 0.0003,
+        "lag_30": 0.0002,
+        "rolling_std_14": 0.0001,
+        "day_of_week": 0.0,
+        "rolling_std_7": 0.0
+      }
+    }
+  },
+  "best_model": "random_forest",
+  "train_size": 41,
+  "test_size": 11
+}
