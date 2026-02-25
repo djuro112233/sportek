@@ -1,0 +1,23 @@
+{
+  "brand": "Decathlon",
+  "period": "2025-Q4",
+  "sustainability": {
+    "carbon_footprint_total": 387.9,
+    "per_unit": 9.7,
+    "recycled_content_pct": 0.0,
+    "waste_kg": 748.3
+  },
+  "quality": {
+    "defect_rate": 0.0484,
+    "customer_satisfaction": 70.3
+  },
+  "social": {
+    "working_hours_compliance": true,
+    "safety_incidents": 3,
+    "training_hours": 95.7
+  },
+  "production": {
+    "total_units": 48474,
+    "efficiency": 81.3
+  }
+}

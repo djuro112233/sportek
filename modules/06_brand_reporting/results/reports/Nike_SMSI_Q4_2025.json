@@ -1,0 +1,36 @@
+{
+  "brand": "Nike",
+  "period": "2025-Q4",
+  "smsi_score": 67.1,
+  "quality": {
+    "score": 65.3,
+    "weight": 40,
+    "defect_rate": 0.0664,
+    "rework_rate": 0.3784,
+    "customer_returns": 51,
+    "aql_compliance": false
+  },
+  "delivery": {
+    "score": 78.6,
+    "weight": 25,
+    "on_time_delivery_pct": 75.8,
+    "avg_lead_time_days": 24.2,
+    "flexibility_score": 82.7
+  },
+  "sustainability": {
+    "score": 52.1,
+    "weight": 20,
+    "carbon_per_pair_kg": 8.03,
+    "waste_reduction_pct": 31.8,
+    "energy_efficiency": 58.1
+  },
+  "innovation": {
+    "score": 72.6,
+    "weight": 15,
+    "process_improvements": 5,
+    "technology_adoption": 100,
+    "cost_optimization_pct": 3.36
+  },
+  "overall_grade": "Bronze",
+  "trend": "declining"
+}

@@ -1,0 +1,142 @@
+{
+  "overall_defect_rate": {
+    "name": "Overall Defect Rate",
+    "value": 0.0564,
+    "target": 0.03,
+    "status": "red",
+    "trend": "stable"
+  },
+  "nike_defect_rate": {
+    "name": "Nike Defect Rate",
+    "value": 0.067,
+    "target": 0.025,
+    "status": "red",
+    "trend": "stable"
+  },
+  "crocs_defect_rate": {
+    "name": "Crocs Defect Rate",
+    "value": 0.0476,
+    "target": 0.035,
+    "status": "red",
+    "trend": "stable"
+  },
+  "decathlon_defect_rate": {
+    "name": "Decathlon Defect Rate",
+    "value": 0.0482,
+    "target": 0.04,
+    "status": "yellow",
+    "trend": "stable"
+  },
+  "on_time_delivery": {
+    "name": "On-Time Delivery",
+    "value": 74.0,
+    "target": 95.0,
+    "status": "red",
+    "trend": "stable"
+  },
+  "oee_average": {
+    "name": "OEE Average",
+    "value": 76.2,
+    "target": 80.0,
+    "status": "yellow",
+    "trend": "stable"
+  },
+  "customer_return_rate": {
+    "name": "Customer Return Rate",
+    "value": 0.0005,
+    "target": 0.01,
+    "status": "green",
+    "trend": "stable"
+  },
+  "rework_rate": {
+    "name": "Rework Rate",
+    "value": 0.362,
+    "target": 0.05,
+    "status": "red",
+    "trend": "stable"
+  },
+  "scrap_rate": {
+    "name": "Scrap Rate",
+    "value": 0.289,
+    "target": 0.02,
+    "status": "red",
+    "trend": "stable"
+  },
+  "first_pass_yield": {
+    "name": "First Pass Yield",
+    "value": 94.4,
+    "target": 95.0,
+    "status": "yellow",
+    "trend": "stable"
+  },
+  "changeover_time_avg": {
+    "name": "Changeover Time Avg (min)",
+    "value": 14.7,
+    "target": 30.0,
+    "status": "green",
+    "trend": "stable"
+  },
+  "downtime_pct": {
+    "name": "Downtime %",
+    "value": 6.5,
+    "target": 10.0,
+    "status": "green",
+    "trend": "stable"
+  },
+  "inventory_turnover": {
+    "name": "Inventory Turnover",
+    "value": 104.6,
+    "target": 8.0,
+    "status": "green",
+    "trend": "stable"
+  },
+  "stockout_incidents": {
+    "name": "Stockout Incidents",
+    "value": 0,
+    "target": 0,
+    "status": "green",
+    "trend": "stable"
+  },
+  "supplier_quality_score": {
+    "name": "Supplier Quality Score",
+    "value": 4.01,
+    "target": 4.0,
+    "status": "green",
+    "trend": "stable"
+  },
+  "training_hours_per_emp": {
+    "name": "Training Hours per Employee",
+    "value": 31.7,
+    "target": 20.0,
+    "status": "green",
+    "trend": "stable"
+  },
+  "safety_incidents": {
+    "name": "Safety Incidents",
+    "value": 14,
+    "target": 0,
+    "status": "red",
+    "trend": "stable"
+  },
+  "energy_per_unit_kwh": {
+    "name": "Energy per Unit (kWh)",
+    "value": 2.51,
+    "target": 2.5,
+    "status": "yellow",
+    "trend": "stable"
+  },
+  "waste_per_unit_kg": {
+    "name": "Waste per Unit (kg)",
+    "value": 0.0085,
+    "target": 0.3,
+    "status": "green",
+    "trend": "stable"
+  },
+  "smsi_score": {
+    "name": "SMSI Score",
+    "value": 67.1,
+    "target": 80.0,
+    "status": "red",
+    "trend": "stable"
+  }
+}
