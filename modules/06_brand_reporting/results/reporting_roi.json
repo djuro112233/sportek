@@ -1,0 +1,48 @@
+{
+  "current_costs_eur": {
+    "report_preparation": {
+      "description": "1 person × 3 days/month × 12 months × 15 EUR/h",
+      "annual_cost": 4320
+    },
+    "qc_manager_review": {
+      "description": "8h/month × 12 months × 18 EUR/h",
+      "annual_cost": 1728
+    },
+    "reporting_errors_penalties": {
+      "description": "Nike late submission penalties, inaccurate data corrections",
+      "annual_cost": 5000
+    },
+    "total_manual_cost": 11048
+  },
+  "ai_improvements": {
+    "report_generation": {
+      "description": "15 min vs 3 days — automated generation",
+      "time_saved_hours_annual": 285.0,
+      "saving_eur": 4275
+    },
+    "review_optimization": {
+      "description": "2h vs 8h review — pre-validated data",
+      "time_saved_hours_annual": 72,
+      "saving_eur": 1296
+    },
+    "error_elimination": {
+      "description": "Zero data errors — eliminates penalties",
+      "error_rate": 0.0,
+      "saving_eur": 5000
+    },
+    "smsi_improvement_opportunity": {
+      "description": "Gold SMSI = priority for new orders (+50k EUR/year estimated)",
+      "potential_extra_revenue_eur": 50000
+    }
+  },
+  "roi_summary": {
+    "total_manual_cost_eur": 11048,
+    "direct_savings_eur": 10571,
+    "smsi_opportunity_eur": 50000,
+    "total_annual_benefit_eur": 60571,
+    "software_cost_annual_eur": 8000,
+    "net_annual_saving_eur": 52571,
+    "payback_months": 1.6,
+    "roi_3yr_pct": 1971.4
+  }
+}
