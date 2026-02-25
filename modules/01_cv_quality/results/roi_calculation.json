@@ -1,0 +1,45 @@
+{
+  "production_data": {
+    "total_pairs_produced": 732700,
+    "total_defects_logged": 5000,
+    "scrap_count": 1445,
+    "rework_count": 1810,
+    "customer_return_count": 339
+  },
+  "current_qc_costs_eur": {
+    "inspectors": 15,
+    "salary_per_inspector_month": 1200,
+    "annual_salary_total": 216000,
+    "capacity_pairs_per_inspector_day": 640,
+    "annual_scrap_cost": 11560.0,
+    "annual_rework_cost": 6335.0,
+    "annual_return_cost": 6102.0,
+    "annual_quality_cost": 23997.0,
+    "annual_total_qc_cost": 239997.0
+  },
+  "ai_system_costs_eur": {
+    "hardware_one_time": 25000,
+    "software_annual": 36000,
+    "inspectors_retained": 6,
+    "annual_salary_after": 86400,
+    "annual_running_cost": 122400
+  },
+  "annual_savings_eur": {
+    "salary_reduction": 129600,
+    "scrap_reduction_25pct": 2890.0,
+    "rework_reduction_15pct": 950.25,
+    "return_reduction_30pct": 1830.6,
+    "quality_saving_total": 5670.85,
+    "gross_annual_saving": 135270.85,
+    "minus_software_cost": -36000,
+    "net_annual_saving": 99270.85,
+    "net_year1_incl_hardware": 74270.85
+  },
+  "roi_summary": {
+    "payback_period_months": 3.0,
+    "roi_3_year_percent": 205.1,
+    "total_saving_3_years": 272812.55,
+    "estimated_defect_reduction": "25%",
+    "estimated_speed_improvement": "10x"
+  }
+}
