@@ -1,0 +1,111 @@
+{
+  "current_state": {
+    "avg_oee": 0.692,
+    "target_oee": 0.85,
+    "oee_gap_pp": 15.8,
+    "lines": 8,
+    "total_shifts": 5440,
+    "annual_planned_qty": 914498,
+    "annual_actual_qty": 741386,
+    "annual_defects": 41801,
+    "annual_downtime_min": 172857,
+    "annual_changeover_min": 80644
+  },
+  "savings": {
+    "oee_improvement": {
+      "description": "+5pp OEE improvement",
+      "extra_pairs_annual": 45724,
+      "value_eur": 548688
+    },
+    "changeover_reduction": {
+      "description": "20% changeover reduction",
+      "saved_minutes_annual": 16128,
+      "extra_pairs_annual": 4525,
+      "value_eur": 54300
+    },
+    "predictive_maintenance": {
+      "description": "30% downtime reduction",
+      "saved_minutes_annual": 51857,
+      "extra_pairs_annual": 14551,
+      "value_eur": 174612
+    },
+    "scheduling_optimization": {
+      "description": "5% throughput gain",
+      "extra_pairs_annual": 37069,
+      "value_eur": 444828
+    }
+  },
+  "financial_summary": {
+    "total_annual_saving_eur": 1222428,
+    "software_cost_annual_eur": 24000,
+    "net_annual_saving_eur": 1198428,
+    "payback_months": 0.2,
+    "roi_3yr_pct": 14980.4
+  },
+  "line_breakdown": [
+    {
+      "line_id": "L7",
+      "current_oee": 0.6997,
+      "target_oee": 0.85,
+      "gap_pp": 15.0,
+      "annual_extra_pairs": 4896,
+      "annual_value_eur": 58752
+    },
+    {
+      "line_id": "L5",
+      "current_oee": 0.6993,
+      "target_oee": 0.85,
+      "gap_pp": 15.1,
+      "annual_extra_pairs": 5725,
+      "annual_value_eur": 68700
+    },
+    {
+      "line_id": "L6",
+      "current_oee": 0.6971,
+      "target_oee": 0.85,
+      "gap_pp": 15.3,
+      "annual_extra_pairs": 5114,
+      "annual_value_eur": 61368
+    },
+    {
+      "line_id": "L4",
+      "current_oee": 0.6934,
+      "target_oee": 0.85,
+      "gap_pp": 15.7,
+      "annual_extra_pairs": 6076,
+      "annual_value_eur": 72912
+    },
+    {
+      "line_id": "L3",
+      "current_oee": 0.6912,
+      "target_oee": 0.85,
+      "gap_pp": 15.9,
+      "annual_extra_pairs": 5553,
+      "annual_value_eur": 66636
+    },
+    {
+      "line_id": "L1",
+      "current_oee": 0.6865,
+      "target_oee": 0.85,
+      "gap_pp": 16.3,
+      "annual_extra_pairs": 6731,
+      "annual_value_eur": 80772
+    },
+    {
+      "line_id": "L8",
+      "current_oee": 0.6864,
+      "target_oee": 0.85,
+      "gap_pp": 16.4,
+      "annual_extra_pairs": 5249,
+      "annual_value_eur": 62988
+    },
+    {
+      "line_id": "L2",
+      "current_oee": 0.682,
+      "target_oee": 0.85,
+      "gap_pp": 16.8,
+      "annual_extra_pairs": 6377,
+      "annual_value_eur": 76524
+    }
+  ]
+}
