@@ -1,0 +1,116 @@
+timestamp,question,answer_length,top_source,confidence,response_time_ms
+2026-02-25T16:19:29,Kako se vodi dokumentacija za izvoz?,354,Trade_Compliance_Handbook.txt,0.5,6.6
+2026-02-25T16:19:29,Koji su koraci finalne inspekcije kvaliteta?,176,SOP_QC_Inspekcija_Final.txt,0.57,1.1
+2026-02-25T16:19:29,Koji su koraci za kalibraciju pletaće mašine?,158,Safety_Procedures_Banja_Luka.txt,0.32,1.8
+2026-02-25T16:19:29,Koliko često se vrši održavanje SHIMA SEIKI mašina?,157,Maintenance_Schedule_SHIMA.txt,0.82,1.1
+2026-02-25T16:19:29,Koliko traje obuka za novog radnika?,394,HR_Onboarding_Production.txt,0.85,1.0
+2026-02-25T16:19:29,Koji su carinski zahtjevi za EU?,430,Trade_Compliance_Handbook.txt,0.32,1.2
+2026-02-25T16:19:29,Kako se skladište sirovine?,208,Maintenance_Schedule_SHIMA.txt,0.28,1.0
+2026-02-25T16:19:29,Kako se vrši vizuelna inspekcija obuće?,275,Material_Specifications_Flyknit.txt,0.55,1.2
+2026-02-25T16:19:29,Koja zaštitna oprema je obavezna?,188,Safety_Procedures_Banja_Luka.txt,0.86,0.9
+2026-02-25T16:19:29,Kako se klasificiraju defekti?,337,HR_Onboarding_Production.txt,0.57,1.0
+2026-02-25T16:19:29,Kako se podešava SHIMA SEIKI mašina za novi model?,180,Maintenance_Schedule_SHIMA.txt,0.6,0.9
+2026-02-25T16:19:29,Kako se vrši prijava nezgode?,468,Safety_Procedures_Banja_Luka.txt,0.31,0.9
+2026-02-25T16:19:29,Koji su koraci finalne inspekcije kvaliteta?,176,SOP_QC_Inspekcija_Final.txt,0.57,1.0
+2026-02-25T16:19:29,Kako se podešava SHIMA SEIKI mašina za novi model?,180,Maintenance_Schedule_SHIMA.txt,0.6,1.0
+2026-02-25T16:19:29,Kako se vodi dokumentacija za izvoz?,354,Trade_Compliance_Handbook.txt,0.5,1.0
+2026-02-25T16:19:29,Koji su zahtjevi za HS klasifikaciju?,176,Trade_Compliance_Handbook.txt,0.53,1.0
+2026-02-25T16:19:29,Kako se podešava SHIMA SEIKI mašina za novi model?,180,Maintenance_Schedule_SHIMA.txt,0.6,0.9
+2026-02-25T16:19:29,Koji su zahtjevi za DPP?,269,Trade_Compliance_Handbook.txt,0.53,1.0
+2026-02-25T16:19:29,Koja dokumentacija je potrebna za zaposlenje?,380,Trade_Compliance_Handbook.txt,0.37,0.9
+2026-02-25T16:19:29,Koji su koraci finalne inspekcije kvaliteta?,176,SOP_QC_Inspekcija_Final.txt,0.57,0.8
+2026-02-25T16:19:29,Koja dokumentacija je potrebna za zaposlenje?,380,Trade_Compliance_Handbook.txt,0.37,1.0
+2026-02-25T16:19:29,Koji su koraci onboarding procesa?,190,HR_Onboarding_Production.txt,0.41,0.9
+2026-02-25T16:19:29,Kako se podešava tenzija niti?,410,SOP_3D_Knit_Setup.txt,0.34,1.0
+2026-02-25T16:19:29,Koji su kriteriji za odbijanje šarže?,454,SOP_QC_Inspekcija_Final.txt,0.43,1.0
+2026-02-25T16:19:29,Koje su specifikacije za Crocs materijale?,423,Crocs_Supplier_Guide.txt,0.39,0.9
+2026-02-25T16:19:29,Kako se podešava tenzija niti?,410,SOP_3D_Knit_Setup.txt,0.34,1.0
+2026-02-25T16:19:29,Kako se vrši vizuelna inspekcija obuće?,275,Material_Specifications_Flyknit.txt,0.55,0.9
+2026-02-25T16:19:29,Kako se vrši vizuelna inspekcija obuće?,275,Material_Specifications_Flyknit.txt,0.55,0.9
+2026-02-25T16:19:29,Koje su specifikacije za Flyknit materijal?,177,Material_Specifications_Flyknit.txt,0.42,1.1
+2026-02-25T16:19:29,Koji su zahtjevi za DPP?,269,Trade_Compliance_Handbook.txt,0.53,0.9
+2026-02-25T16:19:29,Koja dokumentacija je potrebna za zaposlenje?,380,Trade_Compliance_Handbook.txt,0.37,0.8
+2026-02-25T16:19:29,Koliko traje obuka za novog radnika?,394,HR_Onboarding_Production.txt,0.85,1.0
+2026-02-25T16:19:29,Koji su zahtjevi za HS klasifikaciju?,176,Trade_Compliance_Handbook.txt,0.53,0.9
+2026-02-25T16:19:29,Koji su zahtjevi za reciklirani materijal?,158,Safety_Procedures_Banja_Luka.txt,0.3,1.0
+2026-02-25T16:19:29,Koja je procedura za rukovanje opasnim hemikalijama?,211,Material_Specifications_Flyknit.txt,0.27,0.9
+2026-02-25T16:19:29,Koji su zahtjevi za HS klasifikaciju?,176,Trade_Compliance_Handbook.txt,0.53,0.9
+2026-02-25T16:19:29,Koja dokumentacija je potrebna za zaposlenje?,380,Trade_Compliance_Handbook.txt,0.37,1.0
+2026-02-25T16:19:29,Koji su Nike SMSI zahtjevi?,153,Nike_Quality_Manual_2024.txt,0.4,0.9
+2026-02-25T16:19:29,Koji su zahtjevi za testiranje materijala?,184,Crocs_Supplier_Guide.txt,0.32,0.8
+2026-02-25T16:19:29,Kako funkcioniše CBAM izvještavanje?,456,Trade_Compliance_Handbook.txt,0.53,0.9
+2026-02-25T16:19:29,Koji su koraci onboarding procesa?,190,HR_Onboarding_Production.txt,0.41,0.8
+2026-02-25T16:19:29,Kako se klasificiraju defekti?,337,HR_Onboarding_Production.txt,0.57,1.0
+2026-02-25T16:19:29,Koliko često se vrši održavanje SHIMA SEIKI mašina?,157,Maintenance_Schedule_SHIMA.txt,0.82,1.0
+2026-02-25T16:19:29,Kako se mijenja igla na SHIMA SEIKI?,192,SOP_3D_Knit_Setup.txt,0.56,0.9
+2026-02-25T16:19:29,Koji su AQL nivoi za Nike?,423,Nike_Quality_Manual_2024.txt,0.47,0.9
+2026-02-25T16:19:29,Koliko često se vrši održavanje SHIMA SEIKI mašina?,157,Maintenance_Schedule_SHIMA.txt,0.82,0.9
+2026-02-25T16:19:29,Kako se vrši vizuelna inspekcija obuće?,275,Material_Specifications_Flyknit.txt,0.55,0.9
+2026-02-25T16:19:29,Kako se mijenja igla na SHIMA SEIKI?,192,SOP_3D_Knit_Setup.txt,0.56,1.0
+2026-02-25T16:19:29,Koji su Nike SMSI zahtjevi?,153,Nike_Quality_Manual_2024.txt,0.4,0.8
+2026-02-25T16:19:29,Koja je procedura za rukovanje opasnim hemikalijama?,211,Material_Specifications_Flyknit.txt,0.27,0.9
+2026-02-25T16:19:29,Koja je procedura za rukovanje opasnim hemikalijama?,211,Material_Specifications_Flyknit.txt,0.27,0.9
+2026-02-25T16:19:29,Kako se podešava SHIMA SEIKI mašina za novi model?,180,Maintenance_Schedule_SHIMA.txt,0.6,0.9
+2026-02-25T16:19:29,Koji su koraci za kalibraciju pletaće mašine?,158,Safety_Procedures_Banja_Luka.txt,0.32,1.0
+2026-02-25T16:19:29,Koji su kriteriji kvaliteta za niti?,431,Safety_Procedures_Banja_Luka.txt,0.25,1.1
+2026-02-25T16:19:29,Kako se vodi dokumentacija za izvoz?,354,Trade_Compliance_Handbook.txt,0.5,0.9
+2026-02-25T16:19:29,Koji su zahtjevi za DPP?,269,Trade_Compliance_Handbook.txt,0.53,1.0
+2026-02-25T16:19:29,Kako se dokumentiraju defekti?,337,HR_Onboarding_Production.txt,0.57,1.2
+2026-02-25T16:19:29,Koliko traje obuka za novog radnika?,394,HR_Onboarding_Production.txt,0.85,1.0
+2026-02-25T16:19:29,Koji su kriteriji za odbijanje šarže?,454,SOP_QC_Inspekcija_Final.txt,0.43,1.0
+2026-02-25T16:19:29,Koja je procedura za rukovanje opasnim hemikalijama?,211,Material_Specifications_Flyknit.txt,0.27,0.9
+2026-02-25T16:19:29,Koji su zahtjevi za reciklirani materijal?,158,Safety_Procedures_Banja_Luka.txt,0.3,1.0
+2026-02-25T16:19:29,Kako se vodi dokumentacija za izvoz?,354,Trade_Compliance_Handbook.txt,0.5,1.0
+2026-02-25T16:19:29,Kako funkcioniše CBAM izvještavanje?,456,Trade_Compliance_Handbook.txt,0.53,0.9
+2026-02-25T16:19:29,Koji su carinski zahtjevi za EU?,430,Trade_Compliance_Handbook.txt,0.32,0.9
+2026-02-25T16:19:29,Koje su specifikacije za Flyknit materijal?,177,Material_Specifications_Flyknit.txt,0.42,1.1
+2026-02-25T16:19:29,Koji su zahtjevi za rad u smjenama?,187,Safety_Procedures_Banja_Luka.txt,0.32,1.0
+2026-02-25T16:19:29,Koliko često se vrši održavanje SHIMA SEIKI mašina?,157,Maintenance_Schedule_SHIMA.txt,0.82,1.0
+2026-02-25T16:19:29,Kako se klasificiraju defekti?,337,HR_Onboarding_Production.txt,0.57,1.1
+2026-02-25T16:19:29,Koji su parametri za 3D knit setup?,190,SOP_3D_Knit_Setup.txt,0.79,1.0
+2026-02-25T16:19:29,Koji su koraci za kalibraciju pletaće mašine?,158,Safety_Procedures_Banja_Luka.txt,0.32,0.9
+2026-02-25T16:19:29,Kako se podešava SHIMA SEIKI mašina za novi model?,180,Maintenance_Schedule_SHIMA.txt,0.6,0.9
+2026-02-25T16:19:29,Koji su kriteriji kvaliteta za niti?,431,Safety_Procedures_Banja_Luka.txt,0.25,0.9
+2026-02-25T16:19:29,Koji su zahtjevi za testiranje materijala?,184,Crocs_Supplier_Guide.txt,0.32,1.6
+2026-02-25T16:19:29,Koji su parametri za 3D knit setup?,190,SOP_3D_Knit_Setup.txt,0.79,1.0
+2026-02-25T16:19:29,Kako se vodi dokumentacija za izvoz?,354,Trade_Compliance_Handbook.txt,0.5,1.6
+2026-02-25T16:19:29,Koji su sigurnosni protokoli u proizvodnji?,402,Safety_Procedures_Banja_Luka.txt,0.22,0.9
+2026-02-25T16:19:29,Kako se skladište sirovine?,208,Maintenance_Schedule_SHIMA.txt,0.28,0.9
+2026-02-25T16:19:29,Kako se postupa u slučaju požara?,300,Safety_Procedures_Banja_Luka.txt,0.42,1.0
+2026-02-25T16:19:29,Koji su koraci za kalibraciju pletaće mašine?,158,Safety_Procedures_Banja_Luka.txt,0.32,1.4
+2026-02-25T16:19:29,Koliko često se vrši održavanje SHIMA SEIKI mašina?,157,Maintenance_Schedule_SHIMA.txt,0.82,0.9
+2026-02-25T16:19:29,Kako funkcioniše CBAM izvještavanje?,456,Trade_Compliance_Handbook.txt,0.53,0.9
+2026-02-25T16:19:29,Koji su koraci za kalibraciju pletaće mašine?,158,Safety_Procedures_Banja_Luka.txt,0.32,1.0
+2026-02-25T16:19:29,Koji su zahtjevi za DPP?,269,Trade_Compliance_Handbook.txt,0.53,1.0
+2026-02-25T16:19:29,Kako se skladište sirovine?,208,Maintenance_Schedule_SHIMA.txt,0.28,0.9
+2026-02-25T16:19:29,Koji su sigurnosni protokoli u proizvodnji?,402,Safety_Procedures_Banja_Luka.txt,0.22,0.9
+2026-02-25T16:19:29,Kako se podešava SHIMA SEIKI mašina za novi model?,180,Maintenance_Schedule_SHIMA.txt,0.6,0.8
+2026-02-25T16:19:29,Koji su zahtjevi za reciklirani materijal?,158,Safety_Procedures_Banja_Luka.txt,0.3,1.0
+2026-02-25T16:19:29,Kako se vrši prijava nezgode?,468,Safety_Procedures_Banja_Luka.txt,0.31,1.0
+2026-02-25T16:19:29,Kako se vrši vizuelna inspekcija obuće?,275,Material_Specifications_Flyknit.txt,0.55,1.0
+2026-02-25T16:19:29,Kako se klasificiraju defekti?,337,HR_Onboarding_Production.txt,0.57,1.3
+2026-02-25T16:19:29,Kako se vrši vizuelna inspekcija obuće?,275,Material_Specifications_Flyknit.txt,0.55,1.1
+2026-02-25T16:19:29,Koji su Nike SMSI zahtjevi?,153,Nike_Quality_Manual_2024.txt,0.4,0.9
+2026-02-25T16:19:29,Kako se vrši evaluacija novih radnika?,286,HR_Onboarding_Production.txt,0.58,0.9
+2026-02-25T16:19:29,Koja zaštitna oprema je obavezna?,188,Safety_Procedures_Banja_Luka.txt,0.86,0.8
+2026-02-25T16:19:29,Koji su AQL nivoi za Nike?,423,Nike_Quality_Manual_2024.txt,0.47,1.0
+2026-02-25T16:19:29,Koja je procedura za rukovanje opasnim hemikalijama?,211,Material_Specifications_Flyknit.txt,0.27,1.0
+2026-02-25T16:19:29,Koji su zahtjevi za reciklirani materijal?,158,Safety_Procedures_Banja_Luka.txt,0.3,1.0
+2026-02-25T16:19:29,Koji su zahtjevi za HS klasifikaciju?,176,Trade_Compliance_Handbook.txt,0.53,1.0
+2026-02-25T16:19:29,Koje su specifikacije za Crocs materijale?,423,Crocs_Supplier_Guide.txt,0.39,0.9
+2026-02-25T16:19:29,Koje su specifikacije za Flyknit materijal?,177,Material_Specifications_Flyknit.txt,0.42,0.9
+2026-02-25T16:19:45,Koji su koraci finalne inspekcije kvaliteta?,176,SOP_QC_Inspekcija_Final.txt,0.57,1.9
+2026-02-25T16:19:45,Kako se podešava SHIMA SEIKI mašina za novi model?,180,Maintenance_Schedule_SHIMA.txt,0.6,1.1
+2026-02-25T16:19:45,Koji su Nike zahtjevi za šavove na gornjem dijelu?,402,Safety_Procedures_Banja_Luka.txt,0.35,1.2
+2026-02-25T16:19:45,Koja je procedura za rukovanje opasnim hemikalijama?,211,Material_Specifications_Flyknit.txt,0.27,1.1
+2026-02-25T16:19:45,Koliko često se vrši održavanje SHIMA SEIKI mašina?,157,Maintenance_Schedule_SHIMA.txt,0.82,1.0
+2026-02-25T16:20:23,Koji su koraci finalne inspekcije kvaliteta?,506,SOP_QC_Inspekcija_Final.txt,0.57,1.7
+2026-02-25T16:20:23,Kako se podešava SHIMA SEIKI mašina za novi model?,201,Maintenance_Schedule_SHIMA.txt,0.6,1.1
+2026-02-25T16:20:23,Koji su Nike zahtjevi za šavove na gornjem dijelu?,595,Safety_Procedures_Banja_Luka.txt,0.35,1.2
+2026-02-25T16:20:23,Koja je procedura za rukovanje opasnim hemikalijama?,511,Material_Specifications_Flyknit.txt,0.27,1.1
+2026-02-25T16:20:23,Koliko često se vrši održavanje SHIMA SEIKI mašina?,158,Maintenance_Schedule_SHIMA.txt,0.82,1.1
+2026-02-25T16:20:59,Koji su koraci finalne inspekcije kvaliteta?,620,SOP_QC_Inspekcija_Final.txt,0.57,1.8
+2026-02-25T16:20:59,Kako se podešava SHIMA SEIKI mašina za novi model?,419,Maintenance_Schedule_SHIMA.txt,0.6,1.3
+2026-02-25T16:20:59,Koji su Nike zahtjevi za šavove na gornjem dijelu?,595,Safety_Procedures_Banja_Luka.txt,0.35,1.2
+2026-02-25T16:20:59,Koja je procedura za rukovanje opasnim hemikalijama?,635,Material_Specifications_Flyknit.txt,0.27,1.0
+2026-02-25T16:20:59,Koliko često se vrši održavanje SHIMA SEIKI mašina?,289,Maintenance_Schedule_SHIMA.txt,0.82,1.1
