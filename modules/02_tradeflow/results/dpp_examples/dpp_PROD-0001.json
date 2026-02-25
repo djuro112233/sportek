@@ -1,0 +1,60 @@
+{
+  "dpp_version": "1.0",
+  "unique_id": "DPP-SPT-0001",
+  "issued_date": "2026-02-25",
+  "manufacturer": {
+    "name": "Sportek d.o.o.",
+    "address": "Banja Luka, BiH",
+    "id": "SPORTEK-BL-001"
+  },
+  "product": {
+    "name": "Air Max Flyknit Upper Assembly v1",
+    "brand": "Nike",
+    "model": "Air Max Flyknit Upper Assembly",
+    "gtin": "3807711543960",
+    "hs_code": "640411",
+    "weight_grams": 278
+  },
+  "materials": {
+    "composition": {
+      "polyester": 55,
+      "elastane": 30,
+      "nylon": 15
+    },
+    "recycled_content_pct": 0,
+    "hazardous_substances": "REACH compliant; no SVHC detected",
+    "restricted_substances_tested": true
+  },
+  "sustainability": {
+    "carbon_footprint_kg": 7.99,
+    "carbon_footprint_methodology": "ISO 14067",
+    "energy_consumption_kwh": 22.37,
+    "water_consumption_liters": 12.5,
+    "recyclability_score": 69,
+    "disassembly_instructions": "Separate sole from upper via heat-activated adhesive at 80 C. Remove insole manually."
+  },
+  "origin": {
+    "country": "VN",
+    "factory": "NKE-VN-001",
+    "production_date": "2026-01-22",
+    "batch": "B202601-2679"
+  },
+  "compliance": {
+    "ce_marking": true,
+    "reach": true,
+    "oeko_tex": false
+  },
+  "durability": {
+    "expected_lifetime_years": 5,
+    "care_instructions": "Remove insoles before washing. Machine wash cold 30 C, air dry. Do not tumble dry.",
+    "repair_info": "Upper repair via Sportek Repair Centre or authorised Nike service points."
+  },
+  "end_of_life": {
+    "recyclable_components": [
+      "textile upper",
+      "rubber outsole",
+      "foam midsole"
+    ],
+    "disposal_instructions": "Return via Nike Grind or Sportek take-back programme. Textile upper recyclable, sole to energy recovery."
+  }
+}

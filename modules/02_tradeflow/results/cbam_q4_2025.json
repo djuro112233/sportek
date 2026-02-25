@@ -1,0 +1,560 @@
+{
+  "report_type": "CBAM Quarterly Report",
+  "reporting_entity": "Sportek d.o.o., Banja Luka, BiH",
+  "period": "Q4-2025",
+  "generated_date": "2026-02-25",
+  "summary": {
+    "total_products": 55,
+    "total_weight_kg": 8.53,
+    "total_embedded_emissions_kg_co2e": 378.01,
+    "total_embedded_emissions_tonnes_co2e": 0.378,
+    "avg_emissions_per_product_kg": 6.873
+  },
+  "by_country_of_origin": {
+    "BD": {
+      "products": 9,
+      "emissions_kg": 38.177
+    },
+    "ID": {
+      "products": 12,
+      "emissions_kg": 66.158
+    },
+    "VN": {
+      "products": 9,
+      "emissions_kg": 70.896
+    },
+    "IN": {
+      "products": 7,
+      "emissions_kg": 48.492
+    },
+    "CN": {
+      "products": 5,
+      "emissions_kg": 35.806
+    },
+    "TW": {
+      "products": 6,
+      "emissions_kg": 64.265
+    },
+    "KH": {
+      "products": 7,
+      "emissions_kg": 54.213
+    }
+  },
+  "by_brand": {
+    "Crocs": {
+      "products": 12,
+      "emissions_kg": 23.589
+    },
+    "Nike": {
+      "products": 33,
+      "emissions_kg": 256.984
+    },
+    "Decathlon": {
+      "products": 10,
+      "emissions_kg": 97.434
+    }
+  },
+  "product_details": [
+    {
+      "product_id": "PROD-0008",
+      "product_name": "Classic Clog Strap Assembly v2",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "BD",
+      "weight_kg": 0.046,
+      "embedded_emissions_kg_co2e": 2.261
+    },
+    {
+      "product_id": "PROD-0017",
+      "product_name": "Pegasus 3D Knit Collar v4",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "ID",
+      "weight_kg": 0.062,
+      "embedded_emissions_kg_co2e": 4.205
+    },
+    {
+      "product_id": "PROD-0018",
+      "product_name": "Classic Clog Strap Assembly v4",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "VN",
+      "weight_kg": 0.038,
+      "embedded_emissions_kg_co2e": 1.419
+    },
+    {
+      "product_id": "PROD-0019",
+      "product_name": "Kalenji Trail Sole Unit v4",
+      "brand": "Decathlon",
+      "hs_code": "640520",
+      "country_origin": "VN",
+      "weight_kg": 0.322,
+      "embedded_emissions_kg_co2e": 10.067
+    },
+    {
+      "product_id": "PROD-0024",
+      "product_name": "Kalenji Trail Sole Unit v5",
+      "brand": "Decathlon",
+      "hs_code": "640520",
+      "country_origin": "VN",
+      "weight_kg": 0.32,
+      "embedded_emissions_kg_co2e": 9.857
+    },
+    {
+      "product_id": "PROD-0026",
+      "product_name": "Air Max Flyknit Upper Assembly v6",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "IN",
+      "weight_kg": 0.287,
+      "embedded_emissions_kg_co2e": 9.099
+    },
+    {
+      "product_id": "PROD-0027",
+      "product_name": "Pegasus 3D Knit Collar v6",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "CN",
+      "weight_kg": 0.071,
+      "embedded_emissions_kg_co2e": 3.957
+    },
+    {
+      "product_id": "PROD-0028",
+      "product_name": "Classic Clog Strap Assembly v6",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "IN",
+      "weight_kg": 0.044,
+      "embedded_emissions_kg_co2e": 1.911
+    },
+    {
+      "product_id": "PROD-0029",
+      "product_name": "Kalenji Trail Sole Unit v6",
+      "brand": "Decathlon",
+      "hs_code": "640520",
+      "country_origin": "TW",
+      "weight_kg": 0.313,
+      "embedded_emissions_kg_co2e": 9.375
+    },
+    {
+      "product_id": "PROD-0041",
+      "product_name": "Air Max Flyknit Upper Assembly v9",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "KH",
+      "weight_kg": 0.285,
+      "embedded_emissions_kg_co2e": 7.878
+    },
+    {
+      "product_id": "PROD-0043",
+      "product_name": "Classic Clog Strap Assembly v9",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "ID",
+      "weight_kg": 0.051,
+      "embedded_emissions_kg_co2e": 1.422
+    },
+    {
+      "product_id": "PROD-0046",
+      "product_name": "Air Max Flyknit Upper Assembly v10",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "KH",
+      "weight_kg": 0.288,
+      "embedded_emissions_kg_co2e": 8.619
+    },
+    {
+      "product_id": "PROD-0048",
+      "product_name": "Classic Clog Strap Assembly v10",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "BD",
+      "weight_kg": 0.035,
+      "embedded_emissions_kg_co2e": 2.028
+    },
+    {
+      "product_id": "PROD-0054",
+      "product_name": "Kalenji Trail Sole Unit v11",
+      "brand": "Decathlon",
+      "hs_code": "640520",
+      "country_origin": "ID",
+      "weight_kg": 0.311,
+      "embedded_emissions_kg_co2e": 9.055
+    },
+    {
+      "product_id": "PROD-0056",
+      "product_name": "Air Max Flyknit Upper Assembly v12",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "TW",
+      "weight_kg": 0.287,
+      "embedded_emissions_kg_co2e": 7.589
+    },
+    {
+      "product_id": "PROD-0057",
+      "product_name": "Pegasus 3D Knit Collar v12",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "VN",
+      "weight_kg": 0.073,
+      "embedded_emissions_kg_co2e": 3.328
+    },
+    {
+      "product_id": "PROD-0072",
+      "product_name": "Pegasus 3D Knit Collar v15",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "IN",
+      "weight_kg": 0.064,
+      "embedded_emissions_kg_co2e": 2.785
+    },
+    {
+      "product_id": "PROD-0073",
+      "product_name": "Classic Clog Strap Assembly v15",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "ID",
+      "weight_kg": 0.041,
+      "embedded_emissions_kg_co2e": 2.13
+    },
+    {
+      "product_id": "PROD-0080",
+      "product_name": "ZoomX Carbon Plate Insert v16",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "TW",
+      "weight_kg": 0.046,
+      "embedded_emissions_kg_co2e": 12.741
+    },
+    {
+      "product_id": "PROD-0081",
+      "product_name": "Air Max Flyknit Upper Assembly v17",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "ID",
+      "weight_kg": 0.285,
+      "embedded_emissions_kg_co2e": 8.468
+    },
+    {
+      "product_id": "PROD-0082",
+      "product_name": "Pegasus 3D Knit Collar v17",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "ID",
+      "weight_kg": 0.063,
+      "embedded_emissions_kg_co2e": 3.095
+    },
+    {
+      "product_id": "PROD-0085",
+      "product_name": "ZoomX Carbon Plate Insert v17",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "ID",
+      "weight_kg": 0.033,
+      "embedded_emissions_kg_co2e": 11.918
+    },
+    {
+      "product_id": "PROD-0086",
+      "product_name": "Air Max Flyknit Upper Assembly v18",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "KH",
+      "weight_kg": 0.288,
+      "embedded_emissions_kg_co2e": 8.329
+    },
+    {
+      "product_id": "PROD-0088",
+      "product_name": "Classic Clog Strap Assembly v18",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "CN",
+      "weight_kg": 0.048,
+      "embedded_emissions_kg_co2e": 2.082
+    },
+    {
+      "product_id": "PROD-0093",
+      "product_name": "Classic Clog Strap Assembly v19",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "BD",
+      "weight_kg": 0.05,
+      "embedded_emissions_kg_co2e": 1.152
+    },
+    {
+      "product_id": "PROD-0100",
+      "product_name": "ZoomX Carbon Plate Insert v20",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "IN",
+      "weight_kg": 0.043,
+      "embedded_emissions_kg_co2e": 12.58
+    },
+    {
+      "product_id": "PROD-0102",
+      "product_name": "Pegasus 3D Knit Collar v21",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "BD",
+      "weight_kg": 0.059,
+      "embedded_emissions_kg_co2e": 3.084
+    },
+    {
+      "product_id": "PROD-0105",
+      "product_name": "ZoomX Carbon Plate Insert v21",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "TW",
+      "weight_kg": 0.044,
+      "embedded_emissions_kg_co2e": 12.181
+    },
+    {
+      "product_id": "PROD-0107",
+      "product_name": "Pegasus 3D Knit Collar v22",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "KH",
+      "weight_kg": 0.072,
+      "embedded_emissions_kg_co2e": 2.237
+    },
+    {
+      "product_id": "PROD-0111",
+      "product_name": "Air Max Flyknit Upper Assembly v23",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "TW",
+      "weight_kg": 0.283,
+      "embedded_emissions_kg_co2e": 9.558
+    },
+    {
+      "product_id": "PROD-0118",
+      "product_name": "Classic Clog Strap Assembly v24",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "ID",
+      "weight_kg": 0.045,
+      "embedded_emissions_kg_co2e": 1.481
+    },
+    {
+      "product_id": "PROD-0119",
+      "product_name": "Kalenji Trail Sole Unit v24",
+      "brand": "Decathlon",
+      "hs_code": "640520",
+      "country_origin": "VN",
+      "weight_kg": 0.322,
+      "embedded_emissions_kg_co2e": 9.857
+    },
+    {
+      "product_id": "PROD-0121",
+      "product_name": "Air Max Flyknit Upper Assembly v25",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "IN",
+      "weight_kg": 0.289,
+      "embedded_emissions_kg_co2e": 8.759
+    },
+    {
+      "product_id": "PROD-0122",
+      "product_name": "Pegasus 3D Knit Collar v25",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "ID",
+      "weight_kg": 0.069,
+      "embedded_emissions_kg_co2e": 2.807
+    },
+    {
+      "product_id": "PROD-0130",
+      "product_name": "ZoomX Carbon Plate Insert v26",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "VN",
+      "weight_kg": 0.041,
+      "embedded_emissions_kg_co2e": 12.91
+    },
+    {
+      "product_id": "PROD-0131",
+      "product_name": "Air Max Flyknit Upper Assembly v27",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "ID",
+      "weight_kg": 0.272,
+      "embedded_emissions_kg_co2e": 8.765
+    },
+    {
+      "product_id": "PROD-0134",
+      "product_name": "Kalenji Trail Sole Unit v27",
+      "brand": "Decathlon",
+      "hs_code": "640520",
+      "country_origin": "KH",
+      "weight_kg": 0.318,
+      "embedded_emissions_kg_co2e": 9.236
+    },
+    {
+      "product_id": "PROD-0139",
+      "product_name": "Kalenji Trail Sole Unit v28",
+      "brand": "Decathlon",
+      "hs_code": "640520",
+      "country_origin": "ID",
+      "weight_kg": 0.316,
+      "embedded_emissions_kg_co2e": 9.916
+    },
+    {
+      "product_id": "PROD-0141",
+      "product_name": "Air Max Flyknit Upper Assembly v29",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "KH",
+      "weight_kg": 0.273,
+      "embedded_emissions_kg_co2e": 7.626
+    },
+    {
+      "product_id": "PROD-0144",
+      "product_name": "Kalenji Trail Sole Unit v29",
+      "brand": "Decathlon",
+      "hs_code": "640520",
+      "country_origin": "KH",
+      "weight_kg": 0.326,
+      "embedded_emissions_kg_co2e": 10.288
+    },
+    {
+      "product_id": "PROD-0145",
+      "product_name": "ZoomX Carbon Plate Insert v29",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "CN",
+      "weight_kg": 0.049,
+      "embedded_emissions_kg_co2e": 11.802
+    },
+    {
+      "product_id": "PROD-0147",
+      "product_name": "Pegasus 3D Knit Collar v30",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "BD",
+      "weight_kg": 0.064,
+      "embedded_emissions_kg_co2e": 3.665
+    },
+    {
+      "product_id": "PROD-0152",
+      "product_name": "Pegasus 3D Knit Collar v31",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "BD",
+      "weight_kg": 0.069,
+      "embedded_emissions_kg_co2e": 2.417
+    },
+    {
+      "product_id": "PROD-0161",
+      "product_name": "Air Max Flyknit Upper Assembly v33",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "CN",
+      "weight_kg": 0.284,
+      "embedded_emissions_kg_co2e": 8.848
+    },
+    {
+      "product_id": "PROD-0163",
+      "product_name": "Classic Clog Strap Assembly v33",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "BD",
+      "weight_kg": 0.044,
+      "embedded_emissions_kg_co2e": 2.391
+    },
+    {
+      "product_id": "PROD-0164",
+      "product_name": "Kalenji Trail Sole Unit v33",
+      "brand": "Decathlon",
+      "hs_code": "640520",
+      "country_origin": "IN",
+      "weight_kg": 0.316,
+      "embedded_emissions_kg_co2e": 10.876
+    },
+    {
+      "product_id": "PROD-0173",
+      "product_name": "Classic Clog Strap Assembly v35",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "VN",
+      "weight_kg": 0.042,
+      "embedded_emissions_kg_co2e": 2.83
+    },
+    {
+      "product_id": "PROD-0174",
+      "product_name": "Kalenji Trail Sole Unit v35",
+      "brand": "Decathlon",
+      "hs_code": "640520",
+      "country_origin": "BD",
+      "weight_kg": 0.322,
+      "embedded_emissions_kg_co2e": 8.907
+    },
+    {
+      "product_id": "PROD-0175",
+      "product_name": "ZoomX Carbon Plate Insert v35",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "BD",
+      "weight_kg": 0.05,
+      "embedded_emissions_kg_co2e": 12.272
+    },
+    {
+      "product_id": "PROD-0180",
+      "product_name": "ZoomX Carbon Plate Insert v36",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "TW",
+      "weight_kg": 0.045,
+      "embedded_emissions_kg_co2e": 12.821
+    },
+    {
+      "product_id": "PROD-0186",
+      "product_name": "Air Max Flyknit Upper Assembly v38",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "CN",
+      "weight_kg": 0.28,
+      "embedded_emissions_kg_co2e": 9.117
+    },
+    {
+      "product_id": "PROD-0191",
+      "product_name": "Air Max Flyknit Upper Assembly v39",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "VN",
+      "weight_kg": 0.286,
+      "embedded_emissions_kg_co2e": 8.009
+    },
+    {
+      "product_id": "PROD-0193",
+      "product_name": "Classic Clog Strap Assembly v39",
+      "brand": "Crocs",
+      "hs_code": "640299",
+      "country_origin": "IN",
+      "weight_kg": 0.048,
+      "embedded_emissions_kg_co2e": 2.482
+    },
+    {
+      "product_id": "PROD-0197",
+      "product_name": "Pegasus 3D Knit Collar v40",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "ID",
+      "weight_kg": 0.068,
+      "embedded_emissions_kg_co2e": 2.896
+    },
+    {
+      "product_id": "PROD-0200",
+      "product_name": "ZoomX Carbon Plate Insert v40",
+      "brand": "Nike",
+      "hs_code": "640411",
+      "country_origin": "VN",
+      "weight_kg": 0.036,
+      "embedded_emissions_kg_co2e": 12.619
+    }
+  ],
+  "cbam_cost_estimate": {
+    "total_emissions_tonnes": 0.378,
+    "carbon_price_eur_per_tonne": 80.0,
+    "estimated_cbam_cost_eur": 30.24,
+    "note": "CBAM transitional period: reporting only (no payments) until 2025-12-31. Full CBAM with certificates from 2026-01-01."
+  }
+}

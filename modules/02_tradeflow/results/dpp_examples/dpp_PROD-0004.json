@@ -1,0 +1,58 @@
+{
+  "dpp_version": "1.0",
+  "unique_id": "DPP-SPT-0004",
+  "issued_date": "2026-02-25",
+  "manufacturer": {
+    "name": "Sportek d.o.o.",
+    "address": "Banja Luka, BiH",
+    "id": "SPORTEK-BL-001"
+  },
+  "product": {
+    "name": "Kalenji Trail Sole Unit v1",
+    "brand": "Decathlon",
+    "model": "Kalenji Trail Sole Unit",
+    "gtin": "3880617126230",
+    "hs_code": "640520",
+    "weight_grams": 323
+  },
+  "materials": {
+    "composition": {
+      "rubber": 70,
+      "EVA": 30
+    },
+    "recycled_content_pct": 0,
+    "hazardous_substances": "PAH below EU limit; REACH compliant",
+    "restricted_substances_tested": true
+  },
+  "sustainability": {
+    "carbon_footprint_kg": 9.24,
+    "carbon_footprint_methodology": "ISO 14067",
+    "energy_consumption_kwh": 25.87,
+    "water_consumption_liters": 14.5,
+    "recyclability_score": 59,
+    "disassembly_instructions": "Sole unit separates from upper via solvent release. EVA and rubber separable."
+  },
+  "origin": {
+    "country": "KH",
+    "factory": "DCT-BD-018",
+    "production_date": "2026-01-27",
+    "batch": "B202601-5557"
+  },
+  "compliance": {
+    "ce_marking": true,
+    "reach": true,
+    "oeko_tex": true
+  },
+  "durability": {
+    "expected_lifetime_years": 5,
+    "care_instructions": "Remove debris after use. Hand wash, air dry.",
+    "repair_info": "Sole reattachment available at Decathlon workshops."
+  },
+  "end_of_life": {
+    "recyclable_components": [
+      "rubber outsole",
+      "EVA midsole"
+    ],
+    "disposal_instructions": "Return to Decathlon second-life programme. Rubber recycled, EVA to energy recovery."
+  }
+}

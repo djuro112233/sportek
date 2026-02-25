@@ -1,0 +1,58 @@
+{
+  "dpp_version": "1.0",
+  "unique_id": "DPP-SPT-0002",
+  "issued_date": "2026-02-25",
+  "manufacturer": {
+    "name": "Sportek d.o.o.",
+    "address": "Banja Luka, BiH",
+    "id": "SPORTEK-BL-001"
+  },
+  "product": {
+    "name": "Pegasus 3D Knit Collar v1",
+    "brand": "Nike",
+    "model": "Pegasus 3D Knit Collar",
+    "gtin": "3814342783890",
+    "hs_code": "640411",
+    "weight_grams": 57
+  },
+  "materials": {
+    "composition": {
+      "recycled polyester": 70,
+      "elastane": 30
+    },
+    "recycled_content_pct": 70,
+    "hazardous_substances": "REACH compliant; no SVHC detected",
+    "restricted_substances_tested": true
+  },
+  "sustainability": {
+    "carbon_footprint_kg": 3.38,
+    "carbon_footprint_methodology": "ISO 14067",
+    "energy_consumption_kwh": 9.46,
+    "water_consumption_liters": 2.6,
+    "recyclability_score": 83,
+    "disassembly_instructions": "Knit collar detaches from shoe body via stitching removal."
+  },
+  "origin": {
+    "country": "KH",
+    "factory": "NKE-CN-018",
+    "production_date": "2026-02-10",
+    "batch": "B202602-1488"
+  },
+  "compliance": {
+    "ce_marking": true,
+    "reach": true,
+    "oeko_tex": false
+  },
+  "durability": {
+    "expected_lifetime_years": 5,
+    "care_instructions": "Spot clean with damp cloth. Air dry away from direct heat.",
+    "repair_info": "Collar replacement available via Sportek Repair Centre."
+  },
+  "end_of_life": {
+    "recyclable_components": [
+      "recycled polyester knit",
+      "elastane blend"
+    ],
+    "disposal_instructions": "Return via Sportek take-back. 70%+ recycled content — prioritise textile recycling."
+  }
+}

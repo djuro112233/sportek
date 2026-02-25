@@ -1,0 +1,56 @@
+{
+  "dpp_version": "1.0",
+  "unique_id": "DPP-SPT-0005",
+  "issued_date": "2026-02-25",
+  "manufacturer": {
+    "name": "Sportek d.o.o.",
+    "address": "Banja Luka, BiH",
+    "id": "SPORTEK-BL-001"
+  },
+  "product": {
+    "name": "ZoomX Carbon Plate Insert v1",
+    "brand": "Nike",
+    "model": "ZoomX Carbon Plate Insert",
+    "gtin": "3863433266830",
+    "hs_code": "640411",
+    "weight_grams": 45
+  },
+  "materials": {
+    "composition": {
+      "carbon fiber": 100
+    },
+    "recycled_content_pct": 0,
+    "hazardous_substances": "epoxy resin traces; REACH compliant",
+    "restricted_substances_tested": true
+  },
+  "sustainability": {
+    "carbon_footprint_kg": 12.18,
+    "carbon_footprint_methodology": "ISO 14067",
+    "energy_consumption_kwh": 34.1,
+    "water_consumption_liters": 2.0,
+    "recyclability_score": 27,
+    "disassembly_instructions": "Carbon plate bonded with epoxy — requires industrial solvent for separation."
+  },
+  "origin": {
+    "country": "IN",
+    "factory": "NKE-TW-006",
+    "production_date": "2025-03-04",
+    "batch": "B202503-4527"
+  },
+  "compliance": {
+    "ce_marking": true,
+    "reach": true,
+    "oeko_tex": true
+  },
+  "durability": {
+    "expected_lifetime_years": 3,
+    "care_instructions": "Wipe clean. Do not bend carbon plate. Store flat.",
+    "repair_info": "Non-repairable component. Full shoe replacement if plate cracks."
+  },
+  "end_of_life": {
+    "recyclable_components": [
+      "carbon fiber (industrial recycling only)"
+    ],
+    "disposal_instructions": "Return via Nike Grind. Carbon fiber requires specialised recycling — do not place in household waste."
+  }
+}
