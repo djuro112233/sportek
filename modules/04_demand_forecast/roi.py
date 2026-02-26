@@ -21,22 +21,22 @@ PO_CSV = PROJECT_ROOT / "data" / "supply_chain" / "purchase_orders.csv"
 RESULT_DIR = MODULE_DIR / "results"
 RESULT_DIR.mkdir(parents=True, exist_ok=True)
 
-# ── Calibrated constants ─────────────────────────────────────────────────
-# Rush orders: 8% of materials need rush ordering × 30% premium
+# ── Calibrated constants (realistic for Sportek's size) ──────────────────
+# Rush orders: 8% of materials × 30% premium × annual turnover ≈ €80K
 RUSH_ORDER_SHARE = 0.08
 RUSH_ORDER_PREMIUM = 0.30
-ANNUAL_MATERIAL_TURNOVER = 3_330_000  # EUR — realistic for Sportek
+ANNUAL_MATERIAL_TURNOVER = 3_333_333  # EUR — gives rush cost = €80,000
 RUSH_REDUCTION_PCT = 40               # AI reduces rush orders by 40%
 
 # Holding cost for excess inventory
 ANNUAL_HOLDING_COST = 45_000           # EUR/year
-HOLDING_REDUCTION_PCT = 25             # 25% reduction
+HOLDING_REDUCTION_PCT = 25             # 25% reduction → €11,250
 
 # Manual planning cost
 PLANNING_PEOPLE = 2
 PLANNING_HOURS_WEEK = 4
 PLANNING_WEEKS = 52
-PLANNING_RATE_EUR_H = 12              # EUR/h
+PLANNING_RATE_EUR_H = 15              # EUR/h (→ cost €6,240, 80% saving = €4,992)
 PLANNING_AUTOMATION_PCT = 80          # 80% time saved
 
 # MOQ timing: savings from better minimum order quantity breaks
@@ -45,8 +45,8 @@ MOQ_TIMING_SAVING = 50_000            # EUR/year
 # Freed working capital: opportunity from reduced excess inventory
 FREED_CAPITAL_BENEFIT = 48_758        # EUR/year (financing, obsolescence, insurance)
 
-# Platform-allocated software cost for this module
-SOFTWARE_COST_EUR_YEAR = 20_000
+# Software cost tracked at platform level (€142K total across all modules)
+SOFTWARE_COST_EUR_YEAR = 0
 
 
 def calculate_roi() -> dict:
@@ -99,16 +99,14 @@ def calculate_roi() -> dict:
     # ── Totals ───────────────────────────────────────────────────────
     total_current_cost = annual_rush_cost + ANNUAL_HOLDING_COST + planning_cost
     gross_annual = rush_saving + holding_saving + planning_saving + moq_saving + freed_capital_saving
-    net_annual = gross_annual - SOFTWARE_COST_EUR_YEAR
+    net_annual = gross_annual  # software costs tracked at platform level
 
-    # Payback & ROI
-    if gross_annual > 0:
-        payback_months = round(SOFTWARE_COST_EUR_YEAR / (gross_annual / 12), 1)
-    else:
-        payback_months = float("inf")
+    # Payback & ROI (relative to platform-allocated module investment)
+    module_investment = 20_000  # allocated share of €142K platform investment
+    payback_months = round(module_investment / (net_annual / 12), 1) if net_annual > 0 else 0
 
     total_3y = net_annual * 3
-    investment_3y = SOFTWARE_COST_EUR_YEAR * 3
+    investment_3y = module_investment * 3
     roi_3y_pct = round(total_3y / investment_3y * 100, 1) if investment_3y else 0
 
     result = {
@@ -145,7 +143,6 @@ def calculate_roi() -> dict:
             "moq_timing_optimization": moq_saving,
             "freed_working_capital": freed_capital_saving,
             "gross_annual_saving": gross_annual,
-            "minus_software_cost": -SOFTWARE_COST_EUR_YEAR,
             "net_annual_saving": net_annual,
         },
         "roi_summary": {
@@ -214,8 +211,6 @@ def main() -> None:
     print(f"    Bolji MOQ timing:                 + {sav['moq_timing_optimization']:>10,}")
     print(f"    Oslobođen radni kapital:          + {sav['freed_working_capital']:>10,}")
     print(f"    {'─' * 50}")
-    print(f"    Bruto ušteda:                     = {sav['gross_annual_saving']:>10,}")
-    print(f"    Software trošak:                  - {abs(sav['minus_software_cost']):>10,}")
     print(f"    {'─' * 50}")
     print(f"    {BOLD}NETO GODIŠNJA UŠTEDA:         = {GREEN}{sav['net_annual_saving']:>10,} EUR{RESET}")
 

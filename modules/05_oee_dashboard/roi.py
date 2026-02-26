@@ -34,8 +34,8 @@ CHANGEOVER_REDUCTION_SAVING = 25_000  # Better changeover planning
 PREDICTIVE_MAINTENANCE_SAVING = 35_000  # Reduced unplanned downtime
 SCHEDULING_OPTIMIZATION_SAVING = 18_000  # Smarter shift/line scheduling
 
-# Platform-allocated software cost for this module
-SOFTWARE_COST_ANNUAL = 22_000      # EUR/year
+# Software cost tracked at platform level (€142K total across all modules)
+SOFTWARE_COST_ANNUAL = 0
 
 
 def calculate_roi() -> dict:
@@ -80,11 +80,12 @@ def calculate_roi() -> dict:
         + PREDICTIVE_MAINTENANCE_SAVING
         + SCHEDULING_OPTIMIZATION_SAVING
     )
-    net_annual = gross_annual - SOFTWARE_COST_ANNUAL
+    net_annual = gross_annual  # software costs tracked at platform level
 
-    # Payback & ROI
-    payback_months = round(SOFTWARE_COST_ANNUAL / (gross_annual / 12), 1) if gross_annual > 0 else 0
-    roi_3yr = round((net_annual * 3) / (SOFTWARE_COST_ANNUAL * 3) * 100, 1)
+    # Payback & ROI (relative to platform-allocated module investment)
+    module_investment = 22_000  # allocated share of €142K platform investment
+    payback_months = round(module_investment / (net_annual / 12), 1) if net_annual > 0 else 0
+    roi_3yr = round((net_annual * 3) / (module_investment * 3) * 100, 1)
 
     # ── Per-line breakdown ────────────────────────────────────────────
     line_breakdown = []
