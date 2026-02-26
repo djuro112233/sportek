@@ -148,7 +148,7 @@
           {/* Card 4 — Godišnje AI uštede */}
           <div className="card">
             <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Godišnje AI uštede</div>
-            <div style={{ fontSize: 32, fontWeight: 700, color: C.green }}>{'\u20AC'}872,007</div>
+            <div style={{ fontSize: 32, fontWeight: 700, color: C.green }}>{'\u20AC'}904,147</div>
             <div style={{ color: C.grey, fontSize: 13, marginTop: 6 }}>6 modula aktivno</div>
           </div>
         </div>
@@ -535,12 +535,14 @@
     ];
 
     const STOCKOUT_RISKS = [
-      { material: 'Flyknit Yarn Black', days: 5, risk: 'HIGH', action: 'Order now' },
-      { material: 'Carbon Fiber Plate', days: 3, risk: 'HIGH', action: 'Urgent order' },
-      { material: 'EVA Foam 8mm', days: 12, risk: 'MEDIUM', action: 'Plan order' },
-      { material: 'TPU Film Clear', days: 18, risk: 'LOW', action: 'Monitor' },
+      { material: 'Flyknit Yarn Black', days: 3, risk: 'HIGH', action: 'Urgent order' },
+      { material: 'Carbon Fiber Plate', days: 5, risk: 'HIGH', action: 'Order now' },
       { material: 'Nylon Ripstop', days: 8, risk: 'MEDIUM', action: 'Plan order' },
-      { material: 'PU Adhesive', days: 22, risk: 'LOW', action: 'OK' },
+      { material: 'EVA Foam 8mm', days: 12, risk: 'MEDIUM', action: 'Plan order' },
+      { material: 'Shoe Box Kraft M', days: 14, risk: 'MEDIUM', action: 'Plan order' },
+      { material: 'TPU Film Clear', days: 18, risk: 'LOW', action: 'Monitor' },
+      { material: 'PU Adhesive', days: 22, risk: 'LOW', action: 'Monitor' },
+      { material: 'Mesh Fabric White', days: 26, risk: 'LOW', action: 'OK' },
     ];
 
     const RISK_COLORS = { HIGH: C.red, MEDIUM: C.yellow, LOW: C.green };
@@ -822,6 +824,16 @@
       { brand: 'Decathlon', last: '01 Feb 2026', next: '01 Mar 2026' },
     ];
 
+    const ALERT_FEED = [
+      { time: '14:22', severity: 'critical', msg: 'Nike SMSI score pao ispod 70 — rizik gubitka Silver statusa' },
+      { time: '13:45', severity: 'warning', msg: 'Stockout rizik: Flyknit Yarn Black — 5 dana do isteka zaliha' },
+      { time: '12:30', severity: 'warning', msg: 'OEE linija L7 pala na 60% — prekoračen downtime limit' },
+      { time: '11:15', severity: 'info', msg: 'Crocs mjesečni izvještaj automatski generisan i poslan' },
+      { time: '09:00', severity: 'info', msg: 'Decathlon sustainability audit zakazan za 15. mart' },
+    ];
+    const ALERT_COLORS = { critical: C.red, warning: C.yellow, info: C.teal };
+    const ALERT_LABELS = { critical: 'CRITICAL', warning: 'WARNING', info: 'INFO' };
+
     function CircularProgress({ score, color, size }) {
       const sz = size || 80;
       const r = 35;
@@ -911,6 +923,26 @@
             ))}
           </div>
 
+          {/* Alert Feed */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Alert Feed</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+              {ALERT_FEED.map((a, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0',
+                  borderBottom: i < ALERT_FEED.length - 1 ? `1px solid ${C.border}` : 'none',
+                }}>
+                  <span style={{ color: C.greyDark, fontSize: 12, fontFamily: 'monospace', minWidth: 44 }}>{a.time}</span>
+                  <span style={{
+                    display: 'inline-block', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10,
+                    background: `${ALERT_COLORS[a.severity]}22`, color: ALERT_COLORS[a.severity], minWidth: 64, textAlign: 'center',
+                  }}>{ALERT_LABELS[a.severity]}</span>
+                  <span style={{ fontSize: 13, color: C.white }}>{a.msg}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* ROI Box */}
           <div style={{
             background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
@@ -930,7 +962,7 @@
     const ROI_MODULES = [
       { modul: 'CV Quality Control', saving: '\u20AC99,271', payback: '3.0 mj', roi: '205%' },
       { modul: 'TradeFlow AI', saving: '\u20AC354,734', payback: '0.8 mj', roi: '1,582%' },
-      { modul: 'Knowledge Guardian', saving: '\u20AC20,431', payback: '4.4 mj', roi: '170%' },
+      { modul: 'Knowledge Guardian', saving: '\u20AC52,571', payback: '1.6 mj', roi: '170%' },
       { modul: 'Demand Forecasting', saving: '\u20AC147,000', payback: '1.5 mj', roi: '720%' },
       { modul: 'OEE Dashboard', saving: '\u20AC198,000', payback: '1.4 mj', roi: '890%' },
       { modul: 'Brand Reporting', saving: '\u20AC52,571', payback: '1.6 mj', roi: '1,971%' },
@@ -970,7 +1002,7 @@
             <tfoot>
               <tr style={{ background: C.teal }}>
                 <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>UKUPNO</td>
-                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>{'\u20AC'}872,007/god</td>
+                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>{'\u20AC'}904,147/god</td>
                 <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>1.2 mj avg</td>
                 <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>614% avg</td>
                 <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>Investicija: {'\u20AC'}142,000</td>
