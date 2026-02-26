@@ -518,11 +518,154 @@
       );
     }
 
+    // ── FORECAST TAB ─────────────────────────────────────────
+    const forecastData = Array.from({length:44}, (_, i) => {
+      const base = 2500 + Math.sin(i/6)*400 + (i<20?0:i*5);
+      const actual = i<40 ? Math.round(base + (Math.random()-0.5)*300) : null;
+      const forecast = i>=38 ? Math.round(base + (Math.random()-0.5)*100) : null;
+      const upper = forecast ? forecast + 250 : null;
+      const lower = forecast ? forecast - 250 : null;
+      return {week:'W'+(i+1), actual, forecast, upper, lower};
+    });
+
+    const MODEL_COMPARISON = [
+      { model: 'Holt-Winters', mae: 245, rmse: 312, mape: '5.8%', best: false },
+      { model: 'Random Forest', mae: 98, rmse: 142, mape: '3.03%', best: true },
+      { model: 'Gradient Boosting', mae: 156, rmse: 198, mape: '4.2%', best: false },
+    ];
+
+    const STOCKOUT_RISKS = [
+      { material: 'Flyknit Yarn Black', days: 5, risk: 'HIGH', action: 'Order now' },
+      { material: 'Carbon Fiber Plate', days: 3, risk: 'HIGH', action: 'Urgent order' },
+      { material: 'EVA Foam 8mm', days: 12, risk: 'MEDIUM', action: 'Plan order' },
+      { material: 'TPU Film Clear', days: 18, risk: 'LOW', action: 'Monitor' },
+      { material: 'Nylon Ripstop', days: 8, risk: 'MEDIUM', action: 'Plan order' },
+      { material: 'PU Adhesive', days: 22, risk: 'LOW', action: 'OK' },
+    ];
+
+    const RISK_COLORS = { HIGH: C.red, MEDIUM: C.yellow, LOW: C.green };
+    const RISK_EMOJI = { HIGH: '\uD83D\uDD34', MEDIUM: '\uD83D\uDFE1', LOW: '\uD83D\uDFE2' };
+
+    function ForecastTab() {
+      const darkTooltip = { contentStyle: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12 }, itemStyle: { color: C.white }, labelStyle: { color: C.grey } };
+      const thStyle = { padding: '10px 14px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: C.grey, textTransform: 'uppercase', borderBottom: `1px solid ${C.border}` };
+      const tdStyle = { padding: '10px 14px', fontSize: 13, color: C.white, borderBottom: `1px solid ${C.border}` };
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Top row — 3 metric cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Best Model</div>
+              <div style={{ fontSize: 28, fontWeight: 700, color: C.teal }}>Random Forest</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>MAPE</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.green }}>3.03%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Stockout Risks</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.red }}>12</div>
+            </div>
+          </div>
+
+          {/* Forecast Chart */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Demand Forecast — 44 sedmica</div>
+            <ResponsiveContainer width="100%" height={300}>
+              <ComposedChart data={forecastData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis dataKey="week" tick={{ fill: C.grey, fontSize: 10 }} interval={4} />
+                <YAxis tick={{ fill: C.grey, fontSize: 11 }} />
+                <Tooltip {...darkTooltip} />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+                <Area type="monotone" dataKey="upper" stroke="none" fill={C.teal} fillOpacity={0.15} name="Upper bound" />
+                <Area type="monotone" dataKey="lower" stroke="none" fill={C.bg} fillOpacity={1} name="Lower bound" />
+                <Line type="monotone" dataKey="actual" stroke={C.white} strokeWidth={2} dot={false} name="Actual" />
+                <Line type="monotone" dataKey="forecast" stroke={C.teal} strokeWidth={2} strokeDasharray="5 5" dot={false} name="Forecast" />
+                <ReferenceLine x="W38" stroke={C.yellow} strokeDasharray="3 3" label={{ value: 'Forecast start', fill: C.yellow, fontSize: 11 }} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Model Comparison Table */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Model Comparison</div>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th style={thStyle}>Model</th>
+                  <th style={thStyle}>MAE</th>
+                  <th style={thStyle}>RMSE</th>
+                  <th style={thStyle}>MAPE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {MODEL_COMPARISON.map(m => (
+                  <tr key={m.model} style={m.best ? { background: 'rgba(8,145,178,0.12)' } : {}}>
+                    <td style={{ ...tdStyle, fontWeight: m.best ? 700 : 400, color: m.best ? C.teal : C.white }}>
+                      {m.model}{m.best ? ' \u2605' : ''}
+                    </td>
+                    <td style={{ ...tdStyle, fontWeight: m.best ? 700 : 400 }}>{m.mae}</td>
+                    <td style={{ ...tdStyle, fontWeight: m.best ? 700 : 400 }}>{m.rmse}</td>
+                    <td style={{ ...tdStyle, fontWeight: m.best ? 700 : 400 }}>{m.mape}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Stockout Risk Table */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Stockout Risk Monitor</div>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th style={thStyle}>Material</th>
+                  <th style={thStyle}>Days Left</th>
+                  <th style={thStyle}>Risk</th>
+                  <th style={thStyle}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {STOCKOUT_RISKS.map(s => (
+                  <tr key={s.material}>
+                    <td style={tdStyle}>{s.material}</td>
+                    <td style={tdStyle}>{s.days}</td>
+                    <td style={tdStyle}>
+                      <span style={{
+                        display: 'inline-block', fontSize: 12, fontWeight: 600, padding: '2px 10px', borderRadius: 12,
+                        background: `${RISK_COLORS[s.risk]}22`, color: RISK_COLORS[s.risk],
+                      }}>{RISK_EMOJI[s.risk]} {s.risk}</span>
+                    </td>
+                    <td style={tdStyle}>{s.action}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* ROI Box */}
+          <div style={{
+            background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, fontSize: 14, fontWeight: 600,
+          }}>
+            <span style={{ color: C.green }}>{'\u20AC'}147,000/god</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.white }}>Payback: 1.5 mj</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.teal }}>ROI: 720%</span>
+          </div>
+        </div>
+      );
+    }
+
     // ── TAB CONTENT ROUTER ───────────────────────────────────
     function TabContent({ activeTab }) {
       if (activeTab === 'qc') return <QCTab />;
       if (activeTab === 'trade') return <TradeTab />;
       if (activeTab === 'knowledge') return <KnowledgeTab />;
+      if (activeTab === 'forecast') return <ForecastTab />;
       return <div style={{ color: C.grey, fontSize: 14 }}>Tab content: {activeTab}</div>;
     }
 
