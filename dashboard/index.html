@@ -179,6 +179,134 @@
       );
     }
 
+    // ── QC VISION TAB ────────────────────────────────────────
+    const PARETO_DATA = [
+      { name: 'Šav neravnomjeran', count: 1100, cum: 22 },
+      { name: 'Ljepilo vidljivo', count: 900, cum: 40 },
+      { name: 'Boja odstupa', count: 700, cum: 54 },
+      { name: 'Materijal oštećen', count: 600, cum: 66 },
+      { name: 'Dimenzija', count: 500, cum: 76 },
+      { name: '3D knit', count: 450, cum: 85 },
+      { name: 'Logo', count: 400, cum: 93 },
+      { name: 'Đon', count: 350, cum: 100 },
+    ];
+
+    const MONTHS = ['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
+    const DEFECT_TREND = MONTHS.map((m, i) => ({
+      month: m,
+      Nike:     [4.1,3.9,3.7,3.5,3.6,3.5,3.3,3.1,3.0,3.1,3.0,2.9][i],
+      Crocs:    [3.8,3.6,3.5,3.4,3.5,3.4,3.2,3.0,2.9,3.0,2.8,2.7][i],
+      Decathlon: [3.5,3.4,3.3,3.2,3.3,3.2,3.0,2.9,2.8,2.9,2.7,2.6][i],
+    }));
+
+    const FEED_DATA = [
+      { time: '14:32:05', img: 'IMG_4821.jpg', result: 'OK',     confidence: 99.1 },
+      { time: '14:32:02', img: 'IMG_4820.jpg', result: 'OK',     confidence: 97.8 },
+      { time: '14:31:58', img: 'IMG_4819.jpg', result: 'DEFECT', confidence: 94.5 },
+      { time: '14:31:55', img: 'IMG_4818.jpg', result: 'OK',     confidence: 98.2 },
+      { time: '14:31:51', img: 'IMG_4817.jpg', result: 'OK',     confidence: 96.7 },
+      { time: '14:31:48', img: 'IMG_4816.jpg', result: 'DEFECT', confidence: 91.3 },
+      { time: '14:31:44', img: 'IMG_4815.jpg', result: 'OK',     confidence: 99.4 },
+      { time: '14:31:40', img: 'IMG_4814.jpg', result: 'OK',     confidence: 98.0 },
+    ];
+
+    function QCTab() {
+      const darkTooltip = { contentStyle: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12 }, itemStyle: { color: C.white }, labelStyle: { color: C.grey } };
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Top row — 3 metric cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Model Accuracy</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.teal }}>94.2%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Inspections Today</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.white }}>847</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>AI vs Manual</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.green }}>10x brže</div>
+            </div>
+          </div>
+
+          {/* Pareto Chart */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Pareto — Top defekata</div>
+            <ResponsiveContainer width="100%" height={300}>
+              <ComposedChart data={PARETO_DATA} margin={{ top: 5, right: 30, left: 0, bottom: 30 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis dataKey="name" tick={{ fill: C.grey, fontSize: 11 }} angle={-25} textAnchor="end" interval={0} />
+                <YAxis yAxisId="left" tick={{ fill: C.grey, fontSize: 11 }} />
+                <YAxis yAxisId="right" orientation="right" domain={[0, 100]} tick={{ fill: C.grey, fontSize: 11 }} unit="%" />
+                <Tooltip {...darkTooltip} />
+                <Bar yAxisId="left" dataKey="count" fill={C.teal} radius={[4,4,0,0]} />
+                <Line yAxisId="right" type="monotone" dataKey="cum" stroke={C.yellow} strokeWidth={2} dot={{ fill: C.yellow, r: 3 }} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Defect Trend */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Defect Trend po brendu (%)</div>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={DEFECT_TREND} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis dataKey="month" tick={{ fill: C.grey, fontSize: 11 }} />
+                <YAxis tick={{ fill: C.grey, fontSize: 11 }} domain={[2, 5]} unit="%" />
+                <Tooltip {...darkTooltip} />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+                <Line type="monotone" dataKey="Nike" stroke={C.orange} strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="Crocs" stroke={C.purple} strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="Decathlon" stroke={C.green} strokeWidth={2} dot={{ r: 3 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Real-time Feed */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 12 }}>Real-Time Inspection Feed</div>
+            <div style={{ maxHeight: 200, overflowY: 'auto' }}>
+              {FEED_DATA.map((f, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 16, padding: '8px 0',
+                  borderBottom: i < FEED_DATA.length - 1 ? `1px solid ${C.border}` : 'none',
+                  fontSize: 13,
+                }}>
+                  <span style={{ color: C.greyDark, fontFamily: 'monospace', minWidth: 72 }}>{f.time}</span>
+                  <span style={{ color: C.grey, minWidth: 120 }}>{f.img}</span>
+                  {f.result === 'OK'
+                    ? <span style={{ color: C.green, fontWeight: 600, minWidth: 90 }}>{'\u2713'} OK</span>
+                    : <span style={{ color: C.red, fontWeight: 600, minWidth: 90 }}>{'\u2717'} DEFECT</span>
+                  }
+                  <span style={{ color: C.grey }}>{f.confidence}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ROI Box */}
+          <div style={{
+            background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, fontSize: 14, fontWeight: 600,
+          }}>
+            <span style={{ color: C.green }}>{'\u20AC'}99,271/god ušteda</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.white }}>Payback: 3 mj</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.teal }}>ROI: 205%</span>
+          </div>
+        </div>
+      );
+    }
+
+    // ── TAB CONTENT ROUTER ───────────────────────────────────
+    function TabContent({ activeTab }) {
+      if (activeTab === 'qc') return <QCTab />;
+      return <div style={{ color: C.grey, fontSize: 14 }}>Tab content: {activeTab}</div>;
+    }
+
     // ── APP ───────────────────────────────────────────────────
     function App() {
       const [activeTab, setActiveTab] = React.useState('qc');
@@ -189,7 +317,7 @@
           <SummaryCards />
           <TabBar activeTab={activeTab} onSelect={setActiveTab} />
           <div style={{ padding: '24px 32px' }}>
-            <div style={{ color: C.grey, fontSize: 14 }}>Tab content: {activeTab}</div>
+            <TabContent activeTab={activeTab} />
           </div>
           <div id="roi-footer"></div>
         </div>
