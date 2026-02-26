@@ -114,3 +114,5 @@ timestamp,question,answer_length,top_source,confidence,response_time_ms
 2026-02-25T16:20:59,Koji su Nike zahtjevi za šavove na gornjem dijelu?,595,Safety_Procedures_Banja_Luka.txt,0.35,1.2
 2026-02-25T16:20:59,Koja je procedura za rukovanje opasnim hemikalijama?,635,Material_Specifications_Flyknit.txt,0.27,1.0
 2026-02-25T16:20:59,Koliko često se vrši održavanje SHIMA SEIKI mašina?,289,Maintenance_Schedule_SHIMA.txt,0.82,1.1
+2026-02-26T12:24:07,Koji su koraci finalne inspekcije?,620,SOP_QC_Inspekcija_Final.txt,0.51,5.5
+2026-02-26T12:27:13,Koji su koraci finalne inspekcije?,620,SOP_QC_Inspekcija_Final.txt,0.51,2.2
