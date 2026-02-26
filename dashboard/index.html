@@ -660,12 +660,151 @@
       );
     }
 
+    // ── OEE TAB ───────────────────────────────────────────────
+    const OEE_LINES = [
+      { line: 'L1', A: 83, P: 88, Q: 96, oee: 71 },
+      { line: 'L2', A: 81, P: 85, Q: 95, oee: 65 },
+      { line: 'L3', A: 87, P: 90, Q: 97, oee: 76 },
+      { line: 'L4', A: 85, P: 87, Q: 96, oee: 71 },
+      { line: 'L5', A: 82, P: 86, Q: 95, oee: 67 },
+      { line: 'L6', A: 80, P: 84, Q: 94, oee: 63 },
+      { line: 'L7', A: 78, P: 83, Q: 93, oee: 60 },
+      { line: 'L8', A: 84, P: 89, Q: 96, oee: 72 },
+    ];
+
+    const SIX_LOSSES = [
+      { name: 'Breakdowns', loss: 8 },
+      { name: 'Changeover', loss: 5 },
+      { name: 'Speed Loss', loss: 4 },
+      { name: 'Minor Stops', loss: 3 },
+      { name: 'Defects', loss: 3 },
+      { name: 'Startup', loss: 1 },
+    ];
+
+    const WHATIF_RESULTS = {
+      shift: 'Projected output: +18% | OEE impact: -2.1% (fatigue) | Net gain: +15.9%',
+      remove: 'Capacity reduction: -12.5% | OEE improvement: +1.8% | Recommendation: Redistribute to L3, L8',
+      capacity: 'Additional output: 73,200 pari/god | Required investment: \u20AC45,000 | ROI: 8 months',
+    };
+
+    function OeeTab() {
+      const [selectedScenario, setSelectedScenario] = React.useState(null);
+      const darkTooltip = { contentStyle: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12 }, itemStyle: { color: C.white }, labelStyle: { color: C.grey } };
+      const thStyle = { padding: '10px 14px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: C.grey, textTransform: 'uppercase', borderBottom: `1px solid ${C.border}` };
+      const tdStyle = { padding: '10px 14px', fontSize: 13, color: C.white, borderBottom: `1px solid ${C.border}` };
+
+      const oeeBarColor = (entry) => {
+        if (entry.oee > 75) return C.teal;
+        if (entry.oee >= 65) return C.yellow;
+        return C.red;
+      };
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Top row — 4 metric cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Avg OEE</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.teal }}>76.3%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Best: L3</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.green }}>82.1%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Worst: L7</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.red }}>68.5%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Anomalies</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.yellow }}>23</div>
+            </div>
+          </div>
+
+          {/* OEE by Line Chart */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>OEE po liniji (%)</div>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={OEE_LINES} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis dataKey="line" tick={{ fill: C.grey, fontSize: 11 }} />
+                <YAxis tick={{ fill: C.grey, fontSize: 11 }} domain={[0, 100]} unit="%" />
+                <Tooltip {...darkTooltip} formatter={(val, name) => [`${val}%`, name]} />
+                <ReferenceLine y={85} stroke={C.red} strokeDasharray="5 5" label={{ value: 'Target 85%', fill: C.red, fontSize: 11, position: 'right' }} />
+                <Bar dataKey="oee" name="OEE" radius={[4,4,0,0]}>
+                  {OEE_LINES.map((entry, idx) => (
+                    <Cell key={idx} fill={oeeBarColor(entry)} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Six Big Losses */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Six Big Losses (%)</div>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={SIX_LOSSES} layout="vertical" margin={{ top: 5, right: 40, left: 100, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} horizontal={false} />
+                <XAxis type="number" tick={{ fill: C.grey, fontSize: 11 }} unit="%" />
+                <YAxis type="category" dataKey="name" tick={{ fill: C.grey, fontSize: 11 }} width={90} />
+                <Tooltip {...darkTooltip} />
+                <Bar dataKey="loss" fill={C.red} radius={[0,4,4,0]} label={{ position: 'right', fill: C.white, fontSize: 11, formatter: (v) => v + '%' }} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* What-If Scenarios */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>What-If Scenarios</div>
+            <div style={{ display: 'flex', gap: 12, marginBottom: selectedScenario ? 16 : 0 }}>
+              {[
+                { id: 'shift', label: 'Add 3rd Shift' },
+                { id: 'remove', label: 'Remove Line L7' },
+                { id: 'capacity', label: '+10% Capacity' },
+              ].map(s => (
+                <button key={s.id} onClick={() => setSelectedScenario(selectedScenario === s.id ? null : s.id)} style={{
+                  padding: '10px 20px', fontSize: 13, fontWeight: 500, border: `1px solid ${C.border}`,
+                  borderRadius: 8, cursor: 'pointer', transition: 'all 0.2s',
+                  background: selectedScenario === s.id ? C.teal : 'transparent',
+                  color: selectedScenario === s.id ? C.white : C.grey,
+                }}>
+                  {s.label}
+                </button>
+              ))}
+            </div>
+            {selectedScenario && (
+              <div style={{
+                background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: 14,
+                fontSize: 13, color: C.white, lineHeight: 1.6,
+              }}>
+                {WHATIF_RESULTS[selectedScenario]}
+              </div>
+            )}
+          </div>
+
+          {/* ROI Box */}
+          <div style={{
+            background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, fontSize: 14, fontWeight: 600,
+          }}>
+            <span style={{ color: C.green }}>{'\u20AC'}198,000/god</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.white }}>Payback: 1.4 mj</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.teal }}>ROI: 890%</span>
+          </div>
+        </div>
+      );
+    }
+
     // ── TAB CONTENT ROUTER ───────────────────────────────────
     function TabContent({ activeTab }) {
       if (activeTab === 'qc') return <QCTab />;
       if (activeTab === 'trade') return <TradeTab />;
       if (activeTab === 'knowledge') return <KnowledgeTab />;
       if (activeTab === 'forecast') return <ForecastTab />;
+      if (activeTab === 'oee') return <OeeTab />;
       return <div style={{ color: C.grey, fontSize: 14 }}>Tab content: {activeTab}</div>;
     }
 
