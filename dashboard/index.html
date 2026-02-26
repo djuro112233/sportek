@@ -798,6 +798,189 @@
       );
     }
 
+    // ── REPORTING TAB ──────────────────────────────────────
+    const SMSI_CATS = [
+      { name: 'Quality', score: 62, color: C.red },
+      { name: 'Delivery', score: 71, color: C.yellow },
+      { name: 'Sustainability', score: 68, color: C.yellow },
+      { name: 'Innovation', score: 72, color: C.yellow },
+    ];
+
+    const KPI_DATA = [
+      { name: 'Defect Rate', val: '3.2%', s: 'red' }, { name: 'Nike Defect', val: '2.9%', s: 'red' }, { name: 'Crocs Defect', val: '2.7%', s: 'green' }, { name: 'Decathlon Defect', val: '2.6%', s: 'green' },
+      { name: 'On-Time Delivery', val: '91%', s: 'yellow' }, { name: 'OEE Average', val: '76.3%', s: 'yellow' }, { name: 'Customer Returns', val: '0.8%', s: 'green' }, { name: 'Rework Rate', val: '4.8%', s: 'green' },
+      { name: 'Scrap Rate', val: '1.9%', s: 'green' }, { name: 'First Pass Yield', val: '95.2%', s: 'green' }, { name: 'Changeover Avg', val: '28 min', s: 'green' }, { name: 'Downtime', val: '9.2%', s: 'green' },
+      { name: 'Inventory Turn.', val: '7.2x', s: 'yellow' }, { name: 'Stockout', val: '3', s: 'yellow' }, { name: 'Supplier Quality', val: '4.2', s: 'green' }, { name: 'Training Hours', val: '22h', s: 'green' },
+      { name: 'Safety Incidents', val: '2', s: 'red' }, { name: 'Energy/Unit', val: '2.4 kWh', s: 'green' }, { name: 'Waste/Unit', val: '0.28 kg', s: 'green' }, { name: 'SMSI Score', val: '67.1', s: 'red' },
+    ];
+
+    const KPI_COLORS = { red: C.red, yellow: C.yellow, green: C.green };
+
+    const REPORT_BRANDS = [
+      { brand: 'Nike', last: '01 Feb 2026', next: '01 Mar 2026' },
+      { brand: 'Crocs', last: '01 Feb 2026', next: '01 Mar 2026' },
+      { brand: 'Decathlon', last: '01 Feb 2026', next: '01 Mar 2026' },
+    ];
+
+    function CircularProgress({ score, color, size }) {
+      const sz = size || 80;
+      const r = 35;
+      const circumference = 2 * Math.PI * r;
+      const dash = (score / 100) * circumference;
+      return (
+        <div style={{ position: 'relative', width: sz, height: sz }}>
+          <svg width={sz} height={sz}>
+            <circle cx={sz/2} cy={sz/2} r={r} fill="none" stroke={C.border} strokeWidth={6} />
+            <circle cx={sz/2} cy={sz/2} r={r} fill="none" stroke={color} strokeWidth={6}
+              strokeDasharray={`${dash} ${circumference}`} transform={`rotate(-90 ${sz/2} ${sz/2})`}
+              strokeLinecap="round" />
+          </svg>
+          <div style={{
+            position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 18, fontWeight: 700, color: C.white,
+          }}>{score}</div>
+        </div>
+      );
+    }
+
+    function ReportingTab() {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* SMSI Scorecard */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 20 }}>Nike SMSI Scorecard</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 20 }}>
+              {SMSI_CATS.map(c => (
+                <div key={c.name} style={{
+                  background: C.bg, borderRadius: 8, padding: 16,
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
+                }}>
+                  <CircularProgress score={c.score} color={c.color} />
+                  <span style={{ color: C.grey, fontSize: 12, fontWeight: 500 }}>{c.name}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{
+              background: C.bg, borderRadius: 8, padding: 16, textAlign: 'center',
+              border: `1px solid ${C.border}`,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+                <span style={{ fontSize: 24, fontWeight: 700, color: C.white }}>SMSI: 67.1</span>
+                <span style={{ color: C.white }}>—</span>
+                <span style={{
+                  fontSize: 13, fontWeight: 600, padding: '3px 12px', borderRadius: 12,
+                  background: `${C.red}22`, color: C.red,
+                }}>Bronze</span>
+              </div>
+              <div style={{ color: C.yellow, fontSize: 13, marginTop: 8 }}>Target: 82 Gold</div>
+            </div>
+          </div>
+
+          {/* KPI Grid */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>KPI Overview — 20 Key Metrics</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10 }}>
+              {KPI_DATA.map(k => (
+                <div key={k.name} style={{
+                  background: C.bg, borderRadius: 8, padding: 8,
+                  display: 'flex', flexDirection: 'column', gap: 4,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: 10, color: C.grey }}>{k.name}</span>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: KPI_COLORS[k.s], flexShrink: 0 }}></div>
+                  </div>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: C.white }}>{k.val}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Report Status */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            {REPORT_BRANDS.map(r => (
+              <div key={r.brand} className="card">
+                <div style={{ fontSize: 16, fontWeight: 700, color: C.white, marginBottom: 10 }}>{r.brand}</div>
+                <div style={{ fontSize: 12, color: C.greyDark, marginBottom: 4 }}>Last: {r.last}</div>
+                <div style={{ fontSize: 12, color: C.grey, marginBottom: 10 }}>Next: {r.next}</div>
+                <span style={{
+                  fontSize: 12, fontWeight: 600, padding: '3px 12px', borderRadius: 12,
+                  background: 'rgba(16,185,129,0.15)', color: C.green,
+                }}>{'\u2713'} Generated</span>
+              </div>
+            ))}
+          </div>
+
+          {/* ROI Box */}
+          <div style={{
+            background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, fontSize: 14, fontWeight: 600,
+          }}>
+            <span style={{ color: C.green }}>{'\u20AC'}52,571/god</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.white }}>Payback: 1.6 mj</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.teal }}>ROI: 1,971%</span>
+          </div>
+        </div>
+      );
+    }
+
+    // ── ROI FOOTER ──────────────────────────────────────────
+    const ROI_MODULES = [
+      { modul: 'CV Quality Control', saving: '\u20AC99,271', payback: '3.0 mj', roi: '205%' },
+      { modul: 'TradeFlow AI', saving: '\u20AC354,734', payback: '0.8 mj', roi: '1,582%' },
+      { modul: 'Knowledge Guardian', saving: '\u20AC20,431', payback: '4.4 mj', roi: '170%' },
+      { modul: 'Demand Forecasting', saving: '\u20AC147,000', payback: '1.5 mj', roi: '720%' },
+      { modul: 'OEE Dashboard', saving: '\u20AC198,000', payback: '1.4 mj', roi: '890%' },
+      { modul: 'Brand Reporting', saving: '\u20AC52,571', payback: '1.6 mj', roi: '1,971%' },
+    ];
+
+    function RoiFooter() {
+      const thStyle = { padding: '10px 14px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: C.grey, textTransform: 'uppercase', borderBottom: `1px solid ${C.border}` };
+      return (
+        <div style={{
+          marginTop: 32, background: C.card, borderTop: `2px solid ${C.teal}`,
+          borderRadius: 12, padding: '24px 32px',
+        }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.white, textTransform: 'uppercase', marginBottom: 16 }}>
+            UKUPNI ROI — Svih 6 AI Modula
+          </div>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={thStyle}>Modul</th>
+                <th style={thStyle}>Godišnja ušteda</th>
+                <th style={thStyle}>Payback</th>
+                <th style={thStyle}>3yr ROI</th>
+                <th style={thStyle}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ROI_MODULES.map((m, i) => (
+                <tr key={m.modul} style={{ background: i % 2 === 0 ? C.card : C.bg }}>
+                  <td style={{ padding: '10px 14px', fontSize: 14, color: C.white, borderBottom: `1px solid ${C.border}` }}>{m.modul}</td>
+                  <td style={{ padding: '10px 14px', fontSize: 14, color: C.green, fontWeight: 600, borderBottom: `1px solid ${C.border}` }}>{m.saving}</td>
+                  <td style={{ padding: '10px 14px', fontSize: 14, color: C.white, borderBottom: `1px solid ${C.border}` }}>{m.payback}</td>
+                  <td style={{ padding: '10px 14px', fontSize: 14, color: C.teal, fontWeight: 600, borderBottom: `1px solid ${C.border}` }}>{m.roi}</td>
+                  <td style={{ padding: '10px 14px', fontSize: 14, color: C.green, borderBottom: `1px solid ${C.border}` }}>{'\uD83D\uDFE2'} Active</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr style={{ background: C.teal }}>
+                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>UKUPNO</td>
+                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>{'\u20AC'}872,007/god</td>
+                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>1.2 mj avg</td>
+                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>614% avg</td>
+                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>Investicija: {'\u20AC'}142,000</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      );
+    }
+
     // ── TAB CONTENT ROUTER ───────────────────────────────────
     function TabContent({ activeTab }) {
       if (activeTab === 'qc') return <QCTab />;
@@ -805,6 +988,7 @@
       if (activeTab === 'knowledge') return <KnowledgeTab />;
       if (activeTab === 'forecast') return <ForecastTab />;
       if (activeTab === 'oee') return <OeeTab />;
+      if (activeTab === 'reporting') return <ReportingTab />;
       return <div style={{ color: C.grey, fontSize: 14 }}>Tab content: {activeTab}</div>;
     }
 
@@ -820,7 +1004,9 @@
           <div style={{ padding: '24px 32px' }}>
             <TabContent activeTab={activeTab} />
           </div>
-          <div id="roi-footer"></div>
+          <div style={{ padding: '0 32px 32px' }}>
+            <RoiFooter />
+          </div>
         </div>
       );
     }
