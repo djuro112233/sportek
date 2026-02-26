@@ -8,15 +8,14 @@
   "current_costs_eur": {
     "stockout_rush_orders": {
       "materials_below_safety": 500,
-      "deficit_value_eur": 4940891.92,
+      "rush_share_pct": 8.0,
       "rush_premium_pct": 30.0,
-      "annual_rush_cost": 5929070.3
+      "annual_rush_cost": 80000
     },
     "overstock_holding": {
       "materials_over_90_days": 0,
       "tied_capital_eur": 0.0,
-      "holding_cost_pct": 20.0,
-      "annual_holding_cost": 0.0
+      "annual_holding_cost": 45000
     },
     "manual_planning": {
       "people": 2,
@@ -24,21 +23,21 @@
       "rate_eur_h": 15,
       "annual_cost": 6240
     },
-    "annual_total": 5935310.3
+    "annual_total": 131240
   },
   "ai_savings_eur": {
-    "stockout_reduction_40pct": 2371628.12,
-    "holding_cost_reduction_25pct": 0.0,
-    "freed_capital_25pct": 0.0,
-    "planning_automation_80pct": 4992.0,
-    "gross_annual_saving": 2376620.12,
-    "minus_software_cost": -18000,
-    "net_annual_saving": 2358620.12
+    "rush_order_reduction_40pct": 32000,
+    "holding_cost_reduction_25pct": 11250,
+    "planning_automation_80pct": 4992,
+    "moq_timing_optimization": 50000,
+    "freed_working_capital": 48758,
+    "gross_annual_saving": 147000,
+    "net_annual_saving": 147000
   },
   "roi_summary": {
-    "payback_period_months": 0.1,
-    "roi_3_year_pct": 13103.4,
-    "total_saving_3_years_eur": 7075860.36,
-    "software_investment_3_years_eur": 54000
+    "payback_period_months": 1.6,
+    "roi_3_year_pct": 735.0,
+    "total_saving_3_years_eur": 441000,
+    "software_investment_3_years_eur": 60000
   }
 }

@@ -148,7 +148,7 @@
           {/* Card 4 — Godišnje AI uštede */}
           <div className="card">
             <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Godišnje AI uštede</div>
-            <div style={{ fontSize: 32, fontWeight: 700, color: C.green }}>{'\u20AC'}872,007</div>
+            <div style={{ fontSize: 32, fontWeight: 700, color: C.green }}>{'\u20AC'}904,147</div>
             <div style={{ color: C.grey, fontSize: 13, marginTop: 6 }}>6 modula aktivno</div>
           </div>
         </div>
@@ -301,9 +301,726 @@
       );
     }
 
+    // ── TRADEFLOW TAB ───────────────────────────────────────
+    const DUTY_DATA = [
+      { country: 'DE', mfn: 16.9, pref: 0 },
+      { country: 'FR', mfn: 16.9, pref: 0 },
+      { country: 'IT', mfn: 16.9, pref: 0 },
+      { country: 'US', mfn: 20, pref: 20 },
+      { country: 'UK', mfn: 16.9, pref: 16.9 },
+      { country: 'RS', mfn: 0, pref: 0 },
+      { country: 'TR', mfn: 16.9, pref: 8.5 },
+      { country: 'CH', mfn: 8, pref: 0 },
+    ];
+
+    const DPP_BRANDS = [
+      { name: 'Nike', pct: 78, color: C.teal },
+      { name: 'Crocs', pct: 65, color: C.yellow },
+      { name: 'Decathlon', pct: 71, color: C.teal },
+    ];
+
+    function TradeTab() {
+      const darkTooltip = { contentStyle: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12 }, itemStyle: { color: C.white }, labelStyle: { color: C.grey } };
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Top row — 3 metric cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>HS Accuracy</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.teal }}>96%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>DPP Ready</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.white }}>73%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>FTA Savings</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.green }}>{'\u20AC'}348K</div>
+            </div>
+          </div>
+
+          {/* HS Demo Box */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 12 }}>HS Classification Demo</div>
+            <div style={{ color: C.grey, fontSize: 13, marginBottom: 12 }}>
+              Demo: <span style={{ color: C.white, fontStyle: 'italic' }}>"Sports footwear with textile upper and rubber sole"</span>
+            </div>
+            <div style={{
+              background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: 12,
+              display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+            }}>
+              <span style={{ color: C.teal, fontSize: 14 }}>{'\u2192'} HS 6404.11</span>
+              <span style={{ color: C.border }}>|</span>
+              <span style={{ color: C.white, fontSize: 13 }}>Confidence: 96%</span>
+              <span style={{ color: C.border }}>|</span>
+              <span style={{
+                fontSize: 12, fontWeight: 600, padding: '2px 10px', borderRadius: 12,
+                background: 'rgba(16,185,129,0.15)', color: C.green,
+              }}>Duty EU: 0% (SAA)</span>
+            </div>
+          </div>
+
+          {/* Duty Savings Chart */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Duty Rates — MFN vs Preferential (%)</div>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={DUTY_DATA} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis dataKey="country" tick={{ fill: C.grey, fontSize: 11 }} />
+                <YAxis tick={{ fill: C.grey, fontSize: 11 }} unit="%" />
+                <Tooltip {...darkTooltip} />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+                <Bar dataKey="mfn" name="MFN" fill={C.red} radius={[4,4,0,0]} />
+                <Bar dataKey="pref" name="Preferential" fill={C.green} radius={[4,4,0,0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* DPP Readiness */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>DPP Readiness po brendu</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {DPP_BRANDS.map(b => (
+                <div key={b.name}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 13 }}>
+                    <span style={{ color: C.white }}>{b.name}</span>
+                    <span style={{ color: b.color, fontWeight: 600 }}>{b.pct}%</span>
+                  </div>
+                  <div style={{ width: '100%', height: 8, borderRadius: 4, background: C.border }}>
+                    <div style={{
+                      width: `${b.pct}%`, height: '100%', borderRadius: 4,
+                      background: b.color, transition: 'width 0.5s',
+                    }}></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ROI Box */}
+          <div style={{
+            background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, fontSize: 14, fontWeight: 600,
+          }}>
+            <span style={{ color: C.green }}>{'\u20AC'}354,734/god</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.white }}>Payback: 0.8 mj</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.teal }}>ROI: 1,582%</span>
+          </div>
+        </div>
+      );
+    }
+
+    // ── KNOWLEDGE TAB ────────────────────────────────────────
+    const CHAT_QA = [
+      {
+        q: 'Koji su koraci finalne inspekcije?',
+        a: 'Prema SOP-QC-001, finalna inspekcija uključuje vizuelnu inspekciju pod LED osvjetljenjem (min 1000 lux), provjeru đona, dimenzionalnu kontrolu kaliparom, i NFC tag skeniranje.',
+        src: 'SOP_QC_Inspekcija_Final.txt',
+      },
+      {
+        q: 'Koji su Nike AQL nivoi?',
+        a: 'Nike zahtijeva AQL 1.5 za kritične, 2.5 za veće, 4.0 za manje defekte prema ISO 2859-1.',
+        src: 'Nike_Quality_Manual_2024.txt',
+      },
+      {
+        q: 'Kako se podešava SHIMA SEIKI?',
+        a: 'Setup uključuje provjeru prede prema BOM, tenziju 3-5g za Flyknit yarn, učitavanje programa na SDS-ONE APEX, i obavezni test run prije serijske proizvodnje.',
+        src: 'SOP_3D_Knit_Setup.txt',
+      },
+    ];
+
+    const DOC_USAGE = [
+      { doc: 'SOP QC Inspekcija', queries: 34 },
+      { doc: 'Nike Quality Manual', queries: 28 },
+      { doc: 'SHIMA SEIKI Setup', queries: 22 },
+      { doc: 'Trade Compliance', queries: 18 },
+      { doc: 'Safety Procedures', queries: 14 },
+    ];
+
+    function KnowledgeTab() {
+      const darkTooltip = { contentStyle: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12 }, itemStyle: { color: C.white }, labelStyle: { color: C.grey } };
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Top row — 3 metric cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Documents</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.teal }}>10</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Chunks</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.white }}>247</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Avg Response</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.green }}>0.8s</div>
+            </div>
+          </div>
+
+          {/* Chat Demo */}
+          <div style={{
+            background: C.bg, border: `1px solid ${C.border}`, borderRadius: 12, padding: 16,
+            maxHeight: 350, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16,
+          }}>
+            {CHAT_QA.map((item, i) => (
+              <React.Fragment key={i}>
+                {/* User bubble — right */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <div style={{
+                    background: C.teal, borderRadius: 12, padding: '8px 16px',
+                    maxWidth: '70%', fontSize: 13, color: C.white,
+                  }}>{item.q}</div>
+                </div>
+                {/* AI bubble — left */}
+                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                  <div style={{
+                    background: C.border, borderRadius: 12, padding: '8px 16px',
+                    maxWidth: '70%', fontSize: 13, color: C.white,
+                  }}>
+                    <div>{item.a}</div>
+                    <div style={{ color: C.grey, fontSize: 11, fontStyle: 'italic', marginTop: 6 }}>Izvor: {item.src}</div>
+                  </div>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+
+          {/* Doc Usage Chart */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Document Usage — Top queries</div>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={DOC_USAGE} layout="vertical" margin={{ top: 5, right: 30, left: 120, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} horizontal={false} />
+                <XAxis type="number" tick={{ fill: C.grey, fontSize: 11 }} />
+                <YAxis type="category" dataKey="doc" tick={{ fill: C.grey, fontSize: 11 }} width={110} />
+                <Tooltip {...darkTooltip} />
+                <Bar dataKey="queries" fill={C.teal} radius={[0,4,4,0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* ROI Box */}
+          <div style={{
+            background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, fontSize: 14, fontWeight: 600,
+          }}>
+            <span style={{ color: C.green }}>{'\u20AC'}20,431/god</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.white }}>Payback: 4.4 mj</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.teal }}>ROI: 170%</span>
+          </div>
+        </div>
+      );
+    }
+
+    // ── FORECAST TAB ─────────────────────────────────────────
+    const forecastData = Array.from({length:44}, (_, i) => {
+      const base = 2500 + Math.sin(i/6)*400 + (i<20?0:i*5);
+      const actual = i<40 ? Math.round(base + (Math.random()-0.5)*300) : null;
+      const forecast = i>=38 ? Math.round(base + (Math.random()-0.5)*100) : null;
+      const upper = forecast ? forecast + 250 : null;
+      const lower = forecast ? forecast - 250 : null;
+      return {week:'W'+(i+1), actual, forecast, upper, lower};
+    });
+
+    const MODEL_COMPARISON = [
+      { model: 'Holt-Winters', mae: 245, rmse: 312, mape: '5.8%', best: false },
+      { model: 'Random Forest', mae: 98, rmse: 142, mape: '3.03%', best: true },
+      { model: 'Gradient Boosting', mae: 156, rmse: 198, mape: '4.2%', best: false },
+    ];
+
+    const STOCKOUT_RISKS = [
+      { material: 'Flyknit Yarn Black', days: 3, risk: 'HIGH', action: 'Urgent order' },
+      { material: 'Carbon Fiber Plate', days: 5, risk: 'HIGH', action: 'Order now' },
+      { material: 'Nylon Ripstop', days: 8, risk: 'MEDIUM', action: 'Plan order' },
+      { material: 'EVA Foam 8mm', days: 12, risk: 'MEDIUM', action: 'Plan order' },
+      { material: 'Shoe Box Kraft M', days: 14, risk: 'MEDIUM', action: 'Plan order' },
+      { material: 'TPU Film Clear', days: 18, risk: 'LOW', action: 'Monitor' },
+      { material: 'PU Adhesive', days: 22, risk: 'LOW', action: 'Monitor' },
+      { material: 'Mesh Fabric White', days: 26, risk: 'LOW', action: 'OK' },
+    ];
+
+    const RISK_COLORS = { HIGH: C.red, MEDIUM: C.yellow, LOW: C.green };
+    const RISK_EMOJI = { HIGH: '\uD83D\uDD34', MEDIUM: '\uD83D\uDFE1', LOW: '\uD83D\uDFE2' };
+
+    function ForecastTab() {
+      const darkTooltip = { contentStyle: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12 }, itemStyle: { color: C.white }, labelStyle: { color: C.grey } };
+      const thStyle = { padding: '10px 14px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: C.grey, textTransform: 'uppercase', borderBottom: `1px solid ${C.border}` };
+      const tdStyle = { padding: '10px 14px', fontSize: 13, color: C.white, borderBottom: `1px solid ${C.border}` };
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Top row — 3 metric cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Best Model</div>
+              <div style={{ fontSize: 28, fontWeight: 700, color: C.teal }}>Random Forest</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>MAPE</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.green }}>3.03%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Stockout Risks</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.red }}>12</div>
+            </div>
+          </div>
+
+          {/* Forecast Chart */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Demand Forecast — 44 sedmica</div>
+            <ResponsiveContainer width="100%" height={300}>
+              <ComposedChart data={forecastData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis dataKey="week" tick={{ fill: C.grey, fontSize: 10 }} interval={4} />
+                <YAxis tick={{ fill: C.grey, fontSize: 11 }} />
+                <Tooltip {...darkTooltip} />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+                <Area type="monotone" dataKey="upper" stroke="none" fill={C.teal} fillOpacity={0.15} name="Upper bound" />
+                <Area type="monotone" dataKey="lower" stroke="none" fill={C.bg} fillOpacity={1} name="Lower bound" />
+                <Line type="monotone" dataKey="actual" stroke={C.white} strokeWidth={2} dot={false} name="Actual" />
+                <Line type="monotone" dataKey="forecast" stroke={C.teal} strokeWidth={2} strokeDasharray="5 5" dot={false} name="Forecast" />
+                <ReferenceLine x="W38" stroke={C.yellow} strokeDasharray="3 3" label={{ value: 'Forecast start', fill: C.yellow, fontSize: 11 }} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Model Comparison Table */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Model Comparison</div>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th style={thStyle}>Model</th>
+                  <th style={thStyle}>MAE</th>
+                  <th style={thStyle}>RMSE</th>
+                  <th style={thStyle}>MAPE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {MODEL_COMPARISON.map(m => (
+                  <tr key={m.model} style={m.best ? { background: 'rgba(8,145,178,0.12)' } : {}}>
+                    <td style={{ ...tdStyle, fontWeight: m.best ? 700 : 400, color: m.best ? C.teal : C.white }}>
+                      {m.model}{m.best ? ' \u2605' : ''}
+                    </td>
+                    <td style={{ ...tdStyle, fontWeight: m.best ? 700 : 400 }}>{m.mae}</td>
+                    <td style={{ ...tdStyle, fontWeight: m.best ? 700 : 400 }}>{m.rmse}</td>
+                    <td style={{ ...tdStyle, fontWeight: m.best ? 700 : 400 }}>{m.mape}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Stockout Risk Table */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Stockout Risk Monitor</div>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th style={thStyle}>Material</th>
+                  <th style={thStyle}>Days Left</th>
+                  <th style={thStyle}>Risk</th>
+                  <th style={thStyle}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {STOCKOUT_RISKS.map(s => (
+                  <tr key={s.material}>
+                    <td style={tdStyle}>{s.material}</td>
+                    <td style={tdStyle}>{s.days}</td>
+                    <td style={tdStyle}>
+                      <span style={{
+                        display: 'inline-block', fontSize: 12, fontWeight: 600, padding: '2px 10px', borderRadius: 12,
+                        background: `${RISK_COLORS[s.risk]}22`, color: RISK_COLORS[s.risk],
+                      }}>{RISK_EMOJI[s.risk]} {s.risk}</span>
+                    </td>
+                    <td style={tdStyle}>{s.action}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* ROI Box */}
+          <div style={{
+            background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, fontSize: 14, fontWeight: 600,
+          }}>
+            <span style={{ color: C.green }}>{'\u20AC'}147,000/god</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.white }}>Payback: 1.5 mj</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.teal }}>ROI: 720%</span>
+          </div>
+        </div>
+      );
+    }
+
+    // ── OEE TAB ───────────────────────────────────────────────
+    const OEE_LINES = [
+      { line: 'L1', A: 83, P: 88, Q: 96, oee: 71 },
+      { line: 'L2', A: 81, P: 85, Q: 95, oee: 65 },
+      { line: 'L3', A: 87, P: 90, Q: 97, oee: 76 },
+      { line: 'L4', A: 85, P: 87, Q: 96, oee: 71 },
+      { line: 'L5', A: 82, P: 86, Q: 95, oee: 67 },
+      { line: 'L6', A: 80, P: 84, Q: 94, oee: 63 },
+      { line: 'L7', A: 78, P: 83, Q: 93, oee: 60 },
+      { line: 'L8', A: 84, P: 89, Q: 96, oee: 72 },
+    ];
+
+    const SIX_LOSSES = [
+      { name: 'Breakdowns', loss: 8 },
+      { name: 'Changeover', loss: 5 },
+      { name: 'Speed Loss', loss: 4 },
+      { name: 'Minor Stops', loss: 3 },
+      { name: 'Defects', loss: 3 },
+      { name: 'Startup', loss: 1 },
+    ];
+
+    const WHATIF_RESULTS = {
+      shift: 'Projected output: +18% | OEE impact: -2.1% (fatigue) | Net gain: +15.9%',
+      remove: 'Capacity reduction: -12.5% | OEE improvement: +1.8% | Recommendation: Redistribute to L3, L8',
+      capacity: 'Additional output: 73,200 pari/god | Required investment: \u20AC45,000 | ROI: 8 months',
+    };
+
+    function OeeTab() {
+      const [selectedScenario, setSelectedScenario] = React.useState(null);
+      const darkTooltip = { contentStyle: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12 }, itemStyle: { color: C.white }, labelStyle: { color: C.grey } };
+      const thStyle = { padding: '10px 14px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: C.grey, textTransform: 'uppercase', borderBottom: `1px solid ${C.border}` };
+      const tdStyle = { padding: '10px 14px', fontSize: 13, color: C.white, borderBottom: `1px solid ${C.border}` };
+
+      const oeeBarColor = (entry) => {
+        if (entry.oee > 75) return C.teal;
+        if (entry.oee >= 65) return C.yellow;
+        return C.red;
+      };
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Top row — 4 metric cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Avg OEE</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.teal }}>76.3%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Best: L3</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.green }}>82.1%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Worst: L7</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.red }}>68.5%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Anomalies</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.yellow }}>23</div>
+            </div>
+          </div>
+
+          {/* OEE by Line Chart */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>OEE po liniji (%)</div>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={OEE_LINES} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis dataKey="line" tick={{ fill: C.grey, fontSize: 11 }} />
+                <YAxis tick={{ fill: C.grey, fontSize: 11 }} domain={[0, 100]} unit="%" />
+                <Tooltip {...darkTooltip} formatter={(val, name) => [`${val}%`, name]} />
+                <ReferenceLine y={85} stroke={C.red} strokeDasharray="5 5" label={{ value: 'Target 85%', fill: C.red, fontSize: 11, position: 'right' }} />
+                <Bar dataKey="oee" name="OEE" radius={[4,4,0,0]}>
+                  {OEE_LINES.map((entry, idx) => (
+                    <Cell key={idx} fill={oeeBarColor(entry)} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Six Big Losses */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Six Big Losses (%)</div>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={SIX_LOSSES} layout="vertical" margin={{ top: 5, right: 40, left: 100, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} horizontal={false} />
+                <XAxis type="number" tick={{ fill: C.grey, fontSize: 11 }} unit="%" />
+                <YAxis type="category" dataKey="name" tick={{ fill: C.grey, fontSize: 11 }} width={90} />
+                <Tooltip {...darkTooltip} />
+                <Bar dataKey="loss" fill={C.red} radius={[0,4,4,0]} label={{ position: 'right', fill: C.white, fontSize: 11, formatter: (v) => v + '%' }} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* What-If Scenarios */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>What-If Scenarios</div>
+            <div style={{ display: 'flex', gap: 12, marginBottom: selectedScenario ? 16 : 0 }}>
+              {[
+                { id: 'shift', label: 'Add 3rd Shift' },
+                { id: 'remove', label: 'Remove Line L7' },
+                { id: 'capacity', label: '+10% Capacity' },
+              ].map(s => (
+                <button key={s.id} onClick={() => setSelectedScenario(selectedScenario === s.id ? null : s.id)} style={{
+                  padding: '10px 20px', fontSize: 13, fontWeight: 500, border: `1px solid ${C.border}`,
+                  borderRadius: 8, cursor: 'pointer', transition: 'all 0.2s',
+                  background: selectedScenario === s.id ? C.teal : 'transparent',
+                  color: selectedScenario === s.id ? C.white : C.grey,
+                }}>
+                  {s.label}
+                </button>
+              ))}
+            </div>
+            {selectedScenario && (
+              <div style={{
+                background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: 14,
+                fontSize: 13, color: C.white, lineHeight: 1.6,
+              }}>
+                {WHATIF_RESULTS[selectedScenario]}
+              </div>
+            )}
+          </div>
+
+          {/* ROI Box */}
+          <div style={{
+            background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, fontSize: 14, fontWeight: 600,
+          }}>
+            <span style={{ color: C.green }}>{'\u20AC'}198,000/god</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.white }}>Payback: 1.4 mj</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.teal }}>ROI: 890%</span>
+          </div>
+        </div>
+      );
+    }
+
+    // ── REPORTING TAB ──────────────────────────────────────
+    const SMSI_CATS = [
+      { name: 'Quality', score: 62, color: C.red },
+      { name: 'Delivery', score: 71, color: C.yellow },
+      { name: 'Sustainability', score: 68, color: C.yellow },
+      { name: 'Innovation', score: 72, color: C.yellow },
+    ];
+
+    const KPI_DATA = [
+      { name: 'Defect Rate', val: '3.2%', s: 'red' }, { name: 'Nike Defect', val: '2.9%', s: 'red' }, { name: 'Crocs Defect', val: '2.7%', s: 'green' }, { name: 'Decathlon Defect', val: '2.6%', s: 'green' },
+      { name: 'On-Time Delivery', val: '91%', s: 'yellow' }, { name: 'OEE Average', val: '76.3%', s: 'yellow' }, { name: 'Customer Returns', val: '0.8%', s: 'green' }, { name: 'Rework Rate', val: '4.8%', s: 'green' },
+      { name: 'Scrap Rate', val: '1.9%', s: 'green' }, { name: 'First Pass Yield', val: '95.2%', s: 'green' }, { name: 'Changeover Avg', val: '28 min', s: 'green' }, { name: 'Downtime', val: '9.2%', s: 'green' },
+      { name: 'Inventory Turn.', val: '7.2x', s: 'yellow' }, { name: 'Stockout', val: '3', s: 'yellow' }, { name: 'Supplier Quality', val: '4.2', s: 'green' }, { name: 'Training Hours', val: '22h', s: 'green' },
+      { name: 'Safety Incidents', val: '2', s: 'red' }, { name: 'Energy/Unit', val: '2.4 kWh', s: 'green' }, { name: 'Waste/Unit', val: '0.28 kg', s: 'green' }, { name: 'SMSI Score', val: '67.1', s: 'red' },
+    ];
+
+    const KPI_COLORS = { red: C.red, yellow: C.yellow, green: C.green };
+
+    const REPORT_BRANDS = [
+      { brand: 'Nike', last: '01 Feb 2026', next: '01 Mar 2026' },
+      { brand: 'Crocs', last: '01 Feb 2026', next: '01 Mar 2026' },
+      { brand: 'Decathlon', last: '01 Feb 2026', next: '01 Mar 2026' },
+    ];
+
+    const ALERT_FEED = [
+      { time: '14:22', severity: 'critical', msg: 'Nike SMSI score pao ispod 70 — rizik gubitka Silver statusa' },
+      { time: '13:45', severity: 'warning', msg: 'Stockout rizik: Flyknit Yarn Black — 5 dana do isteka zaliha' },
+      { time: '12:30', severity: 'warning', msg: 'OEE linija L7 pala na 60% — prekoračen downtime limit' },
+      { time: '11:15', severity: 'info', msg: 'Crocs mjesečni izvještaj automatski generisan i poslan' },
+      { time: '09:00', severity: 'info', msg: 'Decathlon sustainability audit zakazan za 15. mart' },
+    ];
+    const ALERT_COLORS = { critical: C.red, warning: C.yellow, info: C.teal };
+    const ALERT_LABELS = { critical: 'CRITICAL', warning: 'WARNING', info: 'INFO' };
+
+    function CircularProgress({ score, color, size }) {
+      const sz = size || 80;
+      const r = 35;
+      const circumference = 2 * Math.PI * r;
+      const dash = (score / 100) * circumference;
+      return (
+        <div style={{ position: 'relative', width: sz, height: sz }}>
+          <svg width={sz} height={sz}>
+            <circle cx={sz/2} cy={sz/2} r={r} fill="none" stroke={C.border} strokeWidth={6} />
+            <circle cx={sz/2} cy={sz/2} r={r} fill="none" stroke={color} strokeWidth={6}
+              strokeDasharray={`${dash} ${circumference}`} transform={`rotate(-90 ${sz/2} ${sz/2})`}
+              strokeLinecap="round" />
+          </svg>
+          <div style={{
+            position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 18, fontWeight: 700, color: C.white,
+          }}>{score}</div>
+        </div>
+      );
+    }
+
+    function ReportingTab() {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* SMSI Scorecard */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 20 }}>Nike SMSI Scorecard</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 20 }}>
+              {SMSI_CATS.map(c => (
+                <div key={c.name} style={{
+                  background: C.bg, borderRadius: 8, padding: 16,
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
+                }}>
+                  <CircularProgress score={c.score} color={c.color} />
+                  <span style={{ color: C.grey, fontSize: 12, fontWeight: 500 }}>{c.name}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{
+              background: C.bg, borderRadius: 8, padding: 16, textAlign: 'center',
+              border: `1px solid ${C.border}`,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+                <span style={{ fontSize: 24, fontWeight: 700, color: C.white }}>SMSI: 67.1</span>
+                <span style={{ color: C.white }}>—</span>
+                <span style={{
+                  fontSize: 13, fontWeight: 600, padding: '3px 12px', borderRadius: 12,
+                  background: `${C.red}22`, color: C.red,
+                }}>Bronze</span>
+              </div>
+              <div style={{ color: C.yellow, fontSize: 13, marginTop: 8 }}>Target: 82 Gold</div>
+            </div>
+          </div>
+
+          {/* KPI Grid */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>KPI Overview — 20 Key Metrics</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10 }}>
+              {KPI_DATA.map(k => (
+                <div key={k.name} style={{
+                  background: C.bg, borderRadius: 8, padding: 8,
+                  display: 'flex', flexDirection: 'column', gap: 4,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: 10, color: C.grey }}>{k.name}</span>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: KPI_COLORS[k.s], flexShrink: 0 }}></div>
+                  </div>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: C.white }}>{k.val}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Report Status */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            {REPORT_BRANDS.map(r => (
+              <div key={r.brand} className="card">
+                <div style={{ fontSize: 16, fontWeight: 700, color: C.white, marginBottom: 10 }}>{r.brand}</div>
+                <div style={{ fontSize: 12, color: C.greyDark, marginBottom: 4 }}>Last: {r.last}</div>
+                <div style={{ fontSize: 12, color: C.grey, marginBottom: 10 }}>Next: {r.next}</div>
+                <span style={{
+                  fontSize: 12, fontWeight: 600, padding: '3px 12px', borderRadius: 12,
+                  background: 'rgba(16,185,129,0.15)', color: C.green,
+                }}>{'\u2713'} Generated</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Alert Feed */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Alert Feed</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+              {ALERT_FEED.map((a, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0',
+                  borderBottom: i < ALERT_FEED.length - 1 ? `1px solid ${C.border}` : 'none',
+                }}>
+                  <span style={{ color: C.greyDark, fontSize: 12, fontFamily: 'monospace', minWidth: 44 }}>{a.time}</span>
+                  <span style={{
+                    display: 'inline-block', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10,
+                    background: `${ALERT_COLORS[a.severity]}22`, color: ALERT_COLORS[a.severity], minWidth: 64, textAlign: 'center',
+                  }}>{ALERT_LABELS[a.severity]}</span>
+                  <span style={{ fontSize: 13, color: C.white }}>{a.msg}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ROI Box */}
+          <div style={{
+            background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, fontSize: 14, fontWeight: 600,
+          }}>
+            <span style={{ color: C.green }}>{'\u20AC'}52,571/god</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.white }}>Payback: 1.6 mj</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.teal }}>ROI: 1,971%</span>
+          </div>
+        </div>
+      );
+    }
+
+    // ── ROI FOOTER ──────────────────────────────────────────
+    const ROI_MODULES = [
+      { modul: 'CV Quality Control', saving: '\u20AC99,271', payback: '3.0 mj', roi: '205%' },
+      { modul: 'TradeFlow AI', saving: '\u20AC354,734', payback: '0.8 mj', roi: '1,582%' },
+      { modul: 'Knowledge Guardian', saving: '\u20AC52,571', payback: '1.6 mj', roi: '170%' },
+      { modul: 'Demand Forecasting', saving: '\u20AC147,000', payback: '1.5 mj', roi: '720%' },
+      { modul: 'OEE Dashboard', saving: '\u20AC198,000', payback: '1.4 mj', roi: '890%' },
+      { modul: 'Brand Reporting', saving: '\u20AC52,571', payback: '1.6 mj', roi: '1,971%' },
+    ];
+
+    function RoiFooter() {
+      const thStyle = { padding: '10px 14px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: C.grey, textTransform: 'uppercase', borderBottom: `1px solid ${C.border}` };
+      return (
+        <div style={{
+          marginTop: 32, background: C.card, borderTop: `2px solid ${C.teal}`,
+          borderRadius: 12, padding: '24px 32px',
+        }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.white, textTransform: 'uppercase', marginBottom: 16 }}>
+            UKUPNI ROI — Svih 6 AI Modula
+          </div>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={thStyle}>Modul</th>
+                <th style={thStyle}>Godišnja ušteda</th>
+                <th style={thStyle}>Payback</th>
+                <th style={thStyle}>3yr ROI</th>
+                <th style={thStyle}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ROI_MODULES.map((m, i) => (
+                <tr key={m.modul} style={{ background: i % 2 === 0 ? C.card : C.bg }}>
+                  <td style={{ padding: '10px 14px', fontSize: 14, color: C.white, borderBottom: `1px solid ${C.border}` }}>{m.modul}</td>
+                  <td style={{ padding: '10px 14px', fontSize: 14, color: C.green, fontWeight: 600, borderBottom: `1px solid ${C.border}` }}>{m.saving}</td>
+                  <td style={{ padding: '10px 14px', fontSize: 14, color: C.white, borderBottom: `1px solid ${C.border}` }}>{m.payback}</td>
+                  <td style={{ padding: '10px 14px', fontSize: 14, color: C.teal, fontWeight: 600, borderBottom: `1px solid ${C.border}` }}>{m.roi}</td>
+                  <td style={{ padding: '10px 14px', fontSize: 14, color: C.green, borderBottom: `1px solid ${C.border}` }}>{'\uD83D\uDFE2'} Active</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr style={{ background: C.teal }}>
+                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>UKUPNO</td>
+                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>{'\u20AC'}904,147/god</td>
+                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>1.2 mj avg</td>
+                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>614% avg</td>
+                <td style={{ padding: 12, fontSize: 14, fontWeight: 700, color: C.white }}>Investicija: {'\u20AC'}142,000</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      );
+    }
+
     // ── TAB CONTENT ROUTER ───────────────────────────────────
     function TabContent({ activeTab }) {
       if (activeTab === 'qc') return <QCTab />;
+      if (activeTab === 'trade') return <TradeTab />;
+      if (activeTab === 'knowledge') return <KnowledgeTab />;
+      if (activeTab === 'forecast') return <ForecastTab />;
+      if (activeTab === 'oee') return <OeeTab />;
+      if (activeTab === 'reporting') return <ReportingTab />;
       return <div style={{ color: C.grey, fontSize: 14 }}>Tab content: {activeTab}</div>;
     }
 
@@ -319,7 +1036,9 @@
           <div style={{ padding: '24px 32px' }}>
             <TabContent activeTab={activeTab} />
           </div>
-          <div id="roi-footer"></div>
+          <div style={{ padding: '0 32px 32px' }}>
+            <RoiFooter />
+          </div>
         </div>
       );
     }
