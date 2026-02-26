@@ -301,9 +301,228 @@
       );
     }
 
+    // ── TRADEFLOW TAB ───────────────────────────────────────
+    const DUTY_DATA = [
+      { country: 'DE', mfn: 16.9, pref: 0 },
+      { country: 'FR', mfn: 16.9, pref: 0 },
+      { country: 'IT', mfn: 16.9, pref: 0 },
+      { country: 'US', mfn: 20, pref: 20 },
+      { country: 'UK', mfn: 16.9, pref: 16.9 },
+      { country: 'RS', mfn: 0, pref: 0 },
+      { country: 'TR', mfn: 16.9, pref: 8.5 },
+      { country: 'CH', mfn: 8, pref: 0 },
+    ];
+
+    const DPP_BRANDS = [
+      { name: 'Nike', pct: 78, color: C.teal },
+      { name: 'Crocs', pct: 65, color: C.yellow },
+      { name: 'Decathlon', pct: 71, color: C.teal },
+    ];
+
+    function TradeTab() {
+      const darkTooltip = { contentStyle: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12 }, itemStyle: { color: C.white }, labelStyle: { color: C.grey } };
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Top row — 3 metric cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>HS Accuracy</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.teal }}>96%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>DPP Ready</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.white }}>73%</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>FTA Savings</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.green }}>{'\u20AC'}348K</div>
+            </div>
+          </div>
+
+          {/* HS Demo Box */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 12 }}>HS Classification Demo</div>
+            <div style={{ color: C.grey, fontSize: 13, marginBottom: 12 }}>
+              Demo: <span style={{ color: C.white, fontStyle: 'italic' }}>"Sports footwear with textile upper and rubber sole"</span>
+            </div>
+            <div style={{
+              background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: 12,
+              display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+            }}>
+              <span style={{ color: C.teal, fontSize: 14 }}>{'\u2192'} HS 6404.11</span>
+              <span style={{ color: C.border }}>|</span>
+              <span style={{ color: C.white, fontSize: 13 }}>Confidence: 96%</span>
+              <span style={{ color: C.border }}>|</span>
+              <span style={{
+                fontSize: 12, fontWeight: 600, padding: '2px 10px', borderRadius: 12,
+                background: 'rgba(16,185,129,0.15)', color: C.green,
+              }}>Duty EU: 0% (SAA)</span>
+            </div>
+          </div>
+
+          {/* Duty Savings Chart */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Duty Rates — MFN vs Preferential (%)</div>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={DUTY_DATA} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis dataKey="country" tick={{ fill: C.grey, fontSize: 11 }} />
+                <YAxis tick={{ fill: C.grey, fontSize: 11 }} unit="%" />
+                <Tooltip {...darkTooltip} />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+                <Bar dataKey="mfn" name="MFN" fill={C.red} radius={[4,4,0,0]} />
+                <Bar dataKey="pref" name="Preferential" fill={C.green} radius={[4,4,0,0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* DPP Readiness */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>DPP Readiness po brendu</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {DPP_BRANDS.map(b => (
+                <div key={b.name}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 13 }}>
+                    <span style={{ color: C.white }}>{b.name}</span>
+                    <span style={{ color: b.color, fontWeight: 600 }}>{b.pct}%</span>
+                  </div>
+                  <div style={{ width: '100%', height: 8, borderRadius: 4, background: C.border }}>
+                    <div style={{
+                      width: `${b.pct}%`, height: '100%', borderRadius: 4,
+                      background: b.color, transition: 'width 0.5s',
+                    }}></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ROI Box */}
+          <div style={{
+            background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, fontSize: 14, fontWeight: 600,
+          }}>
+            <span style={{ color: C.green }}>{'\u20AC'}354,734/god</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.white }}>Payback: 0.8 mj</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.teal }}>ROI: 1,582%</span>
+          </div>
+        </div>
+      );
+    }
+
+    // ── KNOWLEDGE TAB ────────────────────────────────────────
+    const CHAT_QA = [
+      {
+        q: 'Koji su koraci finalne inspekcije?',
+        a: 'Prema SOP-QC-001, finalna inspekcija uključuje vizuelnu inspekciju pod LED osvjetljenjem (min 1000 lux), provjeru đona, dimenzionalnu kontrolu kaliparom, i NFC tag skeniranje.',
+        src: 'SOP_QC_Inspekcija_Final.txt',
+      },
+      {
+        q: 'Koji su Nike AQL nivoi?',
+        a: 'Nike zahtijeva AQL 1.5 za kritične, 2.5 za veće, 4.0 za manje defekte prema ISO 2859-1.',
+        src: 'Nike_Quality_Manual_2024.txt',
+      },
+      {
+        q: 'Kako se podešava SHIMA SEIKI?',
+        a: 'Setup uključuje provjeru prede prema BOM, tenziju 3-5g za Flyknit yarn, učitavanje programa na SDS-ONE APEX, i obavezni test run prije serijske proizvodnje.',
+        src: 'SOP_3D_Knit_Setup.txt',
+      },
+    ];
+
+    const DOC_USAGE = [
+      { doc: 'SOP QC Inspekcija', queries: 34 },
+      { doc: 'Nike Quality Manual', queries: 28 },
+      { doc: 'SHIMA SEIKI Setup', queries: 22 },
+      { doc: 'Trade Compliance', queries: 18 },
+      { doc: 'Safety Procedures', queries: 14 },
+    ];
+
+    function KnowledgeTab() {
+      const darkTooltip = { contentStyle: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12 }, itemStyle: { color: C.white }, labelStyle: { color: C.grey } };
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Top row — 3 metric cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Documents</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.teal }}>10</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Chunks</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.white }}>247</div>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Avg Response</div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: C.green }}>0.8s</div>
+            </div>
+          </div>
+
+          {/* Chat Demo */}
+          <div style={{
+            background: C.bg, border: `1px solid ${C.border}`, borderRadius: 12, padding: 16,
+            maxHeight: 350, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16,
+          }}>
+            {CHAT_QA.map((item, i) => (
+              <React.Fragment key={i}>
+                {/* User bubble — right */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <div style={{
+                    background: C.teal, borderRadius: 12, padding: '8px 16px',
+                    maxWidth: '70%', fontSize: 13, color: C.white,
+                  }}>{item.q}</div>
+                </div>
+                {/* AI bubble — left */}
+                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                  <div style={{
+                    background: C.border, borderRadius: 12, padding: '8px 16px',
+                    maxWidth: '70%', fontSize: 13, color: C.white,
+                  }}>
+                    <div>{item.a}</div>
+                    <div style={{ color: C.grey, fontSize: 11, fontStyle: 'italic', marginTop: 6 }}>Izvor: {item.src}</div>
+                  </div>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+
+          {/* Doc Usage Chart */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Document Usage — Top queries</div>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={DOC_USAGE} layout="vertical" margin={{ top: 5, right: 30, left: 120, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} horizontal={false} />
+                <XAxis type="number" tick={{ fill: C.grey, fontSize: 11 }} />
+                <YAxis type="category" dataKey="doc" tick={{ fill: C.grey, fontSize: 11 }} width={110} />
+                <Tooltip {...darkTooltip} />
+                <Bar dataKey="queries" fill={C.teal} radius={[0,4,4,0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* ROI Box */}
+          <div style={{
+            background: '#0F2A1F', border: `1px solid ${C.green}`, borderRadius: 8, padding: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, fontSize: 14, fontWeight: 600,
+          }}>
+            <span style={{ color: C.green }}>{'\u20AC'}20,431/god</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.white }}>Payback: 4.4 mj</span>
+            <span style={{ color: C.border }}>|</span>
+            <span style={{ color: C.teal }}>ROI: 170%</span>
+          </div>
+        </div>
+      );
+    }
+
     // ── TAB CONTENT ROUTER ───────────────────────────────────
     function TabContent({ activeTab }) {
       if (activeTab === 'qc') return <QCTab />;
+      if (activeTab === 'trade') return <TradeTab />;
+      if (activeTab === 'knowledge') return <KnowledgeTab />;
       return <div style={{ color: C.grey, fontSize: 14 }}>Tab content: {activeTab}</div>;
     }
 
