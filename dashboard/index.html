@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,7 +8,8 @@
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
 
   <!-- React 18 -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -16,21 +18,42 @@
   <!-- Babel for JSX -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+  <!-- PropTypes (required by Recharts UMD) -->
+  <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+
   <!-- Recharts -->
   <script src="https://unpkg.com/recharts@2.10.3/umd/Recharts.js"></script>
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background: #0F172A;
       color: #F8FAFC;
       overflow-x: hidden;
     }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0F172A; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0F172A;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
 
     .card {
       background: #1E293B;
@@ -40,6 +63,7 @@
     }
   </style>
 </head>
+
 <body>
   <div id="root"></div>
 
@@ -191,23 +215,23 @@
       { name: 'Đon', count: 350, cum: 100 },
     ];
 
-    const MONTHS = ['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
+    const MONTHS = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'];
     const DEFECT_TREND = MONTHS.map((m, i) => ({
       month: m,
-      Nike:     [4.1,3.9,3.7,3.5,3.6,3.5,3.3,3.1,3.0,3.1,3.0,2.9][i],
-      Crocs:    [3.8,3.6,3.5,3.4,3.5,3.4,3.2,3.0,2.9,3.0,2.8,2.7][i],
-      Decathlon: [3.5,3.4,3.3,3.2,3.3,3.2,3.0,2.9,2.8,2.9,2.7,2.6][i],
+      Nike: [4.1, 3.9, 3.7, 3.5, 3.6, 3.5, 3.3, 3.1, 3.0, 3.1, 3.0, 2.9][i],
+      Crocs: [3.8, 3.6, 3.5, 3.4, 3.5, 3.4, 3.2, 3.0, 2.9, 3.0, 2.8, 2.7][i],
+      Decathlon: [3.5, 3.4, 3.3, 3.2, 3.3, 3.2, 3.0, 2.9, 2.8, 2.9, 2.7, 2.6][i],
     }));
 
     const FEED_DATA = [
-      { time: '14:32:05', img: 'IMG_4821.jpg', result: 'OK',     confidence: 99.1 },
-      { time: '14:32:02', img: 'IMG_4820.jpg', result: 'OK',     confidence: 97.8 },
+      { time: '14:32:05', img: 'IMG_4821.jpg', result: 'OK', confidence: 99.1 },
+      { time: '14:32:02', img: 'IMG_4820.jpg', result: 'OK', confidence: 97.8 },
       { time: '14:31:58', img: 'IMG_4819.jpg', result: 'DEFECT', confidence: 94.5 },
-      { time: '14:31:55', img: 'IMG_4818.jpg', result: 'OK',     confidence: 98.2 },
-      { time: '14:31:51', img: 'IMG_4817.jpg', result: 'OK',     confidence: 96.7 },
+      { time: '14:31:55', img: 'IMG_4818.jpg', result: 'OK', confidence: 98.2 },
+      { time: '14:31:51', img: 'IMG_4817.jpg', result: 'OK', confidence: 96.7 },
       { time: '14:31:48', img: 'IMG_4816.jpg', result: 'DEFECT', confidence: 91.3 },
-      { time: '14:31:44', img: 'IMG_4815.jpg', result: 'OK',     confidence: 99.4 },
-      { time: '14:31:40', img: 'IMG_4814.jpg', result: 'OK',     confidence: 98.0 },
+      { time: '14:31:44', img: 'IMG_4815.jpg', result: 'OK', confidence: 99.4 },
+      { time: '14:31:40', img: 'IMG_4814.jpg', result: 'OK', confidence: 98.0 },
     ];
 
     function QCTab() {
@@ -241,7 +265,7 @@
                 <YAxis yAxisId="left" tick={{ fill: C.grey, fontSize: 11 }} />
                 <YAxis yAxisId="right" orientation="right" domain={[0, 100]} tick={{ fill: C.grey, fontSize: 11 }} unit="%" />
                 <Tooltip {...darkTooltip} />
-                <Bar yAxisId="left" dataKey="count" fill={C.teal} radius={[4,4,0,0]} />
+                <Bar yAxisId="left" dataKey="count" fill={C.teal} radius={[4, 4, 0, 0]} />
                 <Line yAxisId="right" type="monotone" dataKey="cum" stroke={C.yellow} strokeWidth={2} dot={{ fill: C.yellow, r: 3 }} />
               </ComposedChart>
             </ResponsiveContainer>
@@ -320,7 +344,42 @@
     ];
 
     function TradeTab() {
+      const [hsInput, setHsInput] = React.useState('');
+      const [classifyLoading, setClassifyLoading] = React.useState(false);
+      const [classifyResult, setClassifyResult] = React.useState(null);
       const darkTooltip = { contentStyle: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12 }, itemStyle: { color: C.white }, labelStyle: { color: C.grey } };
+
+      async function classifyHS() {
+        const desc = hsInput.trim();
+        if (!desc) return;
+        setClassifyLoading(true);
+        setClassifyResult(null);
+        try {
+          const res = await fetch('http://localhost:8000/api/trade/classify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ description: desc })
+          });
+          if (!res.ok) throw new Error('API error');
+          const data = await res.json();
+          setClassifyResult(data);
+        } catch (e) {
+          setClassifyResult({
+            hs_code_6: '6404.11',
+            hs_code_10: '6404.11.0090',
+            description: desc,
+            confidence: 0.96,
+            chapter: 'Chapter 64: Footwear',
+            duty_rate_mfn: '16.9%',
+            preferential_rate: '0% (SAA)',
+            _fallback: true
+          });
+        }
+        setClassifyLoading(false);
+      }
+
+      const confPct = classifyResult ? Math.round((classifyResult.confidence || 0) * 100) : 0;
+      const confColor = confPct > 80 ? C.green : confPct > 50 ? C.yellow : C.red;
 
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -340,25 +399,102 @@
             </div>
           </div>
 
-          {/* HS Demo Box */}
+          {/* HS Interactive Classification */}
           <div className="card">
-            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 12 }}>HS Classification Demo</div>
-            <div style={{ color: C.grey, fontSize: 13, marginBottom: 12 }}>
-              Demo: <span style={{ color: C.white, fontStyle: 'italic' }}>"Sports footwear with textile upper and rubber sole"</span>
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 12 }}>HS Classification — Live Demo</div>
+            <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+              <input
+                value={hsInput}
+                onChange={e => setHsInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && classifyHS()}
+                placeholder="Unesite opis proizvoda... (npr. mens leather boot waterproof)"
+                style={{
+                  flex: 1, padding: '10px 16px', fontSize: 14, borderRadius: 8,
+                  background: C.card, border: `1px solid ${C.border}`, color: C.white,
+                  outline: 'none', transition: 'border 0.2s',
+                }}
+                onFocus={e => e.target.style.borderColor = C.teal}
+                onBlur={e => e.target.style.borderColor = C.border}
+              />
+              <button
+                onClick={classifyHS}
+                disabled={classifyLoading || !hsInput.trim()}
+                style={{
+                  padding: '10px 24px', fontSize: 14, fontWeight: 600, borderRadius: 8,
+                  background: classifyLoading ? C.border : C.teal, color: C.white,
+                  border: 'none', cursor: classifyLoading ? 'wait' : 'pointer',
+                  transition: 'all 0.2s', opacity: !hsInput.trim() ? 0.5 : 1,
+                }}
+                onMouseEnter={e => { if (!classifyLoading) e.target.style.background = C.tealLight; }}
+                onMouseLeave={e => { if (!classifyLoading) e.target.style.background = C.teal; }}
+              >
+                {classifyLoading ? '\u23F3 Classifying...' : '\u2192 Classify'}
+              </button>
             </div>
-            <div style={{
-              background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: 12,
-              display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
-            }}>
-              <span style={{ color: C.teal, fontSize: 14 }}>{'\u2192'} HS 6404.11</span>
-              <span style={{ color: C.border }}>|</span>
-              <span style={{ color: C.white, fontSize: 13 }}>Confidence: 96%</span>
-              <span style={{ color: C.border }}>|</span>
-              <span style={{
-                fontSize: 12, fontWeight: 600, padding: '2px 10px', borderRadius: 12,
-                background: 'rgba(16,185,129,0.15)', color: C.green,
-              }}>Duty EU: 0% (SAA)</span>
-            </div>
+
+            {/* Loading pulse */}
+            {classifyLoading && (
+              <div style={{ textAlign: 'center', padding: 20 }}>
+                <div style={{ display: 'inline-block', width: 40, height: 40, borderRadius: '50%', border: `3px solid ${C.border}`, borderTopColor: C.teal, animation: 'spin 1s linear infinite' }} />
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+              </div>
+            )}
+
+            {/* Result display */}
+            {classifyResult && !classifyLoading && (
+              <div style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 12, padding: 20 }}>
+                {classifyResult._fallback && (
+                  <div style={{ fontSize: 11, color: C.yellow, marginBottom: 12, padding: '4px 10px', background: `${C.yellow}15`, borderRadius: 6, display: 'inline-block' }}>
+                    {'\u26A0'} API nedostupan — prikazani su demo podaci
+                  </div>
+                )}
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
+                  <div>
+                    <div style={{ color: C.grey, fontSize: 11, textTransform: 'uppercase', marginBottom: 4 }}>HS Code</div>
+                    <div style={{ fontSize: 32, fontWeight: 700, color: C.teal }}>{classifyResult.hs_code_6 || classifyResult.hs_code || 'N/A'}</div>
+                  </div>
+                  {classifyResult.hs_code_10 && (
+                    <div>
+                      <div style={{ color: C.grey, fontSize: 11, textTransform: 'uppercase', marginBottom: 4 }}>Full Code</div>
+                      <div style={{ fontSize: 18, fontWeight: 500, color: C.white }}>{classifyResult.hs_code_10}</div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Confidence bar */}
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <span style={{ color: C.grey, fontSize: 12 }}>Confidence</span>
+                    <span style={{ color: confColor, fontSize: 13, fontWeight: 600 }}>{confPct}%</span>
+                  </div>
+                  <div style={{ width: '100%', height: 8, borderRadius: 4, background: C.border }}>
+                    <div style={{ width: `${confPct}%`, height: '100%', borderRadius: 4, background: `linear-gradient(90deg, ${C.teal}, ${confColor})`, transition: 'width 0.5s' }} />
+                  </div>
+                </div>
+
+                {/* Details row */}
+                <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                  {classifyResult.chapter && (
+                    <div style={{ background: C.card, borderRadius: 8, padding: '8px 14px', fontSize: 13 }}>
+                      <span style={{ color: C.grey }}>{'\uD83D\uDCDA'} </span>
+                      <span style={{ color: C.white }}>{classifyResult.chapter}</span>
+                    </div>
+                  )}
+                  {classifyResult.duty_rate_mfn && (
+                    <div style={{ background: `${C.red}15`, borderRadius: 8, padding: '8px 14px', fontSize: 13 }}>
+                      <span style={{ color: C.grey }}>MFN: </span>
+                      <span style={{ color: C.red, fontWeight: 600 }}>{classifyResult.duty_rate_mfn}</span>
+                    </div>
+                  )}
+                  {classifyResult.preferential_rate && (
+                    <div style={{ background: `${C.green}15`, borderRadius: 8, padding: '8px 14px', fontSize: 13 }}>
+                      <span style={{ color: C.grey }}>Pref: </span>
+                      <span style={{ color: C.green, fontWeight: 600 }}>{classifyResult.preferential_rate}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Duty Savings Chart */}
@@ -371,8 +507,8 @@
                 <YAxis tick={{ fill: C.grey, fontSize: 11 }} unit="%" />
                 <Tooltip {...darkTooltip} />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="mfn" name="MFN" fill={C.red} radius={[4,4,0,0]} />
-                <Bar dataKey="pref" name="Preferential" fill={C.green} radius={[4,4,0,0]} />
+                <Bar dataKey="mfn" name="MFN" fill={C.red} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="pref" name="Preferential" fill={C.green} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -441,11 +577,43 @@
     ];
 
     function KnowledgeTab() {
+      const [questionInput, setQuestionInput] = React.useState('');
+      const [askLoading, setAskLoading] = React.useState(false);
+      const [askResult, setAskResult] = React.useState(null);
       const darkTooltip = { contentStyle: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12 }, itemStyle: { color: C.white }, labelStyle: { color: C.grey } };
+
+      async function askQuestion() {
+        const q = questionInput.trim();
+        if (!q) return;
+        setAskLoading(true);
+        setAskResult(null);
+        try {
+          const res = await fetch('http://localhost:8000/api/knowledge/ask', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question: q })
+          });
+          if (!res.ok) throw new Error('API error');
+          const data = await res.json();
+          setAskResult(data);
+        } catch (e) {
+          setAskResult({
+            answer: 'Na osnovu internih dokumenata: ' + q + ' \u2014 Za detaljniji odgovor, sistem treba pristup va\u0161im stvarnim SOP dokumentima.',
+            sources: [{ file: 'SOP_QC_Inspekcija_Final.txt', relevance: 0.85 }],
+            confidence: 0.75,
+            response_time_ms: 120,
+            _fallback: true
+          });
+        }
+        setAskLoading(false);
+      }
+
+      const askConfPct = askResult ? Math.round((askResult.confidence || 0) * 100) : 0;
+      const askConfColor = askConfPct > 70 ? C.green : askConfPct > 40 ? C.yellow : C.red;
 
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {/* Top row — 3 metric cards */}
+          {/* Top row */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
             <div className="card" style={{ textAlign: 'center' }}>
               <div style={{ color: C.grey, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', marginBottom: 8 }}>Documents</div>
@@ -461,26 +629,18 @@
             </div>
           </div>
 
-          {/* Chat Demo */}
+          {/* Hardcoded Chat Demo */}
           <div style={{
             background: C.bg, border: `1px solid ${C.border}`, borderRadius: 12, padding: 16,
             maxHeight: 350, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16,
           }}>
             {CHAT_QA.map((item, i) => (
               <React.Fragment key={i}>
-                {/* User bubble — right */}
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <div style={{
-                    background: C.teal, borderRadius: 12, padding: '8px 16px',
-                    maxWidth: '70%', fontSize: 13, color: C.white,
-                  }}>{item.q}</div>
+                  <div style={{ background: C.teal, borderRadius: 12, padding: '8px 16px', maxWidth: '70%', fontSize: 13, color: C.white }}>{item.q}</div>
                 </div>
-                {/* AI bubble — left */}
                 <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                  <div style={{
-                    background: C.border, borderRadius: 12, padding: '8px 16px',
-                    maxWidth: '70%', fontSize: 13, color: C.white,
-                  }}>
+                  <div style={{ background: C.border, borderRadius: 12, padding: '8px 16px', maxWidth: '70%', fontSize: 13, color: C.white }}>
                     <div>{item.a}</div>
                     <div style={{ color: C.grey, fontSize: 11, fontStyle: 'italic', marginTop: 6 }}>Izvor: {item.src}</div>
                   </div>
@@ -489,16 +649,91 @@
             ))}
           </div>
 
+          {/* Live Chat Input */}
+          <div className="card">
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 12 }}>Knowledge Guardian {'\u2014'} Live Q&A</div>
+            <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+              <input
+                value={questionInput}
+                onChange={e => setQuestionInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && askQuestion()}
+                placeholder="Postavite pitanje... (npr. Koji su koraci finalne inspekcije?)"
+                style={{
+                  flex: 1, padding: '10px 16px', fontSize: 14, borderRadius: 8,
+                  background: C.card, border: `1px solid ${C.border}`, color: C.white,
+                  outline: 'none', transition: 'border 0.2s',
+                }}
+                onFocus={e => e.target.style.borderColor = C.teal}
+                onBlur={e => e.target.style.borderColor = C.border}
+              />
+              <button
+                onClick={askQuestion}
+                disabled={askLoading || !questionInput.trim()}
+                style={{
+                  padding: '10px 24px', fontSize: 14, fontWeight: 600, borderRadius: 8,
+                  background: askLoading ? C.border : C.teal, color: C.white,
+                  border: 'none', cursor: askLoading ? 'wait' : 'pointer',
+                  transition: 'all 0.2s', opacity: !questionInput.trim() ? 0.5 : 1,
+                }}
+                onMouseEnter={e => { if (!askLoading) e.target.style.background = C.tealLight; }}
+                onMouseLeave={e => { if (!askLoading) e.target.style.background = C.teal; }}
+              >
+                {askLoading ? '\u23F3 Pitam...' : '\uD83D\uDCAC Pitaj'}
+              </button>
+            </div>
+
+            {askLoading && (
+              <div style={{ textAlign: 'center', padding: 20 }}>
+                <div style={{ display: 'inline-block', width: 40, height: 40, borderRadius: '50%', border: `3px solid ${C.border}`, borderTopColor: C.teal, animation: 'spin 1s linear infinite' }} />
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                <div style={{ color: C.grey, fontSize: 12, marginTop: 8 }}>Pretra{'\u017E'}ujem dokumente...</div>
+              </div>
+            )}
+
+            {askResult && !askLoading && (
+              <div style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 12, padding: 20 }}>
+                {askResult._fallback && (
+                  <div style={{ fontSize: 11, color: C.yellow, marginBottom: 12, padding: '4px 10px', background: `${C.yellow}15`, borderRadius: 6, display: 'inline-block' }}>
+                    {'\u26A0'} API nedostupan {'\u2014'} prikazan je demo odgovor
+                  </div>
+                )}
+                <div style={{ fontSize: 14, color: C.white, lineHeight: 1.7, marginBottom: 16 }}>{askResult.answer}</div>
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 14, flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, padding: '3px 12px', borderRadius: 12, background: `${askConfColor}22`, color: askConfColor }}>
+                    Confidence: {askConfPct}%
+                  </span>
+                  {askResult.response_time_ms && (
+                    <span style={{ fontSize: 12, color: C.grey }}>{'\u23F1'} {(askResult.response_time_ms / 1000).toFixed(2)}s</span>
+                  )}
+                </div>
+                {askResult.sources && askResult.sources.length > 0 && (
+                  <div>
+                    <div style={{ color: C.grey, fontSize: 11, textTransform: 'uppercase', marginBottom: 8 }}>Izvori</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      {askResult.sources.map((s, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 12px', background: C.card, borderRadius: 8, fontSize: 12 }}>
+                          <span style={{ color: C.teal }}>{'\uD83D\uDCC4'}</span>
+                          <span style={{ color: C.white }}>{s.file || s.source_file || 'Unknown'}</span>
+                          {s.relevance && <span style={{ color: C.grey, marginLeft: 'auto' }}>relevance: {Math.round(s.relevance * 100)}%</span>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* Doc Usage Chart */}
           <div className="card">
-            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Document Usage — Top queries</div>
+            <div style={{ color: C.grey, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginBottom: 16 }}>Document Usage {'\u2014'} Top queries</div>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={DOC_USAGE} layout="vertical" margin={{ top: 5, right: 30, left: 120, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke={C.border} horizontal={false} />
                 <XAxis type="number" tick={{ fill: C.grey, fontSize: 11 }} />
                 <YAxis type="category" dataKey="doc" tick={{ fill: C.grey, fontSize: 11 }} width={110} />
                 <Tooltip {...darkTooltip} />
-                <Bar dataKey="queries" fill={C.teal} radius={[0,4,4,0]} />
+                <Bar dataKey="queries" fill={C.teal} radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -519,13 +754,13 @@
     }
 
     // ── FORECAST TAB ─────────────────────────────────────────
-    const forecastData = Array.from({length:44}, (_, i) => {
-      const base = 2500 + Math.sin(i/6)*400 + (i<20?0:i*5);
-      const actual = i<40 ? Math.round(base + (Math.random()-0.5)*300) : null;
-      const forecast = i>=38 ? Math.round(base + (Math.random()-0.5)*100) : null;
+    const forecastData = Array.from({ length: 44 }, (_, i) => {
+      const base = 2500 + Math.sin(i / 6) * 400 + (i < 20 ? 0 : i * 5);
+      const actual = i < 40 ? Math.round(base + (Math.random() - 0.5) * 300) : null;
+      const forecast = i >= 38 ? Math.round(base + (Math.random() - 0.5) * 100) : null;
       const upper = forecast ? forecast + 250 : null;
       const lower = forecast ? forecast - 250 : null;
-      return {week:'W'+(i+1), actual, forecast, upper, lower};
+      return { week: 'W' + (i + 1), actual, forecast, upper, lower };
     });
 
     const MODEL_COMPARISON = [
@@ -733,7 +968,7 @@
                 <YAxis tick={{ fill: C.grey, fontSize: 11 }} domain={[0, 100]} unit="%" />
                 <Tooltip {...darkTooltip} formatter={(val, name) => [`${val}%`, name]} />
                 <ReferenceLine y={85} stroke={C.red} strokeDasharray="5 5" label={{ value: 'Target 85%', fill: C.red, fontSize: 11, position: 'right' }} />
-                <Bar dataKey="oee" name="OEE" radius={[4,4,0,0]}>
+                <Bar dataKey="oee" name="OEE" radius={[4, 4, 0, 0]}>
                   {OEE_LINES.map((entry, idx) => (
                     <Cell key={idx} fill={oeeBarColor(entry)} />
                   ))}
@@ -751,7 +986,7 @@
                 <XAxis type="number" tick={{ fill: C.grey, fontSize: 11 }} unit="%" />
                 <YAxis type="category" dataKey="name" tick={{ fill: C.grey, fontSize: 11 }} width={90} />
                 <Tooltip {...darkTooltip} />
-                <Bar dataKey="loss" fill={C.red} radius={[0,4,4,0]} label={{ position: 'right', fill: C.white, fontSize: 11, formatter: (v) => v + '%' }} />
+                <Bar dataKey="loss" fill={C.red} radius={[0, 4, 4, 0]} label={{ position: 'right', fill: C.white, fontSize: 11, formatter: (v) => v + '%' }} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -842,9 +1077,9 @@
       return (
         <div style={{ position: 'relative', width: sz, height: sz }}>
           <svg width={sz} height={sz}>
-            <circle cx={sz/2} cy={sz/2} r={r} fill="none" stroke={C.border} strokeWidth={6} />
-            <circle cx={sz/2} cy={sz/2} r={r} fill="none" stroke={color} strokeWidth={6}
-              strokeDasharray={`${dash} ${circumference}`} transform={`rotate(-90 ${sz/2} ${sz/2})`}
+            <circle cx={sz / 2} cy={sz / 2} r={r} fill="none" stroke={C.border} strokeWidth={6} />
+            <circle cx={sz / 2} cy={sz / 2} r={r} fill="none" stroke={color} strokeWidth={6}
+              strokeDasharray={`${dash} ${circumference}`} transform={`rotate(-90 ${sz / 2} ${sz / 2})`}
               strokeLinecap="round" />
           </svg>
           <div style={{
@@ -1043,8 +1278,13 @@
       );
     }
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    try {
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    } catch (e) {
+      document.getElementById('root').innerHTML = '<pre style="color:red;padding:20px;">' + e.message + '\n' + e.stack + '</pre>';
+    }
   </script>
 </body>
+
 </html>
