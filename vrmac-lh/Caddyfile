@@ -1,0 +1,25 @@
+# Reverse proxy with automatic TLS (Let's Encrypt when DOMAIN is a public hostname; internal CA for localhost).
+# No access log is configured on purpose: access logs would contain client IP addresses.
+{$DOMAIN:localhost} {
+	encode gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "microphone=(self), geolocation=(self), camera=()"
+		-Server
+	}
+
+	handle /api/* {
+		request_body {
+			max_size 25MB
+		}
+		reverse_proxy api:8000
+	}
+
+	handle {
+		reverse_proxy web:3000
+	}
+}

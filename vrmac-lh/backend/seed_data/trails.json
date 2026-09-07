@@ -1,0 +1,55 @@
+{
+  "_note": "Sample trail segments. Geometry is APPROXIMATE (hand-drawn), to be replaced by K4's surveyed GPX.",
+  "segments": [
+    {
+      "slug": "donja-gornja-lastva",
+      "status": "approved",
+      "name_local": "Staza Donja Lastva – Gornja Lastva",
+      "name_en": "Trail Donja Lastva – Gornja Lastva",
+      "description_local": "Pješačka staza od obale u Donjoj Lastvi uzbrdo do Gornje Lastve. Kaldrma i zemljani put kroz maslinjake. Trag je približan.",
+      "description_en": "Footpath from the shore in Donja Lastva uphill to Gornja Lastva. Cobbled and dirt path through olive groves. Track is approximate.",
+      "from_name": "Donja Lastva",
+      "to_name": "Gornja Lastva",
+      "gpx_file": "donja-gornja-lastva.gpx",
+      "difficulty": "moderate",
+      "coords_approximate": true,
+      "source": "sample GPX drawn from public map data — approximate, to be replaced by surveyed track (K4)"
+    },
+    {
+      "slug": "gornja-lastva-sv-vid",
+      "status": "approved",
+      "name_local": "Staza Gornja Lastva – Sveti Vid",
+      "name_en": "Trail Gornja Lastva – St Vitus",
+      "description_local": "Uspon od sela do crkve Svetog Vida na 440 m. Trag je približan.",
+      "description_en": "Ascent from the village to the church of St Vitus at 440 m. Track is approximate.",
+      "from_name": "Gornja Lastva",
+      "to_name": "Sveti Vid",
+      "gpx_file": null,
+      "geometry": {"type": "LineString", "coordinates": [[18.6919, 42.4425, 300], [18.6940, 42.4438, 340], [18.6962, 42.4452, 390], [18.6985, 42.4468, 440]]},
+      "difficulty": "moderate",
+      "coords_approximate": true,
+      "source": "sample — approximate, to be surveyed"
+    },
+    {
+      "slug": "sample-draft-segment",
+      "status": "draft",
+      "name_local": "UZORAK (nacrt): Staza Tivat – Donja Lastva",
+      "name_en": "SAMPLE (draft): Trail Tivat – Donja Lastva",
+      "description_local": "Uzorak segmenta u statusu nacrta — ne smije biti vidljiv posjetiocima.",
+      "description_en": "Sample segment in draft status — must not be visible to visitors.",
+      "from_name": "Tivat",
+      "to_name": "Donja Lastva",
+      "gpx_file": null,
+      "geometry": {"type": "LineString", "coordinates": [[18.7060, 42.4350, 3], [18.6950, 42.4380, 4], [18.6850, 42.4400, 8]]},
+      "difficulty": "easy",
+      "coords_approximate": true,
+      "source": "sample — draft (validation-gate test)"
+    }
+  ],
+  "reports": [
+    {"segment_slug": "donja-gornja-lastva", "status": "approved", "lat": 42.4412, "lng": 18.6885, "condition": "good", "note_local": "Staza prohodna, kaldrma suva. (uzorak)", "note_en": "Trail passable, cobbles dry. (sample)", "reported_at": "2026-08-20T09:00:00Z", "reporter_role": "ambassador"},
+    {"segment_slug": "donja-gornja-lastva", "status": "approved", "lat": 42.4419, "lng": 18.6904, "condition": "caution", "note_local": "Oborene grane poslije nevremena, prolaz moguć uz oprez. (uzorak)", "note_en": "Fallen branches after a storm, passable with care. (sample)", "reported_at": "2026-09-01T16:30:00Z", "reporter_role": "ambassador"},
+    {"segment_slug": "gornja-lastva-sv-vid", "status": "approved", "lat": 42.4452, "lng": 18.6962, "condition": "good", "note_local": "Označena staza, dobro vidljive oznake. (uzorak)", "note_en": "Marked trail, waymarks clearly visible. (sample)", "reported_at": "2026-08-28T11:00:00Z", "reporter_role": "ambassador"},
+    {"segment_slug": "donja-gornja-lastva", "status": "draft", "lat": 42.4408, "lng": 18.6872, "condition": "blocked", "note_local": "UZORAK NACRTA: neprovjerena prijava zatvaranja staze.", "note_en": "SAMPLE DRAFT: unverified report of a trail closure.", "reported_at": "2026-09-05T08:00:00Z", "reporter_role": "visitor"}
+  ]
+}

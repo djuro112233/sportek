@@ -1,0 +1,2 @@
+# Optional: in-process multilingual embeddings instead of Ollama (EMBEDDINGS_PROVIDER=sentence-transformers)
+sentence-transformers>=3.0

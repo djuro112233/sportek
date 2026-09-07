@@ -1,0 +1,12 @@
+{
+  "name": "Vrmac Living Heritage — Host (prototype)",
+  "short_name": "VRMAC-LH",
+  "description": "Prototype built for the SMART ERA application, September–October 2026. Sample data.",
+  "start_url": "/host",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fbfaf7",
+  "theme_color": "#2f6b4f",
+  "lang": "cnr",
+  "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

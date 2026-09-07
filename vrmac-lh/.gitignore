@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.egg-info/
+# Node
+node_modules/
+.next/
+out/
+# Env & secrets
+.env
+!.env.example
+# Runtime data
+data/
+uploads/
+exports/*.json
+exports/*.jsonld
+!exports/.gitkeep
+caddy_data/

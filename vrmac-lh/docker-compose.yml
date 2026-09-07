@@ -1,0 +1,162 @@
+# VRMAC-LH prototype — runs on a 2 vCPU / 4 GB VPS without GPU (small models).
+# Prototype built for the SMART ERA application, September–October 2026. Sample data.
+name: vrmac-lh
+
+x-backend-env: &backend-env
+  env_file: .env
+  environment:
+    DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-vrmac}:${POSTGRES_PASSWORD:-vrmac}@db:5432/${POSTGRES_DB:-vrmac}
+    REDIS_URL: redis://redis:6379/0
+    OLLAMA_URL: http://ollama:11434
+    UPLOAD_DIR: /data/uploads
+    EXPORT_DIR: /data/exports
+    HF_HOME: /models
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vrmac}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vrmac}
+      POSTGRES_DB: ${POSTGRES_DB:-vrmac}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vrmac} -d ${POSTGRES_DB:-vrmac}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "64mb"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["local-llm"]
+    volumes:
+      - ollama:/root/.ollama
+    environment:
+      OLLAMA_KEEP_ALIVE: 10m
+      OLLAMA_NUM_PARALLEL: 1
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    deploy:
+      resources:
+        limits:
+          memory: 2200M
+
+  ollama-pull:
+    image: ollama/ollama:latest
+    profiles: ["local-llm"]
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        ollama pull "${LLM_MODEL:-qwen2.5:1.5b}" && ollama pull "${EMBEDDINGS_MODEL:-paraphrase-multilingual}"
+    restart: "no"
+
+  api:
+    build: ./backend
+    <<: *backend-env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - appdata:/data
+      - models:/models
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request;urllib.request.urlopen('http://localhost:8000/api/health')\""]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+    deploy:
+      resources:
+        limits:
+          memory: 1200M
+
+  worker:
+    build: ./backend
+    <<: *backend-env
+    command: ["python", "-m", "app.cli", "worker"]
+    depends_on:
+      api:
+        condition: service_healthy
+    volumes:
+      - appdata:/data
+      - models:/models
+    deploy:
+      resources:
+        limits:
+          memory: 1200M
+
+  scheduler:
+    build: ./backend
+    <<: *backend-env
+    command: ["python", "-m", "app.cli", "kpi-schedule", "--hour", "2"]
+    depends_on:
+      api:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        API_INTERNAL_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+  caddy:
+    image: caddy:2-alpine
+    profiles: ["proxy"]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+      - api
+
+volumes:
+  pgdata:
+  ollama:
+  appdata:
+  models:
+  caddy_data:
+  caddy_config:

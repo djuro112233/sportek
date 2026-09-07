@@ -1,0 +1,73 @@
+{
+  "_note": "Four fictional providers, clearly marked 'sample'. Photos are SVG placeholders. Prices are illustrative.",
+  "listings": [
+    {
+      "slug": "konoba-maslina-sample",
+      "host_email": "host1@example.org",
+      "status": "approved",
+      "category": "food",
+      "title_local": "Konoba Maslina (uzorak)",
+      "title_en": "Konoba Maslina — tavern (sample)",
+      "description_local": "Porodična konoba u Gornjoj Lastvi sa domaćim jelima, maslinovim uljem i pogledom na zaliv. Uzorak — nije stvarni ponuđač.",
+      "description_en": "Family tavern in Gornja Lastva with home-cooked dishes, olive oil and a view of the bay. Sample — not a real provider.",
+      "price_min": 12, "price_max": 30, "currency": "EUR",
+      "season": "May–October",
+      "capacity": 24,
+      "accessibility_local": "Terasa pristupačna bez stepenica; toalet nije prilagođen.",
+      "accessibility_en": "Terrace reachable without steps; toilet not adapted.",
+      "lat": 42.4423, "lng": 18.6922, "coords_approximate": true,
+      "photo_url": "/api/static/konoba-maslina.svg"
+    },
+    {
+      "slug": "apartman-lastva-sample",
+      "host_email": "host2@example.org",
+      "status": "approved",
+      "category": "accommodation",
+      "title_local": "Apartman Lastva (uzorak)",
+      "title_en": "Apartment Lastva (sample)",
+      "description_local": "Renovirana kamena kuća u Donjoj Lastvi, 300 m od mora, polazna tačka za stazu ka Gornjoj Lastvi. Uzorak — nije stvarni ponuđač.",
+      "description_en": "Renovated stone house in Donja Lastva, 300 m from the sea, starting point of the trail to Gornja Lastva. Sample — not a real provider.",
+      "price_min": 45, "price_max": 90, "currency": "EUR",
+      "season": "all-year",
+      "capacity": 4,
+      "accessibility_local": "Prizemlje bez stepenica; širina vrata 80 cm.",
+      "accessibility_en": "Ground floor without steps; door width 80 cm.",
+      "lat": 42.4402, "lng": 18.6848, "coords_approximate": true,
+      "photo_url": "/api/static/apartman-lastva.svg"
+    },
+    {
+      "slug": "vodic-vrmac-sample",
+      "host_email": "host3@example.org",
+      "status": "approved",
+      "category": "guiding",
+      "title_local": "Vođena šetnja Vrmcem (uzorak)",
+      "title_en": "Guided walk on Vrmac (sample)",
+      "description_local": "Vođena šetnja od Donje Lastve preko Gornje Lastve do Svetog Vida, sa pričom o crkvama, maslinama i fešti. Uzorak — nije stvarni ponuđač.",
+      "description_en": "Guided walk from Donja Lastva via Gornja Lastva to St Vitus, with stories about the churches, olives and the festival. Sample — not a real provider.",
+      "price_min": 15, "price_max": 25, "currency": "EUR",
+      "season": "March–November",
+      "capacity": 12,
+      "accessibility_local": "Staza nije pristupačna za kolica; umjeren uspon.",
+      "accessibility_en": "Trail not wheelchair accessible; moderate ascent.",
+      "lat": 42.4400, "lng": 18.6852, "coords_approximate": true,
+      "photo_url": "/api/static/vodic-vrmac.svg"
+    },
+    {
+      "slug": "radionica-maslinovog-ulja-sample",
+      "host_email": "host4@example.org",
+      "status": "approved",
+      "category": "craft",
+      "title_local": "Radionica maslinovog ulja (uzorak)",
+      "title_en": "Olive-oil workshop (sample)",
+      "description_local": "Radionica o tradicionalnoj preradi maslina u Lastvi, uz degustaciju. Uzorak — nije stvarni ponuđač.",
+      "description_en": "Workshop on traditional olive processing in Lastva, with tasting. Sample — not a real provider.",
+      "price_min": 20, "price_max": 35, "currency": "EUR",
+      "season": "October–December",
+      "capacity": 10,
+      "accessibility_local": "Prostor u prizemlju; jedan stepenik na ulazu.",
+      "accessibility_en": "Ground-floor room; one step at the entrance.",
+      "lat": 42.4421, "lng": 18.6914, "coords_approximate": true,
+      "photo_url": "/api/static/radionica-ulja.svg"
+    }
+  ]
+}

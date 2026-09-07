@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VRMAC-LH prototype (sample, approximate)" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Donja Lastva – Gornja Lastva (sample)</name>
+    <desc>APPROXIMATE hand-drawn track for the SMART ERA prototype. To be replaced by K4's surveyed GPX.</desc>
+  </metadata>
+  <trk>
+    <name>Donja Lastva – Gornja Lastva</name>
+    <trkseg>
+      <trkpt lat="42.4400" lon="18.6850"><ele>8</ele></trkpt>
+      <trkpt lat="42.4403" lon="18.6858"><ele>22</ele></trkpt>
+      <trkpt lat="42.4406" lon="18.6866"><ele>45</ele></trkpt>
+      <trkpt lat="42.4408" lon="18.6873"><ele>68</ele></trkpt>
+      <trkpt lat="42.4411" lon="18.6880"><ele>95</ele></trkpt>
+      <trkpt lat="42.4413" lon="18.6887"><ele>120</ele></trkpt>
+      <trkpt lat="42.4415" lon="18.6893"><ele>150</ele></trkpt>
+      <trkpt lat="42.4417" lon="18.6898"><ele>180</ele></trkpt>
+      <trkpt lat="42.4419" lon="18.6903"><ele>210</ele></trkpt>
+      <trkpt lat="42.4421" lon="18.6908"><ele>240</ele></trkpt>
+      <trkpt lat="42.4422" lon="18.6912"><ele>265</ele></trkpt>
+      <trkpt lat="42.4424" lon="18.6916"><ele>285</ele></trkpt>
+      <trkpt lat="42.4425" lon="18.6919"><ele>300</ele></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
