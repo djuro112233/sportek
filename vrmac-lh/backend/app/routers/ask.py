@@ -15,7 +15,7 @@ The visitor's ``session_id`` / ``device_id`` are accepted only to be **pseudonym
 """
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Response
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -65,6 +65,7 @@ class AskResponse(BaseModel):
 @limiter.limit(settings.rate_limit_ask)
 def ask_endpoint(
     request: Request,
+    response: Response,
     payload: AskIn,
     db_public: Session = Depends(get_public_db),
     db_app: Session = Depends(get_db),

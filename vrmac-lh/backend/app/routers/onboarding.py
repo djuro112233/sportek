@@ -152,7 +152,7 @@ def save_upload(file: UploadFile, destination: Path) -> int:
                 total += len(chunk)
                 if total > svc.MAX_AUDIO_BYTES:
                     raise HTTPException(
-                        status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                        status_code=status.HTTP_413_CONTENT_TOO_LARGE,
                         detail=f"the recording is larger than {svc.MAX_AUDIO_BYTES // (1024 * 1024)} MB",
                     )
                 out.write(chunk)
@@ -161,7 +161,7 @@ def save_upload(file: UploadFile, destination: Path) -> int:
         raise
     if total == 0:
         destination.unlink(missing_ok=True)
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="the recording is empty")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail="the recording is empty")
     return total
 
 

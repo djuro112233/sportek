@@ -196,14 +196,22 @@ SYSTEM_PROMPT = (
 
 # --- language, tokens, stems -----------------------------------------------------------------
 def detect_lang(text: str) -> str:
-    """``cnr`` when the text has Montenegrin diacritics or more Montenegrin than English function
-    words, otherwise ``en``. Deterministic; ties resolve to ``en``."""
-    if any(ch in _DIACRITICS for ch in text):
-        return LOCAL_LANG
+    """Detect the question's language deterministically.
+
+    Function words decide first: they are the strongest signal and cannot appear by accident.
+    Diacritics only break a tie, and then only when they occur in a **lower-case** word — an English
+    question naming Lovćen or Njegoš carries diacritics in proper nouns alone and must stay English.
+    Ties with no such evidence resolve to ``en``.
+    """
     tokens = normalize(text).split()
     cnr_hits = sum(1 for t in tokens if t in _CNR_HINTS)
     en_hits = sum(1 for t in tokens if t in _EN_HINTS)
-    return LOCAL_LANG if cnr_hits > en_hits else "en"
+    if cnr_hits != en_hits:
+        return LOCAL_LANG if cnr_hits > en_hits else "en"
+    lowercase_diacritic = any(
+        not word[:1].isupper() and any(ch in _DIACRITICS for ch in word) for word in text.split()
+    )
+    return LOCAL_LANG if lowercase_diacritic else "en"
 
 
 def normalize_lang(lang: str | None) -> str | None:
@@ -353,6 +361,10 @@ class RetrievedChunk:
         )
 
 
+#: A stem counts as decisive when its IDF weight is within this fraction of the question's maximum.
+DECISIVE_TOLERANCE = 0.999
+
+
 def min_similarity() -> float:
     """``RAG_MIN_SIMILARITY`` when set, else the provider default.
 
@@ -419,6 +431,23 @@ def rank_candidates(candidates: list[RetrievedChunk], q_stems: list[str], idf: I
         c.coverage, c.coverage_plain = coverage_of(q_stems, c.stems, idf)
     candidates.sort(key=lambda c: (-c.rank_score, -c.similarity, c.slug, c.chunk_lang, c.chunk_index))
     return candidates[:top_k]
+
+
+def decisive_stems(q_stems: list[str], idf: Idf) -> list[str]:
+    """The question's rarest stems, reported in ``debug`` for auditing.
+
+    They are **not** used as a gate. Requiring their literal presence was measured on the 60-question
+    set and rejected: the rarest stem of a question is usually a framing word the descriptive corpus
+    never uses ("dana", "nalazi", "day", "year"), so the rule refused 11 of 40 answerable questions
+    while the withholding rate stayed at 100 %. See docs/grounding.md, "Relevance versus attribution".
+    """
+    if not q_stems:
+        return []
+    weights = {s: idf.weight(s) for s in set(q_stems)}
+    top = max(weights.values(), default=0.0)
+    if top <= 0:
+        return []
+    return sorted(s for s, w in weights.items() if w >= top * DECISIVE_TOLERANCE)
 
 
 def _passes_gate(c: RetrievedChunk, min_sim: float, min_cov: float) -> bool:
@@ -802,7 +831,18 @@ def ask(
     debug: dict[str, Any] = {"lang": lang, "mode": "llm" if llm_enabled() else "extractive"}
     vector = get_embeddings().embed([question])[0]
 
-    def withhold(reason: str, confidence: float, *, message: str | None = None, paused: bool = False) -> AskResult:
+    def withhold(
+        reason: str,
+        confidence: float,
+        *,
+        message: str | None = None,
+        paused: bool = False,
+        support: list[SupportResult] | None = None,
+        dropped: int = 0,
+    ) -> AskResult:
+        """Refuse. ``support``/``dropped`` carry the per-sentence verdicts when the refusal is the
+        result of the support check, so the response and the review sheet show why."""
+        support = support or []
         msg = message or refusal_message
         if paused:
             emit_event(
@@ -816,13 +856,13 @@ def ask(
         )
         _record_answer(
             db_app, lang=lang, question=question, result_answer="", answered=False, refusal_reason=reason,
-            confidence=confidence, citations=[], support=[], dropped=0, served_from_cache=False,
+            confidence=confidence, citations=[], support=support, dropped=dropped, served_from_cache=False,
         )
         db_app.commit()
         return AskResult(
-            answered=False, answer=None, citations=[], confidence=confidence, support=[], dropped_sentences=0,
-            refusal_reason=reason, refusal_message=msg, served_from_cache=False, event="answer_withheld",
-            lang=lang, provider=providers_info(), debug=debug,
+            answered=False, answer=None, citations=[], confidence=confidence, support=support,
+            dropped_sentences=dropped, refusal_reason=reason, refusal_message=msg, served_from_cache=False,
+            event="answer_withheld", lang=lang, provider=providers_info(), debug=debug,
         )
 
     def serve(
@@ -905,6 +945,7 @@ def ask(
     best = candidates[0]
     confidence = round(0.5 * best.similarity + 0.5 * best.coverage, 3)
     debug["confidence"] = confidence
+    debug["decisive_stems"] = decisive_stems(q_stems, idf)
     if not _passes_gate(best, min_sim, min_cov):
         reason = REFUSAL_NO_SOURCE if best.coverage_plain == 0.0 else REFUSAL_LOW_CONFIDENCE
         return withhold(reason, confidence)
@@ -925,7 +966,9 @@ def ask(
     answer, cited, dropped = _prune_to_supported(verdicts, cited)
     debug.update({"dropped_sentences": dropped, "support_provider": settings.support_check_provider})
     if not answer or not cited:
-        return withhold(REFUSAL_UNSUPPORTED, confidence)
+        # Every sentence failed the attributability check: refuse, and keep the verdicts so the
+        # response and the monthly review sheet show exactly what was dropped and why.
+        return withhold(REFUSAL_UNSUPPORTED, confidence, support=support, dropped=dropped)
 
     citations = [_citation(chunk, lang, excerpt) for chunk, excerpt in cited]
     if use_cache:

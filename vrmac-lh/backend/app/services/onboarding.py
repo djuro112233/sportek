@@ -123,7 +123,7 @@ def parse_captured_at(value: str | None) -> datetime | None:
         dt = datetime.fromisoformat(str(value).strip().replace("Z", "+00:00"))
     except ValueError as exc:
         raise HTTPException(
-            status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=http_status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail="captured_at must be an ISO 8601 timestamp",
         ) from exc
     return _aware(dt)
@@ -198,7 +198,7 @@ def start_session(
     lang = (language or settings.local_language).strip().lower()
     if lang not in (settings.local_language, "en"):
         raise HTTPException(
-            status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=http_status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"language must be '{settings.local_language}' or 'en'",
         )
 
@@ -215,7 +215,7 @@ def start_session(
         wanted = content.parse_uuid(host_user_id) if host_user_id else None
         if wanted is None:
             raise HTTPException(
-                status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=http_status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="host_user_id is required when an ambassador onboards on behalf of a host",
             )
         host = db.get(User, wanted)
@@ -393,7 +393,7 @@ def set_transcript(db: Session, session: OnboardingSession, text: str) -> Onboar
     text = (text or "").strip()
     if not text:
         raise HTTPException(
-            status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY, detail="text must not be empty"
+            status_code=http_status.HTTP_422_UNPROCESSABLE_CONTENT, detail="text must not be empty"
         )
     now = utcnow()
     session.transcript = text
@@ -510,7 +510,7 @@ def confirm(
         )
     if not bool(consent_in.get("given")):
         raise HTTPException(
-            status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=http_status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail="the host must give consent before the listing is created",
         )
 
@@ -518,7 +518,7 @@ def confirm(
     unconfirmed = unconfirmed_groups(confirmed_fields)
     if unconfirmed:
         raise HTTPException(
-            status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=http_status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=(
                 "the host must confirm every structured field the model never fills; "
                 f"not confirmed: {', '.join(unconfirmed)}"
@@ -528,14 +528,14 @@ def confirm(
     category = str(listing_in.get("category") or "other").strip().lower()
     if category not in LISTING_CATEGORIES:
         raise HTTPException(
-            status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=http_status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"category must be one of: {', '.join(LISTING_CATEGORIES)}",
         )
 
     village = resolve_village(db, listing_in.get("village")) or _village_of(db, session)
     if village is None:
         raise HTTPException(
-            status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=http_status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail="village is required (slug or id) — every listing belongs to a village of the territory",
         )
 
@@ -543,7 +543,7 @@ def confirm(
     title_en = " ".join(str(listing_in.get("title_en") or "").split())
     if not title_local and not title_en:
         raise HTTPException(
-            status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY, detail="title_local is required"
+            status_code=http_status.HTTP_422_UNPROCESSABLE_CONTENT, detail="title_local is required"
         )
 
     draft = session.draft or {}
@@ -642,30 +642,44 @@ def confirm(
 # --------------------------------------------------------------------------------------------------
 # 7. publication timing
 # --------------------------------------------------------------------------------------------------
-def mark_published(db: Session, listing: Listing) -> OnboardingSession | None:
+def session_of_listing(db: Session, listing: Listing) -> OnboardingSession | None:
+    """The onboarding session a listing came from, or ``None`` for a manually created listing."""
+    if getattr(listing, "onboarding_session_id", None):
+        session = db.get(OnboardingSession, listing.onboarding_session_id)
+        if session is not None:
+            return session
+    return db.scalars(select(OnboardingSession).where(OnboardingSession.listing_id == listing.id)).first()
+
+
+def mark_published(db: Session, listing: Listing) -> float | None:
     """Close the *elapsed* clock when a listing born of an onboarding session is approved.
 
     ``services/validation.transition`` calls this after it has set ``published_at`` on an approved
-    listing; it flushes and leaves the commit to that transition. Returns ``None`` for a listing that
-    did not come from the voice wizard.
+    listing, and puts the returned value into the ``entry_approved`` event as
+    ``elapsed_to_publish_seconds`` (KPI K08). This function flushes and leaves the commit to that
+    transition.
+
+    Returns the elapsed wall-clock seconds from the start of the session to publication — which
+    includes waiting for the validator and is therefore **never** compared with the active-authoring
+    target — or ``None`` for a listing that did not come from the voice wizard. Calling it twice for
+    the same listing is a no-op.
     """
-    session: OnboardingSession | None = None
-    if getattr(listing, "onboarding_session_id", None):
-        session = db.get(OnboardingSession, listing.onboarding_session_id)
-    if session is None:
-        session = db.scalars(
-            select(OnboardingSession).where(OnboardingSession.listing_id == listing.id)
-        ).first()
+    session = session_of_listing(db, listing)
     if session is None:
         return None
+    already_published = session.published_at is not None and session.status == "published"
     published = _aware(listing.published_at) or utcnow()
-    session.published_at = published
-    session.elapsed_to_publish_seconds = _since_start(session, published)
+    session.published_at = session.published_at if already_published else published
+    session.elapsed_to_publish_seconds = _since_start(session, session.published_at)
     session.status = "published"
     db.flush()
-    append_timing_log(session, event="published")
-    log.info("onboarding session %s published after %.0f s elapsed", session.id, session.elapsed_to_publish_seconds)
-    return session
+    if not already_published:
+        append_timing_log(session, event="published")
+        log.info(
+            "onboarding session %s published after %.0f s elapsed (active %.0f s)",
+            session.id, session.elapsed_to_publish_seconds, session.active_seconds or 0.0,
+        )
+    return session.elapsed_to_publish_seconds
 
 
 # --------------------------------------------------------------------------------------------------

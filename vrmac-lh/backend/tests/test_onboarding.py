@@ -564,21 +564,26 @@ def test_every_event_is_attached_to_the_village(flow):
 # --------------------------------------------------------------------------------------------------
 @pytest.fixture(scope="session")
 def published(flow):
-    """The validator approves; ``mark_published`` closes the elapsed clock.
+    """The validator approves the listing; ``mark_published`` closes the elapsed clock.
 
-    ``services/validation.transition`` is the shared module (owned elsewhere) that must call
-    ``onboarding.mark_published`` after it publishes a listing — here it is called explicitly.
+    ``services/validation.transition`` (a shared module owned by another claim) calls
+    ``onboarding.mark_published`` itself and puts the returned seconds into the ``entry_approved``
+    event as ``elapsed_to_publish_seconds`` (KPI K08). It is also called explicitly here, both to
+    exercise this module on its own and to prove the call is idempotent.
     """
     with SessionLocal() as db:
         validator = db.scalars(select(User).where(User.email == VALIDATOR)).one()
         listing = validation.transition(
             db, "listing", flow["listing_id"], "approved", actor=validator, note="test: sample listing"
         )
-        session = svc.mark_published(db, listing)
+        elapsed = svc.mark_published(db, listing)
         db.commit()
+        session = db.get(OnboardingSession, uuid.UUID(flow["session_id"]))
+        assert elapsed == pytest.approx(session.elapsed_to_publish_seconds)
         return {
             "listing_id": listing.id,
             "published_at": listing.published_at,
+            "elapsed_to_publish_seconds": elapsed,
             "session": svc.session_state(session),
         }
 
@@ -608,6 +613,21 @@ def test_a_listing_that_did_not_come_from_the_wizard_is_left_alone(db):
     ).first()
     assert other is not None
     assert svc.mark_published(db, other) is None
+    assert svc.session_of_listing(db, other) is None
+
+
+def test_the_approval_event_carries_the_elapsed_time_to_publication(flow, published):
+    """KPI K08 reads ``elapsed_to_publish_seconds`` off the ``entry_approved`` event."""
+    with SessionLocal() as db:
+        approved = db.scalars(
+            select(Event).where(
+                Event.event_type == "entry_approved", Event.item_id == uuid.UUID(flow["listing_id"])
+            )
+        ).all()
+    assert len(approved) == 1
+    assert approved[0].properties["elapsed_to_publish_seconds"] == pytest.approx(
+        published["elapsed_to_publish_seconds"]
+    )
 
 
 # --------------------------------------------------------------------------------------------------
