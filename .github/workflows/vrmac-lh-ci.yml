@@ -27,6 +27,11 @@ jobs:
     env:
       TEST_DATABASE_URL: postgresql+psycopg://vrmac:vrmac@127.0.0.1:5432/vrmac_test
       SECRET_KEY: ci-only-secret-key-0123456789
+      EVENT_PSEUDONYM_KEY: ci-only-pseudonym-key-0123456789
+      # Offline providers: no model download in CI, deterministic results.
+      TEST_EMBEDDINGS_PROVIDER: hash
+      TEST_LLM_PROVIDER: none
+      TEST_SUPPORT_CHECK_PROVIDER: lexical
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -35,7 +40,7 @@ jobs:
           cache: pip
           cache-dependency-path: vrmac-lh/backend/requirements*.txt
       - run: pip install -r requirements.txt -r requirements-dev.txt
-      - name: Run tests (validation gate, grounding 30 questions, onboarding timing, KPIs, NGSI-LD export)
+      - name: Run tests (validation gate, grounding per language, onboarding timing, KPIs, NGSI-LD export)
         run: pytest -q --junitxml=../docs/test-results/junit.xml
       - name: Upload test results
         if: always()

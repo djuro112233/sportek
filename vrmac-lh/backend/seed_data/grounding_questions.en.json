@@ -1,0 +1,277 @@
+{
+  "_note": "Grounding test set for the launch language en. 20 answerable + 10 unanswerable questions, mirroring the cnr set so the two launch languages are compared on the same facts. The expected answers were prepared independently from the retrieval pipeline, by reading the seed facts (seed_data/heritage_entries.json) and the public sources cited there; they are the reference a human uses when checking the run, never an input to the assistant. 'expected_slugs' lists the approved entries that may legitimately be cited. The unanswerable block contains (a) three questions whose answer exists ONLY in non-approved sample entries (draft golden bell 1687, reviewed old school 41 pupils, rejected Roman villa 1999), (b) two questions about Gornji Stoliv, seeded as an unverified draft, and (c) five off-topic questions outside the territory and the mandate of the assistant.",
+  "lang": "en",
+  "questions": [
+    {
+      "id": "en-a01",
+      "lang": "en",
+      "question": "From which century is the church of St Mary in Gornja Lastva?",
+      "expected": "answer",
+      "expected_slugs": ["crkva-sv-marije", "gornja-lastva"],
+      "expected_answer": "The church of St Mary in Gornja Lastva dates from the 14th century.",
+      "note": "Dating of St Mary."
+    },
+    {
+      "id": "en-a02",
+      "lang": "en",
+      "question": "From which century is the church of St Vitus above Gornja Lastva?",
+      "expected": "answer",
+      "expected_slugs": ["crkva-sv-vida", "gornja-lastva"],
+      "expected_answer": "The church of St Vitus is from the 9th century.",
+      "note": "Dating of St Vitus."
+    },
+    {
+      "id": "en-a03",
+      "lang": "en",
+      "question": "At what altitude does the church of St Vitus stand?",
+      "expected": "answer",
+      "expected_slugs": ["crkva-sv-vida", "gornja-lastva", "vrmac-plateau"],
+      "expected_answer": "At 440 metres above sea level.",
+      "note": "Altitude 440 m."
+    },
+    {
+      "id": "en-a04",
+      "lang": "en",
+      "question": "On which day is the Lastovska fešta held?",
+      "expected": "answer",
+      "expected_slugs": ["lastovska-festa", "gornja-lastva"],
+      "expected_answer": "Every first Saturday of August.",
+      "note": "Date rule of the festival."
+    },
+    {
+      "id": "en-a05",
+      "lang": "en",
+      "question": "Since which year has the Lastovska fešta been held?",
+      "expected": "answer",
+      "expected_slugs": ["lastovska-festa", "gornja-lastva"],
+      "expected_answer": "Since 1974.",
+      "note": "Continuity since 1974."
+    },
+    {
+      "id": "en-a06",
+      "lang": "en",
+      "question": "When will the 53rd Lastovska fešta take place?",
+      "expected": "answer",
+      "expected_slugs": ["lastovska-festa"],
+      "expected_answer": "On Saturday, 7 August 2027.",
+      "note": "Next edition of the festival."
+    },
+    {
+      "id": "en-a07",
+      "lang": "en",
+      "question": "Since which year have the Landscape Days been held?",
+      "expected": "answer",
+      "expected_slugs": ["dani-pejzaza", "gornja-lastva"],
+      "expected_answer": "Since 2015.",
+      "note": "Dani pejzaža since 2015."
+    },
+    {
+      "id": "en-a08",
+      "lang": "en",
+      "question": "What is the name of the culture house in Gornja Lastva?",
+      "expected": "answer",
+      "expected_slugs": ["dom-kulture-ilija-markovic", "gornja-lastva"],
+      "expected_answer": "The culture house \"Ilija Marković\".",
+      "note": "Name of the culture house."
+    },
+    {
+      "id": "en-a09",
+      "lang": "en",
+      "question": "Until which year did the olive mills operate in Gornja Lastva?",
+      "expected": "answer",
+      "expected_slugs": ["mlinovi-za-masline", "gornja-lastva"],
+      "expected_answer": "Until 1945.",
+      "note": "Olive mills until 1945."
+    },
+    {
+      "id": "en-a10",
+      "lang": "en",
+      "question": "How many permanent residents did Gornja Lastva have in the 2011 census?",
+      "expected": "answer",
+      "expected_slugs": ["popis-2011", "gornja-lastva"],
+      "expected_answer": "None: the 2011 census recorded no resident population in Gornja Lastva.",
+      "note": "2011 census — no residents."
+    },
+    {
+      "id": "en-a11",
+      "lang": "en",
+      "question": "Where is Gornja Lastva located?",
+      "expected": "answer",
+      "expected_slugs": ["gornja-lastva", "vrmac-plateau"],
+      "expected_answer": "On the slopes of the Vrmac hill, above Donja Lastva and the town of Tivat in the Bay of Kotor.",
+      "note": "Location of the village."
+    },
+    {
+      "id": "en-a12",
+      "lang": "en",
+      "question": "Which municipality do Gornja and Donja Lastva belong to?",
+      "expected": "answer",
+      "expected_slugs": ["tivat", "gornja-lastva", "donja-lastva"],
+      "expected_answer": "The municipality of Tivat.",
+      "note": "Municipality of Tivat."
+    },
+    {
+      "id": "en-a13",
+      "lang": "en",
+      "question": "What is Donja Lastva and where is it?",
+      "expected": "answer",
+      "expected_slugs": ["donja-lastva"],
+      "expected_answer": "A settlement on the shore of the Bay of Tivat, north-west of the centre of Tivat, below Gornja Lastva.",
+      "note": "Donja Lastva."
+    },
+    {
+      "id": "en-a14",
+      "lang": "en",
+      "question": "What is Tivat?",
+      "expected": "answer",
+      "expected_slugs": ["tivat"],
+      "expected_answer": "A town on the Bay of Tivat in the Bay of Kotor and the seat of the municipality of the same name.",
+      "note": "Tivat as town and municipal seat."
+    },
+    {
+      "id": "en-a15",
+      "lang": "en",
+      "question": "Between which bays does the hill of Vrmac lie?",
+      "expected": "answer",
+      "expected_slugs": ["vrmac-plateau"],
+      "expected_answer": "Between the Bay of Tivat and the Bay of Kotor.",
+      "note": "Vrmac between the two bays."
+    },
+    {
+      "id": "en-a16",
+      "lang": "en",
+      "question": "Is there a footpath from Donja Lastva up to Gornja Lastva?",
+      "expected": "answer",
+      "expected_slugs": ["donja-lastva", "gornja-lastva"],
+      "expected_answer": "Yes, a footpath leads uphill from Donja Lastva to Gornja Lastva.",
+      "note": "Footpath Donja → Gornja Lastva."
+    },
+    {
+      "id": "en-a17",
+      "lang": "en",
+      "question": "Which churches does the village of Gornja Lastva have?",
+      "expected": "answer",
+      "expected_slugs": ["gornja-lastva", "crkva-sv-marije", "crkva-sv-vida"],
+      "expected_answer": "The church of St Mary from the 14th century and the church of St Vitus from the 9th century at 440 metres.",
+      "note": "Both churches of the village."
+    },
+    {
+      "id": "en-a18",
+      "lang": "en",
+      "question": "What are the Landscape Days dedicated to?",
+      "expected": "answer",
+      "expected_slugs": ["dani-pejzaza"],
+      "expected_answer": "To the cultural landscape of Vrmac and Gornja Lastva, and to the protection and revival of heritage and landscape.",
+      "note": "Content of the event."
+    },
+    {
+      "id": "en-a19",
+      "lang": "en",
+      "question": "What takes place in the culture house Ilija Marković?",
+      "expected": "answer",
+      "expected_slugs": ["dom-kulture-ilija-markovic"],
+      "expected_answer": "Exhibitions, lectures, workshops and community meetings, including programmes of the Landscape Days.",
+      "note": "Programme of the culture house."
+    },
+    {
+      "id": "en-a20",
+      "lang": "en",
+      "question": "How is the church of St Vitus reached from the village?",
+      "expected": "answer",
+      "expected_slugs": ["crkva-sv-vida"],
+      "expected_answer": "By a footpath from Gornja Lastva up the hill to the church at 440 metres.",
+      "note": "Access to St Vitus."
+    },
+
+    {
+      "id": "en-u01",
+      "lang": "en",
+      "question": "Where was the golden bell of Vrmac hidden in 1687?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "No answer: the claim exists only in a draft entry that was never approved (sample-draft-zlatno-zvono).",
+      "note": "Answer exists only in a NON-APPROVED draft — validation gate."
+    },
+    {
+      "id": "en-u02",
+      "lang": "en",
+      "question": "How many pupils did the old school in Gornja Lastva have in 1931?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "No answer: the figure exists only in an entry still in status 'reviewed' (sample-reviewed-stara-skola).",
+      "note": "Answer exists only in a REVIEWED, non-approved entry."
+    },
+    {
+      "id": "en-u03",
+      "lang": "en",
+      "question": "When was the Roman villa with mosaics discovered at Lastva?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "No answer: the claim exists only in a rejected entry (sample-rejected-rimska-vila).",
+      "note": "Answer exists only in a REJECTED entry."
+    },
+    {
+      "id": "en-u04",
+      "lang": "en",
+      "question": "How many inhabitants does Gornji Stoliv have?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "No answer: the Gornji Stoliv entry is an unverified draft and is not published.",
+      "note": "Gornji Stoliv — unverified draft in the validation queue."
+    },
+    {
+      "id": "en-u05",
+      "lang": "en",
+      "question": "Which churches and chestnut woods are there in Gornji Stoliv?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "No answer: every claim about Gornji Stoliv beyond its position was deliberately omitted until the sources are checked.",
+      "note": "Gornji Stoliv — second variant; nothing about it is approved."
+    },
+    {
+      "id": "en-u06",
+      "lang": "en",
+      "question": "What time does the ferry to Bari leave?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "No answer: ferry timetables are not part of the approved entries about Vrmac.",
+      "note": "Off topic — timetable."
+    },
+    {
+      "id": "en-u07",
+      "lang": "en",
+      "question": "How much does a hotel room in Budva cost?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "No answer: accommodation prices in Budva are outside the scope of the prototype.",
+      "note": "Off topic — hotel prices outside the territory."
+    },
+    {
+      "id": "en-u08",
+      "lang": "en",
+      "question": "What will the weather be like tomorrow in Tivat?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "No answer: a weather forecast is not a heritage fact and has no approved source.",
+      "note": "Off topic — forecast (contains 'Tivat', so it also tests a false match)."
+    },
+    {
+      "id": "en-u09",
+      "lang": "en",
+      "question": "When do the banks in Tivat open?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "No answer: bank opening hours are not part of the approved entries.",
+      "note": "Off topic — bank opening hours."
+    },
+    {
+      "id": "en-u10",
+      "lang": "en",
+      "question": "How high is the Njegoš mausoleum on Lovćen?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "No answer: Lovćen is outside the Vrmac territory and there is no approved entry about it.",
+      "note": "Off topic — another location, but the same question shape (a height in metres)."
+    }
+  ]
+}

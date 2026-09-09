@@ -1,0 +1,277 @@
+{
+  "_note": "Grounding test set for the launch language cnr (Montenegrin, Latin script). 20 answerable + 10 unanswerable questions. The expected answers were prepared independently from the retrieval pipeline, by reading the seed facts (seed_data/heritage_entries.json) and the public sources cited there; they are the reference a human uses when checking the run, never an input to the assistant. 'expected_slugs' lists the approved entries that may legitimately be cited. The unanswerable block contains (a) three questions whose answer exists ONLY in non-approved sample entries (draft golden bell 1687, reviewed old school 41 pupils, rejected Roman villa 1999), (b) two questions about Gornji Stoliv, seeded as an unverified draft, and (c) five off-topic questions outside the territory and the mandate of the assistant.",
+  "lang": "cnr",
+  "questions": [
+    {
+      "id": "cnr-a01",
+      "lang": "cnr",
+      "question": "Iz kojeg vijeka je crkva Svete Marije u Gornjoj Lastvi?",
+      "expected": "answer",
+      "expected_slugs": ["crkva-sv-marije", "gornja-lastva"],
+      "expected_answer": "Crkva Svete Marije u Gornjoj Lastvi potiče iz 14. vijeka.",
+      "note": "Datacija crkve Sv. Marije."
+    },
+    {
+      "id": "cnr-a02",
+      "lang": "cnr",
+      "question": "Iz kojeg vijeka je crkva Svetog Vida iznad Gornje Lastve?",
+      "expected": "answer",
+      "expected_slugs": ["crkva-sv-vida", "gornja-lastva"],
+      "expected_answer": "Crkva Svetog Vida je iz 9. vijeka.",
+      "note": "Datacija crkve Sv. Vida."
+    },
+    {
+      "id": "cnr-a03",
+      "lang": "cnr",
+      "question": "Na kojoj nadmorskoj visini se nalazi crkva Svetog Vida?",
+      "expected": "answer",
+      "expected_slugs": ["crkva-sv-vida", "gornja-lastva", "vrmac-plateau"],
+      "expected_answer": "Na 440 metara nadmorske visine.",
+      "note": "Visina 440 m."
+    },
+    {
+      "id": "cnr-a04",
+      "lang": "cnr",
+      "question": "Kojeg dana se održava Lastovska fešta?",
+      "expected": "answer",
+      "expected_slugs": ["lastovska-festa", "gornja-lastva"],
+      "expected_answer": "Svake prve subote u avgustu.",
+      "note": "Termin fešte."
+    },
+    {
+      "id": "cnr-a05",
+      "lang": "cnr",
+      "question": "Od koje godine se održava Lastovska fešta?",
+      "expected": "answer",
+      "expected_slugs": ["lastovska-festa", "gornja-lastva"],
+      "expected_answer": "Od 1974. godine.",
+      "note": "Kontinuitet od 1974."
+    },
+    {
+      "id": "cnr-a06",
+      "lang": "cnr",
+      "question": "Kada će biti 53. Lastovska fešta?",
+      "expected": "answer",
+      "expected_slugs": ["lastovska-festa"],
+      "expected_answer": "U subotu, 7. avgusta 2027. godine.",
+      "note": "Sljedeće izdanje fešte."
+    },
+    {
+      "id": "cnr-a07",
+      "lang": "cnr",
+      "question": "Od koje godine se održavaju Dani pejzaža?",
+      "expected": "answer",
+      "expected_slugs": ["dani-pejzaza", "gornja-lastva"],
+      "expected_answer": "Od 2015. godine.",
+      "note": "Dani pejzaža od 2015."
+    },
+    {
+      "id": "cnr-a08",
+      "lang": "cnr",
+      "question": "Kako se zove dom kulture u Gornjoj Lastvi?",
+      "expected": "answer",
+      "expected_slugs": ["dom-kulture-ilija-markovic", "gornja-lastva"],
+      "expected_answer": "Dom kulture „Ilija Marković“.",
+      "note": "Naziv doma kulture."
+    },
+    {
+      "id": "cnr-a09",
+      "lang": "cnr",
+      "question": "Do koje godine su u Gornjoj Lastvi radili mlinovi za masline?",
+      "expected": "answer",
+      "expected_slugs": ["mlinovi-za-masline", "gornja-lastva"],
+      "expected_answer": "Do 1945. godine.",
+      "note": "Mlinovi za masline do 1945."
+    },
+    {
+      "id": "cnr-a10",
+      "lang": "cnr",
+      "question": "Koliko je stalnih stanovnika imala Gornja Lastva po popisu iz 2011. godine?",
+      "expected": "answer",
+      "expected_slugs": ["popis-2011", "gornja-lastva"],
+      "expected_answer": "Nijednog: po popisu iz 2011. godine Gornja Lastva nije imala stalnih stanovnika.",
+      "note": "Popis 2011 — bez stalnih stanovnika."
+    },
+    {
+      "id": "cnr-a11",
+      "lang": "cnr",
+      "question": "Gdje se nalazi Gornja Lastva?",
+      "expected": "answer",
+      "expected_slugs": ["gornja-lastva", "vrmac-plateau"],
+      "expected_answer": "Na padinama brda Vrmac, iznad Donje Lastve i Tivta u Boki Kotorskoj.",
+      "note": "Položaj sela."
+    },
+    {
+      "id": "cnr-a12",
+      "lang": "cnr",
+      "question": "Kojoj opštini pripadaju Gornja i Donja Lastva?",
+      "expected": "answer",
+      "expected_slugs": ["tivat", "gornja-lastva", "donja-lastva"],
+      "expected_answer": "Opštini Tivat.",
+      "note": "Opština Tivat."
+    },
+    {
+      "id": "cnr-a13",
+      "lang": "cnr",
+      "question": "Šta je Donja Lastva i gdje se nalazi?",
+      "expected": "answer",
+      "expected_slugs": ["donja-lastva"],
+      "expected_answer": "Naselje na obali Tivatskog zaliva, sjeverozapadno od centra Tivta, ispod Gornje Lastve.",
+      "note": "Donja Lastva."
+    },
+    {
+      "id": "cnr-a14",
+      "lang": "cnr",
+      "question": "Šta je Tivat?",
+      "expected": "answer",
+      "expected_slugs": ["tivat"],
+      "expected_answer": "Grad na obali Tivatskog zaliva u Boki Kotorskoj i sjedište istoimene opštine.",
+      "note": "Tivat kao grad i sjedište opštine."
+    },
+    {
+      "id": "cnr-a15",
+      "lang": "cnr",
+      "question": "Između kojih zaliva se nalazi brdo Vrmac?",
+      "expected": "answer",
+      "expected_slugs": ["vrmac-plateau"],
+      "expected_answer": "Između Tivatskog i Kotorskog zaliva.",
+      "note": "Vrmac između dva zaliva."
+    },
+    {
+      "id": "cnr-a16",
+      "lang": "cnr",
+      "question": "Vodi li pješačka staza iz Donje Lastve u Gornju Lastvu?",
+      "expected": "answer",
+      "expected_slugs": ["donja-lastva", "gornja-lastva"],
+      "expected_answer": "Da, iz Donje Lastve vodi pješačka staza uzbrdo do Gornje Lastve.",
+      "note": "Staza Donja → Gornja Lastva."
+    },
+    {
+      "id": "cnr-a17",
+      "lang": "cnr",
+      "question": "Koje crkve postoje u Gornjoj Lastvi?",
+      "expected": "answer",
+      "expected_slugs": ["gornja-lastva", "crkva-sv-marije", "crkva-sv-vida"],
+      "expected_answer": "Crkva Svete Marije iz 14. vijeka i crkva Svetog Vida iz 9. vijeka na 440 metara.",
+      "note": "Obje crkve sela."
+    },
+    {
+      "id": "cnr-a18",
+      "lang": "cnr",
+      "question": "Čemu su posvećeni Dani pejzaža?",
+      "expected": "answer",
+      "expected_slugs": ["dani-pejzaza"],
+      "expected_answer": "Kulturnom pejzažu Vrmca i Gornje Lastve, odnosno zaštiti i oživljavanju baštine i predjela.",
+      "note": "Sadržaj manifestacije."
+    },
+    {
+      "id": "cnr-a19",
+      "lang": "cnr",
+      "question": "Šta se održava u Domu kulture „Ilija Marković“?",
+      "expected": "answer",
+      "expected_slugs": ["dom-kulture-ilija-markovic"],
+      "expected_answer": "Izložbe, predavanja, radionice i skupovi zajednice, uključujući programe Dana pejzaža.",
+      "note": "Program doma kulture."
+    },
+    {
+      "id": "cnr-a20",
+      "lang": "cnr",
+      "question": "Kako se dolazi do crkve Svetog Vida iz sela?",
+      "expected": "answer",
+      "expected_slugs": ["crkva-sv-vida"],
+      "expected_answer": "Pješačkom stazom iz Gornje Lastve na brdo, do crkve na 440 metara.",
+      "note": "Pristup crkvi Sv. Vida."
+    },
+
+    {
+      "id": "cnr-u01",
+      "lang": "cnr",
+      "question": "Gdje je 1687. godine sakriveno zlatno zvono Vrmca?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "Bez odgovora: tvrdnja postoji samo u nacrtu koji nije odobren (sample-draft-zlatno-zvono), pa asistent mora odbiti.",
+      "note": "Odgovor postoji samo u NEODOBRENOM nacrtu — kapija validacije."
+    },
+    {
+      "id": "cnr-u02",
+      "lang": "cnr",
+      "question": "Koliko je đaka imala stara škola u Gornjoj Lastvi 1931. godine?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "Bez odgovora: podatak postoji samo u unosu u statusu 'reviewed' (sample-reviewed-stara-skola), koji nije odobren.",
+      "note": "Odgovor postoji samo u PREGLEDANOM, neodobrenom unosu."
+    },
+    {
+      "id": "cnr-u03",
+      "lang": "cnr",
+      "question": "Kada je u Lastvi otkrivena rimska vila sa mozaicima?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "Bez odgovora: tvrdnja postoji samo u odbijenom unosu (sample-rejected-rimska-vila).",
+      "note": "Odgovor postoji samo u ODBIJENOM unosu."
+    },
+    {
+      "id": "cnr-u04",
+      "lang": "cnr",
+      "question": "Koliko stanovnika ima Gornji Stoliv?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "Bez odgovora: unos o Gornjem Stolivu je nepotvrđen nacrt i nije objavljen.",
+      "note": "Gornji Stoliv — nepotvrđeni nacrt u redu za validaciju."
+    },
+    {
+      "id": "cnr-u05",
+      "lang": "cnr",
+      "question": "Koje crkve i kestenove šume ima Gornji Stoliv?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "Bez odgovora: sve tvrdnje o Gornjem Stolivu osim položaja namjerno su izostavljene do provjere izvora.",
+      "note": "Gornji Stoliv — druga varijanta; ni jedna tvrdnja nije odobrena."
+    },
+    {
+      "id": "cnr-u06",
+      "lang": "cnr",
+      "question": "Kada polazi trajekt za Bari?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "Bez odgovora: red vožnje trajekta nije dio odobrenih unosa o Vrmcu.",
+      "note": "Van teme — red vožnje."
+    },
+    {
+      "id": "cnr-u07",
+      "lang": "cnr",
+      "question": "Koliko košta noćenje u hotelima u Budvi?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "Bez odgovora: cijene smještaja u Budvi nisu u opsegu prototipa.",
+      "note": "Van teme — cijene hotela izvan teritorije."
+    },
+    {
+      "id": "cnr-u08",
+      "lang": "cnr",
+      "question": "Kakvo će vrijeme biti sjutra u Tivtu?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "Bez odgovora: vremenska prognoza nije baštinski podatak i nema odobrenog izvora.",
+      "note": "Van teme — prognoza (sadrži riječ Tivat, pa provjerava i lažno poklapanje)."
+    },
+    {
+      "id": "cnr-u09",
+      "lang": "cnr",
+      "question": "Kada se otvaraju banke u Tivtu?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "Bez odgovora: radno vrijeme banaka nije dio odobrenih unosa.",
+      "note": "Van teme — radno vrijeme banaka."
+    },
+    {
+      "id": "cnr-u10",
+      "lang": "cnr",
+      "question": "Kolika je visina Njegoševog mauzoleja na Lovćenu?",
+      "expected": "withhold",
+      "expected_slugs": [],
+      "expected_answer": "Bez odgovora: Lovćen je izvan teritorije Vrmca i nema odobrenog unosa.",
+      "note": "Van teme — druga lokacija, ali sličan tip pitanja (visina u metrima)."
+    }
+  ]
+}

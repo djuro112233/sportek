@@ -18,7 +18,10 @@ os.environ["QUEUE_MODE"] = "sync"
 os.environ["EMBEDDINGS_PROVIDER"] = os.environ.get("TEST_EMBEDDINGS_PROVIDER", "hash")
 os.environ["EMBEDDING_DIM"] = os.environ.get("TEST_EMBEDDING_DIM", "768")
 os.environ["LLM_PROVIDER"] = os.environ.get("TEST_LLM_PROVIDER", "none")
+os.environ["SUPPORT_CHECK_PROVIDER"] = os.environ.get("TEST_SUPPORT_CHECK_PROVIDER", "lexical")
 os.environ["STT_PROVIDER"] = "fixture"
+os.environ["EVENT_PSEUDONYM_KEY"] = os.environ.get("TEST_EVENT_PSEUDONYM_KEY", "test-pseudonym-key-0123456789")
+os.environ["CACHE_ENABLED"] = os.environ.get("TEST_CACHE_ENABLED", "true")
 os.environ["RATE_LIMIT_PUBLIC"] = "100000/minute"
 os.environ["RATE_LIMIT_ASK"] = "100000/minute"
 os.environ["UPLOAD_DIR"] = os.environ.get("TEST_UPLOAD_DIR", "./data/test-uploads")
@@ -84,6 +87,7 @@ def client(database):
 
 SAMPLE_ACCOUNTS = {
     "host": "host1@example.org",
+    "host3": "host3@example.org",
     "host2": "host2@example.org",
     "ambassador": "ambassador1@example.org",
     "validator": "validator1@example.org",

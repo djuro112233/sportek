@@ -1,68 +1,82 @@
 # VRMAC-LH — 7-minute pitch script (SMART ERA)
 
 > Prototype built for the SMART ERA application, September–October 2026. Sample data.
+> Nothing in this script claims production status, real users or a TRL.
 
 ## Before the demo (15 minutes earlier)
 
-1. `docker compose up -d` on the demo machine or the VPS; open `/api/health` — providers must show
-   `llm=ollama`, `embeddings=ollama`, `stt=faster-whisper`. Run `make kpi` once so the dashboard has a fresh run.
-2. Open four browser tabs: `/host` (logged in as `host1@example.org`), `/validate` (`validator1@example.org`),
-   `/visitor`, `/dashboard` (`institution1@example.org`). Language toggle set to *Crnogorski* on the host and visitor tabs.
-3. Test the microphone once (record 3 seconds, discard). A real host voice sample in the local language is spoken
-   live in step 2; keep `docs/samples/` handy as a backup recording. If the STT is slow on the machine, use
-   "type instead" — the flow is identical.
-4. Fallbacks: if Ollama is slow, set `LLM_PROVIDER=none` — answers become extractive quotes with citations and the
-   listing extraction is rule-based (both are labelled in the UI). Nothing else changes.
+1. `docker compose up -d`, then open `/api/health`: providers must read `llm`, `embeddings`, `stt` and
+   `support_check`. Run `make kpi` and publish the run (`make kpi` prints the run id; publish it in the
+   dashboard's review panel) so the dashboard has data.
+2. Open four tabs: `/host` (signed in as `host1@example.org`), `/validate` (`validator1@example.org`),
+   `/visitor`, `/dashboard` (`institution1@example.org`). Language toggle on *Crnogorski* for host and visitor.
+3. Test the microphone once and discard the recording. Have a backup recording ready in `docs/samples/`.
+4. Fallbacks: with `LLM_PROVIDER=none` the answers become extractive quotes with citations and the draft
+   becomes rule-based — both are labelled in the UI, and nothing else changes.
 
 ## Script
 
 **0:00 – 0:45 · The problem and the promise**
-"Gornja Lastva has no permanent residents in the 2011 census but a festival held every first Saturday of August since
-1974. Its heritage lives in people and documents that never meet visitors. VRMAC-LH is one validated source of truth:
-hosts speak, validators approve, visitors get answers only from approved facts — or a refusal." Point at the yellow
-banner: everything here is a prototype with sample data.
+"Gornja Lastva had no permanent residents in the 2011 census, yet its festival has been held every first
+Saturday of August since 1974. The heritage of the Vrmac plateau — on both sides of the ridge, in two
+municipalities — lives in people and documents that never reach a visitor. VRMAC-LH is one validated source
+of truth: hosts speak, validators approve, visitors get answers only from approved facts, or an honest
+refusal." Point at the banner: prototype, sample data.
 
-**0:45 – 3:00 · Host flow, live (voice-first onboarding)**
-Host tab → *New listing by voice* → the timer starts. Press *Record* and speak ~30 seconds in Montenegrin, e.g.:
-"Zovem se … imam apartman u Donjoj Lastvi, dvije sobe, do četiri gosta, cijena od 45 do 70 eura po noći, od maja do
-oktobra, prizemlje bez stepenica, tristo metara od mora." Stop → *Upload*. Show the transcript from faster-whisper
-(label under the text). *Generate listing* → the structured draft appears: title, description, price range 45–70 €,
-season May–October, capacity 4, accessibility; missing fields are highlighted (coordinates → *use my location*).
-Confirm → consent text → *Confirm*. The final screen shows the measured duration against the 30-minute target and
-"draft — in validation queue". "This duration is logged; it is KPI data, not a claim."
+**0:45 – 3:00 · Host flow, live (voice-first, offline-capable)**
+Host tab → *New listing*. Pick the village (Donja Lastva, municipality of Tivat) — the active-time timer
+starts and the screen says that waiting for the validator does not count. Record ~30 seconds in
+Montenegrin, for example: "Imam apartman u Donjoj Lastvi, dvije sobe, prizemlje bez stepenica, tristo
+metara od mora, pogled na zaliv." Stop and upload. Show the transcript and the provider label.
+*Generate title and description* → the model returns **only** a title and a description in both languages.
+Then the details form: "the assistant never guesses a price, a season, a capacity or accessibility — the
+host types them and confirms them." Fill 45–70 € per night, May–October, four guests, step-free, tick the
+confirmations, then the consent text, then *Confirm*. The final screen shows the **active authoring time**
+against the 30-minute target, the elapsed time separately, and "draft — in validation queue".
+*If there is time*: switch the browser to offline before uploading to show the recording being queued on the
+device and uploading by itself when connectivity returns — that is the reality on the plateau.
 
 **3:00 – 4:00 · Validation gate**
-Validator tab → the new listing is in the queue with its provenance (created by voice onboarding session, version 1,
-host consent v1). Approve with a note. "Only now the listing exists for visitors — the database role used by the
-visitor app can physically not read drafts: row-level security, tested in CI." Switch to the visitor tab, reload the
-map: the new provider appears, in Montenegrin and English.
+Validator tab → the new listing is in the queue with its village, its provenance (voice onboarding session,
+version 1, consent v1) and the host-confirmed fields. Approve it with a note. "Only now does it exist for
+visitors: the database role the visitor app uses physically cannot read a draft — row-level security, proven
+in CI." Show the two rows flagged *unverified facts* (Gornji Stoliv) and say plainly: nothing unverified can
+be approved, so the assistant will refuse questions about it until a person checks the sources.
+Reload the visitor map: the new provider appears in both languages.
 
 **4:00 – 5:30 · Visitor: map, directions, trail, grounded answers**
-Visitor tab → *Explore*: click St Vitus → *How to get there — on foot* opens Google Maps navigation (real routing, no
-key). *Trails* → Donja Lastva – Gornja Lastva: the GPX track renders with the latest condition report ("caution: fallen
-branches after a storm"). *Ask*: "Kada se održava Lastovska fešta?" → answer with citation: entry *Lastovska fešta*,
-source gornjalastva.org / hr.wikipedia. Then the withheld question: "Gdje je sakriveno zlatno zvono Vrmca?" → refusal:
-"Nemam potvrđen izvor za ovo pitanje…". "That legend exists in the database as a draft. Not approved, not answerable,
-and the refusal is logged as an `answer_withheld` event." (Optional: *Itinerary* for 3 hours from Donja Lastva.)
+Visitor tab → *Explore*: select the church of St Vitus → *How to get there — on foot* opens Google Maps
+navigation (real routing, no key). *Trails* → Donja Lastva – Gornja Lastva: the GPX track renders with the
+latest condition report ("caution: fallen branches after a storm"). *Ask*: "Kada se održava Lastovska
+fešta?" → the answer with its citation (entry *Lastovska fešta*, source gornjalastva.org / hr.wikipedia).
+Then the withheld one: "Gdje je sakriveno zlatno zvono Vrmca?" → the refusal. "That legend is in the
+database as a draft. Not approved, so not answerable — and the refusal is logged as `answer_withheld`."
+Mention the second control: every sentence of an answer is checked against the cited passage and dropped if
+it is not supported. Optionally run the multi-village itinerary for three hours from Donja Lastva.
 
 **5:30 – 6:30 · Institution dashboard**
-Dashboard tab → *Recompute now*. The KPI table refreshes from events only: hosts onboarded by sex (F/M published,
-the small group suppressed with "k<5"), median onboarding minutes, share within 30 minutes, answers served vs
-withheld, requests confirmed, trail reports. Heat map of measured visits per ~100 m cell — cells below 5 sessions
-are not shown. "No number on this screen is typed in; delete the events and the table is empty."
+Dashboard tab → *Recompute*, then publish the run in the **disclosure review** panel: "nothing reaches this
+screen before a person reviews the small cells." The K01–K23 table refreshes from events only, with the
+provisional-definitions banner visible: "these definitions come from a file, not from code — when §11 of the
+SIP Draft is transcribed into it, every figure updates without touching the software." Point at a suppressed
+cell ("k<5"), at gender coming only from voluntary self-report, at the median **active** authoring time next
+to the elapsed time, at the heat map of measured visits per 100 m cell, and at the quality panel: speech
+recognition error rate, cache hit rate and the monthly model spend against the 50 € cap.
 
 **6:30 – 7:00 · Interoperability and close**
-Open `/api/export/ngsi-ld` (NGSI-LD `PointOfInterest` entities, Smart Data Models, schema-validated in the test
-suite) and `/api/export/dcat-ap`. "Open source (AGPL), open data models, open maps, runs on a 4 GB server. Next step
-with SMART ERA: replace the sample coordinates with K4's surveyed GPX and onboard the first real hosts with the
-ambassadors."
+Open `/api/export/ngsi-ld` (Smart Data Models `PointOfInterest`, schema-validated in the test suite) and
+`/api/export/dcat-ap`. "Open source under AGPL, open data models, open maps, an EU inference provider with
+no data retention and a spend cap in code, running on a 4 GB server. With SMART ERA the next steps are K4's
+surveyed GPX instead of our approximate coordinates, the verified Kotor-side villages, and the first real
+hosts onboarded with the ambassadors."
 
 ## If something fails
 
 | Symptom | Do |
 |---|---|
-| Microphone blocked | use *Upload* with `docs/samples/*.webm` or *type instead* |
-| Transcription > 60 s | the job runs on the worker; keep talking about the gate, the page polls automatically |
-| LLM returns an empty draft | rules extraction takes over automatically (label "rules"); edit the fields by hand |
-| Ollama not answering | `LLM_PROVIDER=none` → extractive answers with citations still work |
-| No KPI run | `make kpi` |
+| Microphone blocked | use *Upload* with a file from `docs/samples/`, or *type instead* |
+| Transcription slow | the job runs on the worker and the page polls; keep talking about the gate |
+| Empty or odd draft | the rules fallback takes over (labelled "rules"); edit the two text fields by hand |
+| Model unreachable | `LLM_PROVIDER=none`: extractive answers with citations still work |
+| Spend cap reached | that is a feature: show the cached answer and the "assistant paused" message |
+| No KPI figures | `make kpi`, then publish the run in the review panel |

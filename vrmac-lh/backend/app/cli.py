@@ -49,8 +49,49 @@ def cmd_kpi(args):
     from .services.kpi import compute_kpis
 
     with SessionLocal() as db:
-        result = compute_kpis(db, period_days=args.days)
+        result = compute_kpis(db, period_days=args.days, publish=args.publish)
     print(json.dumps(result, indent=2, default=str))
+
+
+def cmd_kpi_review(args):
+    """Disclosure review: publish or reject a computed KPI run."""
+    from .services.kpi import review_run
+
+    with SessionLocal() as db:
+        result = review_run(db, run_id=args.run_id, decision=args.decision, note=args.note or "")
+    print(json.dumps(result, indent=2, default=str))
+
+
+def cmd_review_sample(args):
+    """Monthly human-sampling script: export a review sheet of random answers."""
+    from .services.review import export_review_sheet
+
+    with SessionLocal() as db:
+        result = export_review_sheet(db, n=args.n, out_dir=args.out or settings.export_dir, days=args.days)
+    print(json.dumps(result, indent=2, default=str))
+
+
+def cmd_stt_eval(args):
+    """Measure the speech-to-text word error rate on the Montenegrin sample set."""
+    from .services.stt_eval import run_evaluation
+
+    with SessionLocal() as db:
+        result = run_evaluation(db)
+    print(json.dumps(result, indent=2, default=str))
+
+
+def cmd_budget(args):
+    from .services.budget import status
+
+    with SessionLocal() as db:
+        print(json.dumps(status(db), indent=2, default=str))
+
+
+def cmd_expire_requests(args):
+    from .services.requests_lifecycle import expire_stale_requests
+
+    with SessionLocal() as db:
+        print(json.dumps(expire_stale_requests(db), indent=2, default=str))
 
 
 def cmd_kpi_schedule(args):
@@ -66,14 +107,21 @@ def cmd_kpi_schedule(args):
         log.info("next KPI computation at %s (in %.0f s)", nxt.isoformat(), wait)
         time.sleep(wait)
         with SessionLocal() as db:
-            compute_kpis(db, period_days=args.days)
+            compute_kpis(db, period_days=args.days, publish=False)
+        try:
+            from .services.requests_lifecycle import expire_stale_requests
+
+            with SessionLocal() as db:
+                expire_stale_requests(db)
+        except ImportError:
+            pass
 
 
 def cmd_grounding_test(args):
     from .services.rag import run_grounding_test
 
     with SessionLocal() as db:
-        result = run_grounding_test(db, questions_path=args.questions, out_path=args.out)
+        result = run_grounding_test(db, questions_path=args.questions, out_path=args.out, lang=args.lang)
     print(json.dumps(result["summary"], indent=2, default=str))
     sys.exit(0 if result["summary"].get("passed") else 1)
 
@@ -85,7 +133,8 @@ def cmd_create_user(args):
     with SessionLocal() as db:
         u = User(
             email=args.email.lower(), password_hash=hash_password(args.password), role=args.role,
-            display_name=args.name or args.email.split("@")[0], sex=args.sex, is_sample=False,
+            display_name=args.name or args.email.split("@")[0], gender=args.gender,
+            gender_self_reported=args.gender != "undisclosed", is_sample=False,
         )
         db.add(u)
         db.commit()
@@ -119,11 +168,22 @@ def main(argv=None):
     s = sub.add_parser("seed"); s.add_argument("--reset", action="store_true"); s.set_defaults(fn=cmd_seed)
     s = sub.add_parser("reindex"); s.set_defaults(fn=cmd_reindex)
     s = sub.add_parser("export-ngsi-ld"); s.add_argument("--out"); s.set_defaults(fn=cmd_export)
-    s = sub.add_parser("kpi-compute"); s.add_argument("--days", type=int, default=365); s.set_defaults(fn=cmd_kpi)
+    s = sub.add_parser("kpi-compute"); s.add_argument("--days", type=int, default=365)
+    s.add_argument("--publish", action="store_true", help="skip the disclosure review (demo only)"); s.set_defaults(fn=cmd_kpi)
+    s = sub.add_parser("kpi-review"); s.add_argument("--run-id", required=True); s.add_argument("--decision", choices=["publish", "reject"], required=True)
+    s.add_argument("--note", default=""); s.set_defaults(fn=cmd_kpi_review)
+    s = sub.add_parser("review-sample"); s.add_argument("--n", type=int, default=30); s.add_argument("--days", type=int, default=31)
+    s.add_argument("--out"); s.set_defaults(fn=cmd_review_sample)
+    s = sub.add_parser("stt-eval"); s.set_defaults(fn=cmd_stt_eval)
+    s = sub.add_parser("budget"); s.set_defaults(fn=cmd_budget)
+    s = sub.add_parser("expire-requests"); s.set_defaults(fn=cmd_expire_requests)
     s = sub.add_parser("kpi-schedule"); s.add_argument("--hour", type=int, default=2); s.add_argument("--days", type=int, default=365); s.set_defaults(fn=cmd_kpi_schedule)
-    s = sub.add_parser("grounding-test"); s.add_argument("--questions"); s.add_argument("--out"); s.set_defaults(fn=cmd_grounding_test)
+    s = sub.add_parser("grounding-test"); s.add_argument("--questions"); s.add_argument("--out")
+    s.add_argument("--lang", choices=["cnr", "en"], help="one launch language (default: all)"); s.set_defaults(fn=cmd_grounding_test)
     s = sub.add_parser("create-user"); s.add_argument("--email", required=True); s.add_argument("--password", required=True)
-    s.add_argument("--role", required=True, choices=["host", "ambassador", "validator", "institution"]); s.add_argument("--sex", choices=["F", "M", "X"]); s.add_argument("--name"); s.set_defaults(fn=cmd_create_user)
+    s.add_argument("--role", required=True, choices=["host", "ambassador", "validator", "institution"])
+    s.add_argument("--gender", choices=["female", "male", "other", "prefer_not_to_say", "undisclosed"], default="undisclosed")
+    s.add_argument("--name"); s.set_defaults(fn=cmd_create_user)
     s = sub.add_parser("worker"); s.set_defaults(fn=cmd_worker)
     s = sub.add_parser("openapi"); s.add_argument("--out"); s.set_defaults(fn=cmd_openapi)
 
