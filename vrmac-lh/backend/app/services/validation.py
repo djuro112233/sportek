@@ -32,6 +32,8 @@ from ..models import (
 )
 from . import indexing
 
+VILLAGE_MODELS = ("heritage_entry", "listing", "trail_segment", "trail_report")
+
 MODEL_BY_TYPE: dict[str, type] = {
     "heritage_entry": HeritageEntry,
     "listing": Listing,
@@ -167,6 +169,15 @@ def transition(
         )
     if item_type == "listing" and to_status == "approved" and not item.consent_record_id:
         raise HTTPException(status_code=409, detail="listing cannot be approved without a consent record")
+    # Content whose facts could not be verified against a public source is never published.
+    if to_status == "approved" and getattr(item, "facts_verified", True) is False:
+        raise HTTPException(
+            status_code=409,
+            detail=(
+                "this item is marked as having unverified facts and cannot be approved — "
+                "verify it against a public source and record the source first"
+            ),
+        )
 
     item.status = to_status
     now = utcnow()
@@ -191,12 +202,26 @@ def transition(
         else:
             indexing.remove_entry_index(db, item.id)
 
+    published_seconds = None
+    if item_type == "listing" and to_status == "approved":
+        # Close the onboarding timing loop: elapsed time to publication (never compared with the
+        # active-authoring target). The onboarding module owns the session bookkeeping.
+        try:
+            from .onboarding import mark_published
+
+            published_seconds = mark_published(db, item)
+        except ImportError:  # pragma: no cover - onboarding module not installed
+            published_seconds = None
+
     if to_status == "approved":
         emit_event(db, "entry_approved", actor=actor, item_type=item_type, item_id=item.id,
-                   version=item.version, from_status=from_status)
+                   version=item.version, from_status=from_status,
+                   village_id=getattr(item, "village_id", None),
+                   elapsed_to_publish_seconds=published_seconds)
     elif to_status == "rejected":
         emit_event(db, "item_rejected", actor=actor, item_type=item_type, item_id=item.id,
-                   version=item.version, from_status=from_status)
+                   version=item.version, from_status=from_status,
+                   village_id=getattr(item, "village_id", None))
     db.commit()
     db.refresh(item)
     return item

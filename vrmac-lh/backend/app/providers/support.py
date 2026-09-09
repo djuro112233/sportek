@@ -66,10 +66,34 @@ def _numbers(text: str) -> set[str]:
     return {n.replace(",", ".").rstrip("0").rstrip(".") if "." in n or "," in n else n for n in _NUMBER.findall(text)}
 
 
+_SENTENCE = re.compile(r"[^.!?]*[.!?]+(?:\s*\[\d+\])*|[^.!?]+$")
+_ORDINAL_END = re.compile(r"\d+\.$")
+
+
 def split_sentences(text: str) -> list[str]:
-    """Split an answer into sentences, keeping trailing citation markers such as ``[1]``."""
-    parts = re.split(r"(?<=[.!?])\s+(?=[A-ZČĆŠŽĐ0-9])", (text or "").strip())
-    return [p.strip() for p in parts if p.strip()]
+    """Split an answer into sentences, keeping trailing citation markers such as ``[1]`` attached.
+
+    Two details matter for the support check, which judges one sentence at a time:
+
+    * a citation marker belongs to the sentence it follows, so ``"A. [1] B. [2]"`` is two sentences,
+      each carrying its own marker;
+    * an ordinal written with a full stop (Montenegrin ``1974. godine``, ``14. vijeka``) is not a
+      sentence end, so such a fragment is merged with the one that follows it.
+    """
+    text = (text or "").strip()
+    if not text:
+        return []
+    parts = [m.group().strip() for m in _SENTENCE.finditer(text)]
+    merged: list[str] = []
+    for part in (p for p in parts if p):
+        stripped = re.sub(r"(?:\s*\[\d+\])*$", "", part).strip()
+        if merged and _ORDINAL_END.search(re.sub(r"(?:\s*\[\d+\])*$", "", merged[-1]).strip()) and part[:1].islower():
+            merged[-1] = f"{merged[-1]} {part}"
+        elif merged and stripped and merged[-1].endswith(("[", " ")):
+            merged[-1] = f"{merged[-1]}{part}"
+        else:
+            merged.append(part)
+    return merged
 
 
 class SupportChecker(Protocol):

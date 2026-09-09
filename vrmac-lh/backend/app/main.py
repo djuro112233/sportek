@@ -32,6 +32,7 @@ from .routers import (
     requests,
     trails,
     validation,
+    villages,
 )
 
 configure_logging()
@@ -119,7 +120,8 @@ async def request_context(request: Request, call_next):
 
 
 for r in (
-    auth, heritage, listings, ask, onboarding, validation, kpi, map_router, trails, itinerary, requests, events, export
+    auth, villages, heritage, listings, ask, onboarding, validation, kpi, map_router, trails, itinerary,
+    requests, events, export
 ):
     app.include_router(r.router)
 
