@@ -11,25 +11,12 @@ import { useEffect, useState } from "react";
 import { pick } from "@/lib/i18n";
 import type { VisitorCtx } from "./context";
 import { errorMessage, getHeritageEntry, getListing, getTrail, postVisit } from "./api";
-import { fmtDate, fmtMonth, fmtMoney, fmtNumber } from "./format";
+import { fmtDate, fmtMonth, fmtMoney, fmtNumber, labelOr } from "./format";
+import { anchorOf } from "./geo";
 import RequestPanel from "./RequestPanel";
 import { ApproximateBadge, ConditionBadge, DirectionsButtons, SampleBadge, TypeChip } from "./ui";
-import type { HeritageEntry, LatLng, Listing, MapFeature, Trail } from "./types";
+import type { HeritageEntry, Listing, MapFeature, Trail } from "./types";
 import styles from "./visitor.module.css";
-
-/** First coordinate of whatever geometry the feature has. */
-function anchorOf(feature: MapFeature): LatLng | null {
-  const g = feature.geometry;
-  if (!g) return null;
-  if (g.type === "Point") return { lat: g.coordinates[1], lng: g.coordinates[0] };
-  if (g.type === "LineString" && g.coordinates.length > 0) {
-    return { lat: g.coordinates[0][1], lng: g.coordinates[0][0] };
-  }
-  if (g.type === "MultiLineString" && g.coordinates[0]?.length > 0) {
-    return { lat: g.coordinates[0][0][1], lng: g.coordinates[0][0][0] };
-  }
-  return null;
-}
 
 export default function ItemDetail({ ctx, feature }: { ctx: VisitorCtx; feature: MapFeature }) {
   const { t, lang } = ctx;
@@ -136,8 +123,8 @@ export default function ItemDetail({ ctx, feature }: { ctx: VisitorCtx; feature:
 
       <p className={styles.inline}>
         <span className="badge">{t(`visitor.type.${props.item_type}`)}</span>
-        {props.kind ? <span className="badge">{t(`visitor.kind.${props.kind}`, { fallback: props.kind })}</span> : null}
-        {props.category ? <span className="badge">{t(`visitor.category.${props.category}`)}</span> : null}
+        {props.kind ? <span className="badge">{labelOr(t, `visitor.kind.${props.kind}`, props.kind)}</span> : null}
+        {props.category ? <span className="badge">{labelOr(t, `visitor.category.${props.category}`, props.category)}</span> : null}
         {approximate ? <ApproximateBadge t={t} /> : null}
         {isSample ? <SampleBadge t={t} /> : null}
       </p>
@@ -168,7 +155,7 @@ export default function ItemDetail({ ctx, feature }: { ctx: VisitorCtx; feature:
           <dt>{t("visitor.trail.ascent")}</dt>
           <dd>{trail?.ascent_m ?? props.ascent_m ? `${fmtNumber(lang, (trail?.ascent_m ?? props.ascent_m) as number)} m` : "—"}</dd>
           <dt>{t("visitor.trail.difficulty")}</dt>
-          <dd>{t(`visitor.difficulty.${trail?.difficulty ?? props.difficulty ?? "unknown"}`)}</dd>
+          <dd>{labelOr(t, `visitor.difficulty.${trail?.difficulty ?? props.difficulty ?? "unknown"}`, trail?.difficulty ?? props.difficulty)}</dd>
           <dt>{t("visitor.trail.latestReport")}</dt>
           <dd>
             <ConditionBadge

@@ -1,5 +1,5 @@
 /** Intl + geometry helpers for the visitor app. cnr → "sr-Latn" (Montenegrin, Latin script). */
-import type { Lang } from "@/lib/i18n";
+import type { Lang, Translate } from "@/lib/i18n";
 import type { LatLng } from "./types";
 
 export function localeFor(lang: Lang): string {
@@ -75,4 +75,13 @@ export function haversineM(a: LatLng, b: LatLng): number {
   const s =
     Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
   return 2 * R * Math.asin(Math.min(1, Math.sqrt(s)));
+}
+
+/**
+ * Translate `key`, falling back to the raw API value when the locale files have no entry for it
+ * (the backend may add a kind, a category or a difficulty this build does not know yet).
+ */
+export function labelOr(t: Translate, key: string, raw: string | null | undefined): string {
+  const value = t(key);
+  return value === key ? (raw ?? "—") : value;
 }

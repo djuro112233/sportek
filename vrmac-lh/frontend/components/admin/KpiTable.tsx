@@ -1,13 +1,13 @@
 "use client";
-import { useId, useState } from "react";
-import { pick, useLang, useT } from "@/lib/i18n";
+import { Fragment, useId, useState } from "react";
+import { pick, useLang, useT, type Translate } from "@/lib/i18n";
 import { fmtByUnit, fmtNumber, label } from "./format";
 import { groupRows, isGenderDisaggregated, isProvisional, type KpiGroup } from "./kpi";
 import { GENDER_DIMENSIONS, type KpiDefinition, type KpiRow, type Village } from "./types";
 import { villageName } from "./villages";
 import styles from "./admin.module.css";
 
-function suppressionText(t: ReturnType<typeof useT>, row: KpiRow, kMin: number): { short: string; full: string } {
+function suppressionText(t: Translate, row: KpiRow, kMin: number): { short: string; full: string } {
   const reason = row.suppression_reason || row.note || "";
   const short = t("admin.kpi.suppressed", { k: kMin });
   const reasonText =
@@ -143,8 +143,8 @@ export default function KpiTable({
             {groups.map((g) => {
               const disaggregated = isGenderDisaggregated(g);
               return (
-                <>
-                  <tr key={g.key}>
+                <Fragment key={g.key}>
+                  <tr>
                     <th scope="row" style={{ fontWeight: 400 }}>
                       <KpiName group={g} />
                     </th>
@@ -168,7 +168,7 @@ export default function KpiTable({
                         </td>
                       </tr>
                     ))}
-                </>
+                </Fragment>
               );
             })}
           </tbody>
