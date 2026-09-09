@@ -1,0 +1,43 @@
+{
+  "_note": "Word-error-rate test set for the Montenegrin speech-to-text provider (internal quality metric, shown on the institutions' dashboard through /api/kpi/quality). THESE FIVE SAMPLES ARE SYNTHETIC STAND-INS: the audio is a plain tone and the 'recognised' text comes from a fixture file, so the figure measures the pipeline, not a real recogniser. Real consented recordings of elderly Montenegrin speakers must replace them before the pitch — see docs/samples/README.md. Each fixture transcript deliberately differs from the reference by one or two words, the way an elderly speaker is actually mis-recognised, so the WER is visibly non-zero.",
+  "language": "cnr",
+  "is_synthetic": true,
+  "audio_dir": "stt_fixtures",
+  "samples": [
+    {
+      "sample_id": "elderly-cnr-01",
+      "audio_file": "elderly-cnr-01.wav",
+      "reference_text": "Izdajem dvije sobe u staroj kući u Gornjoj Lastvi. Kuća je moje porodice već sto godina. Gosti dolaze ljeti, najviše iz Njemačke i Poljske.",
+      "speaker_note": "synthetic stand-in for an elderly Montenegrin speaker — replace with a consented recording",
+      "is_synthetic": true
+    },
+    {
+      "sample_id": "elderly-cnr-02",
+      "audio_file": "elderly-cnr-02.wav",
+      "reference_text": "Moja žena i ja pravimo domaću rakiju i maslinovo ulje. Radionica je u dvorištu, iza kuće. Djeca nam pomažu kad dođu iz škole.",
+      "speaker_note": "synthetic stand-in for an elderly Montenegrin speaker — replace with a consented recording",
+      "is_synthetic": true
+    },
+    {
+      "sample_id": "elderly-cnr-03",
+      "audio_file": "elderly-cnr-03.wav",
+      "reference_text": "Vodim goste na stazu prema Svetom Vidu. Idemo polako, jer ja imam sedamdeset i dvije godine, ali put znam napamet.",
+      "speaker_note": "synthetic stand-in for an elderly Montenegrin speaker — replace with a consented recording",
+      "is_synthetic": true
+    },
+    {
+      "sample_id": "elderly-cnr-04",
+      "audio_file": "elderly-cnr-04.wav",
+      "reference_text": "Kod nas se svake jeseni bere maslina. Cijelo selo pomaže, pa onda zajedno večeramo pod murvom.",
+      "speaker_note": "synthetic stand-in for an elderly Montenegrin speaker — replace with a consented recording",
+      "is_synthetic": true
+    },
+    {
+      "sample_id": "elderly-cnr-05",
+      "audio_file": "elderly-cnr-05.wav",
+      "reference_text": "Kuća je na sprat, ali imamo i sobu u prizemlju za one koji teško hodaju. Do nas se stiže autom, put je uzak.",
+      "speaker_note": "synthetic stand-in for an elderly Montenegrin speaker — replace with a consented recording",
+      "is_synthetic": true
+    }
+  ]
+}

@@ -1,566 +1,756 @@
-"""KPI computation from the event stream (innovation claim 4: *events → KPIs*).
+"""KPI engine — innovation claim 4: *every step emits a pseudonymised event; K01–K23 are computed
+from that stream and published only after a disclosure review.*
 
-Every KPI is derived from the ``events`` table for one period ``[period_start, period_end]``.
-Nothing in this module carries a literal KPI value: change the events and the table changes.
+**No KPI is defined in this file.** The definitions live in
+``backend/kpi_definitions/sip_section_11.json`` (``settings.kpi_definitions_path``), which carries a
+machine-readable ``spec`` per KPI. This module is a generic evaluator for those specs, so replacing
+the file with the wording of SIP Draft §11 changes every published number without a code change.
+Until that transcription happens the file is flagged ``provisional`` and every aggregate row carries
+``provisional_definition = true``.
 
-* **Person-level KPIs** (hosts, listings, onboarding timings) are published for the dimensions
-  ``total``, ``sex=F``, ``sex=M``, ``sex=X``. A cell is published only when at least
-  ``settings.kpi_k_min`` distinct persons stand behind it (*primary suppression*, note ``k<{k}``).
-  When exactly one sex cell of a KPI is suppressed while the total is published, the smallest
-  remaining sex cell is suppressed as well so the hidden value cannot be recovered by subtraction
-  (*secondary suppression*, note ``secondary``).
-* **Non-person KPIs** (visitor activity, answers, requests…) carry the ``total`` dimension only and
-  ``n_persons = None``.
-* **Heat map**: ``visit_recorded`` and ``trail_report`` events with coordinates are aggregated on a
-  0.001° grid (≈ 100 m); only cells with at least ``k_min`` distinct sessions are stored.
+Supported ``spec.type`` values (see ``spec_reference`` in the definition file):
 
-Each computation is a *run* (``run_id``) of ``kpi_aggregates`` + ``kpi_heat_cells`` rows. Old runs
-are kept (an audit trail of what was published when). The dashboard reads those two tables only —
-never raw events, session ids or user ids.
+``count_events``, ``count_distinct_actors``, ``count_distinct_devices`` (with ``dedup_days``),
+``count_distinct_villages``, ``count_distinct_property``, ``median_property``, ``mean_property``,
+``share_property_true``, ``ratio_events``, ``count_items``.
+
+An unknown ``spec.type`` never crashes a run: the row is stored with ``value = null`` and the note
+``unsupported spec``, and the review summary lists the KPI.
+
+Dimensions written per KPI:
+
+* ``total`` — always;
+* ``gender`` — ``female | male | other`` for KPIs flagged ``gender_disaggregated``, computed **only**
+  from events whose actor *voluntarily self-reported* their gender, plus a ``not_reported`` cell
+  carrying the same measure over the events whose actor did not, so the total reconciles;
+* ``village`` — one row per village that appears in the KPI's events (dimension = village slug);
+* ``activity_date_gender`` — for person-level KPIs, the ``date × activity × gender`` cells, stored
+  **only** when they survive the small-cell rule (``services/disclosure.py``).
+
+Every run is a row in ``kpi_runs`` with status ``computed`` → ``published`` | ``rejected``. The
+dashboard reads ``kpi_aggregates`` and ``kpi_heat_cells`` of a **published** run only; it never sees
+raw events, and no aggregate carries a session, device or user identifier.
 """
 from __future__ import annotations
 
+import json
+import logging
 import math
 import statistics
 import uuid
-from collections import defaultdict
-from collections.abc import Callable
-from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta, timezone
-from typing import Any
+from collections import Counter, defaultdict
+from dataclasses import dataclass
+from datetime import date, datetime, timedelta, timezone
+from pathlib import Path
+from typing import Any, Callable, Iterable, Sequence
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from ..config import settings
-from ..models import Event, HeatCell, KpiAggregate, Listing, User, utcnow
-
-# --- dimensions & constants --------------------------------------------------------------------
-
-TOTAL = "total"
-SEX_DIMENSIONS: tuple[str, ...] = ("sex=F", "sex=M", "sex=X")
-DIMENSIONS: tuple[str, ...] = (TOTAL, *SEX_DIMENSIONS)
-
-#: events that identify an anonymous visitor session
-VISITOR_EVENT_TYPES: tuple[str, ...] = (
-    "answer_served", "answer_withheld", "itinerary_generated", "request_sent", "trail_report", "visit_recorded",
+from ..models import (
+    Event,
+    HeatCell,
+    KpiAggregate,
+    KpiRun,
+    ResponseCache,
+    SttEvaluation,
+    User,
+    Village,
+    utcnow,
 )
-#: events that feed the heat map (they carry lat/lng)
+from . import disclosure
+from .disclosure import (
+    GENDER_CELLS,
+    KIND_ACTIVITY,
+    KIND_GENDER,
+    KIND_TOTAL,
+    KIND_VILLAGE,
+    NOT_REPORTED,
+    TOTAL,
+    UNSUPPORTED,
+    Cell,
+)
+
+log = logging.getLogger(__name__)
+
+#: events that feed the heat map (they carry coordinates)
 HEAT_EVENT_TYPES: tuple[str, ...] = ("visit_recorded", "trail_report")
-#: grid cell size in degrees (≈ 111 m north–south, ≈ 82 m east–west at 42.4° N)
+#: grid cell size in degrees ≈ 111 m north–south, ≈ 82 m east–west at 42.4° N
 HEAT_CELL_SIZE_DEG = 0.001
 
-NOTE_PRIMARY = "k<{k}"
-NOTE_SECONDARY = "secondary"
 NOTE_NO_EVENTS = "no events"
-
-UNIT_COUNT = "count"
-UNIT_PERSONS = "persons"
-UNIT_SESSIONS = "sessions"
-UNIT_MINUTES = "minutes"
-UNIT_SHARE = "share"
-
-# --- KPI catalogue ------------------------------------------------------------------------------
-
-KPI_DEFINITIONS: list[dict[str, Any]] = [
-    {
-        "key": "hosts_onboarded",
-        "label_en": "Hosts onboarded",
-        "label_local": "Uključeni domaćini",
-        "formula": "Number of distinct hosts with an onboarding_started event in the period",
-        "unit": UNIT_PERSONS,
-        "person_level": True,
-        "event_types": ["onboarding_started"],
-    },
-    {
-        "key": "listings_confirmed",
-        "label_en": "Listings confirmed by hosts",
-        "label_local": "Ponude koje su domaćini potvrdili",
-        "formula": "Number of listing_confirmed events in the period",
-        "unit": UNIT_COUNT,
-        "person_level": True,
-        "event_types": ["listing_confirmed"],
-    },
-    {
-        "key": "listings_approved",
-        "label_en": "Listings approved (validation gate)",
-        "label_local": "Odobrene ponude (validaciona kapija)",
-        "formula": "Number of entry_approved events with item_type = listing; sex is the sex of the listing's host",
-        "unit": UNIT_COUNT,
-        "person_level": True,
-        "event_types": ["entry_approved"],
-    },
-    {
-        "key": "onboarding_duration_median_min",
-        "label_en": "Onboarding duration, median",
-        "label_local": "Trajanje uključivanja, medijana",
-        "formula": "Median of listing_confirmed.duration_seconds ÷ 60",
-        "unit": UNIT_MINUTES,
-        "person_level": True,
-        "event_types": ["listing_confirmed"],
-    },
-    {
-        "key": "onboarding_duration_mean_min",
-        "label_en": "Onboarding duration, mean",
-        "label_local": "Trajanje uključivanja, prosjek",
-        "formula": "Mean of listing_confirmed.duration_seconds ÷ 60",
-        "unit": UNIT_MINUTES,
-        "person_level": True,
-        "event_types": ["listing_confirmed"],
-    },
-    {
-        "key": "onboarding_within_target_share",
-        "label_en": "Onboardings within the target time",
-        "label_local": "Uključivanja završena u ciljanom vremenu",
-        "formula": "Share of listing_confirmed events with within_target = true (target = ONBOARDING_TARGET_MINUTES)",
-        "unit": UNIT_SHARE,
-        "person_level": True,
-        "event_types": ["listing_confirmed"],
-    },
-    {
-        "key": "entries_approved",
-        "label_en": "Heritage entries approved",
-        "label_local": "Odobreni zapisi baštine",
-        "formula": "Number of entry_approved events with item_type = heritage_entry",
-        "unit": UNIT_COUNT,
-        "person_level": False,
-        "event_types": ["entry_approved"],
-    },
-    {
-        "key": "answers_served",
-        "label_en": "Grounded answers served",
-        "label_local": "Isporučeni odgovori sa citatima",
-        "formula": "Number of answer_served events",
-        "unit": UNIT_COUNT,
-        "person_level": False,
-        "event_types": ["answer_served"],
-    },
-    {
-        "key": "answers_withheld",
-        "label_en": "Answers withheld",
-        "label_local": "Uskraćeni odgovori",
-        "formula": "Number of answer_withheld events",
-        "unit": UNIT_COUNT,
-        "person_level": False,
-        "event_types": ["answer_withheld"],
-    },
-    {
-        "key": "answer_withhold_rate",
-        "label_en": "Answer withhold rate",
-        "label_local": "Stopa uskraćivanja odgovora",
-        "formula": "answers_withheld ÷ (answers_served + answers_withheld)",
-        "unit": UNIT_SHARE,
-        "person_level": False,
-        "event_types": ["answer_served", "answer_withheld"],
-    },
-    {
-        "key": "itineraries_generated",
-        "label_en": "Itineraries generated",
-        "label_local": "Generisani itinereri",
-        "formula": "Number of itinerary_generated events",
-        "unit": UNIT_COUNT,
-        "person_level": False,
-        "event_types": ["itinerary_generated"],
-    },
-    {
-        "key": "requests_sent",
-        "label_en": "Visitor requests sent",
-        "label_local": "Poslati upiti posjetilaca",
-        "formula": "Number of request_sent events",
-        "unit": UNIT_COUNT,
-        "person_level": False,
-        "event_types": ["request_sent"],
-    },
-    {
-        "key": "requests_confirmed",
-        "label_en": "Requests confirmed by hosts",
-        "label_local": "Upiti koje su domaćini potvrdili",
-        "formula": "Number of request_confirmed events",
-        "unit": UNIT_COUNT,
-        "person_level": False,
-        "event_types": ["request_confirmed"],
-    },
-    {
-        "key": "request_confirmation_rate",
-        "label_en": "Request confirmation rate",
-        "label_local": "Stopa potvrđivanja upita",
-        "formula": "requests_confirmed ÷ requests_sent",
-        "unit": UNIT_SHARE,
-        "person_level": False,
-        "event_types": ["request_sent", "request_confirmed"],
-    },
-    {
-        "key": "trail_reports",
-        "label_en": "Trail condition reports",
-        "label_local": "Prijave stanja staza",
-        "formula": "Number of trail_report events",
-        "unit": UNIT_COUNT,
-        "person_level": False,
-        "event_types": ["trail_report"],
-    },
-    {
-        "key": "visits_recorded",
-        "label_en": "Visits recorded",
-        "label_local": "Zabilježene posjete",
-        "formula": "Number of visit_recorded events",
-        "unit": UNIT_COUNT,
-        "person_level": False,
-        "event_types": ["visit_recorded"],
-    },
-    {
-        "key": "visitor_sessions_active",
-        "label_en": "Active visitor sessions",
-        "label_local": "Aktivne sesije posjetilaca",
-        "formula": "Number of distinct anonymous session ids across visitor events "
-                   "(answer_served, answer_withheld, itinerary_generated, request_sent, trail_report, visit_recorded)",
-        "unit": UNIT_SESSIONS,
-        "person_level": False,
-        "event_types": list(VISITOR_EVENT_TYPES),
-    },
-]
-
-KPI_KEYS: tuple[str, ...] = tuple(d["key"] for d in KPI_DEFINITIONS)
-_DEF_BY_KEY: dict[str, dict[str, Any]] = {d["key"]: d for d in KPI_DEFINITIONS}
+RUN_STATUSES = ("computed", "reviewed", "published", "rejected")
 
 
-def definition(key: str) -> dict[str, Any]:
-    return _DEF_BY_KEY[key]
-
-
-# --- row model ----------------------------------------------------------------------------------
-
-
-@dataclass
-class KpiRow:
-    """One published cell. Never carries ids of persons or sessions."""
-
-    kpi_key: str
-    dimension: str
-    value: float | None
-    unit: str
-    n_persons: int | None
-    n_events: int
-    suppressed: bool = False
-    note: str = ""
-
-    def as_dict(self) -> dict[str, Any]:
-        return asdict(self)
+# =================================================================================================
+# definitions file
+# =================================================================================================
 
 
 @dataclass(frozen=True)
-class _Obs:
-    """A person-level observation: who (opaque key), their sex snapshot, and the event."""
+class Definitions:
+    """The parsed definition file. ``provisional`` is true while it is not the §11 wording."""
 
-    person: uuid.UUID | str | None
-    sex: str | None
-    event: Event
+    path: str
+    version: str
+    provisional: bool
+    status: str
+    warning: str
+    replace_instructions: str
+    spec_reference: dict[str, str]
+    kpis: tuple[dict[str, Any], ...]
+    raw: dict[str, Any]
 
+    @property
+    def keys(self) -> tuple[str, ...]:
+        return tuple(k["key"] for k in self.kpis)
 
-ValueFn = Callable[[list[_Obs]], float | None]
+    def get(self, key: str) -> dict[str, Any] | None:
+        for k in self.kpis:
+            if k["key"] == key:
+                return k
+        return None
 
-
-# --- helpers ------------------------------------------------------------------------------------
-
-
-def _prop(e: Event, name: str, default: Any = None) -> Any:
-    props = e.properties or {}
-    return props.get(name, default)
-
-
-def _sex_of(dimension: str) -> str:
-    return dimension.split("=", 1)[1]
-
-
-def _round(x: float | None, digits: int = 4) -> float | None:
-    return None if x is None else round(float(x), digits)
-
-
-def _count(obs: list[_Obs]) -> float | None:
-    return float(len(obs))
-
-
-def _distinct_persons(obs: list[_Obs]) -> float | None:
-    return float(len({o.person for o in obs if o.person is not None}))
+    def public_dict(self) -> dict[str, Any]:
+        """What ``GET /api/kpi/definitions`` returns: the file plus the provisional warning."""
+        doc = dict(self.raw)
+        doc["provisional"] = self.provisional
+        doc["definitions_version"] = self.version
+        doc["source_file"] = Path(self.path).name
+        return doc
 
 
-def _durations_min(obs: list[_Obs]) -> list[float]:
+_cache: dict[str, tuple[tuple[float, int], Definitions]] = {}
+
+
+def definitions_path(path: str | Path | None = None) -> Path:
+    return Path(path or settings.kpi_definitions_path)
+
+
+def load_definitions(path: str | Path | None = None, *, refresh: bool = False) -> Definitions:
+    """Read (and cache) the KPI definition file. Re-read automatically when the file changes."""
+    p = definitions_path(path)
+    try:
+        stat = p.stat()
+    except OSError as exc:  # loud: a KPI run without definitions is meaningless
+        raise RuntimeError(
+            f"KPI definition file not found: {p} — set KPI_DEFINITIONS_PATH or restore the file"
+        ) from exc
+    stamp = (stat.st_mtime, stat.st_size)
+    key = str(p.resolve())
+    if not refresh and key in _cache and _cache[key][0] == stamp:
+        return _cache[key][1]
+
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"KPI definition file {p} is not valid JSON: {exc}") from exc
+    kpis = tuple(raw.get("kpis") or ())
+    if not kpis:
+        raise RuntimeError(f"KPI definition file {p} defines no KPIs")
+    missing = [k for k in kpis if not k.get("key") or not k.get("spec")]
+    if missing:
+        raise RuntimeError(f"KPI definition file {p}: every KPI needs a 'key' and a 'spec'")
+    status = str(raw.get("status", ""))
+    provisional = bool(
+        raw.get("provisional", any(bool(k.get("provisional", True)) for k in kpis))
+        or status.upper().startswith("PROVISIONAL")
+    )
+    defs = Definitions(
+        path=str(p),
+        version=str(raw.get("version", "unversioned")),
+        provisional=provisional,
+        status=status,
+        warning=str(raw.get("warning", "")),
+        replace_instructions=str(raw.get("replace_instructions", "")),
+        spec_reference=dict(raw.get("spec_reference") or {}),
+        kpis=kpis,
+        raw=raw,
+    )
+    _cache[key] = (stamp, defs)
+    return defs
+
+
+def clear_definitions_cache() -> None:
+    _cache.clear()
+
+
+# =================================================================================================
+# spec evaluation (generic; nothing here knows what K07 means)
+# =================================================================================================
+
+
+def _prop(ev: Event, name: str) -> Any:
+    return (ev.properties or {}).get(name)
+
+
+def _matches(ev: Event, filters: dict[str, Any]) -> bool:
+    for field, expected in (filters or {}).items():
+        if field.startswith("properties."):
+            actual = _prop(ev, field.split(".", 1)[1])
+        elif field in ("event_type", "item_type", "actor_role", "municipality", "actor_gender"):
+            actual = getattr(ev, field)
+        else:
+            actual = _prop(ev, field)
+        if isinstance(expected, (list, tuple)):
+            if actual not in expected:
+                return False
+        elif actual != expected:
+            return False
+    return True
+
+
+def _filter(events: Sequence[Event], types: Iterable[str] | None, filters: dict | None) -> list[Event]:
+    wanted = set(types or ())
+    return [
+        e for e in events
+        if (not wanted or e.event_type in wanted) and _matches(e, filters or {})
+    ]
+
+
+def _select(spec: dict, scope: Sequence[Event]) -> tuple[list[Event], tuple[list[Event], list[Event]] | None]:
+    """Events the spec touches (for ``n_events``/``n_persons``) and, for ratios, its two parts."""
+    if spec.get("type") == "ratio_events":
+        num = _filter(scope, spec.get("numerator_event_types"), spec.get("filters"))
+        den = _filter(scope, spec.get("denominator_event_types"), spec.get("filters"))
+        return num + den, (num, den)
+    return _filter(scope, spec.get("event_types"), spec.get("filters")), None
+
+
+def pilot_start() -> date:
+    try:
+        return date.fromisoformat(settings.pilot_start_date)
+    except ValueError:
+        log.warning("PILOT_START_DATE %r is not a date; falling back to 1970-01-01", settings.pilot_start_date)
+        return date(1970, 1, 1)
+
+
+def dedup_window(when: datetime, dedup_days: int, start: date | None = None) -> int:
+    """Index of the deduplication window a timestamp falls in (K11: one 180-day window)."""
+    if dedup_days <= 0:
+        return 0
+    anchor = start or pilot_start()
+    return (when.astimezone(timezone.utc).date() - anchor).days // dedup_days
+
+
+def _numeric_values(events: Sequence[Event], prop: str, scale: float) -> list[float]:
     out: list[float] = []
-    for o in obs:
-        d = _prop(o.event, "duration_seconds")
-        if isinstance(d, (int, float)) and not isinstance(d, bool):
-            out.append(float(d) / 60.0)
+    for e in events:
+        v = _prop(e, prop)
+        if isinstance(v, bool) or v is None:
+            continue
+        try:
+            out.append(float(v) * scale)
+        except (TypeError, ValueError):
+            continue
     return out
 
 
-def _median_duration(obs: list[_Obs]) -> float | None:
-    d = _durations_min(obs)
-    return _round(statistics.median(d), 2) if d else None
+def _hashable(value: Any) -> Any:
+    return json.dumps(value, sort_keys=True, default=str) if isinstance(value, (list, dict)) else value
 
 
-def _mean_duration(obs: list[_Obs]) -> float | None:
-    d = _durations_min(obs)
-    return _round(statistics.fmean(d), 2) if d else None
+def _op_count_events(spec, touched, parts) -> float:
+    return float(len(touched))
 
 
-def _within_target_share(obs: list[_Obs]) -> float | None:
-    flags = [bool(_prop(o.event, "within_target", False)) for o in obs]
-    return _round(sum(flags) / len(flags)) if flags else None
+def _op_count_distinct_actors(spec, touched, parts) -> float:
+    return float(len({e.actor_pseudonym for e in touched if e.actor_pseudonym}))
 
 
-def _person_rows(key: str, obs: list[_Obs], value_fn: ValueFn, k: int) -> list[KpiRow]:
-    """Cells for a person-level KPI with primary and secondary suppression applied."""
-    unit = definition(key)["unit"]
-    rows: list[KpiRow] = []
-    for dim in DIMENSIONS:
-        subset = obs if dim == TOTAL else [o for o in obs if o.sex == _sex_of(dim)]
-        n_persons = len({o.person for o in subset if o.person is not None})
-        row = KpiRow(kpi_key=key, dimension=dim, value=None, unit=unit, n_persons=n_persons, n_events=len(subset))
-        if n_persons < k:
-            row.suppressed = True
-            row.note = NOTE_PRIMARY.format(k=k)
-        else:
-            row.value = value_fn(subset)
-            if row.value is None:
-                row.note = NOTE_NO_EVENTS
-        rows.append(row)
-    _secondary_suppression(rows)
-    return rows
+def _op_count_distinct_devices(spec, touched, parts) -> float:
+    """K11: distinct device pseudonyms, deduplicated once per ``dedup_days``.
+
+    A device that comes back after the window has passed counts again; every visit inside one
+    window counts once.
+    """
+    dedup_days = int(spec.get("dedup_days") or settings.k11_dedup_days)
+    anchor = pilot_start()
+    seen = {
+        (e.device_pseudonym, dedup_window(e.occurred_at, dedup_days, anchor))
+        for e in touched
+        if e.device_pseudonym
+    }
+    return float(len(seen))
 
 
-def _secondary_suppression(rows: list[KpiRow]) -> None:
-    """If exactly one sex cell is suppressed and the total is published, hide the smallest remaining
-    sex cell too (otherwise the hidden cell = total − published cells)."""
-    by_dim = {r.dimension: r for r in rows}
-    total = by_dim.get(TOTAL)
-    if total is None or total.suppressed:
-        return
-    sex_rows = [by_dim[d] for d in SEX_DIMENSIONS if d in by_dim]
-    suppressed = [r for r in sex_rows if r.suppressed]
-    published = [r for r in sex_rows if not r.suppressed]
-    if len(suppressed) != 1 or not published:
-        return
-    victim = min(published, key=lambda r: (r.n_persons or 0, r.n_events, SEX_DIMENSIONS.index(r.dimension)))
-    victim.value = None
-    victim.suppressed = True
-    victim.note = NOTE_SECONDARY
+def _op_count_distinct_villages(spec, touched, parts) -> float:
+    return float(len({e.village_id for e in touched if e.village_id}))
 
 
-def _total_row(key: str, value: float | None, n_events: int, *, note: str = "") -> KpiRow:
-    return KpiRow(kpi_key=key, dimension=TOTAL, value=value, unit=definition(key)["unit"],
-                  n_persons=None, n_events=n_events, suppressed=False, note=note)
+def _op_count_distinct_property(spec, touched, parts) -> float:
+    prop = spec.get("property", "")
+    return float(len({_hashable(_prop(e, prop)) for e in touched if _prop(e, prop) is not None}))
 
 
-def _count_row(key: str, events: list[Event]) -> KpiRow:
-    return _total_row(key, float(len(events)), len(events))
+def _op_median_property(spec, touched, parts) -> float | None:
+    values = _numeric_values(touched, spec.get("property", ""), float(spec.get("scale", 1.0)))
+    return float(statistics.median(values)) if values else None
 
 
-def _rate_row(key: str, numerator: int, denominator: int, n_events: int) -> KpiRow:
-    if denominator <= 0:
-        return _total_row(key, None, n_events, note=NOTE_NO_EVENTS)
-    return _total_row(key, _round(numerator / denominator), n_events)
+def _op_mean_property(spec, touched, parts) -> float | None:
+    values = _numeric_values(touched, spec.get("property", ""), float(spec.get("scale", 1.0)))
+    return float(statistics.fmean(values)) if values else None
 
 
-def _host_sex_lookup(db: Session, listing_ids: set[uuid.UUID]) -> dict[uuid.UUID, tuple[uuid.UUID, str | None]]:
-    """listing id → (host user id, host sex) for ``listings_approved``."""
-    if not listing_ids:
-        return {}
-    stmt = (
-        select(Listing.id, Listing.host_user_id, User.sex)
-        .join(User, User.id == Listing.host_user_id)
-        .where(Listing.id.in_(listing_ids))
+def _op_share_property_true(spec, touched, parts) -> float | None:
+    if not touched:
+        return None
+    prop = spec.get("property", "")
+    return sum(1 for e in touched if bool(_prop(e, prop))) / len(touched)
+
+
+def _op_ratio_events(spec, touched, parts) -> float | None:
+    num, den = parts if parts else ([], [])
+    total = len(num) + len(den)
+    return (len(num) / total) if total else None
+
+
+def _op_count_items(spec, touched, parts) -> float:
+    return float(len({e.item_id for e in touched if e.item_id}))
+
+
+OPERATORS: dict[str, Callable[[dict, list[Event], Any], float | None]] = {
+    "count_events": _op_count_events,
+    "count_distinct_actors": _op_count_distinct_actors,
+    "count_distinct_devices": _op_count_distinct_devices,
+    "count_distinct_villages": _op_count_distinct_villages,
+    "count_distinct_property": _op_count_distinct_property,
+    "median_property": _op_median_property,
+    "mean_property": _op_mean_property,
+    "share_property_true": _op_share_property_true,
+    "ratio_events": _op_ratio_events,
+    "count_items": _op_count_items,
+}
+
+
+def evaluate(spec: dict, scope: Sequence[Event]) -> tuple[float | None, list[Event], str]:
+    """Evaluate one spec over one dimension's events → (value, touched events, note)."""
+    touched, parts = _select(spec, scope)
+    op = OPERATORS.get(str(spec.get("type", "")))
+    if op is None:
+        return None, touched, UNSUPPORTED
+    try:
+        value = op(spec, touched, parts)
+    except Exception as exc:  # a broken spec must not take the whole run down
+        log.warning("KPI spec %r failed: %s", spec, exc)
+        return None, touched, f"spec error: {type(exc).__name__}"
+    note = NOTE_NO_EVENTS if not touched else ""
+    return value, touched, note
+
+
+# =================================================================================================
+# cell construction
+# =================================================================================================
+
+
+def _persons_behind(kpi: dict, touched: Sequence[Event]) -> int | None:
+    """Distinct individuals behind a cell: actors for person-level KPIs, otherwise devices.
+
+    ``None`` means "not backed by individuals" (for example a count of validator decisions) — the
+    k-rule does not apply to such a cell.
+    """
+    if not touched:
+        return None
+    if kpi.get("person_level"):
+        return len({e.actor_pseudonym for e in touched if e.actor_pseudonym})
+    devices = {e.device_pseudonym for e in touched if e.device_pseudonym}
+    if devices:
+        return len(devices)
+    actors = {e.actor_pseudonym for e in touched if e.actor_pseudonym}
+    return len(actors) if actors else None
+
+
+def _cell(kpi: dict, dimension: str, kind: str, scope: Sequence[Event]) -> Cell:
+    value, touched, note = evaluate(kpi["spec"], scope)
+    return Cell(
+        kpi_key=kpi["key"],
+        kpi_label=kpi.get("label_en") or kpi["key"],
+        dimension=dimension,
+        dimension_kind=kind,
+        value=value,
+        unit=kpi.get("unit", "count"),
+        n_persons=_persons_behind(kpi, touched),
+        n_events=len(touched),
+        provisional_definition=bool(kpi.get("provisional", True)),
+        note=note,
     )
-    return {lid: (hid, sex) for lid, hid, sex in db.execute(stmt)}
 
 
-# --- heat map -----------------------------------------------------------------------------------
+def _gender_scopes(events: Sequence[Event]) -> dict[str, list[Event]]:
+    """Split events by *voluntarily self-reported* gender; everything else is ``not_reported``."""
+    scopes: dict[str, list[Event]] = {g: [] for g in (*GENDER_CELLS, NOT_REPORTED)}
+    for e in events:
+        if e.gender_self_reported and e.actor_gender in GENDER_CELLS:
+            scopes[e.actor_gender].append(e)
+        else:
+            scopes[NOT_REPORTED].append(e)
+    return scopes
 
 
-def cell_index(lat: float, lng: float, size: float = HEAT_CELL_SIZE_DEG) -> tuple[int, int]:
-    """Grid indices of the cell containing (lat, lng)."""
-    return math.floor(lat / size + 1e-9), math.floor(lng / size + 1e-9)
+def build_cells(defs: Definitions, events: Sequence[Event], village_slugs: dict[uuid.UUID, str]) -> list[Cell]:
+    """Every cell of a run, before disclosure control."""
+    cells: list[Cell] = []
+    by_gender = _gender_scopes(events)
+    by_village: dict[uuid.UUID, list[Event]] = defaultdict(list)
+    for e in events:
+        if e.village_id is not None:
+            by_village[e.village_id].append(e)
+
+    for kpi in defs.kpis:
+        cells.append(_cell(kpi, TOTAL, KIND_TOTAL, events))
+
+        if kpi.get("gender_disaggregated"):
+            for dim in (*GENDER_CELLS, NOT_REPORTED):
+                cells.append(_cell(kpi, dim, KIND_GENDER, by_gender[dim]))
+
+        for village_id, scope in by_village.items():
+            slug = village_slugs.get(village_id)
+            if slug is None:
+                continue
+            cell = _cell(kpi, slug, KIND_VILLAGE, scope)
+            if cell.n_events:  # only villages the KPI actually saw
+                cells.append(cell)
+
+        if kpi.get("person_level"):
+            cells.extend(_activity_cells(kpi, events))
+    return cells
 
 
-def cell_centre(index: tuple[int, int], size: float = HEAT_CELL_SIZE_DEG) -> tuple[float, float]:
-    """(lat, lng) of the centre of a grid cell."""
-    i, j = index
-    return round(i * size + size / 2, 7), round(j * size + size / 2, 7)
+def _activity_cells(kpi: dict, events: Sequence[Event]) -> list[Cell]:
+    """``date × activity × gender`` cells — the finest grain, governed by the small-cell rule."""
+    touched, _ = _select(kpi["spec"], events)
+    buckets: dict[tuple[str, str, str], list[Event]] = defaultdict(list)
+    for e in touched:
+        gender = e.actor_gender if (e.gender_self_reported and e.actor_gender in GENDER_CELLS) else NOT_REPORTED
+        day = e.occurred_at.astimezone(timezone.utc).date().isoformat()
+        buckets[(day, e.event_type, gender)].append(e)
+    cells = []
+    for (day, activity, gender), evs in sorted(buckets.items()):
+        actors = {e.actor_pseudonym for e in evs if e.actor_pseudonym}
+        cells.append(
+            Cell(
+                kpi_key=kpi["key"],
+                kpi_label=kpi.get("label_en") or kpi["key"],
+                dimension=f"{day}|{activity}|{gender}",
+                dimension_kind=KIND_ACTIVITY,
+                value=float(len(evs)),
+                unit="count",
+                n_persons=len(actors),
+                n_events=len(evs),
+                provisional_definition=bool(kpi.get("provisional", True)),
+            )
+        )
+    return cells
 
 
-def _heat_identity(e: Event) -> str | None:
-    """Opaque per-visitor key used only to count distinct sessions; never stored."""
-    if e.session_id:
-        return f"s:{e.session_id}"
-    if e.actor_user_id:
-        return f"u:{e.actor_user_id}"
-    return None
+# =================================================================================================
+# heat map
+# =================================================================================================
 
 
-def aggregate_heat_cells(events: list[Event], k: int, size: float = HEAT_CELL_SIZE_DEG) -> list[dict[str, Any]]:
-    """Grid aggregation of geotagged visitor events; only cells with ≥ k distinct sessions survive."""
-    cells: dict[tuple[int, int], dict[str, Any]] = {}
+def build_heat_cells(events: Sequence[Event], k_min: int, cell_size: float = HEAT_CELL_SIZE_DEG) -> list[dict]:
+    """Aggregate geotagged visitor events on a ~100 m grid; keep cells with ≥ k_min devices."""
+    grid: dict[tuple[int, int], dict[str, Any]] = defaultdict(
+        lambda: {"visits": 0, "devices": set(), "municipality": Counter()}
+    )
     for e in events:
         if e.event_type not in HEAT_EVENT_TYPES or e.lat is None or e.lng is None:
             continue
-        ident = _heat_identity(e)
-        if ident is None:
-            continue
-        cell = cells.setdefault(cell_index(e.lat, e.lng, size), {"n_visits": 0, "idents": set()})
-        cell["n_visits"] += 1
-        cell["idents"].add(ident)
-    out: list[dict[str, Any]] = []
-    for idx in sorted(cells):
-        n_sessions = len(cells[idx]["idents"])
-        if n_sessions < k:
-            continue
-        lat, lng = cell_centre(idx, size)
-        out.append({
-            "cell_lat": lat, "cell_lng": lng, "cell_size_deg": size,
-            "n_visits": cells[idx]["n_visits"], "n_sessions": n_sessions,
-        })
+        key = (math.floor(e.lat / cell_size), math.floor(e.lng / cell_size))
+        bucket = grid[key]
+        bucket["visits"] += 1
+        if e.device_pseudonym:
+            bucket["devices"].add(e.device_pseudonym)
+        if e.municipality:
+            bucket["municipality"][e.municipality] += 1
+
+    out = []
+    for (ilat, ilng), bucket in sorted(grid.items()):
+        n_devices = len(bucket["devices"])
+        if n_devices < k_min:
+            continue  # a cell that could point at a handful of people is never stored
+        municipality = bucket["municipality"].most_common(1)[0][0] if bucket["municipality"] else None
+        out.append(
+            {
+                "cell_lat": round((ilat + 0.5) * cell_size, 6),
+                "cell_lng": round((ilng + 0.5) * cell_size, 6),
+                "cell_size_deg": cell_size,
+                "n_visits": bucket["visits"],
+                "n_devices": n_devices,
+                "municipality": municipality,
+            }
+        )
     return out
 
 
-# --- computation --------------------------------------------------------------------------------
-
-
-def compute_rows(db: Session, events: list[Event], k: int) -> list[KpiRow]:
-    """Pure KPI computation over a list of events (already limited to the period)."""
-    by_type: dict[str, list[Event]] = defaultdict(list)
-    for e in events:
-        by_type[e.event_type].append(e)
-
-    def actor_obs(evs: list[Event]) -> list[_Obs]:
-        return [_Obs(person=e.actor_user_id, sex=e.actor_sex, event=e) for e in evs]
-
-    rows: list[KpiRow] = []
-
-    # person-level
-    onboarding = actor_obs(by_type["onboarding_started"])
-    rows += _person_rows("hosts_onboarded", onboarding, _distinct_persons, k)
-
-    confirmed = actor_obs(by_type["listing_confirmed"])
-    rows += _person_rows("listings_confirmed", confirmed, _count, k)
-
-    approved_listings = [e for e in by_type["entry_approved"] if e.item_type == "listing"]
-    hosts = _host_sex_lookup(db, {e.item_id for e in approved_listings if e.item_id is not None})
-    approved_obs = [
-        _Obs(person=hosts[e.item_id][0] if e.item_id in hosts else None,
-             sex=hosts[e.item_id][1] if e.item_id in hosts else None, event=e)
-        for e in approved_listings
+def heat_feature(cell: HeatCell) -> dict[str, Any]:
+    """One heat cell as a GeoJSON Polygon (the grid square), with its centre in the properties."""
+    half = cell.cell_size_deg / 2
+    lat, lng = cell.cell_lat, cell.cell_lng
+    ring = [
+        [round(lng - half, 6), round(lat - half, 6)],
+        [round(lng + half, 6), round(lat - half, 6)],
+        [round(lng + half, 6), round(lat + half, 6)],
+        [round(lng - half, 6), round(lat + half, 6)],
+        [round(lng - half, 6), round(lat - half, 6)],
     ]
-    rows += _person_rows("listings_approved", approved_obs, _count, k)
-
-    rows += _person_rows("onboarding_duration_median_min", confirmed, _median_duration, k)
-    rows += _person_rows("onboarding_duration_mean_min", confirmed, _mean_duration, k)
-    rows += _person_rows("onboarding_within_target_share", confirmed, _within_target_share, k)
-
-    # non-person
-    rows.append(_count_row("entries_approved", [e for e in by_type["entry_approved"] if e.item_type == "heritage_entry"]))
-    served, withheld = by_type["answer_served"], by_type["answer_withheld"]
-    rows.append(_count_row("answers_served", served))
-    rows.append(_count_row("answers_withheld", withheld))
-    rows.append(_rate_row("answer_withhold_rate", len(withheld), len(served) + len(withheld), len(served) + len(withheld)))
-    rows.append(_count_row("itineraries_generated", by_type["itinerary_generated"]))
-    sent, conf = by_type["request_sent"], by_type["request_confirmed"]
-    rows.append(_count_row("requests_sent", sent))
-    rows.append(_count_row("requests_confirmed", conf))
-    rows.append(_rate_row("request_confirmation_rate", len(conf), len(sent), len(sent) + len(conf)))
-    rows.append(_count_row("trail_reports", by_type["trail_report"]))
-    rows.append(_count_row("visits_recorded", by_type["visit_recorded"]))
-    visitor_events = [e for t in VISITOR_EVENT_TYPES for e in by_type[t] if e.session_id]
-    rows.append(_total_row("visitor_sessions_active", float(len({e.session_id for e in visitor_events})), len(visitor_events)))
-
-    assert [r.kpi_key for r in rows if r.dimension == TOTAL] == list(KPI_KEYS), "KPI catalogue and computation differ"
-    return rows
+    return {
+        "type": "Feature",
+        "geometry": {"type": "Polygon", "coordinates": [ring]},
+        "properties": {
+            "n_visits": cell.n_visits,
+            "n_devices": cell.n_devices,
+            "municipality": cell.municipality,
+            "cell_size_deg": cell.cell_size_deg,
+            "center": {"lat": lat, "lng": lng},
+        },
+    }
 
 
-def _as_utc(dt: datetime) -> datetime:
-    return dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt.astimezone(timezone.utc)
+# =================================================================================================
+# runs
+# =================================================================================================
 
 
-def compute_kpis(db: Session, period_days: int = 365, now: datetime | None = None) -> dict[str, Any]:
-    """Compute one KPI run from the events in ``[now − period_days, now]`` and persist it.
+def compute_kpis(
+    db: Session,
+    period_days: int = 365,
+    now: datetime | None = None,
+    publish: bool = False,
+    definitions: Definitions | None = None,
+) -> dict[str, Any]:
+    """Compute one KPI run from the event stream and store the reviewed aggregates.
 
-    Deletes nothing: every run is appended (``run_id``). Returns a summary that contains the
-    published rows only (no ids of persons or sessions).
+    ``publish=True`` marks the run published without a disclosure review — a convenience for the
+    CLI demo (``python -m app.cli kpi-compute --publish``). The API always goes through
+    :func:`review_run`.
     """
-    if period_days < 1:
-        raise ValueError("period_days must be >= 1")
-    period_end = _as_utc(now) if now is not None else utcnow()
-    period_start = period_end - timedelta(days=period_days)
-    k = settings.kpi_k_min
+    defs = definitions or load_definitions()
+    period_end = (now or utcnow()).astimezone(timezone.utc)
+    period_start = period_end - timedelta(days=max(1, int(period_days)))
+    k_min = settings.kpi_k_min
 
     events = list(
         db.scalars(
             select(Event)
             .where(Event.occurred_at >= period_start, Event.occurred_at <= period_end)
-            .order_by(Event.occurred_at, Event.id)
+            .order_by(Event.occurred_at)
         )
     )
-    rows = compute_rows(db, events, k)
-    cells = aggregate_heat_cells(events, k)
+    village_slugs = {v.id: v.slug for v in db.scalars(select(Village))}
 
-    run_id = uuid.uuid4()
-    computed_at = utcnow()
-    for r in rows:
-        db.add(KpiAggregate(run_id=run_id, computed_at=computed_at, period_start=period_start,
-                            period_end=period_end, **r.as_dict()))
-    for c in cells:
-        db.add(HeatCell(run_id=run_id, computed_at=computed_at, **c))
+    run = KpiRun(
+        period_start=period_start,
+        period_end=period_end,
+        k_min=k_min,
+        definitions_version=defs.version,
+        definitions_provisional=defs.provisional,
+        status="computed",
+    )
+    db.add(run)
+    db.flush()
+
+    cells = build_cells(defs, events, village_slugs)
+    summary = disclosure.apply_disclosure_control(cells, k_min)
+
+    stored = [c for c in cells if not (c.dimension_kind == KIND_ACTIVITY and c.suppressed)]
+    for c in stored:
+        db.add(
+            KpiAggregate(
+                run_id=run.id,
+                computed_at=run.computed_at,
+                period_start=period_start,
+                period_end=period_end,
+                kpi_key=c.kpi_key,
+                kpi_label=c.kpi_label,
+                dimension=c.dimension,
+                dimension_kind=c.dimension_kind,
+                value=c.value,
+                unit=c.unit,
+                n_persons=c.n_persons,
+                n_events=c.n_events,
+                suppressed=c.suppressed,
+                suppression_reason=c.suppression_reason,
+                provisional_definition=c.provisional_definition,
+                note=c.note,
+            )
+        )
+
+    heat = build_heat_cells(events, k_min)
+    for h in heat:
+        db.add(HeatCell(run_id=run.id, computed_at=run.computed_at, **h))
+
+    run.n_rows = len(stored)
+    run.n_suppressed = sum(1 for c in stored if c.suppressed)
+    if publish:
+        run.status = "published"
+        run.reviewed_at = utcnow()
+        run.review_note = "published without a disclosure review (kpi-compute --publish, demo only)"
     db.commit()
 
-    return {
-        "run_id": run_id,
-        "computed_at": computed_at,
+    result = {
+        "run_id": str(run.id),
+        "status": run.status,
+        "computed_at": run.computed_at,
         "period_start": period_start,
         "period_end": period_end,
-        "k_min": k,
+        "period_days": period_days,
+        "k_min": k_min,
+        "definitions_version": defs.version,
+        "definitions_provisional": defs.provisional,
+        "definitions_path": defs.path,
+        "n_kpis": len(defs.kpis),
         "n_events": len(events),
-        "rows": [r.as_dict() for r in rows],
-        "heat_cells": len(cells),
+        "n_rows": run.n_rows,
+        "n_suppressed": run.n_suppressed,
+        "n_heat_cells": len(heat),
+        "n_small_cells_dropped": len(cells) - len(stored),
+        "disclosure": summary,
+        "published_without_review": bool(publish),
+    }
+    log.info(
+        "KPI run %s: %d events → %d rows (%d suppressed), %d heat cells, definitions %s%s",
+        run.id, len(events), run.n_rows, run.n_suppressed, len(heat), defs.version,
+        " (PROVISIONAL)" if defs.provisional else "",
+    )
+    return result
+
+
+def latest_published_run(db: Session) -> KpiRun | None:
+    return db.scalars(
+        select(KpiRun).where(KpiRun.status == "published").order_by(KpiRun.computed_at.desc()).limit(1)
+    ).first()
+
+
+def get_run(db: Session, run_id: uuid.UUID | str) -> KpiRun | None:
+    try:
+        rid = run_id if isinstance(run_id, uuid.UUID) else uuid.UUID(str(run_id))
+    except ValueError:
+        return None
+    return db.get(KpiRun, rid)
+
+
+def recent_runs(db: Session, limit: int = 20) -> list[KpiRun]:
+    return list(db.scalars(select(KpiRun).order_by(KpiRun.computed_at.desc()).limit(limit)))
+
+
+def rows_for_run(db: Session, run: KpiRun) -> list[KpiAggregate]:
+    return list(
+        db.scalars(
+            select(KpiAggregate)
+            .where(KpiAggregate.run_id == run.id)
+            .order_by(KpiAggregate.kpi_key, KpiAggregate.dimension_kind, KpiAggregate.dimension)
+        )
+    )
+
+
+def heat_cells_for_run(db: Session, run: KpiRun) -> list[HeatCell]:
+    return list(db.scalars(select(HeatCell).where(HeatCell.run_id == run.id)))
+
+
+def review_run(
+    db: Session,
+    run_id: uuid.UUID | str,
+    decision: str,
+    note: str = "",
+    reviewer: User | None = None,
+) -> dict[str, Any]:
+    """The disclosure review: publish or reject a computed run. Only a published run is readable."""
+    if decision not in ("publish", "reject"):
+        raise ValueError("decision must be 'publish' or 'reject'")
+    run = get_run(db, run_id)
+    if run is None:
+        raise LookupError(f"KPI run {run_id} not found")
+    if run.status in ("published", "rejected"):
+        raise ValueError(f"KPI run {run.id} was already reviewed (status {run.status})")
+
+    rows = rows_for_run(db, run)
+    run.status = "published" if decision == "publish" else "rejected"
+    run.review_note = note or ""
+    run.reviewed_at = utcnow()
+    run.reviewed_by = reviewer.id if reviewer is not None else None
+    db.commit()
+    return {
+        "run_id": str(run.id),
+        "status": run.status,
+        "decision": decision,
+        "reviewed_at": run.reviewed_at,
+        "reviewed_by_role": reviewer.role if reviewer is not None else None,
+        "review_note": run.review_note,
+        "k_min": run.k_min,
+        "definitions_version": run.definitions_version,
+        "definitions_provisional": run.definitions_provisional,
+        "disclosure": disclosure.review_summary(rows, k_min=run.k_min),
     }
 
 
-# --- reading the latest run ---------------------------------------------------------------------
+def review_sheet(db: Session, run: KpiRun) -> dict[str, Any]:
+    """What the human reviewer sees before signing off a run."""
+    rows = rows_for_run(db, run)
+    return {
+        "run_id": str(run.id),
+        "status": run.status,
+        "computed_at": run.computed_at,
+        "period_start": run.period_start,
+        "period_end": run.period_end,
+        "k_min": run.k_min,
+        "definitions_version": run.definitions_version,
+        "definitions_provisional": run.definitions_provisional,
+        "n_rows": run.n_rows,
+        "n_suppressed": run.n_suppressed,
+        "n_heat_cells": len(heat_cells_for_run(db, run)),
+        "disclosure": disclosure.review_summary(rows, k_min=run.k_min),
+    }
 
 
-@dataclass(frozen=True)
-class RunInfo:
-    run_id: uuid.UUID
-    computed_at: datetime
-    period_start: datetime
-    period_end: datetime
+# =================================================================================================
+# internal quality metrics (/api/kpi/quality)
+# =================================================================================================
 
 
-def latest_run(db: Session) -> RunInfo | None:
-    """The most recent run, or None when nothing has been computed yet."""
-    row = db.execute(
-        select(KpiAggregate.run_id, KpiAggregate.computed_at, KpiAggregate.period_start, KpiAggregate.period_end)
-        .order_by(KpiAggregate.computed_at.desc())
-        .limit(1)
+def stt_wer_summary(db: Session) -> dict[str, Any]:
+    """Latest speech-to-text evaluation run (word error rate on the elderly-speaker sample set)."""
+    latest = db.scalars(
+        select(SttEvaluation).order_by(SttEvaluation.evaluated_at.desc()).limit(1)
     ).first()
-    return RunInfo(*row) if row else None
+    if latest is None:
+        return {"available": False, "note": "no speech-to-text evaluation has been run yet"}
+    rows = list(db.scalars(select(SttEvaluation).where(SttEvaluation.run_id == latest.run_id)))
+    wers = [r.wer for r in rows]
+    words = sum(r.n_reference_words for r in rows)
+    return {
+        "available": True,
+        "run_id": str(latest.run_id),
+        "evaluated_at": latest.evaluated_at,
+        "provider": latest.provider,
+        "model": latest.model,
+        "n_samples": len(rows),
+        "n_reference_words": words,
+        "mean_wer": round(statistics.fmean(wers), 4) if wers else None,
+        "median_wer": round(statistics.median(wers), 4) if wers else None,
+        "worst_wer": round(max(wers), 4) if wers else None,
+        "synthetic_samples": all(r.is_synthetic_sample for r in rows) if rows else None,
+    }
 
 
-def run_rows(db: Session, run_id: uuid.UUID) -> list[KpiRow]:
-    """Published rows of a run, in catalogue order."""
-    order = {key: i for i, key in enumerate(KPI_KEYS)}
-    dim_order = {d: i for i, d in enumerate(DIMENSIONS)}
-    aggs = list(db.scalars(select(KpiAggregate).where(KpiAggregate.run_id == run_id)))
-    aggs.sort(key=lambda a: (order.get(a.kpi_key, len(order)), dim_order.get(a.dimension, len(dim_order))))
-    return [
-        KpiRow(kpi_key=a.kpi_key, dimension=a.dimension, value=a.value, unit=a.unit, n_persons=a.n_persons,
-               n_events=a.n_events, suppressed=a.suppressed, note=a.note)
-        for a in aggs
-    ]
+def cache_summary(db: Session) -> dict[str, Any]:
+    """Response-cache effectiveness. Each entry cost one miss, so hit_rate = hits / (hits + entries)."""
+    entries = list(db.scalars(select(ResponseCache)))
+    hits = sum(e.hits for e in entries)
+    invalidated = sum(1 for e in entries if e.invalidated_at is not None)
+    requests = hits + len(entries)
+    return {
+        "entries": len(entries),
+        "hits": hits,
+        "hit_rate": round(hits / requests, 4) if requests else 0.0,
+        "invalidated": invalidated,
+        "enabled": settings.cache_enabled,
+    }
 
 
-def run_heat_cells(db: Session, run_id: uuid.UUID) -> list[HeatCell]:
-    return list(db.scalars(select(HeatCell).where(HeatCell.run_id == run_id).order_by(HeatCell.cell_lat, HeatCell.cell_lng)))
+def quality_metrics(db: Session) -> dict[str, Any]:
+    from . import budget
 
-
-def heat_cell_polygon(lat: float, lng: float, size: float) -> dict[str, Any]:
-    """GeoJSON Polygon (lng, lat order) of a square cell centred on (lat, lng)."""
-    h = size / 2
-    ring = [[lng - h, lat - h], [lng + h, lat - h], [lng + h, lat + h], [lng - h, lat + h], [lng - h, lat - h]]
-    return {"type": "Polygon", "coordinates": [[[round(x, 7), round(y, 7)] for x, y in ring]]}
+    return {"stt_wer": stt_wer_summary(db), "cache": cache_summary(db), "budget": budget.status(db)}

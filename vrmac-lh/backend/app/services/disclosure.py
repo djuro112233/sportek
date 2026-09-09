@@ -25,7 +25,7 @@ The module is deliberately free of database access so it can be tested on constr
 from __future__ import annotations
 
 from collections import Counter, defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Iterable, Protocol, Sequence
 
 from ..config import settings

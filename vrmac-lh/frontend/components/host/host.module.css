@@ -1,0 +1,324 @@
+/* Host app styles. Plain CSS, no framework; the shared primitives (.btn, .card, .field, .badge,
+   .alert) live in app/globals.css and are reused here. Colour is never the only signal: every
+   state also carries a word or a symbol. */
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.shellHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.who {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  align-items: baseline;
+}
+
+.subnav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+}
+
+.subnav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  background: #fff;
+}
+
+.subnav a[aria-current="page"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+/* --- wizard ------------------------------------------------------------------------------- */
+
+.stepper {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+.stepper li {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  background: #fff;
+  color: var(--muted);
+}
+
+.stepper li.current {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.stepper li.done {
+  color: var(--ok-fg);
+  background: var(--ok-bg);
+  border-color: #a8d4b9;
+}
+
+.timerBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  padding: 0.5rem 0.75rem;
+}
+
+.timer {
+  font-variant-numeric: tabular-nums;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.timerMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.overTarget {
+  color: var(--warn-fg);
+}
+
+/* --- recorder ----------------------------------------------------------------------------- */
+
+.recordControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0.75rem 0;
+}
+
+.bigButton {
+  min-height: 64px;
+  min-width: 12rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.duration {
+  font-variant-numeric: tabular-nums;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.recDot::before {
+  content: "\25CF";
+  color: var(--danger-fg);
+  margin-right: 0.4rem;
+}
+
+audio {
+  width: 100%;
+  max-width: 30rem;
+}
+
+/* --- offline queue ------------------------------------------------------------------------ */
+
+.queue {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  padding: 0.75rem;
+}
+
+.queueList {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.queueItem {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.6rem;
+}
+
+.queueItem > div:first-child {
+  min-width: 14rem;
+}
+
+/* --- forms -------------------------------------------------------------------------------- */
+
+.twoCol {
+  display: grid;
+  gap: 0 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.group {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem 1rem;
+  margin: 0 0 1rem;
+  background: #fff;
+}
+
+.group > legend {
+  font-weight: 700;
+  padding: 0 0.4rem;
+}
+
+.check {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  min-height: 44px;
+  padding: 0.4rem 0;
+  cursor: pointer;
+}
+
+.check input[type="checkbox"],
+.check input[type="radio"] {
+  width: 1.35rem;
+  height: 1.35rem;
+  min-height: 1.35rem;
+  margin: 0.25rem 0 0;
+  flex: none;
+}
+
+.confirmBox {
+  margin-top: 0.6rem;
+  border-top: 1px dashed var(--border);
+  padding-top: 0.3rem;
+}
+
+.confirmBox.pending {
+  color: var(--warn-fg);
+}
+
+.radioRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0.15rem 0 0.5rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.spacer {
+  margin-left: auto;
+}
+
+/* --- listings & requests ------------------------------------------------------------------ */
+
+.cards {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+}
+
+.cardHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.langBlock {
+  border-left: 3px solid var(--accent-soft);
+  padding-left: 0.6rem;
+  margin: 0.5rem 0;
+}
+
+.langBlock > h4 {
+  margin: 0 0 0.2rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.facts {
+  margin: 0.5rem 0 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.15rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.facts dt {
+  color: var(--muted);
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.consent {
+  max-height: 18rem;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  background: #fff;
+}
+
+.consent h4 {
+  margin: 0.5rem 0 0.25rem;
+}
+
+.consent ul {
+  margin: 0.25rem 0;
+  padding-left: 1.2rem;
+}
+
+.replyRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 16rem;
+}

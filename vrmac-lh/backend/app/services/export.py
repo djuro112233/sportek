@@ -1,17 +1,24 @@
 """Interoperability stub (innovation claim #6).
 
-Exports the *approved* heritage entries and provider listings as NGSI-LD ``PointOfInterest``
-entities that follow the FIWARE / Smart Data Models ``dataModel.PointOfInterest`` schema, plus a
-DCAT-AP dataset description of the export.
+Exports the *approved* heritage entries and provider listings of the whole Vrmac territory as
+NGSI-LD ``PointOfInterest`` entities that follow the FIWARE / Smart Data Models
+``dataModel.PointOfInterest`` schema, plus a DCAT-AP dataset description of the export.
 
 Three representations are produced:
 
 * **key-values** – the simplified NGSI-LD representation (``?options=keyValues``). This is the
   form the Smart Data Models JSON schema describes, so this is what is validated.
 * **normalized** – the full NGSI-LD representation (``{"type": "Property", "value": …}``,
-  ``GeoProperty`` for ``location``) with an ``@context``. This is what an NGSI-LD context broker
-  such as Orion-LD ingests (see docs/interoperability.md for the ``curl`` upsert example).
+  ``GeoProperty`` for ``location``, ``Relationship`` for ``refSeeAlso``) with an ``@context``.
+  This is what an NGSI-LD context broker such as Orion-LD ingests (see docs/interoperability.md
+  for the ``entityOperations/upsert`` example).
 * **DCAT-AP** – a JSON-LD ``dcat:Dataset`` describing the two distributions above.
+
+**Territory.** The prototype covers Vrmac on both sides of the ridge, so every entity carries the
+village it belongs to and that village's municipality:
+``address = {addressLocality: <village name (en)>, addressRegion: "<municipality> municipality,
+Bay of Kotor", addressCountry: "ME"}`` and a machine-readable ``[village: <slug> — …]`` note inside
+``description``. Both attributes exist in the vendored schema, so nothing is invented.
 
 Validation runs fully **offline**: the schemas are vendored under ``backend/schemas/sdm`` and a
 ``referencing.Registry`` maps the public schema URIs (``https://smart-data-models.github.io/…``)
@@ -25,6 +32,8 @@ from __future__ import annotations
 
 import json
 import logging
+import re
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
@@ -34,10 +43,10 @@ from urllib.parse import urlparse
 from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from ..config import BACKEND_DIR, PROTOTYPE_LABEL, settings
-from ..models import HeritageEntry, Listing
+from ..models import HeritageEntry, Listing, Village
 from .validation import approved_only
 
 log = logging.getLogger(__name__)
@@ -56,8 +65,16 @@ NGSI_LD_CONTEXT: list[str] = [POI_CONTEXT_URI, NGSI_LD_CORE_CONTEXT_URI]
 ENTITY_TYPE = "PointOfInterest"
 ID_PREFIX = "urn:ngsi-ld:PointOfInterest:vrmac-lh:"
 DATA_PROVIDER = "VRMAC-LH prototype (SMART ERA)"
-ADDRESS: dict[str, str] = {"addressLocality": "Tivat", "addressRegion": "Boka Kotorska", "addressCountry": "ME"}
+ADDRESS_COUNTRY = "ME"
+# The Bay of Kotor is the region both municipalities of the territory belong to.
+REGION_SUFFIX = "Bay of Kotor"
 COORDS_APPROXIMATE_NOTE = "(coordinates approximate)"
+LISTING_SOURCE = "VRMAC-LH host onboarding (host-confirmed, validated listing)"
+
+# NGSI-LD attribute kinds used by the normalized form.
+GEO_ATTRS: tuple[str, ...] = ("location",)
+DATETIME_ATTRS: tuple[str, ...] = ("dateCreated", "dateModified")
+RELATIONSHIP_ATTRS: tuple[str, ...] = ("refSeeAlso",)
 
 # kind of a heritage entry → PointOfInterest category (a list; first item is the primary category)
 HERITAGE_CATEGORY: dict[str, str] = {
@@ -67,6 +84,30 @@ HERITAGE_CATEGORY: dict[str, str] = {
     "tradition": "tradition",
     "institution": "institution",
     "landscape": "landscape",
+}
+
+MONTHS_EN = (
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+)
+MONTHS_LOCAL = (
+    "januar", "februar", "mart", "april", "maj", "jun",
+    "jul", "avgust", "septembar", "oktobar", "novembar", "decembar",
+)
+MONTHS_LOCAL_GENITIVE = (
+    "januara", "februara", "marta", "aprila", "maja", "juna",
+    "jula", "avgusta", "septembra", "oktobra", "novembra", "decembra",
+)
+
+# labels for the host-confirmed structured fields (``Listing.confirmed_fields``)
+CONFIRMED_LABELS: dict[str, tuple[str, str]] = {
+    "price_min": ("price", "cijena"),
+    "price_max": ("price", "cijena"),
+    "currency": ("price", "cijena"),
+    "season": ("season", "sezona"),
+    "capacity": ("capacity", "kapacitet"),
+    "accessibility": ("accessibility", "pristupačnost"),
+    "coordinates": ("coordinates", "koordinate"),
 }
 
 EXPORT_FILES: dict[str, str] = {
@@ -109,6 +150,10 @@ def _clean(d: dict[str, Any]) -> dict[str, Any]:
     return {k: v for k, v in d.items() if v is not None and v != "" and v != []}
 
 
+def _join(parts: list[str]) -> str:
+    return " ".join(p.strip() for p in parts if p and p.strip()).strip()
+
+
 def _bilingual(en: str, local: str) -> str:
     """One description string carrying both languages (the schema's ``description`` is a string)."""
     en, local = (en or "").strip(), (local or "").strip()
@@ -121,32 +166,137 @@ def _entity_id(slug: str) -> str:
     return f"{ID_PREFIX}{slug}"
 
 
-def _heritage_category(entry: HeritageEntry) -> list[str]:
-    tags = {str(t).lower() for t in (entry.tags or [])}
-    if entry.kind == "place":
-        return ["town" if "town" in tags else "village"]
-    if entry.kind == "institution" and "culture-house" in tags:
-        return ["culture_house"]
-    return [HERITAGE_CATEGORY.get(entry.kind, entry.kind.replace("-", "_"))]
+def entity_slug(entity: dict[str, Any]) -> str:
+    """The item slug behind an exported entity id."""
+    return str(entity["id"])[len(ID_PREFIX):]
 
 
+# --- territory: village + municipality ------------------------------------------------------
+VILLAGE_NOTE_RE = re.compile(r"\[village: (?P<slug>[a-z0-9-]+) — (?P<name>[^,]+), (?P<mun>[^\]]+?) municipality\]")
+
+
+def address_of(village: Village) -> dict[str, str]:
+    """``Location-Commons.address`` of a village: locality, region (municipality), country.
+
+    Only properties defined by the vendored ``address`` definition are used.
+    """
+    return {
+        "addressLocality": village.name_en or village.name_local,
+        "addressRegion": f"{village.municipality} municipality, {REGION_SUFFIX}",
+        "addressCountry": ADDRESS_COUNTRY,
+    }
+
+
+def village_note(village: Village) -> str:
+    """Machine-readable territory note carried inside ``description`` (the schema has no
+    village attribute, and inventing one would only pass because ``additionalProperties`` is
+    unrestricted)."""
+    return (
+        f"[village: {village.slug} — {village.name_en or village.name_local}, "
+        f"{village.municipality} municipality]"
+    )
+
+
+def village_slug_of(entity: dict[str, Any]) -> str | None:
+    """Read the village slug back out of an exported (key-values) entity."""
+    match = VILLAGE_NOTE_RE.search(str(entity.get("description", "")))
+    return match.group("slug") if match else None
+
+
+def municipality_of(entity: dict[str, Any]) -> str | None:
+    """Read the municipality back out of an exported entity's ``address.addressRegion``."""
+    region = (entity.get("address") or {}).get("addressRegion")
+    return region.split(" municipality", 1)[0] if region else None
+
+
+# --- listing helpers ------------------------------------------------------------------------
 def _price_range(listing: Listing) -> str | None:
     lo, hi, cur = listing.price_min, listing.price_max, listing.currency or "EUR"
     if lo is None and hi is None:
         return None
     if lo is not None and hi is not None:
-        return f"{lo:g}–{hi:g} {cur}" if lo != hi else f"{lo:g} {cur}"
-    return f"from {lo:g} {cur}" if lo is not None else f"up to {hi:g} {cur}"
+        core = f"{lo:g}–{hi:g} {cur}" if lo != hi else f"{lo:g} {cur}"
+    elif lo is not None:
+        core = f"from {lo:g} {cur}"
+    else:
+        core = f"up to {hi:g} {cur}"
+    note = (listing.price_note_en or listing.price_note_local or "").strip()
+    return f"{core} {note}".strip() if note else core
+
+
+def season_text(listing: Listing) -> tuple[str, str]:
+    """(English, Montenegrin) sentence built from ``season_all_year`` / ``season_from`` / ``season_to``."""
+    if listing.season_all_year:
+        return ("Season: open all year.", "Sezona: otvoreno cijele godine.")
+    start, end = listing.season_from, listing.season_to
+    if start and end:
+        return (
+            f"Season: {MONTHS_EN[start - 1]}–{MONTHS_EN[end - 1]}.",
+            f"Sezona: {MONTHS_LOCAL[start - 1]}–{MONTHS_LOCAL[end - 1]}.",
+        )
+    if start:
+        return (
+            f"Season: from {MONTHS_EN[start - 1]} onwards.",
+            f"Sezona: od {MONTHS_LOCAL_GENITIVE[start - 1]} nadalje.",
+        )
+    if end:
+        return (
+            f"Season: until {MONTHS_EN[end - 1]}.",
+            f"Sezona: do {MONTHS_LOCAL_GENITIVE[end - 1]}.",
+        )
+    return ("Season: not stated by the host.", "Sezona: domaćin nije naveo.")
+
+
+def accessibility_text(listing: Listing) -> tuple[str, str]:
+    """(English, Montenegrin) sentence built from ``accessibility_step_free`` + the host's note."""
+    step_free = listing.accessibility_step_free
+    if step_free is True:
+        en, local = ["Accessibility: step-free access."], ["Pristupačnost: pristup bez stepenica."]
+    elif step_free is False:
+        en, local = ["Accessibility: not step-free."], ["Pristupačnost: nije bez stepenica."]
+    else:
+        en, local = ["Accessibility: not stated by the host."], ["Pristupačnost: domaćin nije naveo."]
+    if (listing.accessibility_note_en or "").strip():
+        en.append(listing.accessibility_note_en.strip())
+    if (listing.accessibility_note_local or "").strip():
+        local.append(listing.accessibility_note_local.strip())
+    return (_join(en), _join(local))
+
+
+def _confirmed_text(listing: Listing) -> tuple[str, str]:
+    """What the host actually confirmed (``confirmed_fields``) — never model-inferred."""
+    en_labels: list[str] = []
+    local_labels: list[str] = []
+    for field in listing.confirmed_fields or []:
+        label = CONFIRMED_LABELS.get(str(field))
+        if label is None:
+            label = (str(field), str(field))
+        if label[0] not in en_labels:
+            en_labels.append(label[0])
+            local_labels.append(label[1])
+    if not en_labels:
+        return ("Structured details were not confirmed by the host.", "Domaćin nije potvrdio strukturirana polja.")
+    return (
+        "Host-confirmed: " + ", ".join(en_labels) + ".",
+        "Domaćin potvrdio: " + ", ".join(local_labels) + ".",
+    )
 
 
 # --- mapping: our rows → key-values entities ------------------------------------------------
-def heritage_entry_to_keyvalues(entry: HeritageEntry, base_url: str | None = None) -> KeyValues:
+def heritage_entry_to_keyvalues(
+    entry: HeritageEntry, base_url: str | None = None, village_poi_id: str | None = None
+) -> KeyValues:
     """Map an approved heritage entry (with coordinates) to a key-values ``PointOfInterest``."""
+    village = entry.village
     urls = [s.get("url") for s in (entry.sources or []) if isinstance(s, dict) and s.get("url")]
     see_also = list(dict.fromkeys(urls))  # unique, order preserved
-    description = _bilingual(entry.summary_en, entry.summary_local)
-    if entry.coords_approximate:
-        description = f"{description} {COORDS_APPROXIMATE_NOTE}".strip()
+    description = _join(
+        [
+            _bilingual(entry.summary_en, entry.summary_local),
+            village_note(village),
+            COORDS_APPROXIMATE_NOTE if entry.coords_approximate else "",
+        ]
+    )
     return _clean(
         {
             "id": _entity_id(entry.slug),
@@ -156,7 +306,9 @@ def heritage_entry_to_keyvalues(entry: HeritageEntry, base_url: str | None = Non
             "description": description,
             "category": _heritage_category(entry),
             "location": {"type": "Point", "coordinates": [entry.lng, entry.lat]},
-            "address": dict(ADDRESS),
+            "address": address_of(village),
+            "areaServed": village.name_en or village.name_local,
+            "refSeeAlso": [village_poi_id] if village_poi_id and village_poi_id != _entity_id(entry.slug) else None,
             "source": see_also[0] if see_also else entry.source,
             "seeAlso": see_also or None,
             "additionalInfoURL": f"{base_url}/api/heritage/{entry.slug}" if base_url else None,
@@ -167,23 +319,42 @@ def heritage_entry_to_keyvalues(entry: HeritageEntry, base_url: str | None = Non
     )
 
 
-def listing_to_keyvalues(listing: Listing, base_url: str | None = None) -> KeyValues:
+def _heritage_category(entry: HeritageEntry) -> list[str]:
+    tags = {str(t).lower() for t in (entry.tags or [])}
+    if entry.kind == "place":
+        return ["town" if "town" in tags else "village"]
+    if entry.kind == "institution" and "culture-house" in tags:
+        return ["culture_house"]
+    return [HERITAGE_CATEGORY.get(entry.kind, entry.kind.replace("-", "_"))]
+
+
+def listing_to_keyvalues(
+    listing: Listing, base_url: str | None = None, village_poi_id: str | None = None
+) -> KeyValues:
     """Map an approved listing (with coordinates) to a key-values ``PointOfInterest``.
 
-    Never exports host identity: no names, e-mails, phone numbers or user ids.
+    ``season``, ``accessibility``, price and capacity come from the **host-confirmed structured
+    fields**; nothing here is inferred by a model. Never exports host identity: no names,
+    e-mails, phone numbers or user ids.
     """
-    description = _bilingual(listing.description_en, listing.description_local)
-    extras: list[str] = []
-    if listing.season:
-        extras.append(f"Season: {listing.season}.")
-    if listing.accessibility_en or listing.accessibility_local:
-        extras.append("Accessibility: " + _bilingual(listing.accessibility_en, listing.accessibility_local))
-    if listing.is_sample and "sample" not in description.lower():
-        extras.append("Sample provider (fictional).")
-    if listing.coords_approximate:
-        extras.append(COORDS_APPROXIMATE_NOTE)
-    if extras:
-        description = " ".join([description, *extras]).strip()
+    village = listing.village
+    season_en, season_local = season_text(listing)
+    access_en, access_local = accessibility_text(listing)
+    confirmed_en, confirmed_local = _confirmed_text(listing)
+    en_parts = [(listing.description_en or "").strip(), season_en, access_en, confirmed_en]
+    local_parts = [(listing.description_local or "").strip(), season_local, access_local, confirmed_local]
+    if listing.is_sample:
+        if "sample" not in " ".join(en_parts).lower():
+            en_parts.append("Sample provider (fictional).")
+        if "uzorak" not in " ".join(local_parts).lower():
+            local_parts.append("Uzorak — nije stvarni ponuđač.")
+    description = _join(
+        [
+            _bilingual(_join(en_parts), _join(local_parts)),
+            village_note(village),
+            COORDS_APPROXIMATE_NOTE if listing.coords_approximate else "",
+        ]
+    )
     contact_point = _clean(
         {
             "contactType": "visitor request through the VRMAC-LH platform (no direct contact details published)",
@@ -200,13 +371,15 @@ def listing_to_keyvalues(listing: Listing, base_url: str | None = None) -> KeyVa
             "description": description,
             "category": [listing.category or "other"],
             "location": {"type": "Point", "coordinates": [listing.lng, listing.lat]},
-            "address": dict(ADDRESS),
+            "address": address_of(village),
+            "areaServed": village.name_en or village.name_local,
+            "refSeeAlso": [village_poi_id] if village_poi_id else None,
             "priceRange": _price_range(listing),
             "capacity": listing.capacity,
             "image": f"{base_url}{listing.photo_url}" if base_url and listing.photo_url.startswith("/") else None,
             "contactPoint": contact_point,
             "additionalInfoURL": f"{base_url}/api/listings/{listing.slug}" if base_url else None,
-            "source": "VRMAC-LH host onboarding (validated listing)",
+            "source": LISTING_SOURCE,
             "dataProvider": DATA_PROVIDER,
             "dateCreated": _iso_z(listing.created_at),
             "dateModified": _iso_z(listing.published_at or listing.updated_at),
@@ -218,17 +391,20 @@ def listing_to_keyvalues(listing: Listing, base_url: str | None = None) -> KeyVa
 def to_normalized(kv: KeyValues) -> Normalized:
     """Expand a key-values entity into the normalized NGSI-LD representation.
 
-    * ``location`` → ``GeoProperty``; ``dateCreated``/``dateModified`` → ``DateTime`` values;
-      everything else → ``Property``. There are no relationships in this export.
+    * ``location`` → ``GeoProperty``; ``refSeeAlso`` → ``Relationship`` (its ``object`` is the
+      entity id of the village's own PointOfInterest); ``dateCreated``/``dateModified`` carry a
+      typed ``DateTime`` value; everything else → ``Property``.
     * ``@context`` is the Smart Data Models PointOfInterest context + the NGSI-LD core context.
     """
     out: Normalized = {"id": kv["id"], "type": kv["type"]}
     for key, value in kv.items():
         if key in ("id", "type", "@context"):
             continue
-        if key == "location":
+        if key in GEO_ATTRS:
             out[key] = {"type": "GeoProperty", "value": value}
-        elif key in ("dateCreated", "dateModified"):
+        elif key in RELATIONSHIP_ATTRS:
+            out[key] = {"type": "Relationship", "object": value}
+        elif key in DATETIME_ATTRS:
             out[key] = {"type": "Property", "value": {"@type": "DateTime", "@value": value}}
         else:
             out[key] = {"type": "Property", "value": value}
@@ -237,26 +413,83 @@ def to_normalized(kv: KeyValues) -> Normalized:
 
 
 # --- data access -----------------------------------------------------------------------------
+@dataclass(frozen=True)
+class PoiRecord:
+    """One exported point of interest and where it belongs in the territory."""
+
+    item_type: str  # "heritage_entry" | "listing"
+    slug: str
+    village_slug: str
+    village_name: str
+    municipality: str
+    keyvalues: KeyValues
+    normalized: Normalized
+
+
 def _approved_rows(db: Session, model: type) -> list:
     """Approved rows with coordinates, deterministic order; re-checks ``status`` defensively."""
-    stmt = approved_only(select(model), model).where(model.lat.is_not(None), model.lng.is_not(None))
+    stmt = (
+        approved_only(select(model), model)
+        .where(model.lat.is_not(None), model.lng.is_not(None))
+        .options(joinedload(model.village))
+    )
     rows = list(db.scalars(stmt.order_by(model.slug)))
     for row in rows:
         if row.status != "approved":  # belt and braces: never export non-validated content
             raise RuntimeError(f"export refused: {model.__tablename__} {row.slug} has status {row.status!r}")
+        if row.village is None:  # village_id is mandatory; a NULL would lose the territory
+            raise RuntimeError(f"export refused: {model.__tablename__} {row.slug} has no village")
     return rows
 
 
-def poi_entities(db: Session, base_url: str | None = None) -> list[tuple[KeyValues, Normalized]]:
-    """All exportable POIs as ``(key_values_entity, normalized_entity)`` pairs.
+def poi_records(db: Session, base_url: str | None = None) -> list[PoiRecord]:
+    """All exportable POIs with their territory metadata.
 
-    Exported: approved heritage entries with coordinates (every kind) followed by approved listings
-    with coordinates. ``base_url`` (no trailing slash) is optional; when given, the entities carry
-    absolute ``additionalInfoURL``/``image``/``contactPoint.url`` links into this deployment.
+    Exported: approved heritage entries with coordinates (every kind) followed by approved
+    listings with coordinates. ``base_url`` (no trailing slash) is optional; when given, the
+    entities carry absolute ``additionalInfoURL``/``image``/``contactPoint.url`` links into this
+    deployment.
     """
-    entries = [heritage_entry_to_keyvalues(e, base_url) for e in _approved_rows(db, HeritageEntry)]
-    listings = [listing_to_keyvalues(l, base_url) for l in _approved_rows(db, Listing)]
-    return [(kv, to_normalized(kv)) for kv in [*entries, *listings]]
+    entries = _approved_rows(db, HeritageEntry)
+    listings = _approved_rows(db, Listing)
+    # A village that has its own approved "place" entry becomes the anchor entity every other POI
+    # of that village points at with an NGSI-LD Relationship.
+    village_poi: dict[str, str] = {
+        e.village.slug: _entity_id(e.slug) for e in entries if e.kind == "place" and e.slug == e.village.slug
+    }
+    records: list[PoiRecord] = []
+    for entry in entries:
+        kv = heritage_entry_to_keyvalues(entry, base_url, village_poi.get(entry.village.slug))
+        records.append(
+            PoiRecord(
+                item_type="heritage_entry",
+                slug=entry.slug,
+                village_slug=entry.village.slug,
+                village_name=entry.village.name_en or entry.village.name_local,
+                municipality=entry.village.municipality,
+                keyvalues=kv,
+                normalized=to_normalized(kv),
+            )
+        )
+    for listing in listings:
+        kv = listing_to_keyvalues(listing, base_url, village_poi.get(listing.village.slug))
+        records.append(
+            PoiRecord(
+                item_type="listing",
+                slug=listing.slug,
+                village_slug=listing.village.slug,
+                village_name=listing.village.name_en or listing.village.name_local,
+                municipality=listing.village.municipality,
+                keyvalues=kv,
+                normalized=to_normalized(kv),
+            )
+        )
+    return records
+
+
+def poi_entities(db: Session, base_url: str | None = None) -> list[tuple[KeyValues, Normalized]]:
+    """All exportable POIs as ``(key_values_entity, normalized_entity)`` pairs."""
+    return [(r.keyvalues, r.normalized) for r in poi_records(db, base_url)]
 
 
 # --- offline schema validation ---------------------------------------------------------------
@@ -290,18 +523,54 @@ def _format_checker() -> FormatChecker:
 
 
 @lru_cache(maxsize=1)
+def registry() -> Registry:
+    """Offline ``referencing`` registry: the public Smart Data Models URIs → the vendored files.
+
+    ``smart-data-models.github.io`` is never contacted; every ``$ref`` in the PointOfInterest
+    schema resolves from ``backend/schemas/sdm``.
+    """
+    return Registry().with_resources(
+        [
+            (POI_SCHEMA_URI, Resource.from_contents(_load_schema("PointOfInterest.schema.json"))),
+            (COMMON_SCHEMA_URI, Resource.from_contents(_load_schema("common-schema.json"))),
+        ]
+    )
+
+
+@lru_cache(maxsize=1)
 def poi_validator() -> Draft202012Validator:
     """Validator for the vendored PointOfInterest schema; every ``$ref`` resolves offline."""
     poi_schema = _load_schema("PointOfInterest.schema.json")
-    common_schema = _load_schema("common-schema.json")
-    registry = Registry().with_resources(
-        [
-            (POI_SCHEMA_URI, Resource.from_contents(poi_schema)),
-            (COMMON_SCHEMA_URI, Resource.from_contents(common_schema)),
-        ]
-    )
     Draft202012Validator.check_schema(poi_schema)
-    return Draft202012Validator(poi_schema, registry=registry, format_checker=_format_checker())
+    return Draft202012Validator(poi_schema, registry=registry(), format_checker=_format_checker())
+
+
+@lru_cache(maxsize=1)
+def known_attributes() -> frozenset[str]:
+    """Every attribute name the vendored PointOfInterest schema (and its ``allOf`` refs) defines.
+
+    The schema does not set ``additionalProperties: false``, so an invented attribute would slip
+    through validation unnoticed. The export therefore restricts itself to these names and
+    ``export_all`` reports any drift (``unknown_attributes``).
+    """
+    resolver = registry().resolver()
+    names: set[str] = set()
+
+    def collect(subschema: dict[str, Any]) -> None:
+        ref = subschema.get("$ref")
+        if ref:
+            subschema = resolver.lookup(ref).contents
+        names.update(subschema.get("properties", {}))
+        for branch in subschema.get("allOf", []):
+            collect(branch)
+
+    collect(poi_validator().schema)
+    return frozenset(names)
+
+
+def unknown_attributes(kv: KeyValues) -> list[str]:
+    """Attributes of an entity that the schema does not define (must always be empty)."""
+    return sorted(k for k in kv if k not in known_attributes() and k != "@context")
 
 
 def schema_version() -> str:
@@ -318,6 +587,15 @@ def validate_entity(kv: KeyValues) -> list[dict[str, Any]]:
                 "path": "/".join(str(p) for p in err.path) or "<entity>",
                 "message": err.message,
                 "validator": err.validator,
+            }
+        )
+    for name in unknown_attributes(kv):
+        errors.append(
+            {
+                "id": kv.get("id"),
+                "path": name,
+                "message": f"{name!r} is not defined by the PointOfInterest schema",
+                "validator": "knownAttributes",
             }
         )
     return errors
@@ -345,17 +623,25 @@ def _lang(en: str, local: str) -> list[dict[str, str]]:
     return [{"@value": en, "@language": "en"}, {"@value": local, "@language": settings.local_language}]
 
 
+def _xsd_dt(value: str) -> dict[str, str]:
+    return {"@value": value, "@type": "xsd:dateTime"}
+
+
 def dcat_ap(db: Session, base_url: str) -> dict[str, Any]:
     """DCAT-AP (JSON-LD) description of the NGSI-LD export as one ``dcat:Dataset``."""
     base_url = base_url.rstrip("/")
-    entities = [kv for kv, _ in poi_entities(db)]
+    records = poi_records(db)
+    entities = [r.keyvalues for r in records]
     points = [(kv["location"]["coordinates"][0], kv["location"]["coordinates"][1]) for kv in entities]
     bbox = _bbox(points)
     created = [kv["dateCreated"] for kv in entities if kv.get("dateCreated")]
     modified = [kv["dateModified"] for kv in entities if kv.get("dateModified")]
     now = _iso_z(datetime.now(timezone.utc))
-    n_entries = sum(1 for kv in entities if kv["id"].endswith(tuple(f":{s}" for s in _heritage_slugs(entities))))
+    n_entries = sum(1 for r in records if r.item_type == "heritage_entry")
+    n_listings = sum(1 for r in records if r.item_type == "listing")
     categories = sorted({c for kv in entities for c in kv.get("category", [])})
+    villages = sorted({r.village_name for r in records})
+    municipalities = sorted({r.municipality for r in records})
 
     spatial: dict[str, Any] | None = None
     if bbox:
@@ -366,10 +652,22 @@ def dcat_ap(db: Session, base_url: str) -> dict[str, Any]:
         )
         geojson = {
             "type": "Polygon",
-            "coordinates": [[[min_lng, min_lat], [max_lng, min_lat], [max_lng, max_lat], [min_lng, max_lat], [min_lng, min_lat]]],
+            "coordinates": [
+                [
+                    [min_lng, min_lat],
+                    [max_lng, min_lat],
+                    [max_lng, max_lat],
+                    [min_lng, max_lat],
+                    [min_lng, min_lat],
+                ]
+            ],
         }
         spatial = {
             "@type": "dct:Location",
+            "rdfs:label": _lang(
+                "Vrmac — " + " and ".join(f"{m} municipality" for m in municipalities) + ", Bay of Kotor, Montenegro",
+                "Vrmac — " + " i ".join(f"opština {m}" for m in municipalities) + ", Boka Kotorska, Crna Gora",
+            ),
             "dcat:bbox": {"@value": wkt, "@type": "geo:wktLiteral"},
             "locn:geometry": {
                 "@value": json.dumps(geojson, separators=(",", ":")),
@@ -377,16 +675,36 @@ def dcat_ap(db: Session, base_url: str) -> dict[str, Any]:
             },
         }
 
+    temporal = {
+        "@type": "dct:PeriodOfTime",
+        "dcat:startDate": _xsd_dt(min(created) if created else now),
+        "dcat:endDate": _xsd_dt(max(modified) if modified else now),
+    }
+
     prototype_note = (
         f"{PROTOTYPE_LABEL} The heritage entries are public facts with cited sources; the provider listings "
         "are fictional sample providers. Coordinates are approximate until surveyed. Only content that passed "
-        "the validation gate (status 'approved') is exported."
+        "the validation gate (status 'approved') is exported — unverified villages and their entries are not."
+    )
+    prototype_note_local = (
+        "Prototip za prijavu SMART ERA, septembar–oktobar 2026. Uzorak podataka: unosi baštine su javne "
+        "činjenice sa izvorima, a ponuđači su izmišljeni uzorci. Koordinate su približne. Izvozi se samo "
+        "sadržaj koji je prošao validaciju."
     )
     distributions = [
         {
             "@id": f"{base_url}/api/export/dcat-ap#ngsi-ld-normalized",
             "@type": "dcat:Distribution",
-            "dct:title": _lang("NGSI-LD PointOfInterest entities (normalized)", "NGSI-LD PointOfInterest entiteti (normalizovani)"),
+            "dct:title": _lang(
+                "NGSI-LD PointOfInterest entities (normalized)",
+                "NGSI-LD PointOfInterest entiteti (normalizovani)",
+            ),
+            "dct:description": _lang(
+                "Full NGSI-LD representation (Property / GeoProperty / Relationship) with @context, ready for "
+                "POST /ngsi-ld/v1/entityOperations/upsert on an NGSI-LD context broker.",
+                "Puna NGSI-LD reprezentacija (Property / GeoProperty / Relationship) sa @context, spremna za "
+                "upsert u NGSI-LD broker.",
+            ),
             "dcat:accessURL": {"@id": f"{base_url}/api/export/ngsi-ld"},
             "dcat:downloadURL": {"@id": f"{base_url}/api/export/ngsi-ld"},
             "dcat:mediaType": {"@id": f"{IANA_MEDIA_TYPE}application/ld+json"},
@@ -397,7 +715,16 @@ def dcat_ap(db: Session, base_url: str) -> dict[str, Any]:
         {
             "@id": f"{base_url}/api/export/dcat-ap#ngsi-ld-keyvalues",
             "@type": "dcat:Distribution",
-            "dct:title": _lang("NGSI-LD PointOfInterest entities (key-values)", "NGSI-LD PointOfInterest entiteti (key-values)"),
+            "dct:title": _lang(
+                "NGSI-LD PointOfInterest entities (key-values)",
+                "NGSI-LD PointOfInterest entiteti (key-values)",
+            ),
+            "dct:description": _lang(
+                "Simplified key-values representation — the form the Smart Data Models JSON schema describes "
+                f"and the one validated offline against PointOfInterest {schema_version()}.",
+                "Pojednostavljena key-values reprezentacija — oblik koji opisuje JSON šema Smart Data Models "
+                f"i koji se offline validira prema PointOfInterest {schema_version()}.",
+            ),
             "dcat:accessURL": {"@id": f"{base_url}/api/export/ngsi-ld/keyvalues"},
             "dcat:downloadURL": {"@id": f"{base_url}/api/export/ngsi-ld/keyvalues"},
             "dcat:mediaType": {"@id": f"{IANA_MEDIA_TYPE}application/json"},
@@ -413,16 +740,18 @@ def dcat_ap(db: Session, base_url: str) -> dict[str, Any]:
         "@type": "dcat:Dataset",
         "dct:identifier": "vrmac-lh-points-of-interest",
         "dct:title": _lang(
-            "Vrmac Living Heritage — points of interest (Gornja Lastva, Tivat)",
-            "Vrmac živa baština — tačke interesa (Gornja Lastva, Tivat)",
+            "Vrmac Living Heritage — points of interest (Tivat and Kotor municipalities)",
+            "Vrmac živa baština — tačke interesa (opštine Tivat i Kotor)",
         ),
         "dct:description": _lang(
             "Validated heritage entries (villages, churches, events, traditions, culture house, landscape) and "
-            "provider listings (accommodation, food, guiding, craft) on the Vrmac peninsula, exported as NGSI-LD "
-            "PointOfInterest entities following the FIWARE Smart Data Models. " + prototype_note,
+            "provider listings (accommodation, food, guiding, craft) of the Vrmac plateau on both sides of the "
+            "ridge, exported as NGSI-LD PointOfInterest entities following the FIWARE Smart Data Models. Every "
+            "entity carries its village (addressLocality) and municipality (addressRegion). " + prototype_note,
             "Validirani unosi baštine (naselja, crkve, događaji, tradicije, dom kulture, pejzaž) i ponude "
-            "(smještaj, hrana, vođenje, zanati) na poluostrvu Vrmac, izvezeni kao NGSI-LD PointOfInterest entiteti "
-            "prema FIWARE Smart Data Models. Prototip — uzorak podataka; ponuđači su izmišljeni.",
+            "(smještaj, hrana, vođenje, zanati) sa vrmačke visoravni sa obje strane grebena, izvezeni kao "
+            "NGSI-LD PointOfInterest entiteti prema FIWARE Smart Data Models. Svaki entitet nosi svoje selo "
+            "(addressLocality) i opštinu (addressRegion). " + prototype_note_local,
         ),
         "dct:publisher": {"@type": "foaf:Agent", "foaf:name": PUBLISHER_NAME},
         "dcat:contactPoint": {
@@ -432,34 +761,28 @@ def dcat_ap(db: Session, base_url: str) -> dict[str, Any]:
         "dct:license": {"@id": LICENSE_URI},
         "dct:accessRights": {"@id": "http://publications.europa.eu/resource/authority/access-right/PUBLIC"},
         "dcat:keyword": [
-            "heritage", "Vrmac", "Gornja Lastva", "Tivat", "Boka Kotorska", "Montenegro", "point of interest",
-            "NGSI-LD", "Smart Data Models", "rural tourism", "cultural landscape", *categories,
+            "heritage", "Vrmac", "Boka Kotorska", "Bay of Kotor", "Montenegro", "point of interest",
+            "NGSI-LD", "Smart Data Models", "DCAT-AP", "rural tourism", "cultural landscape",
+            *[f"{m} municipality" for m in municipalities], *villages, *categories,
         ],
         "dcat:theme": [{"@id": f"{EU_THEME}EDUC"}, {"@id": f"{EU_THEME}ENVI"}, {"@id": f"{EU_THEME}REGI"}],
         "dct:language": [{"@id": f"{EU_LANGUAGE}ENG"}, {"@id": f"{EU_LANGUAGE}CNR"}],
         "dct:spatial": spatial,
+        "dct:temporal": temporal,
         "dct:accrualPeriodicity": {"@id": f"{EU_FREQUENCY}CONT"},
-        "dct:issued": {"@value": min(created) if created else now, "@type": "xsd:dateTime"},
-        "dct:modified": {"@value": max(modified) if modified else now, "@type": "xsd:dateTime"},
+        "dct:issued": _xsd_dt(min(created) if created else now),
+        "dct:modified": _xsd_dt(max(modified) if modified else now),
         "dct:conformsTo": {"@id": POI_SCHEMA_URI},
         "dct:provenance": {"@type": "dct:ProvenanceStatement", "rdfs:label": prototype_note},
         "dcat:landingPage": {"@id": f"{base_url}/api/docs"},
         "dcat:distribution": distributions,
         "rdfs:comment": (
-            f"{len(entities)} PointOfInterest entities ({n_entries} heritage entries, {len(entities) - n_entries} "
-            "sample listings). Key-values form validated offline against the vendored Smart Data Models schema "
-            f"version {schema_version()}."
+            f"{len(entities)} PointOfInterest entities ({n_entries} heritage entries, {n_listings} sample "
+            f"listings) in {len(villages)} village(s) of {len(municipalities)} municipality(ies). Key-values "
+            f"form validated offline against the vendored Smart Data Models schema version {schema_version()}."
         ),
     }
     return _clean(dataset)
-
-
-def _heritage_slugs(entities: list[KeyValues]) -> list[str]:
-    """Slugs of the heritage entries among the entities (listings never carry ``seeAlso``/source URLs).
-
-    Heritage entities are the ones whose ``source`` is not the platform's onboarding marker.
-    """
-    return [kv["id"][len(ID_PREFIX):] for kv in entities if kv.get("source") != "VRMAC-LH host onboarding (validated listing)"]
 
 
 # --- files -----------------------------------------------------------------------------------
@@ -470,17 +793,19 @@ def _write_json(path: Path, payload: Any) -> None:
 def export_all(db: Session, out_dir: str | Path, base_url: str = "http://localhost:8000") -> dict[str, Any]:
     """Write the NGSI-LD (normalized + key-values), DCAT-AP and validation-report files.
 
-    Returns ``{n_entities, valid, files, errors, schema_version}``. ``valid`` is ``False`` (with the
-    schema errors listed) when any entity fails validation — the files are still written so the
-    problem can be inspected, but the result never claims success.
+    Returns ``{n_entities, valid, files, errors, schema_version, villages, municipalities}``.
+    ``valid`` is ``False`` (with the schema errors listed) when any entity fails validation — the
+    files are still written so the problem can be inspected, but the result never claims success.
     """
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    pairs = poi_entities(db)
+    pairs = poi_entities(db, base_url)
     keyvalues = [kv for kv, _ in pairs]
     normalized = [norm for _, norm in pairs]
     errors = validate_entities(keyvalues)
     valid = not errors
+    villages = sorted({v for v in (village_slug_of(kv) for kv in keyvalues) if v})
+    municipalities = sorted({m for m in (municipality_of(kv) for kv in keyvalues) if m})
     report = {
         "schema_id": POI_SCHEMA_URI,
         "schema_version": schema_version(),
@@ -488,6 +813,9 @@ def export_all(db: Session, out_dir: str | Path, base_url: str = "http://localho
         "n_entities": len(keyvalues),
         "valid": valid,
         "errors": errors,
+        "villages": villages,
+        "municipalities": municipalities,
+        "offline": True,
     }
     files = {
         "normalized": out / EXPORT_FILES["normalized"],
@@ -502,11 +830,17 @@ def export_all(db: Session, out_dir: str | Path, base_url: str = "http://localho
     if not valid:
         log.warning("NGSI-LD export does NOT validate: %d error(s)", len(errors))
     else:
-        log.info("NGSI-LD export: %d entities validated against PointOfInterest %s", len(keyvalues), report["schema_version"])
+        log.info(
+            "NGSI-LD export: %d entities validated against PointOfInterest %s",
+            len(keyvalues),
+            report["schema_version"],
+        )
     return {
         "n_entities": len(keyvalues),
         "valid": valid,
         "schema_version": report["schema_version"],
+        "villages": villages,
+        "municipalities": municipalities,
         "files": [str(p.resolve()) for p in files.values()],
         "errors": errors,
     }

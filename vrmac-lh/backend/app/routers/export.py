@@ -39,9 +39,11 @@ def _validity_headers(keyvalues: list[dict]) -> dict[str, str]:
 )
 @limiter.limit(settings.rate_limit_public)
 def ngsi_ld_normalized(request: Request, db: Session = Depends(get_public_db)) -> JSONResponse:
-    """Normalized NGSI-LD list (``Property``/``GeoProperty`` attributes + ``@context``).
+    """Normalized NGSI-LD list (``Property``/``GeoProperty``/``Relationship`` + ``@context``).
 
     Ready for ``POST /ngsi-ld/v1/entityOperations/upsert`` on an NGSI-LD context broker.
+    Every entity carries its village (``address.addressLocality``) and municipality
+    (``address.addressRegion``).
     """
     pairs = export_service.poi_entities(db, base_url=_base_url(request))
     headers = _validity_headers([kv for kv, _ in pairs])
@@ -68,5 +70,12 @@ def ngsi_ld_keyvalues(request: Request, db: Session = Depends(get_public_db)) ->
 )
 @limiter.limit(settings.rate_limit_public)
 def dcat_ap(request: Request, db: Session = Depends(get_public_db)) -> JSONResponse:
-    doc = export_service.dcat_ap(db, base_url=_base_url(request))
-    return JSONResponse(doc, media_type=JSON_LD)
+    """DCAT-AP ``dcat:Dataset`` for the two NGSI-LD distributions.
+
+    Carries the same ``X-Schema-Valid`` verdict as the data endpoints it describes, so a harvester
+    never advertises a dataset whose entities do not validate.
+    """
+    base_url = _base_url(request)
+    doc = export_service.dcat_ap(db, base_url=base_url)
+    headers = _validity_headers([kv for kv, _ in export_service.poi_entities(db, base_url=base_url)])
+    return JSONResponse(doc, media_type=JSON_LD, headers=headers)

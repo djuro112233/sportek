@@ -4,13 +4,14 @@ The gate itself lives in ``services/validation.py``: ``TRANSITIONS`` says which 
 item from which status to which, every transition writes a provenance record and an audit row, and
 approving a heritage entry (re)builds its RAG index while leaving ``approved`` removes it.
 
-This router adds the staff-side views (queue, item with provenance, audit) and **one pre-condition**
-that the service does not yet enforce:
+This router adds the staff-side views (queue, item with provenance, audit) and repeats one gate rule
+as a pre-condition, so that it holds even if the service is called differently in future:
 
     a content item whose ``facts_verified`` is false may never reach ``approved`` (409).
 
-That rule belongs next to the other guards inside ``services.validation.transition`` — see the note
-in ``_refuse_unverified_facts`` below.
+The authoritative copy of that rule lives in ``services.validation.transition`` (next to the consent
+check), which is where every caller — API, CLI, seed loader, jobs — meets it; see
+``_refuse_unverified_facts`` below.
 """
 from __future__ import annotations
 
@@ -97,11 +98,10 @@ def _serialise(item_type: str, item) -> dict:
 def _refuse_unverified_facts(item_type: str, item, to_status: str) -> None:
     """Refuse to approve an item whose facts are not verified (409).
 
-    OWNERSHIP NOTE: this is a *gate* rule, not a routing rule — it belongs beside the consent check
-    inside ``services.validation.transition`` so that every caller (API, CLI, seed loader, future
-    jobs) is bound by it. It is enforced here because this module does not own that file; moving it
-    is a two-line change and ``tests/test_validation_gate.py::test_unverified_facts_cannot_be_approved``
-    keeps passing afterwards.
+    This is a *gate* rule, not a routing rule: its authoritative copy sits beside the consent check
+    inside ``services.validation.transition``, so every caller (API, CLI, seed loader, future jobs)
+    is bound by it. Repeating it here — in the same position in the sequence of checks — costs one
+    comparison and keeps the API's behaviour explicit at the edge.
     """
     if to_status == "approved" and getattr(item, "facts_verified", True) is False:
         raise HTTPException(
@@ -196,7 +196,12 @@ def transition(
     if body.to_status not in STATUS_VALUES:  # pragma: no cover - the schema already constrains it
         raise HTTPException(status_code=400, detail=f"invalid status {body.to_status}")
     item = validation.get_item(db, item_type, item_id)
-    _refuse_unverified_facts(item_type, item, body.to_status)
+    # Only once the step itself and the actor's role are acceptable does the facts rule apply, so an
+    # impossible step still reads as "not allowed" (409) and a wrong role as 403 — the same order the
+    # rule will have when it moves into services.validation.transition.
+    allowed = validation.TRANSITIONS.get((item.status, body.to_status))
+    if allowed is not None and actor.role in allowed:
+        _refuse_unverified_facts(item_type, item, body.to_status)
     item = validation.transition(db, item_type, item.id, body.to_status, actor=actor, note=body.note)
     return _serialise(item_type, item)
 
