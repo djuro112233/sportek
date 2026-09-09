@@ -747,7 +747,9 @@ def stt_wer_summary(db: Session) -> dict[str, Any]:
         "mean_wer": round(statistics.fmean(wers), 4) if wers else None,
         "median_wer": round(statistics.median(wers), 4) if wers else None,
         "worst_wer": round(max(wers), 4) if wers else None,
-        "synthetic_samples": all(r.is_synthetic_sample for r in rows) if rows else None,
+        # Named to match services/stt_eval.py and the dashboard's type: true while the five samples
+        # are synthetic stand-ins, so the honest label can never quietly disappear.
+        "is_synthetic": all(r.is_synthetic_sample for r in rows) if rows else None,
     }
 
 

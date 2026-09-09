@@ -14,7 +14,7 @@ from __future__ import annotations
 import uuid
 from typing import Any, Literal
 
-from fastapi import APIRouter, Depends, Request, status
+from fastapi import APIRouter, Depends, Request, Response, status
 from pydantic import BaseModel, Field, field_validator
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -69,7 +69,7 @@ def nearest_village(db: Session, lat: float, lng: float) -> Village | None:
 
 @router.post("", status_code=status.HTTP_201_CREATED, summary="Record an anonymous visit (public)")
 @limiter.limit(settings.rate_limit_public)
-def record_visit(request: Request, body: VisitEventIn, db: Session = Depends(get_db)) -> dict[str, Any]:
+def record_visit(request: Request, response: Response, body: VisitEventIn, db: Session = Depends(get_db)) -> dict[str, Any]:
     """Write one pseudonymised ``visit_recorded`` event. Only aggregates of these are ever shown."""
     village = nearest_village(db, body.lat, body.lng)
     emit_event(
@@ -95,6 +95,6 @@ def record_visit(request: Request, body: VisitEventIn, db: Session = Depends(get
 
 @router.get("/types", summary="Event types emitted by the platform (public)")
 @limiter.limit(settings.rate_limit_public)
-def event_types(request: Request) -> list[str]:
+def event_types(request: Request, response: Response) -> list[str]:
     """Every event type in the stream; only ``visit_recorded`` may be posted by a client."""
     return list(EVENT_TYPES)

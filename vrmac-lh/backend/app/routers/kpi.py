@@ -14,7 +14,7 @@ import uuid
 from datetime import datetime
 from typing import Annotated, Any, Literal
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -204,7 +204,7 @@ def heatmap(user: ReaderUser, db: Session = Depends(get_db)) -> dict[str, Any]:
 
 @router.get("/definitions", summary="The K01–K23 definition file (public, provisional)")
 @limiter.limit(settings.rate_limit_public)
-def definitions(request: Request) -> dict[str, Any]:
+def definitions(request: Request, response: Response) -> dict[str, Any]:
     """Public: the definitions behind every published number, with the provisional warning."""
     defs = kpi_service.load_definitions()
     doc = defs.public_dict()
