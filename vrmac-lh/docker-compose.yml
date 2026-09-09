@@ -113,6 +113,7 @@ services:
   scheduler:
     build: ./backend
     <<: *backend-env
+    # nightly: KPI computation (02:00 UTC) and expiry of stale visitor requests
     command: ["python", "-m", "app.cli", "kpi-schedule", "--hour", "2"]
     depends_on:
       api:

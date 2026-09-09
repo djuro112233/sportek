@@ -17,8 +17,29 @@ class UserOut(ORMModel):
     email: str
     role: str
     display_name: str
-    sex: str | None = None
+    # Voluntary self-report only; "undisclosed" until the person chooses to answer.
+    gender: str = "undisclosed"
+    gender_self_reported: bool = False
+    village_id: uuid.UUID | None = None
     is_sample: bool
+
+
+class VillageOut(ORMModel):
+    """A settlement of the Vrmac territory. Reference data: names, municipality, coordinates."""
+
+    id: uuid.UUID
+    slug: str
+    name_local: str
+    name_en: str
+    municipality: str
+    ridge_side: str
+    lat: float | None
+    lng: float | None
+    coords_approximate: bool
+    elevation_m: int | None
+    source: str
+    facts_verified: bool
+    verification_note: str
 
 
 class LoginIn(BaseModel):
@@ -55,6 +76,7 @@ class SourceRef(BaseModel):
 class HeritageEntryOut(ORMModel):
     id: uuid.UUID
     slug: str
+    village_id: uuid.UUID
     kind: str
     title_local: str
     title_en: str
@@ -72,6 +94,8 @@ class HeritageEntryOut(ORMModel):
     established_year: int | None
     source: str
     sources: list
+    facts_verified: bool
+    verification_note: str
     tags: list
     status: str
     version: int
@@ -82,18 +106,26 @@ class HeritageEntryOut(ORMModel):
 class ListingOut(ORMModel):
     id: uuid.UUID
     slug: str
+    village_id: uuid.UUID
     category: str
     title_local: str
     title_en: str
     description_local: str
     description_en: str
+    # Host-confirmed structured fields (never inferred by a model).
     price_min: float | None
     price_max: float | None
     currency: str
-    season: str | None
+    price_note_local: str
+    price_note_en: str
+    season_from: int | None
+    season_to: int | None
+    season_all_year: bool
     capacity: int | None
-    accessibility_local: str
-    accessibility_en: str
+    accessibility_step_free: bool | None
+    accessibility_note_local: str
+    accessibility_note_en: str
+    confirmed_fields: list
     lat: float | None
     lng: float | None
     coords_approximate: bool
@@ -112,6 +144,7 @@ class ListingOut(ORMModel):
 class TrailReportOut(ORMModel):
     id: uuid.UUID
     segment_id: uuid.UUID
+    village_id: uuid.UUID | None
     lat: float
     lng: float
     condition: str
@@ -128,6 +161,8 @@ class TrailReportOut(ORMModel):
 class TrailSegmentOut(ORMModel):
     id: uuid.UUID
     slug: str
+    village_id: uuid.UUID
+    village_slugs: list
     name_local: str
     name_en: str
     description_local: str
@@ -162,3 +197,16 @@ class Citation(BaseModel):
     chunk_index: int
     score: float
     excerpt: str
+    entry_version: int = 1
+    village_slug: str | None = None
+
+
+class SupportResult(BaseModel):
+    """Verdict of the per-sentence attributability check (claim 2b)."""
+
+    sentence: str
+    supported: bool
+    score: float
+    method: str
+    passage_index: int | None = None
+    reason: str = ""

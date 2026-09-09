@@ -1,0 +1,77 @@
+{
+  "_note": "The territory is the rural plateau of Vrmac on both sides of the ridge, not one village. Villages are reference data: names, municipality and APPROXIMATE coordinates only. Every claim about a village lives in a heritage entry that passes the validation gate. facts_verified=false marks a village whose public sources could not be checked in this build environment — see verification_note.",
+  "villages": [
+    {
+      "slug": "gornja-lastva",
+      "name_local": "Gornja Lastva",
+      "name_en": "Gornja Lastva",
+      "municipality": "Tivat",
+      "ridge_side": "tivat",
+      "lat": 42.4425, "lng": 18.6919, "coords_approximate": true,
+      "elevation_m": 300,
+      "source": "hr.wikipedia — Gornja Lastva (coordinates 42.4425 N, 18.6919 E); gornjalastva.org",
+      "facts_verified": true,
+      "verification_note": "Coordinates approximate per hr.wikipedia; to be replaced by K4's surveyed GPX."
+    },
+    {
+      "slug": "donja-lastva",
+      "name_local": "Donja Lastva",
+      "name_en": "Donja Lastva",
+      "municipality": "Tivat",
+      "ridge_side": "tivat",
+      "lat": 42.44, "lng": 18.685, "coords_approximate": true,
+      "elevation_m": 5,
+      "source": "hr.wikipedia — Donja Lastva",
+      "facts_verified": true,
+      "verification_note": "Coordinates approximate (settlement centre); to be surveyed."
+    },
+    {
+      "slug": "sveti-vid",
+      "name_local": "Sveti Vid (područje)",
+      "name_en": "St Vitus area",
+      "municipality": "Tivat",
+      "ridge_side": "ridge",
+      "lat": 42.4468, "lng": 18.6985, "coords_approximate": true,
+      "elevation_m": 440,
+      "source": "hr.wikipedia — Gornja Lastva (church of St Vitus, 9th c., 440 m)",
+      "facts_verified": true,
+      "verification_note": "Area around the church of St Vitus on the ridge above Gornja Lastva; coordinates approximate."
+    },
+    {
+      "slug": "tivat",
+      "name_local": "Tivat",
+      "name_en": "Tivat",
+      "municipality": "Tivat",
+      "ridge_side": "tivat",
+      "lat": 42.435, "lng": 18.706, "coords_approximate": true,
+      "elevation_m": 3,
+      "source": "hr.wikipedia — Tivat",
+      "facts_verified": true,
+      "verification_note": "Municipality seat; coordinates approximate (town centre)."
+    },
+    {
+      "slug": "gornji-stoliv",
+      "name_local": "Gornji Stoliv",
+      "name_en": "Gornji Stoliv",
+      "municipality": "Kotor",
+      "ridge_side": "kotor",
+      "lat": 42.464, "lng": 18.715, "coords_approximate": true,
+      "elevation_m": 250,
+      "source": "UNVERIFIED — no public source could be consulted in the build environment",
+      "facts_verified": false,
+      "verification_note": "MUST BE VERIFIED BEFORE THE PITCH: name spelling, municipality (Kotor), coordinates and altitude against hr.wikipedia 'Gornji Stoliv' and Kotor municipality sources. Wikipedia was not reachable from the build environment (egress policy), so nothing about this village is published: its heritage entries stay in the validation queue as drafts."
+    },
+    {
+      "slug": "pasiglav",
+      "name_local": "Pasiglav",
+      "name_en": "Pasiglav",
+      "municipality": "Tivat",
+      "ridge_side": "tivat",
+      "lat": 42.4365, "lng": 18.6795, "coords_approximate": true,
+      "elevation_m": 180,
+      "source": "UNVERIFIED — no public source could be consulted in the build environment",
+      "facts_verified": false,
+      "verification_note": "MUST BE VERIFIED BEFORE THE PITCH: existence, spelling, municipality and coordinates of this hamlet on Vrmac. Listed in the brief's territory model; no content is published for it."
+    }
+  ]
+}

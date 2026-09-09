@@ -1,6 +1,7 @@
 """Embeddings behind an interface.
 
-EMBEDDINGS_PROVIDER=ollama                → multilingual open model served by Ollama (default: paraphrase-multilingual, 768-d)
+EMBEDDINGS_PROVIDER=eu_api                → multilingual open model from the EU inference provider (OpenAI-compatible /embeddings)
+EMBEDDINGS_PROVIDER=ollama                → the same open model served by Ollama (default: paraphrase-multilingual, 768-d)
 EMBEDDINGS_PROVIDER=sentence-transformers → in-process model (needs requirements-st.txt)
 EMBEDDINGS_PROVIDER=hash                  → deterministic hashed lexical features; no model download.
                                             Used by the CI test-suite so the grounding tests are reproducible offline.
@@ -21,7 +22,7 @@ import httpx
 from ..config import settings
 
 # Provider-specific defaults for the retrieval-confidence threshold (cosine similarity).
-DEFAULT_MIN_SIMILARITY = {"hash": 0.35, "ollama": 0.60, "sentence-transformers": 0.60}
+DEFAULT_MIN_SIMILARITY = {"hash": 0.35, "ollama": 0.60, "sentence-transformers": 0.60, "eu_api": 0.60}
 
 _STOPWORDS = {
     # English
@@ -120,6 +121,40 @@ class OllamaEmbeddings:
         return vectors
 
 
+class OpenAICompatibleEmbeddings:
+    """EU inference provider (or any OpenAI-compatible /embeddings endpoint)."""
+
+    name = "eu_api"
+
+    def __init__(self, base_url: str, api_key: str, model: str, dim: int, timeout: float = 120.0):
+        self.base_url = base_url.rstrip("/")
+        self.api_key = api_key
+        self.model = model
+        self.dim = dim
+        self.timeout = timeout
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        if not texts:
+            return []
+        if not self.base_url:
+            raise RuntimeError("EMBEDDINGS_API_BASE / LLM_API_BASE is not configured")
+        headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
+        r = httpx.post(
+            f"{self.base_url}/embeddings",
+            json={"model": self.model, "input": texts},
+            headers=headers,
+            timeout=self.timeout,
+        )
+        r.raise_for_status()
+        vectors = [row["embedding"] for row in sorted(r.json()["data"], key=lambda d: d.get("index", 0))]
+        for v in vectors:
+            if len(v) != self.dim:
+                raise ValueError(
+                    f"embedding model {self.model} returns {len(v)}-d vectors but EMBEDDING_DIM={self.dim}"
+                )
+        return vectors
+
+
 class SentenceTransformersEmbeddings:
     name = "sentence-transformers"
 
@@ -146,6 +181,11 @@ def get_embeddings() -> Embeddings:
         p = settings.embeddings_provider
         if p == "hash":
             _instance = HashEmbeddings(settings.embedding_dim)
+        elif p == "eu_api":
+            _instance = OpenAICompatibleEmbeddings(
+                settings.embeddings_base_url, settings.embeddings_api_key or settings.llm_api_key,
+                settings.embeddings_model, settings.embedding_dim,
+            )
         elif p == "ollama":
             _instance = OllamaEmbeddings(settings.ollama_url, settings.embeddings_model, settings.embedding_dim)
         elif p == "sentence-transformers":
@@ -153,6 +193,20 @@ def get_embeddings() -> Embeddings:
         else:
             raise ValueError(f"unknown EMBEDDINGS_PROVIDER {p}")
     return _instance
+
+
+def reset_embeddings_cache() -> None:
+    """Test helper: forget the memoised provider after changing settings."""
+    global _instance
+    _instance = None
+
+
+def cosine(a: list[float], b: list[float]) -> float:
+    """Cosine similarity of two vectors (0 when either is degenerate)."""
+    dot = sum(x * y for x, y in zip(a, b))
+    na = math.sqrt(sum(x * x for x in a))
+    nb = math.sqrt(sum(y * y for y in b))
+    return 0.0 if na == 0 or nb == 0 else dot / (na * nb)
 
 
 def min_similarity() -> float:

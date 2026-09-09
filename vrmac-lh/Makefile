@@ -9,8 +9,11 @@ PYTEST ?= backend/.venv/bin/pytest
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
-env: ## Create .env from .env.example with a random SECRET_KEY
-	@test -f .env || (cp .env.example .env && sed -i "s/^SECRET_KEY=.*/SECRET_KEY=$$(openssl rand -hex 32)/" .env && echo ".env created")
+env: ## Create .env from .env.example with random secrets
+	@test -f .env || (cp .env.example .env \
+		&& sed -i "s/^SECRET_KEY=.*/SECRET_KEY=$$(openssl rand -hex 32)/" .env \
+		&& sed -i "s/^EVENT_PSEUDONYM_KEY=.*/EVENT_PSEUDONYM_KEY=$$(openssl rand -hex 32)/" .env \
+		&& echo ".env created with random SECRET_KEY and EVENT_PSEUDONYM_KEY")
 
 up: env ## Start the whole stack (db, redis, ollama, api, worker, scheduler, web)
 	$(COMPOSE) up --build -d
@@ -38,8 +41,18 @@ export: ## Export approved POIs as NGSI-LD + DCAT-AP into ./exports
 	$(COMPOSE) exec api python -m app.cli export-ngsi-ld --out /data/exports
 	$(COMPOSE) cp api:/data/exports/. ./exports/
 
-grounding: ## Run the 30-question grounding test inside the api container
+grounding: ## Run the grounding test (20 answerable + 10 unanswerable per language)
 	$(COMPOSE) exec api python -m app.cli grounding-test --out /data/exports/grounding_results.json
+
+review-sample: ## Export the monthly human review sheet (30 random answers)
+	$(COMPOSE) exec api python -m app.cli review-sample --out /data/exports
+	$(COMPOSE) cp api:/data/exports/. ./exports/
+
+stt-eval: ## Measure the speech-to-text word error rate on the Montenegrin sample set
+	$(COMPOSE) exec api python -m app.cli stt-eval
+
+budget: ## Show this month's model spend against LLM_MONTHLY_CAP_EUR
+	$(COMPOSE) exec api python -m app.cli budget
 
 openapi: ## Write docs/openapi.json from the running code
 	cd backend && SECRET_KEY=$${SECRET_KEY:-docs-only-secret-key-0000} AUTO_INIT_DB=false ../$(PY) -m app.cli openapi --out ../docs/openapi.json

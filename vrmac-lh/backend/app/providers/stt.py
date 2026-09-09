@@ -1,7 +1,10 @@
 """Speech-to-text behind an interface.
 
+STT_PROVIDER=eu_api         → Whisper hosted by the EU inference provider under the same
+                              no-data-retention contract as the LLM (OpenAI-compatible
+                              /audio/transcriptions). Billable: priced per audio minute.
 STT_PROVIDER=faster-whisper → local CTranslate2 Whisper (CPU, int8). Model downloaded on first use.
-STT_PROVIDER=api            → OpenAI-compatible /audio/transcriptions endpoint (hosted or self-hosted whisper server)
+STT_PROVIDER=api            → any other OpenAI-compatible /audio/transcriptions endpoint
 STT_PROVIDER=fixture        → TEST ONLY: returns the transcript stored next to the audio file
                               (<file>.txt) or in seed_data/stt_fixtures/<stem>.txt. Never use for a live demo.
 """
@@ -26,6 +29,7 @@ class TranscriptResult:
     duration_s: float | None
     provider: str
     model: str
+    billable: bool = False
     segments: list[dict] = field(default_factory=list)
 
 
@@ -85,9 +89,9 @@ class FasterWhisperSTT:
 
 
 class WhisperAPISTT:
-    name = "api"
-
-    def __init__(self, base_url: str, api_key: str, model: str):
+    def __init__(self, base_url: str, api_key: str, model: str, name: str = "api", billable: bool = True):
+        self.name = name
+        self.billable = billable
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key
         self.model = model
@@ -111,6 +115,7 @@ class WhisperAPISTT:
             duration_s=audio_duration_seconds(path),
             provider=self.name,
             model=self.model,
+            billable=self.billable,
         )
 
 
@@ -140,6 +145,29 @@ class FixtureSTT:
         raise FileNotFoundError(f"no STT fixture transcript for {p.name}")
 
 
+def word_error_rate(reference: str, hypothesis: str) -> tuple[float, int]:
+    """Word error rate (Levenshtein on words) and the reference length.
+
+    Text is lower-cased and stripped of punctuation first, so the metric measures words, not
+    formatting. Returns ``(wer, n_reference_words)``; an empty reference gives ``(0.0, 0)``.
+    """
+    import re as _re
+
+    def words(text: str) -> list[str]:
+        return _re.sub(r"[^\w\s]", " ", (text or "").lower()).split()
+
+    ref, hyp = words(reference), words(hypothesis)
+    if not ref:
+        return (0.0, 0)
+    previous = list(range(len(hyp) + 1))
+    for i, r in enumerate(ref, start=1):
+        current = [i]
+        for j, h in enumerate(hyp, start=1):
+            current.append(min(previous[j] + 1, current[j - 1] + 1, previous[j - 1] + (r != h)))
+        previous = current
+    return (previous[len(hyp)] / len(ref), len(ref))
+
+
 _instance: STT | None = None
 
 
@@ -149,6 +177,14 @@ def get_stt() -> STT:
         p = settings.stt_provider
         if p == "faster-whisper":
             _instance = FasterWhisperSTT(settings.stt_model, settings.stt_compute_type)
+        elif p == "eu_api":
+            _instance = WhisperAPISTT(
+                settings.stt_api_base or settings.llm_api_base,
+                settings.stt_api_key or settings.llm_api_key,
+                settings.stt_api_model,
+                name=settings.llm_provider_name or "eu_api",
+                billable=True,
+            )
         elif p == "api":
             _instance = WhisperAPISTT(settings.stt_api_base, settings.stt_api_key, settings.stt_api_model)
         elif p == "fixture":
@@ -156,3 +192,9 @@ def get_stt() -> STT:
         else:
             raise ValueError(f"unknown STT_PROVIDER {p}")
     return _instance
+
+
+def reset_stt_cache() -> None:
+    """Test helper: forget the memoised provider after changing settings."""
+    global _instance
+    _instance = None

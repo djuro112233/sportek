@@ -23,6 +23,7 @@ from ..models import (
     TrailReport,
     TrailSegment,
     User,
+    Village,
     utcnow,
 )
 from ..services import indexing
@@ -31,9 +32,10 @@ from ..services.validation import add_provenance
 log = logging.getLogger(__name__)
 
 TRUNCATE_ORDER = [
-    "kpi_heat_cells", "kpi_aggregates", "events", "audit_log", "visitor_requests", "trail_reports",
-    "trail_segments", "entry_chunks", "provenance", "listings", "consent_records", "onboarding_sessions",
-    "heritage_entries", "users",
+    "kpi_heat_cells", "kpi_aggregates", "kpi_runs", "events", "answer_records", "response_cache",
+    "llm_usage", "stt_evaluations", "audit_log", "visitor_requests", "trail_reports", "trail_segments",
+    "entry_chunks", "provenance", "listings", "consent_records", "onboarding_sessions",
+    "heritage_entries", "users", "villages",
 ]
 
 
@@ -86,6 +88,14 @@ def geometry_stats(geometry: dict) -> tuple[int, int]:
     return int(round(length)), int(round(ascent))
 
 
+def s_village_slug(seg: TrailSegment, villages_by_slug: dict) -> str:
+    """Fallback village for a report: the segment's own village."""
+    for slug, v in villages_by_slug.items():
+        if v.id == seg.village_id:
+            return slug
+    raise KeyError("village of segment not found")
+
+
 def _approve(db: Session, item_type: str, item, validator: User, source: str) -> None:
     item.status = "approved"
     item.approved_by = validator.id
@@ -102,11 +112,28 @@ def load_seed(db: Session, *, reset: bool = False) -> dict:
     if db.scalar(select(User.id).limit(1)) is not None:
         return {"status": "already seeded", "hint": "use --reset to reload"}
 
+    # --- villages (reference data for the whole territory) -------------------
+    villages_by_slug: dict[str, Village] = {}
+    for v in _read("villages.json")["villages"]:
+        village = Village(
+            slug=v["slug"], name_local=v["name_local"], name_en=v["name_en"], municipality=v["municipality"],
+            ridge_side=v.get("ridge_side", "tivat"), lat=v.get("lat"), lng=v.get("lng"),
+            coords_approximate=v.get("coords_approximate", True), elevation_m=v.get("elevation_m"),
+            source=v.get("source", ""), facts_verified=v.get("facts_verified", False),
+            verification_note=v.get("verification_note", ""),
+        )
+        db.add(village)
+        villages_by_slug[village.slug] = village
+    db.flush()
+
     users_by_email: dict[str, User] = {}
     for u in _read("users.json")["users"]:
+        village = villages_by_slug.get(u.get("village") or "")
         user = User(
             email=u["email"].lower(), password_hash=hash_password(settings.seed_password), role=u["role"],
-            display_name=u["display_name"], sex=u.get("sex"), is_sample=True,
+            display_name=u["display_name"], gender=u.get("gender", "undisclosed"),
+            gender_self_reported=bool(u.get("gender_self_reported", False)),
+            village_id=village.id if village else None, is_sample=True,
         )
         db.add(user)
         users_by_email[user.email] = user
@@ -121,21 +148,25 @@ def load_seed(db: Session, *, reset: bool = False) -> dict:
     for e in data["entries"]:
         target = e["status"]
         entry = HeritageEntry(
-            slug=e["slug"], kind=e["kind"], title_local=e["title_local"], title_en=e["title_en"],
+            slug=e["slug"], village_id=villages_by_slug[e["village"]].id, kind=e["kind"],
+            title_local=e["title_local"], title_en=e["title_en"],
             summary_local=e.get("summary_local", ""), summary_en=e.get("summary_en", ""),
             body_local=e.get("body_local", ""), body_en=e.get("body_en", ""),
             lat=e.get("lat"), lng=e.get("lng"), coords_approximate=e.get("coords_approximate", True),
             coords_source=e.get("coords_source", ""), elevation_m=e.get("elevation_m"),
             event_date=datetime.fromisoformat(e["event_date"]).date() if e.get("event_date") else None,
             recurrence_rule=e.get("recurrence_rule"), established_year=e.get("established_year"),
-            source=e["source"], sources=[source_book[k] for k in e.get("source_keys", [])], tags=e.get("tags", []),
-            status="draft", version=1, created_by=ambassador.id,
+            source=e["source"], sources=[source_book[k] for k in e.get("source_keys", [])],
+            facts_verified=e.get("facts_verified", True), verification_note=e.get("verification_note", ""),
+            tags=e.get("tags", []), status="draft", version=1, created_by=ambassador.id,
         )
         db.add(entry)
         db.flush()
         add_provenance(db, "heritage_entry", entry, "created", actor=ambassador, source=e["source"],
                        note="seed: public facts with cited sources", to_status="draft")
         if target == "approved":
+            if not entry.facts_verified:  # defence in depth: unverified content is never approved
+                raise ValueError(f"seed entry {entry.slug} is marked unverified and cannot be approved")
             _approve(db, "heritage_entry", entry, validator, e["source"])
         elif target == "reviewed":
             entry.status = "reviewed"
@@ -159,11 +190,17 @@ def load_seed(db: Session, *, reset: bool = False) -> dict:
         db.add(consent)
         db.flush()
         listing = Listing(
-            slug=l["slug"], host_user_id=host.id, category=l["category"], title_local=l["title_local"],
-            title_en=l["title_en"], description_local=l["description_local"], description_en=l["description_en"],
+            slug=l["slug"], host_user_id=host.id, village_id=villages_by_slug[l["village"]].id,
+            category=l["category"], title_local=l["title_local"], title_en=l["title_en"],
+            description_local=l["description_local"], description_en=l["description_en"],
             price_min=l.get("price_min"), price_max=l.get("price_max"), currency=l.get("currency", "EUR"),
-            season=l.get("season"), capacity=l.get("capacity"), accessibility_local=l.get("accessibility_local", ""),
-            accessibility_en=l.get("accessibility_en", ""), lat=l.get("lat"), lng=l.get("lng"),
+            price_note_local=l.get("price_note_local", ""), price_note_en=l.get("price_note_en", ""),
+            season_from=l.get("season_from"), season_to=l.get("season_to"),
+            season_all_year=bool(l.get("season_all_year", False)), capacity=l.get("capacity"),
+            accessibility_step_free=l.get("accessibility_step_free"),
+            accessibility_note_local=l.get("accessibility_note_local", ""),
+            accessibility_note_en=l.get("accessibility_note_en", ""),
+            confirmed_fields=l.get("confirmed_fields", []), lat=l.get("lat"), lng=l.get("lng"),
             coords_approximate=l.get("coords_approximate", True), photo_url=l.get("photo_url", ""), is_sample=True,
             missing_fields=[], extraction_method="manual", translation_pending=False, consent_record_id=consent.id,
             status="draft", version=1,
@@ -190,7 +227,9 @@ def load_seed(db: Session, *, reset: bool = False) -> dict:
             length_m, ascent_m = geometry_stats(geometry)
         start = geometry["coordinates"][0]
         seg = TrailSegment(
-            slug=s["slug"], name_local=s["name_local"], name_en=s["name_en"],
+            slug=s["slug"], village_id=villages_by_slug[s["village"]].id,
+            village_slugs=s.get("village_slugs", [s["village"]]),
+            name_local=s["name_local"], name_en=s["name_en"],
             description_local=s.get("description_local", ""), description_en=s.get("description_en", ""),
             from_name=s.get("from_name", ""), to_name=s.get("to_name", ""), gpx_file=s.get("gpx_file"),
             geometry=geometry, length_m=length_m, ascent_m=ascent_m, difficulty=s.get("difficulty", "moderate"),
@@ -207,7 +246,8 @@ def load_seed(db: Session, *, reset: bool = False) -> dict:
     for r in tdata["reports"]:
         seg = segments_by_slug[r["segment_slug"]]
         rep = TrailReport(
-            segment_id=seg.id, lat=r["lat"], lng=r["lng"], condition=r["condition"], note_local=r.get("note_local", ""),
+            segment_id=seg.id, village_id=villages_by_slug[r.get("village", s_village_slug(seg, villages_by_slug))].id,
+            lat=r["lat"], lng=r["lng"], condition=r["condition"], note_local=r.get("note_local", ""),
             note_en=r.get("note_en", ""), reported_at=_parse_dt(r["reported_at"]), reporter_role=r.get("reporter_role", "visitor"),
             reporter_user_id=ambassador.id if r.get("reporter_role") == "ambassador" else None, is_sample=True,
             status="draft", version=1,
@@ -229,13 +269,14 @@ def load_seed(db: Session, *, reset: bool = False) -> dict:
     try:
         from .synthetic_events import load_synthetic_events  # provided by the KPI module
 
-        n_events = load_synthetic_events(db, users_by_email)
+        n_events = load_synthetic_events(db, users_by_email, villages_by_slug)
         db.commit()
     except ImportError:
         log.info("no synthetic event history module; skipping")
 
     summary = {
         "status": "seeded",
+        "villages": len(villages_by_slug),
         "users": len(users_by_email),
         "heritage_entries": n_entries,
         "listings": n_listings,

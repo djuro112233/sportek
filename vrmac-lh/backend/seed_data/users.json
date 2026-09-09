@@ -1,20 +1,125 @@
 {
-  "_note": "Sample accounts only. Fictional people; e-mail addresses use the reserved example.org domain. Password = SEED_PASSWORD.",
+  "_note": "Sample accounts only. Fictional people; e-mail addresses use the reserved example.org domain. Password = SEED_PASSWORD. 'gender' is a VOLUNTARY self-report: two sample hosts deliberately leave it undisclosed and one selects prefer_not_to_say, so the KPI code is exercised on rows that must be excluded from gender-disaggregated figures.",
   "users": [
-    {"email": "host1@example.org", "role": "host", "display_name": "Ana (sample host)", "sex": "F"},
-    {"email": "host2@example.org", "role": "host", "display_name": "Marko (sample host)", "sex": "M"},
-    {"email": "host3@example.org", "role": "host", "display_name": "Jelena (sample host)", "sex": "F"},
-    {"email": "host4@example.org", "role": "host", "display_name": "Nikola (sample host)", "sex": "M"},
-    {"email": "host5@example.org", "role": "host", "display_name": "Sample host 5", "sex": "F"},
-    {"email": "host6@example.org", "role": "host", "display_name": "Sample host 6", "sex": "M"},
-    {"email": "host7@example.org", "role": "host", "display_name": "Sample host 7", "sex": "F"},
-    {"email": "host8@example.org", "role": "host", "display_name": "Sample host 8", "sex": "M"},
-    {"email": "host9@example.org", "role": "host", "display_name": "Sample host 9", "sex": "F"},
-    {"email": "host10@example.org", "role": "host", "display_name": "Sample host 10", "sex": "M"},
-    {"email": "host11@example.org", "role": "host", "display_name": "Sample host 11", "sex": "F"},
-    {"email": "host12@example.org", "role": "host", "display_name": "Sample host 12", "sex": "X"},
-    {"email": "ambassador1@example.org", "role": "ambassador", "display_name": "Ambasador (sample)", "sex": "F"},
-    {"email": "validator1@example.org", "role": "validator", "display_name": "Validator — Napredak (sample)", "sex": "M"},
-    {"email": "institution1@example.org", "role": "institution", "display_name": "Institucija — read-only (sample)", "sex": "X"}
+    {
+      "email": "host1@example.org",
+      "role": "host",
+      "display_name": "Ana (sample host)",
+      "gender": "female",
+      "gender_self_reported": true,
+      "village": "gornja-lastva"
+    },
+    {
+      "email": "host2@example.org",
+      "role": "host",
+      "display_name": "Marko (sample host)",
+      "gender": "male",
+      "gender_self_reported": true,
+      "village": "donja-lastva"
+    },
+    {
+      "email": "host3@example.org",
+      "role": "host",
+      "display_name": "Jelena (sample host)",
+      "gender": "female",
+      "gender_self_reported": true,
+      "village": "donja-lastva"
+    },
+    {
+      "email": "host4@example.org",
+      "role": "host",
+      "display_name": "Nikola (sample host)",
+      "gender": "male",
+      "gender_self_reported": true,
+      "village": "gornja-lastva"
+    },
+    {
+      "email": "host5@example.org",
+      "role": "host",
+      "display_name": "Sample host 5",
+      "gender": "female",
+      "gender_self_reported": true,
+      "village": null
+    },
+    {
+      "email": "host6@example.org",
+      "role": "host",
+      "display_name": "Sample host 6",
+      "gender": "male",
+      "gender_self_reported": true,
+      "village": null
+    },
+    {
+      "email": "host7@example.org",
+      "role": "host",
+      "display_name": "Sample host 7",
+      "gender": "female",
+      "gender_self_reported": true,
+      "village": null
+    },
+    {
+      "email": "host8@example.org",
+      "role": "host",
+      "display_name": "Sample host 8",
+      "gender": "male",
+      "gender_self_reported": true,
+      "village": null
+    },
+    {
+      "email": "host9@example.org",
+      "role": "host",
+      "display_name": "Sample host 9",
+      "gender": "undisclosed",
+      "gender_self_reported": false,
+      "village": null
+    },
+    {
+      "email": "host10@example.org",
+      "role": "host",
+      "display_name": "Sample host 10",
+      "gender": "prefer_not_to_say",
+      "gender_self_reported": true,
+      "village": null
+    },
+    {
+      "email": "host11@example.org",
+      "role": "host",
+      "display_name": "Sample host 11",
+      "gender": "undisclosed",
+      "gender_self_reported": false,
+      "village": null
+    },
+    {
+      "email": "host12@example.org",
+      "role": "host",
+      "display_name": "Sample host 12",
+      "gender": "other",
+      "gender_self_reported": true,
+      "village": null
+    },
+    {
+      "email": "ambassador1@example.org",
+      "role": "ambassador",
+      "display_name": "Ambasador (sample)",
+      "gender": "female",
+      "gender_self_reported": true,
+      "village": null
+    },
+    {
+      "email": "validator1@example.org",
+      "role": "validator",
+      "display_name": "Validator — Napredak (sample)",
+      "gender": "male",
+      "gender_self_reported": true,
+      "village": null
+    },
+    {
+      "email": "institution1@example.org",
+      "role": "institution",
+      "display_name": "Institucija — read-only (sample)",
+      "gender": "other",
+      "gender_self_reported": true,
+      "village": null
+    }
   ]
 }

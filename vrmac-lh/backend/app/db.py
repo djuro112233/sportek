@@ -52,6 +52,11 @@ def get_public_db() -> Generator[Session, None, None]:
         db.close()
 
 
+# Reference tables the visitor role may read in full. Villages carry no free-text claim: only names,
+# municipality, approximate coordinates and the source/verification flag of those facts. Every claim
+# about a village lives in a heritage entry, which goes through the validation gate.
+PUBLIC_REFERENCE_TABLES: tuple[str, ...] = ("villages",)
+
 # Tables the visitor role may read (RLS restricts rows to approved content).
 PUBLIC_TABLES: dict[str, str] = {
     "heritage_entries": "status = 'approved'",
@@ -93,6 +98,8 @@ def apply_public_role_and_rls(conn) -> None:
     conn.execute(text(f"GRANT USAGE ON SCHEMA public TO {role}"))
     # Revoke anything broader that may have been granted earlier, then grant SELECT only.
     conn.execute(text(f"REVOKE ALL ON ALL TABLES IN SCHEMA public FROM {role}"))
+    for table in PUBLIC_REFERENCE_TABLES:
+        conn.execute(text(f"GRANT SELECT ON {table} TO {role}"))
     for table, predicate in PUBLIC_TABLES.items():
         conn.execute(text(f"GRANT SELECT ON {table} TO {role}"))
         conn.execute(text(f"ALTER TABLE {table} ENABLE ROW LEVEL SECURITY"))
@@ -103,12 +110,17 @@ def apply_public_role_and_rls(conn) -> None:
 
 
 def init_db(drop: bool = False) -> None:
-    """Create extension, tables, visitor role and RLS policies. Idempotent."""
+    """Create extension, tables, visitor role and RLS policies. Idempotent.
+
+    ``drop=True`` recreates the whole ``public`` schema, which is the only reliable way to reset a
+    database whose schema predates the current models (the prototype ships no migrations).
+    """
     from . import models  # noqa: F401  (register tables)
 
     with engine.begin() as conn:
-        conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         if drop:
-            Base.metadata.drop_all(conn)
+            conn.execute(text("DROP SCHEMA public CASCADE"))
+            conn.execute(text("CREATE SCHEMA public"))
+        conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         Base.metadata.create_all(conn)
         apply_public_role_and_rls(conn)
