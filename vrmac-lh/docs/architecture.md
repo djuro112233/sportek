@@ -1,101 +1,127 @@
 # Architecture
 
 > Prototype built for the SMART ERA application, September–October 2026. Sample data.
-> The reference documents named in the brief (`SIP_Draft_Vrmac_Living_Heritage.pdf` §2.2/§2.3/§11 and
-> `VRMAC_LH_Prototype.html`) were not available in the repository when this prototype was built; the diagram
-> below follows the brief's architecture description and should be aligned with §2.2 of the SIP Draft.
+> `SIP_Draft_Vrmac_Living_Heritage.pdf` §2.2/§2.3 was not available to this build, so the diagrams below
+> follow the brief. Align them with the SIP Draft before the pitch (see `docs/decisions.md`).
 
-## Component diagram
+## Territory
+
+The prototype covers the rural plateau of Vrmac **on both sides of the ridge**. Every point of interest,
+provider, trail segment and event belongs to a village, and every village carries its municipality.
+
+| Village | Municipality | Side | Content |
+|---|---|---|---|
+| Gornja Lastva | Tivat | Tivat | approved: village, both churches' entries, festival, landscape days, culture house, olive mills, census |
+| Donja Lastva | Tivat | Tivat | approved: settlement, sample providers, trailhead |
+| St Vitus area | Tivat | ridge | approved: 9th-century church at 440 m |
+| Tivat | Tivat | Tivat | approved: municipality seat |
+| Gornji Stoliv | **Kotor** | Kotor | **unverified**: draft entry only, cannot be approved |
+| Pasiglav | Tivat | Tivat | **unverified**: reference row only |
+
+## Components
 
 ```mermaid
 flowchart LR
-  subgraph Clients["Next.js apps (one codebase, /api proxied)"]
-    HOST["Host PWA<br/>voice recording, draft review, consent"]
-    VIS["Visitor app<br/>MapLibre + OSM map, GPX trails, ask, itinerary, requests"]
-    VAL["Validator queue<br/>draft → reviewed → approved | rejected, provenance"]
-    DASH["Institution dashboard<br/>KPI table (k≥5, by sex), heat map, timing log"]
+  subgraph Clients["Next.js (one codebase, /api proxied)"]
+    HOST["Host PWA<br/>offline recording (IndexedDB),<br/>host-confirmed fields, consent"]
+    VIS["Visitor app<br/>MapLibre + OSM, GPX trails,<br/>ask, multi-village itinerary"]
+    VAL["Validator queue<br/>draft → reviewed → approved | rejected"]
+    DASH["Institution dashboard<br/>K01–K23 after disclosure review,<br/>heat map, quality metrics"]
   end
 
-  CADDY["Caddy<br/>TLS, security headers, no access log"]
+  CADDY["Caddy — TLS, security headers, no access log"]
   HOST --> CADDY
   VIS --> CADDY
   VAL --> CADDY
   DASH --> CADDY
 
   subgraph API["FastAPI (Python 3.12) — OpenAPI at /api/docs"]
-    AUTH["auth + RBAC<br/>bcrypt, JWT, audit log"]
+    AUTH["auth + RBAC + audit log"]
     GATE["validation gate<br/>services/validation.py"]
-    RAG["grounded answers<br/>services/rag.py"]
+    RAG["grounded answers<br/>services/rag.py + response cache"]
+    SUP["support check<br/>providers/support.py"]
     ONB["voice onboarding<br/>services/onboarding.py"]
-    GEO["map / trails / itinerary<br/>services/geo.py"]
-    KPI["events → KPIs<br/>services/kpi.py"]
-    EXP["NGSI-LD + DCAT-AP<br/>services/export.py"]
+    GEO["map / trails / itinerary / requests"]
+    KPI["events → K01–K23<br/>services/kpi.py + disclosure.py"]
+    EXP["NGSI-LD + DCAT-AP"]
+    BUD["spend cap<br/>services/budget.py"]
   end
   CADDY --> API
+  RAG --> SUP
+  RAG --> BUD
+  ONB --> BUD
 
   subgraph Providers["Pluggable providers (env flags)"]
-    LLM["LLM<br/>Ollama (qwen2.5:1.5b) | OpenAI-compatible | none"]
-    EMB["Embeddings<br/>Ollama paraphrase-multilingual | sentence-transformers | hash"]
-    STT["Speech-to-text<br/>faster-whisper small int8 | API | fixture"]
+    LLM["LLM: EU inference provider (pay-per-use,<br/>no data retention) | ollama/vllm | none"]
+    EMB["Embeddings: multilingual open model"]
+    STT["STT: EU Whisper | faster-whisper | fixture"]
   end
   RAG --> LLM
   RAG --> EMB
+  SUP --> LLM
   ONB --> LLM
   ONB --> STT
 
   subgraph Data["PostgreSQL 16 + pgvector"]
     APPROLE["app role (owner)"]
-    PUBROLE["visitor role<br/>SELECT only, RLS: status = 'approved'"]
-    T["content tables + status/version<br/>provenance, consent_records,<br/>events, kpi_aggregates, audit_log,<br/>entry_chunks (vectors)"]
+    PUBROLE["visitor role — SELECT only,<br/>RLS: status = 'approved'"]
+    T["villages, content + status/version,<br/>provenance, consent, pseudonymised events,<br/>kpi_runs/aggregates, answer_records,<br/>response_cache, llm_usage, audit_log,<br/>entry_chunks (vectors)"]
   end
   AUTH --> APPROLE
   GATE --> APPROLE
   ONB --> APPROLE
   KPI --> APPROLE
+  BUD --> APPROLE
   RAG --> PUBROLE
   GEO --> PUBROLE
   EXP --> PUBROLE
   APPROLE --> T
   PUBROLE --> T
 
-  REDIS["Redis + RQ worker<br/>transcription jobs"]
+  REDIS["Redis + RQ worker — transcription"]
   ONB --> REDIS
-  SCHED["scheduler<br/>nightly KPI job 02:00 UTC"] --> KPI
-  EXP --> NGSI["NGSI-LD PointOfInterest<br/>+ DCAT-AP (files / endpoints)"]
+  SCHED["scheduler — nightly KPIs 02:00 UTC,<br/>request expiry"] --> KPI
+  EXP --> NGSI["NGSI-LD PointOfInterest + DCAT-AP"]
 ```
 
-## Workflows (one real path each)
+## Workflows
 
 ```mermaid
 sequenceDiagram
   participant H as Host (PWA)
+  participant IDB as IndexedDB
   participant A as API
-  participant S as STT
+  participant S as Speech-to-text
   participant L as LLM
   participant V as Validator
   participant P as Visitor
   H->>A: POST /onboarding/sessions (onboarding_started)
-  H->>A: POST …/audio (webm)
-  A->>S: transcribe (faster-whisper)
+  H->>IDB: record audio (works offline)
+  IDB-->>A: POST …/audio when online (offline_captured, captured_at)
+  A->>S: transcribe
   A-->>H: transcript (transcript_ready)
   H->>A: POST …/draft
-  A->>L: extract structured listing (json) / rules fallback
-  A-->>H: draft + missing_fields (draft_generated)
-  H->>A: POST …/confirm (listing + consent) → consent_record, listing[draft] (listing_confirmed, duration logged)
-  V->>A: POST /validation/items/listing/{id}/transition approved (entry_approved, provenance, audit)
-  P->>A: GET /listings, /map/features (visitor role, RLS → approved only)
-  P->>A: POST /ask → answer with citations (answer_served) or refusal (answer_withheld)
+  A->>L: rephrase into TITLE + DESCRIPTION only
+  A-->>H: draft + fields_required (draft_generated)
+  H->>A: POST …/confirm — host-entered price, season, capacity, accessibility + consent
+  Note over A: listing [draft], consent record, active vs elapsed time logged (listing_confirmed)
+  V->>A: transition → approved (entry_approved, provenance, audit)
+  P->>A: GET /map/features, /listings — visitor role, RLS → approved only
+  P->>A: POST /ask
+  A->>A: retrieve approved chunks → confidence gate → generate → SUPPORT CHECK per sentence
+  A-->>P: answer + citations (answer_served) or refusal (answer_withheld)
 ```
 
-## Data-layer enforcement of the validation gate
+## How each guarantee is enforced
 
-1. `status` CHECK constraint on every content table (`draft|reviewed|approved|rejected`), `version >= 1`.
-2. Every transition writes a `provenance` row (who, when, version, source, note) and an `audit_log` row.
-3. Visitor endpoints open the database as `vrmac_public`, a role with `SELECT` only and **row-level-security
-   policies** `USING (status = 'approved')` on `heritage_entries`, `listings`, `trail_segments`, `trail_reports`,
-   and `EXISTS(... approved)` on `entry_chunks`. A buggy query cannot leak a draft.
-4. The services additionally apply an explicit `status == 'approved'` filter (belt and braces).
-5. Tests in `backend/tests/test_validation_gate.py` prove all of the above against a real PostgreSQL.
+| Guarantee | Mechanism |
+|---|---|
+| Only approved content reaches visitors | `CHECK` constraint on status; read-only DB role with row-level security `USING (status='approved')`; explicit `approved_only` filters; `tests/test_validation_gate.py` |
+| Unverified facts cannot be published | `facts_verified` flag; the gate refuses to approve; the assistant therefore withholds |
+| Answers are attributable | retrieval over approved chunks + per-sentence support check; unsupported sentences dropped; empty answer → withheld |
+| Never unsourced text when the budget runs out | `services/budget.guard` → cached answer or "assistant paused"; generation is the only thing that stops |
+| No personal data in analytics | keyed HMAC pseudonyms for actor, session and device; no free text in events; answers stored unlinked for review |
+| Nothing published below k | primary (k≥5), secondary and small-cell suppression, then a human disclosure review per run |
 
 ## Deployment (2 vCPU / 4 GB, no GPU)
 
@@ -103,12 +129,12 @@ sequenceDiagram
 |---|---|---|---|
 | db | pgvector/pgvector:pg16 | 512 MB | content, vectors, events, aggregates |
 | redis | redis:7-alpine | 64 MB | job queue |
-| ollama (+ ollama-pull) | ollama/ollama | 2.2 GB | qwen2.5:1.5b + paraphrase-multilingual (CPU) |
+| ollama (+ pull) | ollama/ollama | 2.2 GB | demo-laptop models (skip when using the EU provider) |
 | api | backend/Dockerfile | 1.2 GB | FastAPI + faster-whisper small (int8) |
-| worker | backend/Dockerfile | 1.2 GB | RQ worker (transcription) |
-| scheduler | backend/Dockerfile | 256 MB | nightly KPI computation |
+| worker | backend/Dockerfile | 1.2 GB | transcription jobs |
+| scheduler | backend/Dockerfile | 256 MB | nightly KPI run, request expiry |
 | web | frontend/Dockerfile | 384 MB | Next.js (standalone) |
 | caddy (profile `proxy`) | caddy:2-alpine | – | TLS termination |
 
-Memory caps are soft guidance for a 4 GB VPS; the LLM and STT models are the small variants on purpose.
-`LLM_PROVIDER=openai` with a hosted API removes the Ollama service entirely (`COMPOSE_PROFILES=` empty).
+With `LLM_PROVIDER=eu_api` and `COMPOSE_PROFILES=` the Ollama service disappears and the stack fits
+comfortably in 4 GB.
