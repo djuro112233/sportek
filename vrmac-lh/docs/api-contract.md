@@ -138,6 +138,9 @@ Expiry: requests older than their `expires_at` are closed as `expired` by the sc
 | GET | `/api/export/ngsi-ld/keyvalues` | public | key-values form, validated against the Smart Data Models schema |
 | GET | `/api/export/dcat-ap` | public | DCAT-AP dataset description (JSON-LD) |
 
+All three export responses carry `X-Schema-Valid`, `X-Schema-Id` and `X-Schema-Version`; the DCAT-AP
+response reports the verdict of the data it describes.
+
 ## meta
 `GET /api/health` (providers, spend cap), `GET /api/meta` (prototype label, languages, municipalities,
 maps provider, k-min, onboarding target, cache and support-check settings).

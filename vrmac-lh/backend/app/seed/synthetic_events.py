@@ -290,7 +290,7 @@ def load_synthetic_events(db: Session, users_by_email: dict, villages_by_slug: d
                     },
                 )
 
-            if rng.random() < 0.22:
+            if rng.random() < 0.45:
                 request_no += 1
                 host = hosts_taking_requests[request_no % len(hosts_taking_requests)]
                 vslug = HOTSPOTS[home][2]

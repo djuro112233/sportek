@@ -149,7 +149,7 @@
     {
       "id": "cnr-a17",
       "lang": "cnr",
-      "question": "Koje crkve postoje u Gornjoj Lastvi?",
+      "question": "Koje crkve ima selo Gornja Lastva?",
       "expected": "answer",
       "expected_slugs": ["gornja-lastva", "crkva-sv-marije", "crkva-sv-vida"],
       "expected_answer": "Crkva Svete Marije iz 14. vijeka i crkva Svetog Vida iz 9. vijeka na 440 metara.",

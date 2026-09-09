@@ -1,0 +1,7 @@
+# Active authoring time vs elapsed time, one line per confirmed/published onboarding session.
+# Appended by app/services/onboarding.py. Session ids and durations only — no user id, no name,
+# no transcript. active_s is the KPI K06/K07 input; elapsed_* include waiting for a validator.
+2026-09-09T14:57:57Z  event=confirmed  session=631d5770-cfaf-4a68-97a6-3954337dbad2  active_s=255  elapsed_to_confirm_s=1320  elapsed_to_publish_s=-  within_active_target=true  target_min=30  offline_captured=true  upload_deferred_s=1200  stt=fixture  llm=none  status=confirmed
+2026-09-09T14:57:59Z  event=published  session=631d5770-cfaf-4a68-97a6-3954337dbad2  active_s=255  elapsed_to_confirm_s=1320  elapsed_to_publish_s=1321  within_active_target=true  target_min=30  offline_captured=true  upload_deferred_s=1200  stt=fixture  llm=none  status=published
+2026-09-09T14:58:16Z  event=confirmed  session=70ef70c7-76ac-40b5-bca8-3bd9c41b167e  active_s=255  elapsed_to_confirm_s=1320  elapsed_to_publish_s=-  within_active_target=true  target_min=30  offline_captured=true  upload_deferred_s=1200  stt=fixture  llm=none  status=confirmed
+2026-09-09T14:58:16Z  event=published  session=70ef70c7-76ac-40b5-bca8-3bd9c41b167e  active_s=255  elapsed_to_confirm_s=1320  elapsed_to_publish_s=1320  within_active_target=true  target_min=30  offline_captured=true  upload_deferred_s=1200  stt=fixture  llm=none  status=published

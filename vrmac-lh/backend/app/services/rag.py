@@ -148,6 +148,8 @@ EXTRA_STOPWORDS: frozenset[str] = frozenset(
         "should", "could", "would", "will", "have", "has", "had", "been", "being", "am", "into",
         "onto", "than", "then", "so", "if", "not", "no", "yes", "up", "down", "out", "just", "also",
         "very", "really", "exactly", "like", "called", "name", "named", "there", "still", "get",
+        # English locative / existential frames: "where is X located" says nothing about X
+        "located", "situated", "lies", "lie", "stands", "stand", "take", "takes",
     }
 )
 
@@ -780,12 +782,18 @@ def ask(
     lang: str | None = None,
     session_id: str | None = None,
     device_id: str | None = None,
+    *,
+    use_cache: bool = True,
 ) -> AskResult:
     """Answer a visitor question from approved entries only, or refuse — see the module docstring.
 
     ``db_public`` (visitor role, RLS) retrieves; ``db_app`` (application role) reads the cache and
     writes the event, the usage rows and the unlinked answer record. Both the API router and the
     grounding-test runner call exactly this function.
+
+    ``use_cache=False`` neither reads nor writes the response cache. Only the grounding-test runner
+    sets it, so that the report measures retrieval, the gate and the support check on every run
+    instead of replaying the previous run's answers (the cache has its own tests).
     """
     question = " ".join((question or "").split())
     lang = normalize_lang(lang) or detect_lang(question)
@@ -849,7 +857,7 @@ def ask(
         )
 
     # 1. cache (exact, then semantic) -------------------------------------------------------
-    hit = cache_lookup(db_app, question, lang, vector)
+    hit = cache_lookup(db_app, question, lang, vector) if use_cache else None
     if hit is not None:
         hit.row.hits += 1
         hit.row.last_used_at = utcnow()
@@ -920,7 +928,8 @@ def ask(
         return withhold(REFUSAL_UNSUPPORTED, confidence)
 
     citations = [_citation(chunk, lang, excerpt) for chunk, excerpt in cited]
-    cache_store(db_app, question, lang, vector, answer, citations, confidence)
+    if use_cache:
+        cache_store(db_app, question, lang, vector, answer, citations, confidence)
     return serve(answer, citations, confidence, support, dropped, False)
 
 
@@ -1017,7 +1026,7 @@ def run_grounding_test(
             for item in items:
                 res = ask(
                     public_db, db, item["question"], lang=item.get("lang") or lg,
-                    session_id="grounding-test", device_id="grounding-test",
+                    session_id="grounding-test", device_id="grounding-test", use_cache=False,
                 )
                 row = evaluate_question(item, res)
                 row["set_lang"] = lg

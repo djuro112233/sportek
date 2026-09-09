@@ -81,6 +81,8 @@ HEAT_CELL_SIZE_DEG = 0.001
 
 NOTE_NO_EVENTS = "no events"
 RUN_STATUSES = ("computed", "reviewed", "published", "rejected")
+#: actor roles the statistics are *about* (as opposed to staff performing an editorial action)
+SUBJECT_ROLES: tuple[str, ...] = ("host", "visitor")
 
 
 # =================================================================================================
@@ -227,11 +229,18 @@ def pilot_start() -> date:
 
 
 def dedup_window(when: datetime, dedup_days: int, start: date | None = None) -> int:
-    """Index of the deduplication window a timestamp falls in (K11: one 180-day window)."""
+    """Index of the deduplication window a timestamp falls in (K11: one 180-day window).
+
+    Windows are anchored at ``settings.pilot_start_date``: window 0 is the first ``dedup_days`` of
+    the pilot, window 1 the next, and so on. Anything recorded *before* the pilot started (the
+    synthetic demo history, a pre-pilot test) is folded into window 0 so it cannot inflate the
+    count. A device seen in two different windows is counted twice — that is the deduplication rule,
+    not a bug: it says "reached again after 180 days".
+    """
     if dedup_days <= 0:
         return 0
     anchor = start or pilot_start()
-    return (when.astimezone(timezone.utc).date() - anchor).days // dedup_days
+    return max(0, (when.astimezone(timezone.utc).date() - anchor).days // dedup_days)
 
 
 def _numeric_values(events: Sequence[Event], prop: str, scale: float) -> list[float]:
@@ -346,20 +355,27 @@ def evaluate(spec: dict, scope: Sequence[Event]) -> tuple[float | None, list[Eve
 
 
 def _persons_behind(kpi: dict, touched: Sequence[Event]) -> int | None:
-    """Distinct individuals behind a cell: actors for person-level KPIs, otherwise devices.
+    """Distinct individuals behind a cell — what the k-rule counts.
 
-    ``None`` means "not backed by individuals" (for example a count of validator decisions) — the
-    k-rule does not apply to such a cell.
+    * **person-level KPI** → distinct actor pseudonyms: the KPI is explicitly about people.
+    * otherwise → distinct visitor devices plus distinct *host* actors, the two groups the
+      statistics are about.
+
+    ``None`` means "no individual stands behind this cell" and the k-rule does not apply: a count of
+    validator decisions (entries approved, items rejected) says nothing about a host or a visitor,
+    and suppressing it would hide the validation gate's own output for no privacy gain.
     """
     if not touched:
         return None
     if kpi.get("person_level"):
         return len({e.actor_pseudonym for e in touched if e.actor_pseudonym})
-    devices = {e.device_pseudonym for e in touched if e.device_pseudonym}
-    if devices:
-        return len(devices)
-    actors = {e.actor_pseudonym for e in touched if e.actor_pseudonym}
-    return len(actors) if actors else None
+    subjects = {("device", e.device_pseudonym) for e in touched if e.device_pseudonym}
+    subjects |= {
+        ("actor", e.actor_pseudonym)
+        for e in touched
+        if e.actor_pseudonym and e.actor_role in SUBJECT_ROLES
+    }
+    return len(subjects) or None
 
 
 def _cell(kpi: dict, dimension: str, kind: str, scope: Sequence[Event]) -> Cell:

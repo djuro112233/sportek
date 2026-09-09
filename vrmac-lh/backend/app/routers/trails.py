@@ -12,6 +12,7 @@ localised "visible after validation" message — it appears publicly only once a
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -55,21 +56,21 @@ def list_trails(
     village: str | None = Query(default=None, description="village slug or id (matches any village the trail connects)"),
     municipality: str | None = Query(default=None, description="Tivat or Kotor"),
     db: Session = Depends(get_public_db),
-) -> list[dict]:
+) -> JSONResponse:
     """Every approved segment, its ``village_slugs`` and its latest **approved** condition report."""
     by_id = geo.villages_by_id(db)
-    return [
+    return JSONResponse([
         geo.trail_payload(db, seg, by_id)
         for seg in geo.approved_segments(db, village=village, municipality=municipality)
-    ]
+    ])
 
 
 @router.get("/{slug_or_id}", summary="One approved trail segment with its approved reports")
 @limiter.limit(settings.rate_limit_public)
-def get_trail(request: Request, slug_or_id: str, db: Session = Depends(get_public_db)) -> dict:
+def get_trail(request: Request, slug_or_id: str, db: Session = Depends(get_public_db)) -> JSONResponse:
     """404 unless the segment is approved. ``reports`` are approved reports, newest first."""
     seg = content.get_approved_by_slug_or_id(db, TrailSegment, slug_or_id)
-    return geo.trail_payload(db, seg, geo.villages_by_id(db), with_reports=True)
+    return JSONResponse(geo.trail_payload(db, seg, geo.villages_by_id(db), with_reports=True))
 
 
 @router.get("/{slug_or_id}/gpx", summary="GPX track of an approved trail segment")
@@ -103,7 +104,7 @@ def submit_report(
     public_db: Session = Depends(get_public_db),
     db: Session = Depends(get_db),
     user: User | None = Depends(get_optional_user),
-) -> dict:
+) -> JSONResponse:
     """Create the report as a **draft** and emit ``trail_report`` (pseudonymised, with coordinates).
 
     Anyone may report: an anonymous visitor identified only by a random client id, or a signed-in
@@ -153,7 +154,7 @@ def submit_report(
             report_id=str(report.id),
             segment_slug=segment.slug,
         )
-    return {
+    return JSONResponse(status_code=status.HTTP_202_ACCEPTED, content={
         "id": str(report.id),
         "status": "draft",
         "segment_id": str(segment.id),
@@ -164,4 +165,4 @@ def submit_report(
         "visible_after_validation": True,
         "message": ACCEPTED_MESSAGE.get(payload.lang, ACCEPTED_MESSAGE["en"]),
         "conditions": list(CONDITION_VALUES),
-    }
+    })

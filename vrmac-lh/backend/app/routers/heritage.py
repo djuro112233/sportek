@@ -17,7 +17,7 @@ import uuid
 from datetime import date
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
 from pydantic import BaseModel, Field, field_validator
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -113,6 +113,7 @@ class HeritageUpdateIn(BaseModel):
 @limiter.limit(settings.rate_limit_public)
 def list_entries(
     request: Request,
+    response: Response,
     db: Annotated[Session, Depends(get_public_db)],
     kind: Annotated[str | None, Query(description="place | church | building | event | …")] = None,
     village: Annotated[str | None, Query(description="village slug or id")] = None,
@@ -130,6 +131,7 @@ def list_entries(
 @limiter.limit(settings.rate_limit_public)
 def calendar(
     request: Request,
+    response: Response,
     db: Annotated[Session, Depends(get_public_db)],
     village: Annotated[str | None, Query(description="village slug or id")] = None,
     municipality: Annotated[str | None, Query(description="Tivat | Kotor")] = None,
@@ -146,6 +148,7 @@ def calendar(
 @limiter.limit(settings.rate_limit_public)
 def get_entry(
     request: Request,
+    response: Response,
     slug_or_id: str,
     db: Annotated[Session, Depends(get_public_db)],
 ) -> HeritageEntry:

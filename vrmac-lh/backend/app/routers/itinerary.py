@@ -12,6 +12,7 @@ property is read by K15 (share of itineraries covering more than one village).
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -44,9 +45,9 @@ class ItineraryIn(BaseModel):
 
 @router.get("/interests", summary="Interest values accepted by POST /api/itinerary")
 @limiter.limit(settings.rate_limit_public)
-def interests(request: Request) -> dict:
+def interests(request: Request) -> JSONResponse:
     """Heritage kinds and listing categories, with the localised label used for ``why``."""
-    return {
+    return JSONResponse({
         "interests": [
             {
                 "value": value,
@@ -59,7 +60,7 @@ def interests(request: Request) -> dict:
         "aliases": {k: list(v) for k, v in geo.INTEREST_ALIASES.items()},
         "max_hours": geo.MAX_ITINERARY_HOURS,
         "default_start": {"lat": geo.DEFAULT_START[0], "lng": geo.DEFAULT_START[1], "village_slug": "donja-lastva"},
-    }
+    })
 
 
 @router.post("", summary="Plan a walking itinerary across the villages of Vrmac")
@@ -69,7 +70,7 @@ def create_itinerary(
     payload: ItineraryIn,
     db: Session = Depends(get_public_db),
     write_db: Session = Depends(get_db),
-) -> dict:
+) -> JSONResponse:
     """Greedy nearest-neighbour plan within ``hours``; emits ``itinerary_generated``."""
     _, unknown = geo.normalise_interests(payload.interests)
     if unknown:
@@ -112,4 +113,4 @@ def create_itinerary(
         lang=payload.lang,
     )
     write_db.commit()
-    return result
+    return JSONResponse(result)

@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -50,6 +50,7 @@ class GenderSelfReportIn(BaseModel):
 @limiter.limit(settings.rate_limit_public)
 def login(
     request: Request,
+    response: Response,
     body: LoginIn,
     db: Annotated[Session, Depends(get_db)],
 ) -> TokenOut:

@@ -18,7 +18,7 @@ from __future__ import annotations
 import uuid
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -78,6 +78,7 @@ class ListingUpdateIn(BaseModel):
 @limiter.limit(settings.rate_limit_public)
 def list_listings(
     request: Request,
+    response: Response,
     db: Annotated[Session, Depends(get_public_db)],
     category: Annotated[str | None, Query(description="accommodation | food | guiding | …")] = None,
     village: Annotated[str | None, Query(description="village slug or id")] = None,
@@ -106,6 +107,7 @@ def my_listings(
 @limiter.limit(settings.rate_limit_public)
 def get_listing(
     request: Request,
+    response: Response,
     slug_or_id: str,
     db: Annotated[Session, Depends(get_public_db)],
 ) -> Listing:

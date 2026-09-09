@@ -15,6 +15,7 @@ from __future__ import annotations
 from datetime import date
 
 from fastapi import APIRouter, Depends, Query, Request, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -73,7 +74,7 @@ def send_request(
     payload: RequestIn,
     public_db: Session = Depends(get_public_db),
     db: Session = Depends(get_db),
-) -> dict:
+) -> JSONResponse:
     """404 unless the listing is approved — a draft listing cannot receive requests."""
     approved = content.get_approved_by_slug_or_id(public_db, Listing, payload.listing_id)
     listing = db.get(Listing, approved.id)
@@ -90,7 +91,7 @@ def send_request(
     out = lifecycle.visitor_payload(req, listing, _village(db, listing))
     out["message_to_visitor"] = SENT_MESSAGE.get(payload.lang, SENT_MESSAGE["en"])
     out["no_booking"] = True
-    return out
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=out)
 
 
 @router.get("/mine", summary="The visitor's own requests")
@@ -99,13 +100,13 @@ def my_requests(
     request: Request,
     session_id: str = Query(..., min_length=8, max_length=64),
     db: Session = Depends(get_db),
-) -> list[dict]:
+) -> JSONResponse:
     """Only requests whose ``visitor_session_id`` matches exactly."""
     out = []
     for req in lifecycle.requests_for_session(db, session_id):
         listing = lifecycle.listing_of(db, req)
         out.append(lifecycle.visitor_payload(req, listing, _village(db, listing)))
-    return out
+    return JSONResponse(out)
 
 
 @router.get("/host", summary="Requests for the signed-in host's own listings")
@@ -164,7 +165,7 @@ def cancel(
     request_id: str,
     payload: CancelIn,
     db: Session = Depends(get_db),
-) -> dict:
+) -> JSONResponse:
     """403 unless the request carries exactly this ``session_id``."""
     req = lifecycle.get_request(db, request_id)
     lifecycle.require_visitor(req, payload.session_id)
@@ -173,4 +174,4 @@ def cancel(
         lifecycle.set_status(
             db, req, "cancelled", actor=None, actor_kind="visitor", session_id=payload.session_id
         )
-    return lifecycle.visitor_payload(req, listing, _village(db, listing))
+    return JSONResponse(lifecycle.visitor_payload(req, listing, _village(db, listing)))

@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, Query, Request, Response
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -64,6 +64,7 @@ def _with_counts(village: Village, counts: dict[str, int]) -> VillageWithCounts:
 @limiter.limit(settings.rate_limit_public)
 def list_villages(
     request: Request,
+    response: Response,
     db: Annotated[Session, Depends(get_public_db)],
     municipality: Annotated[str | None, Query(description="Tivat | Kotor")] = None,
 ) -> list[VillageWithCounts]:
@@ -89,6 +90,7 @@ def list_villages(
 @limiter.limit(settings.rate_limit_public)
 def get_village(
     request: Request,
+    response: Response,
     slug_or_id: str,
     db: Annotated[Session, Depends(get_public_db)],
 ) -> VillageWithCounts:
