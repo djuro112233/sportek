@@ -48,7 +48,7 @@ Columns every row carries: `event_type`, `occurred_at`, `actor_pseudonym`, `acto
 | `request_completed` | `services/requests_lifecycle.py: set_status` | the host who closed it | `from_status`, `closed_by`, `category` | K18, K19 |
 | `request_refused` | `services/requests_lifecycle.py: set_status` | the host who refused | `from_status`, `closed_by`, `category` | K19 |
 | `request_cancelled` | `services/requests_lifecycle.py: set_status` | host **or** visitor (`closed_by`) | `from_status`, `closed_by`, `category` | K19 |
-| `request_expired` | `services/requests_lifecycle.py: expire_stale_requests` | nobody — `actor_role = "system"` | `from_status`, `closed_by`, `category` | K19 |
+| `request_expired` | `services/requests_lifecycle.py: set_status`, from `expire_stale_requests` | nobody — `actor_role = "system"` | `from_status`, `closed_by`, `category` | K19 |
 | `trail_report` | `routers/trails.py: submit_report` | anonymous visitor, or a signed-in reporter | `condition`, `report_id`, `segment_slug` | K11, K20, heat map |
 | `visit_recorded` | `routers/events.py: record_visit` | anonymous visitor | *(none)* | K11, K21, heat map |
 
@@ -58,6 +58,15 @@ draft-related indicator, the spec can point at this event without touching any c
 
 Rows written by the seed's synthetic demo history additionally carry `synthetic: true`
 (`app/seed/synthetic_events.py`); nothing in that history is real usage. See `docs/decisions.md` §11.
+
+The synthetic rows carry every property the current KPI specs read (`active_seconds`,
+`within_active_target`, `offline_captured`, `elapsed_to_publish_seconds`, `multi_village`), but their
+property sets are a variant of the live emitters', not a copy: they omit `question_len` /
+`question_sha256`, they name the refusal reason `refusal_reason` where `services/rag.py` writes
+`reason`, and the request events carry a `request_id` instead of `from_status` / `closed_by` /
+`category`. A §11 spec that reads a property outside that list will therefore see it on live events
+and not on the demo history. The column that decides which spec matches is `event_type`, which is
+identical in both.
 
 ### Coordinates and item references
 
@@ -86,8 +95,9 @@ consequences the KPI engine depends on:
   another instance of this software gets a different pseudonym.
 * **Revocable**: rotating `EVENT_PSEUDONYM_KEY` makes every historical pseudonym unlinkable to
   anything written afterwards. Old rows keep their old digests, new rows get new ones, and the two
-  cannot be joined. Rotation is therefore a real erasure lever, and it is also a break in every
-  distinct-person and distinct-device count that spans the rotation.
+  cannot be joined. Rotation is therefore a real unlinking lever — the rows survive, the ability to
+  connect them to anything newer does not — and it is equally a break in every distinct-person and
+  distinct-device count that spans it.
 
 Because the `kind` is part of the message, the same string hashed as a session and as a device yields
 two different pseudonyms, so a session pseudonym can never be matched against a device pseudonym.
@@ -137,8 +147,8 @@ written by `services/rag.py: _record_answer` alongside the event.
 `occurred_at`, `lang`, `question`, `answer`, `answered`, `refusal_reason`, `confidence`, `citations`,
 `support_results`, `dropped_sentences`, the provider names and `served_from_cache`.
 
-The event and the answer record are written in the same transaction and share only a timestamp. That
-is on purpose and it is the trade-off: a reviewer can read every question and judge every citation,
+The event and the answer record are written in the same transaction, moments apart, and share no key
+— only an approximate timestamp. That is on purpose and it is the trade-off: a reviewer can read every question and judge every citation,
 but cannot tie a question back to a person — not by joining tables, because there is no column to join
 on. The `question_sha256` in the event is a hash of the question, not a key into `answer_records`;
 matching would require already knowing the question text.
