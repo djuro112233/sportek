@@ -1,0 +1,5846 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "VRMAC-LH prototype API",
+    "description": "\n**Prototype built for the SMART ERA application, September–October 2026. Sample data.**\n\nInnovation claims implemented for real (not mocked):\n\nThe territory is the rural plateau of **Vrmac on both sides of the ridge**: every point of interest, provider,\ntrail segment and event belongs to a village with its municipality (Tivat or Kotor), and itineraries span villages.\n\n1. **Validation gate** – every content item is `draft → reviewed → approved | rejected`; visitors only ever read\n   `approved` rows (explicit filters + PostgreSQL row-level security on a read-only DB role).\n2. **Grounded answers or refusal** – `/api/ask` retrieves only approved entries **and** checks every answer\n   sentence against the cited passage; unsupported sentences are dropped and an empty answer is withheld\n   with an `answer_withheld` event.\n3. **Voice-first onboarding** – offline-capable recording → speech-to-text → the model drafts *title and\n   description only*; price, season, capacity and accessibility are host-entered and host-confirmed →\n   consent → validation queue → publish (Montenegrin + English).\n4. **Events → KPIs** – every step emits a *pseudonymised* event; K01–K23 are computed nightly and published\n   only after a disclosure review (k≥5 and small-cell suppression).\n5. **Map & directions** – every approved item has WGS84 coordinates, GPX trails and geotagged condition reports.\n6. **Interoperability** – NGSI-LD `PointOfInterest` (Smart Data Models) + DCAT-AP export.\n",
+    "license": {
+      "name": "AGPL-3.0-only",
+      "url": "https://www.gnu.org/licenses/agpl-3.0.html"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Sign in with e-mail and password",
+        "description": "Exchange sample credentials for a short-lived JWT.\n\nThe audit row for a *failed* attempt holds no e-mail address and no client address — only the\nfact that a login failed, with the request id for correlation.",
+        "operationId": "login_api_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "The signed-in user",
+        "operationId": "me_api_auth_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/me/gender": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Voluntary gender self-report (the only way gender_self_reported becomes true)",
+        "description": "Record the caller's own voluntary self-report.\n\n``gender_self_reported`` becomes true for every one of the four answers — including\n``prefer_not_to_say``, which is an answer, not silence. Only the values in\n``models.GENDER_REPORTED`` are ever disaggregated; the KPI engine excludes the rest.",
+        "operationId": "set_gender_api_auth_me_gender_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenderSelfReportIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/villages": {
+      "get": {
+        "tags": [
+          "villages"
+        ],
+        "summary": "Villages of the territory (public reference data) with their approved-item counts",
+        "description": "Every village, optionally restricted to one municipality.\n\nUnverified villages are **not** hidden: they are returned with ``facts_verified=false`` and a\n``verification_note``, which is what the UI needs in order to mark them.",
+        "operationId": "list_villages_api_villages_get",
+        "parameters": [
+          {
+            "name": "municipality",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Tivat | Kotor",
+              "title": "Municipality"
+            },
+            "description": "Tivat | Kotor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VillageWithCounts"
+                  },
+                  "title": "Response List Villages Api Villages Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/villages/{slug_or_id}": {
+      "get": {
+        "tags": [
+          "villages"
+        ],
+        "summary": "One village by slug or id, with its approved-item counts",
+        "operationId": "get_village_api_villages__slug_or_id__get",
+        "parameters": [
+          {
+            "name": "slug_or_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug Or Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VillageWithCounts"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/heritage": {
+      "get": {
+        "tags": [
+          "heritage"
+        ],
+        "summary": "Approved heritage entries",
+        "description": "Approved entries only — visitor DB role (RLS) plus the explicit status filter.",
+        "operationId": "list_entries_api_heritage_get",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "place | church | building | event | …",
+              "title": "Kind"
+            },
+            "description": "place | church | building | event | …"
+          },
+          {
+            "name": "village",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "village slug or id",
+              "title": "Village"
+            },
+            "description": "village slug or id"
+          },
+          {
+            "name": "municipality",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Tivat | Kotor",
+              "title": "Municipality"
+            },
+            "description": "Tivat | Kotor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HeritageEntryOut"
+                  },
+                  "title": "Response List Entries Api Heritage Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "heritage"
+        ],
+        "summary": "Create a heritage entry (always draft)",
+        "description": "Store a new entry in ``draft`` with its citation and first provenance record.",
+        "operationId": "create_entry_api_heritage_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HeritageCreateIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeritageEntryOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/heritage/calendar": {
+      "get": {
+        "tags": [
+          "heritage"
+        ],
+        "summary": "Approved events by date",
+        "description": "Approved ``kind='event'`` entries, earliest date first; recurring events without a date last.",
+        "operationId": "calendar_api_heritage_calendar_get",
+        "parameters": [
+          {
+            "name": "village",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "village slug or id",
+              "title": "Village"
+            },
+            "description": "village slug or id"
+          },
+          {
+            "name": "municipality",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Tivat | Kotor",
+              "title": "Municipality"
+            },
+            "description": "Tivat | Kotor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HeritageEntryOut"
+                  },
+                  "title": "Response Calendar Api Heritage Calendar Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/heritage/{slug_or_id}": {
+      "get": {
+        "tags": [
+          "heritage"
+        ],
+        "summary": "One approved entry",
+        "description": "404 unless the entry is approved — the gate does not leak existence of unvalidated content.",
+        "operationId": "get_entry_api_heritage__slug_or_id__get",
+        "parameters": [
+          {
+            "name": "slug_or_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug Or Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeritageEntryOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/heritage/{item_id}": {
+      "put": {
+        "tags": [
+          "heritage"
+        ],
+        "summary": "Edit an entry (new version, back to draft)",
+        "description": "Any edit bumps the version; an approved entry returns to ``draft`` and leaves the index.",
+        "operationId": "update_entry_api_heritage__item_id__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Item Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HeritageUpdateIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeritageEntryOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/heritage/{item_id}/provenance": {
+      "get": {
+        "tags": [
+          "heritage"
+        ],
+        "summary": "Provenance trail of an entry (who did what, when, to which version)",
+        "operationId": "entry_provenance_api_heritage__item_id__provenance_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Item Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProvenanceOut"
+                  },
+                  "title": "Response Entry Provenance Api Heritage  Item Id  Provenance Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/listings": {
+      "get": {
+        "tags": [
+          "listings"
+        ],
+        "summary": "Approved listings",
+        "description": "Approved listings only — visitor DB role (RLS) plus the explicit status filter.",
+        "operationId": "list_listings_api_listings_get",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "accommodation | food | guiding | …",
+              "title": "Category"
+            },
+            "description": "accommodation | food | guiding | …"
+          },
+          {
+            "name": "village",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "village slug or id",
+              "title": "Village"
+            },
+            "description": "village slug or id"
+          },
+          {
+            "name": "municipality",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Tivat | Kotor",
+              "title": "Municipality"
+            },
+            "description": "Tivat | Kotor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListingOut"
+                  },
+                  "title": "Response List Listings Api Listings Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/listings/mine": {
+      "get": {
+        "tags": [
+          "listings"
+        ],
+        "summary": "The host's own listings (every status)",
+        "description": "A host sees their own drafts and rejected listings — nobody else's, whatever the status.",
+        "operationId": "my_listings_api_listings_mine_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ListingOut"
+                  },
+                  "type": "array",
+                  "title": "Response My Listings Api Listings Mine Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/listings/{slug_or_id}": {
+      "get": {
+        "tags": [
+          "listings"
+        ],
+        "summary": "One approved listing",
+        "description": "404 unless the listing is approved.",
+        "operationId": "get_listing_api_listings__slug_or_id__get",
+        "parameters": [
+          {
+            "name": "slug_or_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug Or Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/listings/{item_id}": {
+      "put": {
+        "tags": [
+          "listings"
+        ],
+        "summary": "Edit a listing (new version, back to draft)",
+        "description": "Edit and re-submit: the listing leaves the public site until a validator approves it again.",
+        "operationId": "update_listing_api_listings__item_id__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Item Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListingUpdateIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/listings/{item_id}/provenance": {
+      "get": {
+        "tags": [
+          "listings"
+        ],
+        "summary": "Provenance trail of a listing",
+        "operationId": "listing_provenance_api_listings__item_id__provenance_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Item Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProvenanceOut"
+                  },
+                  "title": "Response Listing Provenance Api Listings  Item Id  Provenance Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ask": {
+      "post": {
+        "tags": [
+          "ask"
+        ],
+        "summary": "Ask the visitor assistant",
+        "operationId": "ask_endpoint_api_ask_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AskIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AskResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/onboarding/sessions": {
+      "post": {
+        "tags": [
+          "onboarding"
+        ],
+        "summary": "Start Session",
+        "description": "Open a voice onboarding session. An ambassador may onboard on behalf of a host.",
+        "operationId": "start_session_api_onboarding_sessions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Start Session Api Onboarding Sessions Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/onboarding/sessions/{session_id}/heartbeat": {
+      "post": {
+        "tags": [
+          "onboarding"
+        ],
+        "summary": "Heartbeat",
+        "description": "Accumulate ACTIVE authoring time — this, not the wall clock, is what the 30-minute target measures.",
+        "operationId": "heartbeat_api_onboarding_sessions__session_id__heartbeat_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HeartbeatIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number"
+                  },
+                  "title": "Response Heartbeat Api Onboarding Sessions  Session Id  Heartbeat Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/onboarding/sessions/{session_id}/audio": {
+      "post": {
+        "tags": [
+          "onboarding"
+        ],
+        "summary": "Upload Audio",
+        "description": "Upload a recording and transcribe it.\n\nThe PWA may record offline (IndexedDB) and upload later: it then sends ``offline_captured=true``\nand ``captured_at``, and the API stores how long the recording waited (``upload_deferred_seconds``).\nThe audio file is deleted as soon as it is transcribed unless ``KEEP_AUDIO=true``.",
+        "operationId": "upload_audio_api_onboarding_sessions__session_id__audio_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_audio_api_onboarding_sessions__session_id__audio_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Upload Audio Api Onboarding Sessions  Session Id  Audio Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/onboarding/sessions/{session_id}/transcript": {
+      "post": {
+        "tags": [
+          "onboarding"
+        ],
+        "summary": "Set Transcript",
+        "description": "A typed transcript (no microphone), or the host's correction of the machine transcript.",
+        "operationId": "set_transcript_api_onboarding_sessions__session_id__transcript_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranscriptIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Set Transcript Api Onboarding Sessions  Session Id  Transcript Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/onboarding/sessions/{session_id}/draft": {
+      "post": {
+        "tags": [
+          "onboarding"
+        ],
+        "summary": "Generate Draft",
+        "description": "Draft the **title and description only** from the host's own words.\n\n``fields_required`` lists the structured fields the host must still fill in and confirm: price,\nseason, capacity, accessibility, coordinates, category and village. The model never fills them.",
+        "operationId": "generate_draft_api_onboarding_sessions__session_id__draft_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Generate Draft Api Onboarding Sessions  Session Id  Draft Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/onboarding/sessions/{session_id}/confirm": {
+      "post": {
+        "tags": [
+          "onboarding"
+        ],
+        "summary": "Confirm",
+        "description": "Consent + host-confirmed fields → a listing in ``draft`` (i.e. in the validation queue).",
+        "operationId": "confirm_api_onboarding_sessions__session_id__confirm_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Confirm Api Onboarding Sessions  Session Id  Confirm Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/onboarding/sessions/{session_id}": {
+      "get": {
+        "tags": [
+          "onboarding"
+        ],
+        "summary": "Read Session",
+        "description": "The session's state and both clocks: the owner host, its ambassador, any ambassador or validator.",
+        "operationId": "read_session_api_onboarding_sessions__session_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Read Session Api Onboarding Sessions  Session Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/onboarding/timing-log": {
+      "get": {
+        "tags": [
+          "onboarding"
+        ],
+        "summary": "Timing Log",
+        "description": "Active authoring time vs elapsed time per session. Session ids and durations only — no user id.",
+        "operationId": "timing_log_api_onboarding_timing_log_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Timing Log Api Onboarding Timing Log Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/validation/queue": {
+      "get": {
+        "tags": [
+          "validation"
+        ],
+        "summary": "Items waiting for validation",
+        "description": "Drafts and reviewed items, oldest first, with their village, municipality and source.\n\n``facts_verified=false`` tells the validator up front that approving is refused until the\nsources have been checked.",
+        "operationId": "queue_api_validation_queue_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "heritage_entry | listing | trail_segment | trail_report",
+              "title": "Item Type"
+            },
+            "description": "heritage_entry | listing | trail_segment | trail_report"
+          },
+          {
+            "name": "village",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "village slug or id",
+              "title": "Village"
+            },
+            "description": "village slug or id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QueueItem"
+                  },
+                  "title": "Response Queue Api Validation Queue Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/validation/items/{item_type}/{item_id}": {
+      "get": {
+        "tags": [
+          "validation"
+        ],
+        "summary": "One item in any status, with its provenance trail",
+        "operationId": "get_item_api_validation_items__item_type___item_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Type"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/validation/items/{item_type}/{item_id}/transition": {
+      "post": {
+        "tags": [
+          "validation"
+        ],
+        "summary": "Move an item through the gate (draft → reviewed → approved | rejected)",
+        "description": "Perform one transition.\n\nRoles come from ``services.validation.TRANSITIONS`` (403 when the actor's role may not do it),\nthe step itself must exist (409), a listing needs a consent record before approval (409) and an\nitem whose facts are unverified is refused approval (409). The transition writes provenance and\naudit rows, updates the RAG index and emits ``entry_approved`` / ``item_rejected``.",
+        "operationId": "transition_api_validation_items__item_type___item_id__transition_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Type"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusTransitionIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Transition Api Validation Items  Item Type   Item Id  Transition Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/validation/audit": {
+      "get": {
+        "tags": [
+          "validation"
+        ],
+        "summary": "The last 200 audit rows",
+        "description": "Newest first. Audit details are free of personal data by construction (app/audit.py).",
+        "operationId": "audit_api_validation_audit_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 200,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditRow"
+                  },
+                  "title": "Response Audit Api Validation Audit Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kpi": {
+      "get": {
+        "tags": [
+          "kpi"
+        ],
+        "summary": "Published KPI aggregates (latest reviewed run)",
+        "description": "The dashboard's only data source. Empty until a disclosure review publishes a run.",
+        "operationId": "kpi_table_api_kpi_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KpiTable"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/kpi/compute": {
+      "post": {
+        "tags": [
+          "kpi"
+        ],
+        "summary": "Compute a new KPI run (status: computed, not yet published)",
+        "operationId": "compute_api_kpi_compute_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ComputeIn"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Compute Api Kpi Compute Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/kpi/runs": {
+      "get": {
+        "tags": [
+          "kpi"
+        ],
+        "summary": "Recent KPI runs and their review status",
+        "operationId": "runs_api_kpi_runs_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RunOut"
+                  },
+                  "title": "Response Runs Api Kpi Runs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kpi/runs/{run_id}/review": {
+      "post": {
+        "tags": [
+          "kpi"
+        ],
+        "summary": "Disclosure review: publish or reject a computed run",
+        "description": "A human confirms the suppression result. Only a published run reaches ``GET /api/kpi``.",
+        "operationId": "review_api_kpi_runs__run_id__review_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Review Api Kpi Runs  Run Id  Review Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kpi/heatmap": {
+      "get": {
+        "tags": [
+          "kpi"
+        ],
+        "summary": "Heat map of the published run (GeoJSON, k≥k_min devices per cell)",
+        "operationId": "heatmap_api_kpi_heatmap_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Heatmap Api Kpi Heatmap Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/kpi/definitions": {
+      "get": {
+        "tags": [
+          "kpi"
+        ],
+        "summary": "The K01–K23 definition file (public, provisional)",
+        "description": "Public: the definitions behind every published number, with the provisional warning.",
+        "operationId": "definitions_api_kpi_definitions_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Definitions Api Kpi Definitions Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kpi/quality": {
+      "get": {
+        "tags": [
+          "kpi"
+        ],
+        "summary": "Internal quality metrics: speech-to-text WER, cache, spend cap",
+        "operationId": "quality_api_kpi_quality_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Quality Api Kpi Quality Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/map/features": {
+      "get": {
+        "tags": [
+          "map"
+        ],
+        "summary": "Approved map features (GeoJSON FeatureCollection)",
+        "description": "Points for approved heritage entries and listings, LineStrings for approved trail segments.\n\nEvery feature carries its village and municipality, the ``coords_approximate`` flag and both\nGoogle Maps navigation links. Trail features additionally carry the GPX URL, the villages they\nconnect and the latest **approved** condition report.",
+        "operationId": "map_features_api_map_features_get",
+        "parameters": [
+          {
+            "name": "village",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "village slug or id",
+              "title": "Village"
+            },
+            "description": "village slug or id"
+          },
+          {
+            "name": "municipality",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Tivat or Kotor",
+              "title": "Municipality"
+            },
+            "description": "Tivat or Kotor"
+          },
+          {
+            "name": "item_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "heritage_entry | listing | trail_segment",
+              "title": "Item Type"
+            },
+            "description": "heritage_entry | listing | trail_segment"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/map/directions": {
+      "get": {
+        "tags": [
+          "map"
+        ],
+        "summary": "Google Maps navigation deep link for a destination",
+        "description": "The deep link the \"how to get there\" button opens — real Google routing, no API key.",
+        "operationId": "directions_api_map_directions_get",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 90.0,
+              "minimum": -90.0,
+              "description": "destination latitude (WGS84)",
+              "title": "Lat"
+            },
+            "description": "destination latitude (WGS84)"
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 180.0,
+              "minimum": -180.0,
+              "description": "destination longitude (WGS84)",
+              "title": "Lng"
+            },
+            "description": "destination longitude (WGS84)"
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^(walking|driving)$",
+              "description": "walking | driving",
+              "default": "walking",
+              "title": "Mode"
+            },
+            "description": "walking | driving"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trails": {
+      "get": {
+        "tags": [
+          "trails"
+        ],
+        "summary": "Approved trail segments with their latest condition report",
+        "description": "Every approved segment, its ``village_slugs`` and its latest **approved** condition report.",
+        "operationId": "list_trails_api_trails_get",
+        "parameters": [
+          {
+            "name": "village",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "village slug or id (matches any village the trail connects)",
+              "title": "Village"
+            },
+            "description": "village slug or id (matches any village the trail connects)"
+          },
+          {
+            "name": "municipality",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Tivat or Kotor",
+              "title": "Municipality"
+            },
+            "description": "Tivat or Kotor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trails/{slug_or_id}": {
+      "get": {
+        "tags": [
+          "trails"
+        ],
+        "summary": "One approved trail segment with its approved reports",
+        "description": "404 unless the segment is approved. ``reports`` are approved reports, newest first.",
+        "operationId": "get_trail_api_trails__slug_or_id__get",
+        "parameters": [
+          {
+            "name": "slug_or_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug Or Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trails/{slug_or_id}/gpx": {
+      "get": {
+        "tags": [
+          "trails"
+        ],
+        "summary": "GPX track of an approved trail segment",
+        "description": "The surveyed seed file when the segment references one, otherwise a track generated from the\nstored geometry. Both are GPX 1.1 and both are approximate in this prototype.",
+        "operationId": "get_trail_gpx_api_trails__slug_or_id__gpx_get",
+        "parameters": [
+          {
+            "name": "slug_or_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug Or Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trails/{slug_or_id}/reports": {
+      "post": {
+        "tags": [
+          "trails"
+        ],
+        "summary": "Submit a geotagged condition report (goes to the validation queue)",
+        "description": "Create the report as a **draft** and emit ``trail_report`` (pseudonymised, with coordinates).\n\nAnyone may report: an anonymous visitor identified only by a random client id, or a signed-in\nhost/ambassador/validator. Nothing is published until the validation gate approves it.",
+        "operationId": "submit_report_api_trails__slug_or_id__reports_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "slug_or_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug Or Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrailReportIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/itinerary/interests": {
+      "get": {
+        "tags": [
+          "itinerary"
+        ],
+        "summary": "Interest values accepted by POST /api/itinerary",
+        "description": "Heritage kinds and listing categories, with the localised label used for ``why``.",
+        "operationId": "interests_api_itinerary_interests_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/itinerary": {
+      "post": {
+        "tags": [
+          "itinerary"
+        ],
+        "summary": "Plan a walking itinerary across the villages of Vrmac",
+        "description": "Greedy nearest-neighbour plan within ``hours``; emits ``itinerary_generated``.",
+        "operationId": "create_itinerary_api_itinerary_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItineraryIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/requests": {
+      "post": {
+        "tags": [
+          "requests"
+        ],
+        "summary": "Send a request to a provider",
+        "description": "404 unless the listing is approved — a draft listing cannot receive requests.",
+        "operationId": "send_request_api_requests_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/requests/mine": {
+      "get": {
+        "tags": [
+          "requests"
+        ],
+        "summary": "The visitor's own requests",
+        "description": "Only requests whose ``visitor_session_id`` matches exactly.",
+        "operationId": "my_requests_api_requests_mine_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 64,
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/requests/host": {
+      "get": {
+        "tags": [
+          "requests"
+        ],
+        "summary": "Requests for the signed-in host's own listings",
+        "description": "The host-facing view: message, date and party size — never the visitor's session id.",
+        "operationId": "host_requests_api_requests_host_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 16
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Host Requests Api Requests Host Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/requests/{request_id}/respond": {
+      "post": {
+        "tags": [
+          "requests"
+        ],
+        "summary": "Host confirms or refuses a request",
+        "description": "A confirmation is a message, not a reservation. 403 for another provider's listing.",
+        "operationId": "respond_api_requests__request_id__respond_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Request Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RespondIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Respond Api Requests  Request Id  Respond Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/requests/{request_id}/close": {
+      "post": {
+        "tags": [
+          "requests"
+        ],
+        "summary": "Host closes a confirmed request (completed / cancelled)",
+        "operationId": "close_api_requests__request_id__close_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Request Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloseIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Close Api Requests  Request Id  Close Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/requests/{request_id}/cancel": {
+      "post": {
+        "tags": [
+          "requests"
+        ],
+        "summary": "Visitor cancels their own request",
+        "description": "403 unless the request carries exactly this ``session_id``.",
+        "operationId": "cancel_api_requests__request_id__cancel_post",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Request Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/events": {
+      "post": {
+        "tags": [
+          "events"
+        ],
+        "summary": "Record an anonymous visit (public)",
+        "description": "Write one pseudonymised ``visit_recorded`` event. Only aggregates of these are ever shown.",
+        "operationId": "record_visit_api_events_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VisitEventIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Record Visit Api Events Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/events/types": {
+      "get": {
+        "tags": [
+          "events"
+        ],
+        "summary": "Event types emitted by the platform (public)",
+        "description": "Every event type in the stream; only ``visit_recorded`` may be posted by a client.",
+        "operationId": "event_types_api_events_types_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "title": "Response Event Types Api Events Types Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/export/ngsi-ld": {
+      "get": {
+        "tags": [
+          "export"
+        ],
+        "summary": "Approved POIs as normalized NGSI-LD PointOfInterest entities",
+        "description": "Normalized NGSI-LD list (``Property``/``GeoProperty``/``Relationship`` + ``@context``).\n\nReady for ``POST /ngsi-ld/v1/entityOperations/upsert`` on an NGSI-LD context broker.\nEvery entity carries its village (``address.addressLocality``) and municipality\n(``address.addressRegion``).",
+        "operationId": "ngsi_ld_normalized_api_export_ngsi_ld_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/export/ngsi-ld/keyvalues": {
+      "get": {
+        "tags": [
+          "export"
+        ],
+        "summary": "Approved POIs as NGSI-LD key-values entities (schema-validated)",
+        "description": "Key-values form; ``X-Schema-Valid`` says whether every entity validates against the\nvendored Smart Data Models PointOfInterest schema.",
+        "operationId": "ngsi_ld_keyvalues_api_export_ngsi_ld_keyvalues_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/export/dcat-ap": {
+      "get": {
+        "tags": [
+          "export"
+        ],
+        "summary": "DCAT-AP dataset description of the NGSI-LD export (JSON-LD)",
+        "description": "DCAT-AP ``dcat:Dataset`` for the two NGSI-LD distributions.\n\nCarries the same ``X-Schema-Valid`` verdict as the data endpoints it describes, so a harvester\nnever advertises a dataset whose entities do not validate.",
+        "operationId": "dcat_ap_api_export_dcat_ap_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Health",
+        "operationId": "health_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/meta": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Meta",
+        "operationId": "meta_api_meta_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AskIn": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Question"
+          },
+          "lang": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lang",
+            "description": "cnr | en; detected from the question when omitted"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "device_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Device Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question"
+        ],
+        "title": "AskIn"
+      },
+      "AskResponse": {
+        "properties": {
+          "answered": {
+            "type": "boolean",
+            "title": "Answered"
+          },
+          "answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Answer"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/components/schemas/Citation"
+            },
+            "type": "array",
+            "title": "Citations",
+            "default": []
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "default": 0.0
+          },
+          "support": {
+            "items": {
+              "$ref": "#/components/schemas/SupportResult"
+            },
+            "type": "array",
+            "title": "Support",
+            "default": []
+          },
+          "dropped_sentences": {
+            "type": "integer",
+            "title": "Dropped Sentences",
+            "default": 0
+          },
+          "refusal_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refusal Reason"
+          },
+          "refusal_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refusal Message"
+          },
+          "served_from_cache": {
+            "type": "boolean",
+            "title": "Served From Cache",
+            "default": false
+          },
+          "provider": {
+            "$ref": "#/components/schemas/ProviderInfo"
+          },
+          "event": {
+            "type": "string",
+            "title": "Event"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answered",
+          "provider",
+          "event"
+        ],
+        "title": "AskResponse",
+        "description": "The exact shape agreed in docs/api-contract.md (section `ask`)."
+      },
+      "AuditRow": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "occurred_at": {
+            "title": "Occurred At"
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "resource_type": {
+            "type": "string",
+            "title": "Resource Type"
+          },
+          "resource_id": {
+            "type": "string",
+            "title": "Resource Id"
+          },
+          "detail": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Detail"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "occurred_at",
+          "user_id",
+          "role",
+          "action",
+          "resource_type",
+          "resource_id",
+          "detail",
+          "request_id"
+        ],
+        "title": "AuditRow",
+        "description": "An audit row. ``detail`` never contains personal data (see app/audit.py)."
+      },
+      "Body_upload_audio_api_onboarding_sessions__session_id__audio_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "description": "the recording (webm, ogg, wav, m4a, mp3, mp4; ≤ 25 MB)"
+          },
+          "offline_captured": {
+            "type": "boolean",
+            "title": "Offline Captured",
+            "description": "recorded without connectivity, kept in IndexedDB",
+            "default": false
+          },
+          "captured_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Captured At",
+            "description": "ISO 8601 — when the recording was made"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_audio_api_onboarding_sessions__session_id__audio_post"
+      },
+      "CancelIn": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 8,
+            "title": "Session Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id"
+        ],
+        "title": "CancelIn"
+      },
+      "Citation": {
+        "properties": {
+          "entry_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Entry Id"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "lang": {
+            "type": "string",
+            "title": "Lang"
+          },
+          "chunk_index": {
+            "type": "integer",
+            "title": "Chunk Index"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "excerpt": {
+            "type": "string",
+            "title": "Excerpt"
+          },
+          "entry_version": {
+            "type": "integer",
+            "title": "Entry Version",
+            "default": 1
+          },
+          "village_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Village Slug"
+          }
+        },
+        "type": "object",
+        "required": [
+          "entry_id",
+          "slug",
+          "title",
+          "source",
+          "lang",
+          "chunk_index",
+          "score",
+          "excerpt"
+        ],
+        "title": "Citation"
+      },
+      "CloseIn": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "pattern": "^(completed|cancelled)$",
+            "title": "Status"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "CloseIn"
+      },
+      "ComputeIn": {
+        "properties": {
+          "period_days": {
+            "type": "integer",
+            "maximum": 3650.0,
+            "minimum": 1.0,
+            "title": "Period Days",
+            "default": 365
+          }
+        },
+        "type": "object",
+        "title": "ComputeIn"
+      },
+      "ConfirmIn": {
+        "properties": {
+          "listing": {
+            "$ref": "#/components/schemas/ListingIn"
+          },
+          "consent": {
+            "$ref": "#/components/schemas/ConsentIn"
+          }
+        },
+        "type": "object",
+        "required": [
+          "listing",
+          "consent"
+        ],
+        "title": "ConfirmIn"
+      },
+      "ConsentIn": {
+        "properties": {
+          "given": {
+            "type": "boolean",
+            "title": "Given",
+            "default": false
+          },
+          "method": {
+            "type": "string",
+            "title": "Method",
+            "default": "checkbox"
+          },
+          "text_version": {
+            "type": "string",
+            "title": "Text Version",
+            "default": "v1"
+          }
+        },
+        "type": "object",
+        "title": "ConsentIn"
+      },
+      "GenderSelfReportIn": {
+        "properties": {
+          "gender": {
+            "type": "string",
+            "enum": [
+              "female",
+              "male",
+              "other",
+              "prefer_not_to_say"
+            ],
+            "title": "Gender",
+            "description": "female | male | other | prefer_not_to_say"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "gender"
+        ],
+        "title": "GenderSelfReportIn",
+        "description": "Voluntary self-report. Extra fields (a user id, an e-mail…) are rejected on purpose:\nnobody may report a gender *for* somebody else."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HeartbeatIn": {
+        "properties": {
+          "active_seconds_delta": {
+            "type": "number",
+            "maximum": 120.0,
+            "minimum": 1.0,
+            "title": "Active Seconds Delta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "active_seconds_delta"
+        ],
+        "title": "HeartbeatIn",
+        "description": "One heartbeat of ACTIVE authoring time. A single delta is capped so a stuck tab cannot inflate it."
+      },
+      "HeritageCreateIn": {
+        "properties": {
+          "village": {
+            "type": "string",
+            "title": "Village",
+            "description": "village slug or id — every entry belongs to a village"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "place",
+              "church",
+              "building",
+              "event",
+              "tradition",
+              "institution",
+              "landscape"
+            ],
+            "title": "Kind",
+            "default": "place"
+          },
+          "title_local": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Title Local",
+            "description": "Montenegrin (Latin script)"
+          },
+          "title_en": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Title En"
+          },
+          "summary_local": {
+            "type": "string",
+            "title": "Summary Local",
+            "default": ""
+          },
+          "summary_en": {
+            "type": "string",
+            "title": "Summary En",
+            "default": ""
+          },
+          "body_local": {
+            "type": "string",
+            "title": "Body Local",
+            "default": ""
+          },
+          "body_en": {
+            "type": "string",
+            "title": "Body En",
+            "default": ""
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 90.0,
+                "minimum": -90.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 180.0,
+                "minimum": -180.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
+          },
+          "coords_approximate": {
+            "type": "boolean",
+            "title": "Coords Approximate",
+            "default": true
+          },
+          "coords_source": {
+            "type": "string",
+            "title": "Coords Source",
+            "default": ""
+          },
+          "elevation_m": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Elevation M"
+          },
+          "event_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Date"
+          },
+          "recurrence_rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recurrence Rule"
+          },
+          "established_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Established Year"
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Source",
+            "description": "required citation for the facts of this entry"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceRef"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "facts_verified": {
+            "type": "boolean",
+            "title": "Facts Verified",
+            "description": "false marks facts that could not be checked; such an entry can never be approved",
+            "default": true
+          },
+          "verification_note": {
+            "type": "string",
+            "title": "Verification Note",
+            "default": ""
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          }
+        },
+        "type": "object",
+        "required": [
+          "village",
+          "title_local",
+          "title_en",
+          "source"
+        ],
+        "title": "HeritageCreateIn",
+        "description": "New entry. It is always created in ``draft``: nothing enters the site without validation."
+      },
+      "HeritageEntryOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "village_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Village Id"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "title_local": {
+            "type": "string",
+            "title": "Title Local"
+          },
+          "title_en": {
+            "type": "string",
+            "title": "Title En"
+          },
+          "summary_local": {
+            "type": "string",
+            "title": "Summary Local"
+          },
+          "summary_en": {
+            "type": "string",
+            "title": "Summary En"
+          },
+          "body_local": {
+            "type": "string",
+            "title": "Body Local"
+          },
+          "body_en": {
+            "type": "string",
+            "title": "Body En"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
+          },
+          "coords_approximate": {
+            "type": "boolean",
+            "title": "Coords Approximate"
+          },
+          "coords_source": {
+            "type": "string",
+            "title": "Coords Source"
+          },
+          "elevation_m": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Elevation M"
+          },
+          "event_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Date"
+          },
+          "recurrence_rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recurrence Rule"
+          },
+          "established_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Established Year"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "sources": {
+            "items": {},
+            "type": "array",
+            "title": "Sources"
+          },
+          "facts_verified": {
+            "type": "boolean",
+            "title": "Facts Verified"
+          },
+          "verification_note": {
+            "type": "string",
+            "title": "Verification Note"
+          },
+          "tags": {
+            "items": {},
+            "type": "array",
+            "title": "Tags"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "approved_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approved At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "village_id",
+          "kind",
+          "title_local",
+          "title_en",
+          "summary_local",
+          "summary_en",
+          "body_local",
+          "body_en",
+          "lat",
+          "lng",
+          "coords_approximate",
+          "coords_source",
+          "elevation_m",
+          "event_date",
+          "recurrence_rule",
+          "established_year",
+          "source",
+          "sources",
+          "facts_verified",
+          "verification_note",
+          "tags",
+          "status",
+          "version",
+          "approved_at",
+          "updated_at"
+        ],
+        "title": "HeritageEntryOut"
+      },
+      "HeritageUpdateIn": {
+        "properties": {
+          "village": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Village"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "place",
+                  "church",
+                  "building",
+                  "event",
+                  "tradition",
+                  "institution",
+                  "landscape"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
+          "title_local": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title Local"
+          },
+          "title_en": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title En"
+          },
+          "summary_local": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary Local"
+          },
+          "summary_en": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary En"
+          },
+          "body_local": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body Local"
+          },
+          "body_en": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body En"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 90.0,
+                "minimum": -90.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 180.0,
+                "minimum": -180.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
+          },
+          "coords_approximate": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coords Approximate"
+          },
+          "coords_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coords Source"
+          },
+          "elevation_m": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Elevation M"
+          },
+          "event_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Date"
+          },
+          "recurrence_rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recurrence Rule"
+          },
+          "established_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Established Year"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "sources": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/SourceRef"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sources"
+          },
+          "facts_verified": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Facts Verified"
+          },
+          "verification_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verification Note"
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tags"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Note",
+            "description": "why the entry was edited",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "HeritageUpdateIn",
+        "description": "Partial edit. Any edit bumps the version; an approved entry drops back to draft."
+      },
+      "ItemView": {
+        "properties": {
+          "item_type": {
+            "type": "string",
+            "title": "Item Type"
+          },
+          "item": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Item"
+          },
+          "provenance": {
+            "items": {
+              "$ref": "#/components/schemas/ProvenanceOut"
+            },
+            "type": "array",
+            "title": "Provenance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "item_type",
+          "item",
+          "provenance"
+        ],
+        "title": "ItemView",
+        "description": "One item in any status, with its full provenance trail."
+      },
+      "ItineraryIn": {
+        "properties": {
+          "interests": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 24,
+            "title": "Interests"
+          },
+          "hours": {
+            "type": "number",
+            "maximum": 12.0,
+            "minimum": 1.0,
+            "title": "Hours",
+            "default": 3.0
+          },
+          "start": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StartPoint"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "villages": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 24,
+            "title": "Villages"
+          },
+          "municipality": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Municipality"
+          },
+          "lang": {
+            "type": "string",
+            "pattern": "^(cnr|en)$",
+            "title": "Lang",
+            "default": "cnr"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "device_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Device Id"
+          }
+        },
+        "type": "object",
+        "title": "ItineraryIn",
+        "description": "What the visitor asks for: interests, available hours, where they start, which villages."
+      },
+      "KpiRow": {
+        "properties": {
+          "kpi_key": {
+            "type": "string",
+            "title": "Kpi Key"
+          },
+          "kpi_label": {
+            "type": "string",
+            "title": "Kpi Label"
+          },
+          "dimension": {
+            "type": "string",
+            "title": "Dimension"
+          },
+          "dimension_kind": {
+            "type": "string",
+            "title": "Dimension Kind"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "n_persons": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "N Persons"
+          },
+          "n_events": {
+            "type": "integer",
+            "title": "N Events"
+          },
+          "suppressed": {
+            "type": "boolean",
+            "title": "Suppressed"
+          },
+          "suppression_reason": {
+            "type": "string",
+            "title": "Suppression Reason"
+          },
+          "provisional_definition": {
+            "type": "boolean",
+            "title": "Provisional Definition"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kpi_key",
+          "kpi_label",
+          "dimension",
+          "dimension_kind",
+          "value",
+          "unit",
+          "n_persons",
+          "n_events",
+          "suppressed",
+          "suppression_reason",
+          "provisional_definition",
+          "note"
+        ],
+        "title": "KpiRow",
+        "description": "One published (or suppressed) cell. Carries no session, device or user identifier."
+      },
+      "KpiTable": {
+        "properties": {
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "computed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Computed At"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period End"
+          },
+          "k_min": {
+            "type": "integer",
+            "title": "K Min"
+          },
+          "definitions_version": {
+            "type": "string",
+            "title": "Definitions Version"
+          },
+          "definitions_provisional": {
+            "type": "boolean",
+            "title": "Definitions Provisional"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/KpiRow"
+            },
+            "type": "array",
+            "title": "Rows"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "computed_at",
+          "period_start",
+          "period_end",
+          "k_min",
+          "definitions_version",
+          "definitions_provisional",
+          "rows"
+        ],
+        "title": "KpiTable"
+      },
+      "ListingIn": {
+        "properties": {
+          "title_local": {
+            "type": "string",
+            "title": "Title Local",
+            "default": ""
+          },
+          "title_en": {
+            "type": "string",
+            "title": "Title En",
+            "default": ""
+          },
+          "description_local": {
+            "type": "string",
+            "title": "Description Local",
+            "default": ""
+          },
+          "description_en": {
+            "type": "string",
+            "title": "Description En",
+            "default": ""
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "default": "other"
+          },
+          "village": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Village"
+          },
+          "price_min": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Min"
+          },
+          "price_max": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Max"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "default": "EUR"
+          },
+          "price_note_local": {
+            "type": "string",
+            "title": "Price Note Local",
+            "default": ""
+          },
+          "price_note_en": {
+            "type": "string",
+            "title": "Price Note En",
+            "default": ""
+          },
+          "season_from": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 12.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Season From"
+          },
+          "season_to": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 12.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Season To"
+          },
+          "season_all_year": {
+            "type": "boolean",
+            "title": "Season All Year",
+            "default": false
+          },
+          "capacity": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 500.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capacity"
+          },
+          "accessibility_step_free": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accessibility Step Free"
+          },
+          "accessibility_note_local": {
+            "type": "string",
+            "title": "Accessibility Note Local",
+            "default": ""
+          },
+          "accessibility_note_en": {
+            "type": "string",
+            "title": "Accessibility Note En",
+            "default": ""
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 90.0,
+                "minimum": -90.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 180.0,
+                "minimum": -180.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
+          },
+          "coords_approximate": {
+            "type": "boolean",
+            "title": "Coords Approximate",
+            "default": true
+          },
+          "photo_url": {
+            "type": "string",
+            "title": "Photo Url",
+            "default": ""
+          },
+          "confirmed_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Confirmed Fields"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ListingIn",
+        "description": "The host's own listing. Structured fields are entered here and listed in ``confirmed_fields``."
+      },
+      "ListingOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "village_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Village Id"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "title_local": {
+            "type": "string",
+            "title": "Title Local"
+          },
+          "title_en": {
+            "type": "string",
+            "title": "Title En"
+          },
+          "description_local": {
+            "type": "string",
+            "title": "Description Local"
+          },
+          "description_en": {
+            "type": "string",
+            "title": "Description En"
+          },
+          "price_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Min"
+          },
+          "price_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Max"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "price_note_local": {
+            "type": "string",
+            "title": "Price Note Local"
+          },
+          "price_note_en": {
+            "type": "string",
+            "title": "Price Note En"
+          },
+          "season_from": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Season From"
+          },
+          "season_to": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Season To"
+          },
+          "season_all_year": {
+            "type": "boolean",
+            "title": "Season All Year"
+          },
+          "capacity": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capacity"
+          },
+          "accessibility_step_free": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accessibility Step Free"
+          },
+          "accessibility_note_local": {
+            "type": "string",
+            "title": "Accessibility Note Local"
+          },
+          "accessibility_note_en": {
+            "type": "string",
+            "title": "Accessibility Note En"
+          },
+          "confirmed_fields": {
+            "items": {},
+            "type": "array",
+            "title": "Confirmed Fields"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
+          },
+          "coords_approximate": {
+            "type": "boolean",
+            "title": "Coords Approximate"
+          },
+          "photo_url": {
+            "type": "string",
+            "title": "Photo Url"
+          },
+          "is_sample": {
+            "type": "boolean",
+            "title": "Is Sample"
+          },
+          "missing_fields": {
+            "items": {},
+            "type": "array",
+            "title": "Missing Fields"
+          },
+          "extraction_method": {
+            "type": "string",
+            "title": "Extraction Method"
+          },
+          "translation_pending": {
+            "type": "boolean",
+            "title": "Translation Pending"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "approved_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approved At"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "village_id",
+          "category",
+          "title_local",
+          "title_en",
+          "description_local",
+          "description_en",
+          "price_min",
+          "price_max",
+          "currency",
+          "price_note_local",
+          "price_note_en",
+          "season_from",
+          "season_to",
+          "season_all_year",
+          "capacity",
+          "accessibility_step_free",
+          "accessibility_note_local",
+          "accessibility_note_en",
+          "confirmed_fields",
+          "lat",
+          "lng",
+          "coords_approximate",
+          "photo_url",
+          "is_sample",
+          "missing_fields",
+          "extraction_method",
+          "translation_pending",
+          "status",
+          "version",
+          "approved_at",
+          "published_at",
+          "updated_at"
+        ],
+        "title": "ListingOut"
+      },
+      "ListingUpdateIn": {
+        "properties": {
+          "village": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Village"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "accommodation",
+                  "food",
+                  "guiding",
+                  "craft",
+                  "experience",
+                  "transport",
+                  "other"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "title_local": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title Local"
+          },
+          "title_en": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title En"
+          },
+          "description_local": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description Local"
+          },
+          "description_en": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description En"
+          },
+          "price_min": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Min"
+          },
+          "price_max": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Max"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 3,
+                "minLength": 3
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "price_note_local": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Note Local"
+          },
+          "price_note_en": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Note En"
+          },
+          "season_from": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 12.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Season From"
+          },
+          "season_to": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 12.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Season To"
+          },
+          "season_all_year": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Season All Year"
+          },
+          "capacity": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capacity"
+          },
+          "accessibility_step_free": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accessibility Step Free"
+          },
+          "accessibility_note_local": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accessibility Note Local"
+          },
+          "accessibility_note_en": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accessibility Note En"
+          },
+          "confirmed_fields": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confirmed Fields"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 90.0,
+                "minimum": -90.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 180.0,
+                "minimum": -180.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
+          },
+          "coords_approximate": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coords Approximate"
+          },
+          "photo_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Photo Url"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Note",
+            "description": "why the listing was edited",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "ListingUpdateIn",
+        "description": "Partial edit by the owning host (or an ambassador helping them).\n\nEvery structured field is optional and **host-entered**; sending one is the host confirming it.\nAny edit bumps the version and returns the listing to ``draft`` for re-validation."
+      },
+      "LoginIn": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 72,
+            "minLength": 1,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "LoginIn"
+      },
+      "ProvenanceOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "item_type": {
+            "type": "string",
+            "title": "Item Type"
+          },
+          "item_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Item Id"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "from_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Status"
+          },
+          "to_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "To Status"
+          },
+          "actor_user_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor User Id"
+          },
+          "actor_role": {
+            "type": "string",
+            "title": "Actor Role"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "item_type",
+          "item_id",
+          "version",
+          "action",
+          "from_status",
+          "to_status",
+          "actor_user_id",
+          "actor_role",
+          "source",
+          "note",
+          "created_at"
+        ],
+        "title": "ProvenanceOut"
+      },
+      "ProviderInfo": {
+        "properties": {
+          "llm": {
+            "type": "string",
+            "title": "Llm"
+          },
+          "embeddings": {
+            "type": "string",
+            "title": "Embeddings"
+          },
+          "support_check": {
+            "type": "string",
+            "title": "Support Check"
+          }
+        },
+        "type": "object",
+        "required": [
+          "llm",
+          "embeddings",
+          "support_check"
+        ],
+        "title": "ProviderInfo"
+      },
+      "QueueItem": {
+        "properties": {
+          "item_type": {
+            "type": "string",
+            "title": "Item Type"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "village": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Village"
+          },
+          "municipality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Municipality"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "created_at": {
+            "title": "Created At"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": ""
+          },
+          "facts_verified": {
+            "type": "boolean",
+            "title": "Facts Verified",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "item_type",
+          "id",
+          "title",
+          "status",
+          "version",
+          "created_at"
+        ],
+        "title": "QueueItem",
+        "description": "One row of the validator's queue (docs/api-contract.md § validation)."
+      },
+      "RequestIn": {
+        "properties": {
+          "listing_id": {
+            "type": "string",
+            "maxLength": 120,
+            "title": "Listing Id",
+            "description": "listing id or slug"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Message"
+          },
+          "requested_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requested Date"
+          },
+          "party_size": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 50.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Party Size"
+          },
+          "session_id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 8,
+            "title": "Session Id"
+          },
+          "device_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Device Id"
+          },
+          "lang": {
+            "type": "string",
+            "pattern": "^(cnr|en)$",
+            "title": "Lang",
+            "default": "cnr"
+          }
+        },
+        "type": "object",
+        "required": [
+          "listing_id",
+          "message",
+          "session_id"
+        ],
+        "title": "RequestIn"
+      },
+      "RespondIn": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "pattern": "^(confirmed|refused)$",
+            "title": "Status"
+          },
+          "reply": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Reply",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "RespondIn"
+      },
+      "ReviewIn": {
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "publish",
+              "reject"
+            ],
+            "title": "Decision"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "decision"
+        ],
+        "title": "ReviewIn"
+      },
+      "RunOut": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "computed_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Computed At"
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Period Start"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Period End"
+          },
+          "k_min": {
+            "type": "integer",
+            "title": "K Min"
+          },
+          "definitions_version": {
+            "type": "string",
+            "title": "Definitions Version"
+          },
+          "definitions_provisional": {
+            "type": "boolean",
+            "title": "Definitions Provisional"
+          },
+          "n_rows": {
+            "type": "integer",
+            "title": "N Rows"
+          },
+          "n_suppressed": {
+            "type": "integer",
+            "title": "N Suppressed"
+          },
+          "reviewed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewed At"
+          },
+          "review_note": {
+            "type": "string",
+            "title": "Review Note"
+          },
+          "disclosure": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Disclosure"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "status",
+          "computed_at",
+          "period_start",
+          "period_end",
+          "k_min",
+          "definitions_version",
+          "definitions_provisional",
+          "n_rows",
+          "n_suppressed",
+          "reviewed_at",
+          "review_note",
+          "disclosure"
+        ],
+        "title": "RunOut"
+      },
+      "SessionIn": {
+        "properties": {
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "village": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Village"
+          },
+          "host_user_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Host User Id"
+          }
+        },
+        "type": "object",
+        "title": "SessionIn"
+      },
+      "SourceRef": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "title": "SourceRef"
+      },
+      "StartPoint": {
+        "properties": {
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lng": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lng"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lat",
+          "lng"
+        ],
+        "title": "StartPoint"
+      },
+      "StatusTransitionIn": {
+        "properties": {
+          "to_status": {
+            "type": "string",
+            "pattern": "^(draft|reviewed|approved|rejected)$",
+            "title": "To Status"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "to_status"
+        ],
+        "title": "StatusTransitionIn"
+      },
+      "SupportResult": {
+        "properties": {
+          "sentence": {
+            "type": "string",
+            "title": "Sentence"
+          },
+          "supported": {
+            "type": "boolean",
+            "title": "Supported"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "passage_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Passage Index"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "sentence",
+          "supported",
+          "score",
+          "method"
+        ],
+        "title": "SupportResult",
+        "description": "Verdict of the per-sentence attributability check (claim 2b)."
+      },
+      "TokenOut": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserOut"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "user"
+        ],
+        "title": "TokenOut"
+      },
+      "TrailReportIn": {
+        "properties": {
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lng": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lng"
+          },
+          "condition": {
+            "type": "string",
+            "pattern": "^(good|caution|blocked)$",
+            "title": "Condition"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000,
+            "title": "Note",
+            "default": ""
+          },
+          "lang": {
+            "type": "string",
+            "pattern": "^(cnr|en)$",
+            "title": "Lang",
+            "default": "cnr"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "device_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Device Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lat",
+          "lng",
+          "condition"
+        ],
+        "title": "TrailReportIn",
+        "description": "A geotagged condition report: which segment (path), which point (lat/lng), what state."
+      },
+      "TranscriptIn": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 20000,
+            "minLength": 1,
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "TranscriptIn"
+      },
+      "UserOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "gender": {
+            "type": "string",
+            "title": "Gender",
+            "default": "undisclosed"
+          },
+          "gender_self_reported": {
+            "type": "boolean",
+            "title": "Gender Self Reported",
+            "default": false
+          },
+          "village_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Village Id"
+          },
+          "is_sample": {
+            "type": "boolean",
+            "title": "Is Sample"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "role",
+          "display_name",
+          "is_sample"
+        ],
+        "title": "UserOut"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VillageCounts": {
+        "properties": {
+          "heritage_entries": {
+            "type": "integer",
+            "title": "Heritage Entries",
+            "default": 0
+          },
+          "listings": {
+            "type": "integer",
+            "title": "Listings",
+            "default": 0
+          },
+          "trail_segments": {
+            "type": "integer",
+            "title": "Trail Segments",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "VillageCounts",
+        "description": "Approved items of a village, by type (the validation gate applies to all three)."
+      },
+      "VillageWithCounts": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name_local": {
+            "type": "string",
+            "title": "Name Local"
+          },
+          "name_en": {
+            "type": "string",
+            "title": "Name En"
+          },
+          "municipality": {
+            "type": "string",
+            "title": "Municipality"
+          },
+          "ridge_side": {
+            "type": "string",
+            "title": "Ridge Side"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
+          },
+          "coords_approximate": {
+            "type": "boolean",
+            "title": "Coords Approximate"
+          },
+          "elevation_m": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Elevation M"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "facts_verified": {
+            "type": "boolean",
+            "title": "Facts Verified"
+          },
+          "verification_note": {
+            "type": "string",
+            "title": "Verification Note"
+          },
+          "n_approved_items": {
+            "type": "integer",
+            "title": "N Approved Items",
+            "default": 0
+          },
+          "counts": {
+            "$ref": "#/components/schemas/VillageCounts",
+            "default": {
+              "heritage_entries": 0,
+              "listings": 0,
+              "trail_segments": 0
+            }
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name_local",
+          "name_en",
+          "municipality",
+          "ridge_side",
+          "lat",
+          "lng",
+          "coords_approximate",
+          "elevation_m",
+          "source",
+          "facts_verified",
+          "verification_note"
+        ],
+        "title": "VillageWithCounts",
+        "description": "``VillageOut`` plus the approved-content counters of the contract."
+      },
+      "VisitEventIn": {
+        "properties": {
+          "event_type": {
+            "type": "string",
+            "const": "visit_recorded",
+            "title": "Event Type"
+          },
+          "session_id": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Session Id"
+          },
+          "device_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Device Id"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lng": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lng"
+          },
+          "item_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Item Type"
+          },
+          "item_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Item Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_type",
+          "session_id",
+          "lat",
+          "lng"
+        ],
+        "title": "VisitEventIn",
+        "description": "A visitor's position ping. No free text, no identifier that survives in the clear."
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
