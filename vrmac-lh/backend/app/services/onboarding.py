@@ -70,6 +70,10 @@ LISTING_CATEGORIES: tuple[str, ...] = (
     "accommodation", "food", "guiding", "craft", "experience", "transport", "other",
 )
 
+#: Statuses in which the session has produced its listing and accepts no further capture. A late
+#: deferred upload, or a typed transcript sent after the fact, would otherwise reopen it.
+CLOSED_STATUSES: frozenset[str] = frozenset({"confirmed", "published"})
+
 #: The host must actively confirm each of these groups. Any alias in ``confirmed_fields`` counts, so
 #: both the compact form (``["price", "season", …]``) and the per-column form
 #: (``["price_min", "price_max", "season_from", …]``) are accepted.
@@ -170,6 +174,32 @@ def require_read(session: OnboardingSession, user: User) -> None:
     if not may_read(session, user):
         raise HTTPException(
             status_code=http_status.HTTP_403_FORBIDDEN, detail="this onboarding session belongs to another host"
+        )
+
+
+def is_closed(session: OnboardingSession) -> bool:
+    """True once the host has confirmed the listing: the session's own work is finished."""
+    return session.status in CLOSED_STATUSES or session.listing_id is not None
+
+
+def require_open_for_capture(session: OnboardingSession, *, what: str = "recording") -> None:
+    """Refuse new capture on a session that already produced a listing.
+
+    A deferred upload can arrive minutes or hours after the host confirmed the listing (the PWA
+    keeps recordings in IndexedDB). Accepting it would run :func:`transcribe` over a finished
+    session, set ``transcript_ready_at`` again and push ``status`` back to ``transcribed`` — while
+    ``confirmed_at``, ``elapsed_to_confirm_seconds`` and the listing stay in place. The timing log
+    that validators and institutions read would then carry a *confirmed* session's durations under
+    the status of an unfinished one. There is nothing to repair afterwards, so the API refuses the
+    late upload with 409 and the browser drops the recording from its queue.
+    """
+    if is_closed(session):
+        raise HTTPException(
+            status_code=http_status.HTTP_409_CONFLICT,
+            detail=(
+                f"this onboarding session is already {session.status} and its listing exists — "
+                f"a late {what} is not accepted, because it would reopen a finished session"
+            ),
         )
 
 

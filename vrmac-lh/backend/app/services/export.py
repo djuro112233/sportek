@@ -46,7 +46,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
 from ..config import BACKEND_DIR, PROTOTYPE_LABEL, settings
-from ..models import HeritageEntry, Listing, Village
+from ..models import MUNICIPALITIES, HeritageEntry, Listing, Village
 from .validation import approved_only
 
 log = logging.getLogger(__name__)
@@ -64,6 +64,12 @@ NGSI_LD_CONTEXT: list[str] = [POI_CONTEXT_URI, NGSI_LD_CORE_CONTEXT_URI]
 
 ENTITY_TYPE = "PointOfInterest"
 ID_PREFIX = "urn:ngsi-ld:PointOfInterest:vrmac-lh:"
+#: Item-type token inside every entity id. Slugs are unique **per table**, not across tables, so a
+#: heritage entry and a listing may legitimately share one; an id built from the slug alone would
+#: then collide (two different entities, one id) and the schema would still call the export valid.
+HERITAGE_ITEM_TYPE = "heritage_entry"
+LISTING_ITEM_TYPE = "listing"
+ITEM_TYPES: tuple[str, ...] = (HERITAGE_ITEM_TYPE, LISTING_ITEM_TYPE)
 DATA_PROVIDER = "VRMAC-LH prototype (SMART ERA)"
 ADDRESS_COUNTRY = "ME"
 # The Bay of Kotor is the region both municipalities of the territory belong to.
@@ -162,13 +168,40 @@ def _bilingual(en: str, local: str) -> str:
     return en or local
 
 
-def _entity_id(slug: str) -> str:
-    return f"{ID_PREFIX}{slug}"
+def _entity_id(item_type: str, slug: str) -> str:
+    """``urn:ngsi-ld:PointOfInterest:vrmac-lh:<item type>:<slug>``.
+
+    The item type is part of the id because ``heritage_entries.slug`` and ``listings.slug`` are only
+    unique within their own table: a heritage entry and a listing may share a slug, and two entities
+    with the same id would be one entity to any context broker or open-data harvester.
+    """
+    if item_type not in ITEM_TYPES:  # pragma: no cover - guarded by the callers
+        raise ValueError(f"unknown export item type {item_type!r}")
+    return f"{ID_PREFIX}{item_type}:{slug}"
 
 
 def entity_slug(entity: dict[str, Any]) -> str:
-    """The item slug behind an exported entity id."""
-    return str(entity["id"])[len(ID_PREFIX):]
+    """The item slug behind an exported entity id (the last segment of the id)."""
+    return str(entity["id"]).rsplit(":", 1)[-1]
+
+
+def entity_item_type(entity: dict[str, Any]) -> str:
+    """``"heritage_entry"`` / ``"listing"`` — the table an exported entity came from."""
+    rest = str(entity["id"])[len(ID_PREFIX):]
+    item_type = rest.split(":", 1)[0]
+    return item_type if item_type in ITEM_TYPES else ""
+
+
+def _ref_see_also(village_poi_id: str | None, own_id: str) -> list[str] | None:
+    """The village anchor as a one-item ``refSeeAlso``, or ``None``.
+
+    ``None`` when the village has no exported entry of its own **and** when the anchor is this very
+    entity: a POI that pointed at itself would tell a context broker that the village is next to
+    itself, which is noise at best and a cycle at worst.
+    """
+    if not village_poi_id or village_poi_id == own_id:
+        return None
+    return [village_poi_id]
 
 
 # --- territory: village + municipality ------------------------------------------------------
@@ -299,7 +332,7 @@ def heritage_entry_to_keyvalues(
     )
     return _clean(
         {
-            "id": _entity_id(entry.slug),
+            "id": _entity_id(HERITAGE_ITEM_TYPE, entry.slug),
             "type": ENTITY_TYPE,
             "name": entry.title_en or entry.title_local,
             "alternateName": entry.title_local,
@@ -308,7 +341,9 @@ def heritage_entry_to_keyvalues(
             "location": {"type": "Point", "coordinates": [entry.lng, entry.lat]},
             "address": address_of(village),
             "areaServed": village.name_en or village.name_local,
-            "refSeeAlso": [village_poi_id] if village_poi_id and village_poi_id != _entity_id(entry.slug) else None,
+            # A village never points at itself: on the entity that *is* the village, the anchor
+            # id equals this entity's own id.
+            "refSeeAlso": _ref_see_also(village_poi_id, _entity_id(HERITAGE_ITEM_TYPE, entry.slug)),
             "source": see_also[0] if see_also else entry.source,
             "seeAlso": see_also or None,
             "additionalInfoURL": f"{base_url}/api/heritage/{entry.slug}" if base_url else None,
@@ -364,7 +399,7 @@ def listing_to_keyvalues(
     )
     return _clean(
         {
-            "id": _entity_id(listing.slug),
+            "id": _entity_id(LISTING_ITEM_TYPE, listing.slug),
             "type": ENTITY_TYPE,
             "name": listing.title_en or listing.title_local,
             "alternateName": listing.title_local,
@@ -373,7 +408,8 @@ def listing_to_keyvalues(
             "location": {"type": "Point", "coordinates": [listing.lng, listing.lat]},
             "address": address_of(village),
             "areaServed": village.name_en or village.name_local,
-            "refSeeAlso": [village_poi_id] if village_poi_id else None,
+            # Same rule as for heritage entries: an entity is never its own village anchor.
+            "refSeeAlso": _ref_see_also(village_poi_id, _entity_id(LISTING_ITEM_TYPE, listing.slug)),
             "priceRange": _price_range(listing),
             "capacity": listing.capacity,
             "image": f"{base_url}{listing.photo_url}" if base_url and listing.photo_url.startswith("/") else None,
@@ -455,7 +491,9 @@ def poi_records(db: Session, base_url: str | None = None) -> list[PoiRecord]:
     # A village that has its own approved "place" entry becomes the anchor entity every other POI
     # of that village points at with an NGSI-LD Relationship.
     village_poi: dict[str, str] = {
-        e.village.slug: _entity_id(e.slug) for e in entries if e.kind == "place" and e.slug == e.village.slug
+        e.village.slug: _entity_id(HERITAGE_ITEM_TYPE, e.slug)
+        for e in entries
+        if e.kind == "place" and e.slug == e.village.slug
     }
     records: list[PoiRecord] = []
     for entry in entries:
@@ -497,6 +535,17 @@ def _load_schema(name: str) -> dict[str, Any]:
     return json.loads((SCHEMA_DIR / name).read_text(encoding="utf-8"))
 
 
+#: RFC 3986 absolute-URI shape, checked without ``rfc3987`` — that package is not in ``backend/.venv``
+#: and the export has to validate on an offline demo laptop, so the check stays dependency-free:
+#: ``scheme ":" hier-part [ "?" query ] [ "#" fragment ]`` where every character after the scheme is
+#: from the RFC 3986 set — a raw space, a tab, a newline or any other character outside that set is
+#: rejected instead of quietly accepted. (Non-ASCII IRIs are rejected too; the export emits none.)
+URI_RE = re.compile(
+    r"^[A-Za-z][A-Za-z0-9+.\-]*:"                      # scheme, then the hier-part:
+    r"[A-Za-z0-9\-._~%!$&'()*+,;=:@/?#\[\]]+$"          # unreserved / pct-encoded / sub-delims / …
+)
+
+
 def _format_checker() -> FormatChecker:
     """Format checks that work without optional dependencies (rfc3339-validator, rfc3987)."""
     checker = FormatChecker(formats=())
@@ -512,11 +561,19 @@ def _format_checker() -> FormatChecker:
 
     @checker.checks("uri", raises=ValueError)
     def _uri(instance: Any) -> bool:
+        """Absolute URI (RFC 3986). Deliberately stricter than "has a scheme and something after it":
+        a value with a space, a control character or an empty authority is not a URI, and a harvester
+        that dereferences ``seeAlso`` would choke on it."""
         if not isinstance(instance, str):
             return True
+        if not URI_RE.match(instance):
+            raise ValueError(f"{instance!r} is not an absolute RFC 3986 URI")
         parts = urlparse(instance)
         if not parts.scheme or not (parts.netloc or parts.path):
             raise ValueError(f"{instance!r} is not an absolute URI")
+        # "scheme://" with no host: urlparse is happy, RFC 3986 is not.
+        if instance[len(parts.scheme) + 1:].startswith("//") and not parts.netloc:
+            raise ValueError(f"{instance!r} has an empty authority")
         return True
 
     return checker
@@ -627,6 +684,59 @@ def _xsd_dt(value: str) -> dict[str, str]:
     return {"@value": value, "@type": "xsd:dateTime"}
 
 
+def municipalities_en(municipalities: list[str]) -> str:
+    """``["Tivat"]`` → ``"Tivat municipality"``; two → ``"Tivat and Kotor municipalities"``."""
+    if not municipalities:
+        return ""
+    if len(municipalities) == 1:
+        return f"{municipalities[0]} municipality"
+    return " and ".join(municipalities) + " municipalities"
+
+
+def municipalities_local(municipalities: list[str]) -> str:
+    """``["Tivat"]`` → ``"opština Tivat"``; two → ``"opštine Tivat i Kotor"``."""
+    if not municipalities:
+        return ""
+    if len(municipalities) == 1:
+        return f"opština {municipalities[0]}"
+    return "opštine " + " i ".join(municipalities)
+
+
+def territory_note(municipalities: list[str]) -> tuple[str, str]:
+    """What the export *covers* and what it does not — derived from the exported entities.
+
+    The dataset title must never name a municipality the payload does not contain: a harvester reads
+    the title as the dataset's scope. Anything of the territory that is not (yet) exported is stated
+    here, in the description, as a limitation instead of being asserted as coverage.
+    """
+    covered = [m for m in MUNICIPALITIES if m in municipalities] + [
+        m for m in municipalities if m not in MUNICIPALITIES
+    ]
+    missing = [m for m in MUNICIPALITIES if m not in municipalities]
+    if not covered:
+        return (
+            "This export currently contains no validated point of interest, so it covers no "
+            "municipality of the Vrmac territory yet.",
+            "Ovaj izvoz trenutno ne sadrži nijednu validiranu tačku interesa, pa još ne pokriva "
+            "nijednu opštinu vrmačke teritorije.",
+        )
+    en = f"Territory covered by this export: {municipalities_en(covered)}, Bay of Kotor."
+    local = f"Teritorija koju pokriva ovaj izvoz: {municipalities_local(covered)}, Boka Kotorska."
+    if missing:
+        en += (
+            " The prototype's territory also reaches the other side of the ridge "
+            f"({municipalities_en(missing)}), but nothing from there has passed the validation gate "
+            "yet — its facts could not be checked against a public source in this build — so this "
+            "dataset contains none of it."
+        )
+        local += (
+            " Teritorija prototipa obuhvata i drugu stranu grebena "
+            f"({municipalities_local(missing)}), ali odatle još ništa nije prošlo validaciju, pa "
+            "ovaj skup podataka to ne sadrži."
+        )
+    return en, local
+
+
 def dcat_ap(db: Session, base_url: str) -> dict[str, Any]:
     """DCAT-AP (JSON-LD) description of the NGSI-LD export as one ``dcat:Dataset``."""
     base_url = base_url.rstrip("/")
@@ -642,6 +752,12 @@ def dcat_ap(db: Session, base_url: str) -> dict[str, Any]:
     categories = sorted({c for kv in entities for c in kv.get("category", [])})
     villages = sorted({r.village_name for r in records})
     municipalities = sorted({r.municipality for r in records})
+    # The title names the municipalities the payload actually contains — never the territory the
+    # prototype hopes to cover. What is missing is said in the description (see territory_note).
+    territory_en, territory_local = territory_note(municipalities)
+    scope_en, scope_local = municipalities_en(municipalities), municipalities_local(municipalities)
+    title_en = "Vrmac Living Heritage — points of interest" + (f" ({scope_en})" if scope_en else "")
+    title_local = "Vrmac živa baština — tačke interesa" + (f" ({scope_local})" if scope_local else "")
 
     spatial: dict[str, Any] | None = None
     if bbox:
@@ -739,19 +855,16 @@ def dcat_ap(db: Session, base_url: str) -> dict[str, Any]:
         "@id": f"{base_url}/api/export/dcat-ap#dataset",
         "@type": "dcat:Dataset",
         "dct:identifier": "vrmac-lh-points-of-interest",
-        "dct:title": _lang(
-            "Vrmac Living Heritage — points of interest (Tivat and Kotor municipalities)",
-            "Vrmac živa baština — tačke interesa (opštine Tivat i Kotor)",
-        ),
+        "dct:title": _lang(title_en, title_local),
         "dct:description": _lang(
             "Validated heritage entries (villages, churches, events, traditions, culture house, landscape) and "
-            "provider listings (accommodation, food, guiding, craft) of the Vrmac plateau on both sides of the "
-            "ridge, exported as NGSI-LD PointOfInterest entities following the FIWARE Smart Data Models. Every "
-            "entity carries its village (addressLocality) and municipality (addressRegion). " + prototype_note,
+            "provider listings (accommodation, food, guiding, craft) of the Vrmac plateau, exported as NGSI-LD "
+            "PointOfInterest entities following the FIWARE Smart Data Models. Every entity carries its village "
+            f"(addressLocality) and municipality (addressRegion). {territory_en} " + prototype_note,
             "Validirani unosi baštine (naselja, crkve, događaji, tradicije, dom kulture, pejzaž) i ponude "
-            "(smještaj, hrana, vođenje, zanati) sa vrmačke visoravni sa obje strane grebena, izvezeni kao "
-            "NGSI-LD PointOfInterest entiteti prema FIWARE Smart Data Models. Svaki entitet nosi svoje selo "
-            "(addressLocality) i opštinu (addressRegion). " + prototype_note_local,
+            "(smještaj, hrana, vođenje, zanati) sa vrmačke visoravni, izvezeni kao NGSI-LD PointOfInterest "
+            "entiteti prema FIWARE Smart Data Models. Svaki entitet nosi svoje selo (addressLocality) i opštinu "
+            f"(addressRegion). {territory_local} " + prototype_note_local,
         ),
         "dct:publisher": {"@type": "foaf:Agent", "foaf:name": PUBLISHER_NAME},
         "dcat:contactPoint": {

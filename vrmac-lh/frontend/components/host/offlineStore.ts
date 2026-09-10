@@ -94,14 +94,16 @@ export function deleteRecording(id: string): Promise<void> {
   return tx<undefined>("readwrite", (s) => s.delete(id) as IDBRequest<undefined>).then(() => undefined);
 }
 
-/** Uploaded entries older than `maxAgeMs` are dropped so the device does not fill up with audio. */
-export async function pruneUploaded(maxAgeMs = 24 * 60 * 60 * 1000): Promise<number> {
+/** Finished entries older than `maxAgeMs` are dropped so the device does not fill up with audio. */
+export async function pruneFinished(maxAgeMs = 24 * 60 * 60 * 1000): Promise<number> {
   const now = Date.now();
   const rows = await listRecordings();
   let removed = 0;
   for (const r of rows) {
-    if (r.state !== "uploaded" || !r.uploaded_at) continue;
-    const at = Date.parse(r.uploaded_at);
+    if (!isTerminal(r)) continue;
+    const stamp = r.finished_at ?? r.uploaded_at;
+    if (!stamp) continue;
+    const at = Date.parse(stamp);
     if (Number.isFinite(at) && now - at > maxAgeMs) {
       await deleteRecording(r.id);
       removed += 1;
@@ -110,8 +112,54 @@ export async function pruneUploaded(maxAgeMs = 24 * 60 * 60 * 1000): Promise<num
   return removed;
 }
 
-export const PENDING_STATES: QueuedState[] = ["queued", "failed"];
+/**
+ * States that still owe the host an upload. `uploading` belongs here: a row left in that state by a
+ * reload was *not* finished, and leaving it out was what stranded it — the panel then reported
+ * "nothing is waiting to upload" while the session sat unfinished.
+ */
+export const PENDING_STATES: QueuedState[] = ["queued", "uploading", "failed"];
+/** States nothing will move out of on its own. The host can delete them; `rejected` may be retried. */
+export const TERMINAL_STATES: QueuedState[] = ["uploaded", "rejected", "obsolete"];
 
 export function isPending(r: QueuedRecording): boolean {
-  return r.state === "queued" || r.state === "failed";
+  return PENDING_STATES.includes(r.state);
+}
+
+export function isTerminal(r: QueuedRecording): boolean {
+  return TERMINAL_STATES.includes(r.state);
+}
+
+/** A terminal row that did not reach the API: the panel explains it instead of counting it as waiting. */
+export function isBlocked(r: QueuedRecording): boolean {
+  return r.state === "rejected" || r.state === "obsolete";
+}
+
+/** False while a failed row is serving its backoff; `next_attempt_at` is set when an attempt fails. */
+export function isDue(r: QueuedRecording, now = Date.now()): boolean {
+  if (!r.next_attempt_at) return true;
+  const at = Date.parse(r.next_attempt_at);
+  return !Number.isFinite(at) || at <= now;
+}
+
+/**
+ * Return rows stranded in `uploading` to `queued`.
+ *
+ * A row is set to `uploading` immediately before the request goes out, so a reload (or a crash, or a
+ * flat battery) in mid-upload leaves that state behind with nothing left to finish it. On mount the
+ * queue calls this with the ids it is itself uploading — on a fresh page instance that set is empty,
+ * so every `uploading` row it finds was left by a previous life of the page and is retried.
+ * The upload is idempotent from the host's point of view: a recording the API did receive before the
+ * reload leaves the session transcribed, and the retry either transcribes it again or, once the
+ * listing is confirmed, is refused with 409 and the row is dropped as `obsolete`.
+ */
+export async function reclaimStale(inFlight: Iterable<string> = []): Promise<QueuedRecording[]> {
+  const mine = new Set(inFlight);
+  const rows = await listRecordings();
+  const reclaimed: QueuedRecording[] = [];
+  for (const r of rows) {
+    if (r.state !== "uploading" || mine.has(r.id)) continue;
+    const next = await patchRecording(r.id, { state: "queued", next_attempt_at: undefined });
+    if (next) reclaimed.push(next);
+  }
+  return reclaimed;
 }

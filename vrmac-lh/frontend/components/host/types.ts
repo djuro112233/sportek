@@ -270,8 +270,16 @@ export interface ListingFormValues {
 
 export type Confirmations = Record<StructuredField, boolean>;
 
-/** One recording held in IndexedDB until it can be uploaded (offline capture). */
-export type QueuedState = "queued" | "uploading" | "uploaded" | "failed";
+/**
+ * One recording held in IndexedDB until it can be uploaded (offline capture).
+ *
+ * Three of the states are still on their way (`queued`, `uploading`, `failed` — a failed row waits
+ * for its backoff and is tried again) and three are terminal: `uploaded`, `rejected` (the API will
+ * never accept this file, or the attempts ran out) and `obsolete` (the listing was confirmed while
+ * the recording was still waiting, so the API refuses it with 409 — see docs/onboarding.md). A
+ * terminal row is out of the upload queue: the panel explains it and offers to delete it.
+ */
+export type QueuedState = "queued" | "uploading" | "uploaded" | "failed" | "rejected" | "obsolete";
 
 export interface QueuedRecording {
   id: string;
@@ -289,6 +297,10 @@ export interface QueuedRecording {
   captured_offline: boolean;
   last_error?: string;
   uploaded_at?: string;
+  /** ISO timestamp: the row is not attempted again before this (exponential backoff). */
+  next_attempt_at?: string;
+  /** ISO timestamp of the moment the row reached a terminal state (used for pruning). */
+  finished_at?: string;
   transcript?: string;
   job_id?: string | null;
 }

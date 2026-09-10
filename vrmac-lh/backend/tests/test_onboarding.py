@@ -681,3 +681,92 @@ def test_the_timing_log_file_is_appended_without_personal_data(flow, published):
     assert "offline_captured=true" in ours[0]
     for email in (HOST, AMBASSADOR):
         assert str(_user_id(email)) not in "\n".join(lines)
+
+
+# --------------------------------------------------------------------------------------------------
+# (9) a finished session stays finished — a late deferred upload may not reopen it
+#
+# The PWA keeps recordings in IndexedDB and uploads them whenever connectivity allows, which can be
+# long after the host confirmed the listing. Before the guard below, such an upload was accepted:
+# ``transcribe`` set ``transcript_ready_at`` again and moved ``status`` back to ``transcribed`` while
+# ``confirmed_at``, ``elapsed_to_confirm_seconds`` and the listing stayed in place, so
+# ``GET /api/onboarding/timing-log`` served a row with status ``transcribed`` carrying
+# ``elapsed_to_confirm_seconds`` and ``within_active_target`` — a contradiction institutions read.
+# --------------------------------------------------------------------------------------------------
+def _confirmed_session(client, auth) -> tuple[str, dict]:
+    """A session walked all the way to a confirmed listing."""
+    session, headers = _confirmable_session(client, auth)
+    r = client.post(
+        f"/api/onboarding/sessions/{session['id']}/confirm",
+        json={"listing": _listing_payload(), "consent": CONSENT},
+        headers=headers,
+    )
+    assert r.status_code == 200, r.text
+    return session["id"], headers
+
+
+def _timing_row(client, auth, session_id: str) -> dict:
+    r = client.get("/api/onboarding/timing-log", headers=auth(VALIDATOR))
+    assert r.status_code == 200, r.text
+    return next(row for row in r.json() if row["session_id"] == session_id)
+
+
+def test_a_recording_that_arrives_after_confirm_is_refused(client, auth):
+    sid, headers = _confirmed_session(client, auth)
+    with SessionLocal() as db:
+        before = svc.session_state(db.get(OnboardingSession, uuid.UUID(sid)))
+
+    r = _upload(client, headers, sid)
+
+    assert r.status_code == 409, r.text
+    assert "already confirmed" in r.json()["detail"]
+    assert not (Path(settings.upload_dir) / sid).exists(), "the file must be refused before it is written"
+    with SessionLocal() as db:
+        after = svc.session_state(db.get(OnboardingSession, uuid.UUID(sid)))
+    assert after["status"] == "confirmed"
+    assert after["transcript_ready_at"] == before["transcript_ready_at"]
+    assert after["confirmed_at"] == before["confirmed_at"]
+    assert after["transcript"] == before["transcript"]
+    assert after["listing_id"] == before["listing_id"]
+
+
+def test_the_timing_log_row_of_a_confirmed_session_is_not_corrupted_by_a_late_upload(client, auth):
+    """The corrupted row the verifier saw: status ``transcribed`` next to a confirmation time."""
+    sid, headers = _confirmed_session(client, auth)
+    assert _upload(client, headers, sid).status_code == 409
+
+    row = _timing_row(client, auth, sid)
+    assert row["status"] == "confirmed"
+    assert row["elapsed_to_confirm_seconds"] is not None
+    assert row["within_active_target"] is not None
+    # Never a row that claims to be mid-transcription and to have been confirmed at the same time.
+    assert not (row["status"] in ("transcribed", "captured_offline") and row["elapsed_to_confirm_seconds"])
+
+
+def test_a_typed_transcript_that_arrives_after_confirm_is_refused(client, auth):
+    sid, headers = _confirmed_session(client, auth)
+    r = client.post(
+        f"/api/onboarding/sessions/{sid}/transcript",
+        json={"text": "Zaboravih da dodam još jednu rečenicu. Izmišljeni primjer."},
+        headers=headers,
+    )
+    assert r.status_code == 409, r.text
+    with SessionLocal() as db:
+        assert db.get(OnboardingSession, uuid.UUID(sid)).status == "confirmed"
+
+
+def test_a_recording_that_arrives_after_publication_is_refused(client, auth, flow, published):
+    sid = flow["session_id"]
+    r = _upload(client, auth(HOST), sid)
+    assert r.status_code == 409, r.text
+    assert "already published" in r.json()["detail"]
+    assert _timing_row(client, auth, sid)["status"] == "published"
+
+
+def test_an_unfinished_session_still_accepts_a_deferred_upload(client, auth):
+    """The guard closes confirmed sessions only: the offline queue must still work in the normal case."""
+    headers = auth(HOST)
+    session = _start(client, headers, village="donja-lastva")
+    r = _upload(client, headers, session["id"], offline=True, captured_ago=CAPTURED_AGO)
+    assert r.status_code == 200, r.text
+    assert r.json()["status"] == "transcribed"

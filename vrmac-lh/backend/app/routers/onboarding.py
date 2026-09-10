@@ -5,6 +5,7 @@ Flow (docs/api-contract.md, docs/onboarding.md)::
     POST /sessions              open a session          -> onboarding_started
     POST /sessions/{id}/heartbeat   ACTIVE authoring time (the ≤ 30 min target measures this)
     POST /sessions/{id}/audio       multipart upload -> speech-to-text -> transcript_ready
+                                    (409 once the session is confirmed: a late upload may not reopen it)
     POST /sessions/{id}/transcript  typed or corrected transcript
     POST /sessions/{id}/draft       title + description ONLY -> draft_generated
     POST /sessions/{id}/confirm     consent + host-confirmed fields -> listing (draft) -> listing_confirmed
@@ -206,8 +207,15 @@ def upload_audio(
     The PWA may record offline (IndexedDB) and upload later: it then sends ``offline_captured=true``
     and ``captured_at``, and the API stores how long the recording waited (``upload_deferred_seconds``).
     The audio file is deleted as soon as it is transcribed unless ``KEEP_AUDIO=true``.
+
+    A deferred upload can arrive *after* the host has already confirmed the listing. Transcribing it
+    would push a finished session back to ``transcribed`` while its ``confirmed_at`` and elapsed
+    clock stay set, and the timing log institutions read would carry that contradiction. Such an
+    upload is refused with **409** before the file is written to disk; the browser then drops the
+    recording from its queue instead of retrying it.
     """
     session = _writable_session(db, session_id, user)
+    svc.require_open_for_capture(session, what="recording")
     captured = svc.parse_captured_at(captured_at)
 
     basename = safe_basename(file.filename)
@@ -242,8 +250,13 @@ def upload_audio(
 
 @router.post("/sessions/{session_id}/transcript")
 def set_transcript(session_id: str, payload: TranscriptIn, user: HostOrAmbassador, db: Db) -> dict[str, Any]:
-    """A typed transcript (no microphone), or the host's correction of the machine transcript."""
+    """A typed transcript (no microphone), or the host's correction of the machine transcript.
+
+    Refused with 409 once the session has produced its listing, for the same reason the audio
+    upload is: it would set ``transcript_ready_at`` again and reopen a finished session.
+    """
     session = _writable_session(db, session_id, user)
+    svc.require_open_for_capture(session, what="transcript")
     svc.set_transcript(db, session, payload.text)
     db.commit()
     db.refresh(session)

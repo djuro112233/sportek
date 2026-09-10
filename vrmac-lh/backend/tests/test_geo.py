@@ -7,6 +7,8 @@ covers Vrmac on both sides of the ridge and not a single village.
 """
 from __future__ import annotations
 
+import contextlib
+import re
 import uuid
 
 import gpxpy
@@ -37,6 +39,28 @@ def features(client) -> dict:
 
 def _props(collection: dict) -> dict[tuple[str, str], dict]:
     return {(f["properties"]["item_type"], f["properties"]["slug"]): f["properties"] for f in collection["features"]}
+
+
+@contextlib.contextmanager
+def temporarily_approved_segment(db, slug: str):
+    """Approve a seeded **draft** segment for the duration of a test, then put it back.
+
+    The seed publishes nothing on the Kotor side, so a Kotor filter that is never given anything to
+    match cannot tell a working filter from a broken one. This approves the ridge crossing (which
+    starts in Tivat and ends in Kotor) through the real validation gate, hands it to the test and
+    returns it to ``draft`` afterwards, so every later test sees the seeded state again.
+    """
+    segment = db.scalars(select(TrailSegment).where(TrailSegment.slug == slug)).one()
+    validator = db.scalars(select(User).where(User.email == "validator1@example.org")).one()
+    assert segment.status == "draft", "the fixture approves a draft, not something already published"
+    validation.transition(db, "trail_segment", segment.id, "approved", actor=validator,
+                          note="temporary: exercising the municipality filter")
+    try:
+        yield segment
+    finally:
+        validation.transition(db, "trail_segment", segment.id, "draft", actor=validator,
+                              note="temporary approval withdrawn: end of test")
+        db.expire_all()
 
 
 def _expected(db) -> set[tuple[str, str]]:
@@ -109,7 +133,7 @@ def test_feature_properties_are_type_specific(features):
 
 
 # --- (2) territory filters ------------------------------------------------------------------------
-def test_filter_by_village_and_municipality(client):
+def test_filter_by_village_and_municipality(client, db):
     gornja = client.get("/api/map/features", params={"village": "gornja-lastva"}).json()
     slugs = {f["properties"]["slug"] for f in gornja["features"]}
     assert {"crkva-sv-marije", "konoba-maslina-sample"} <= slugs
@@ -128,6 +152,35 @@ def test_filter_by_village_and_municipality(client):
     kotor = client.get("/api/map/features", params={"municipality": "Kotor"}).json()
     assert kotor["features"] == []
     assert kotor["bbox"] is None
+
+    # ...but an empty answer proves nothing about the filter itself, so publish something on the
+    # Kotor side for the length of this block. The ridge crossing *starts* in Sveti Vid (Tivat) and
+    # ends in Gornji Stoliv (Kotor): it must appear on both sides, because the filter matches every
+    # village a trail connects, not only the one it starts in.
+    with temporarily_approved_segment(db, "sveti-vid-gornji-stoliv"):
+        kotor_now = client.get("/api/map/features", params={"municipality": "Kotor"}).json()
+        assert [f["properties"]["slug"] for f in kotor_now["features"]] == ["sveti-vid-gornji-stoliv"]
+        assert kotor_now["bbox"] is not None
+        crossing = kotor_now["features"][0]["properties"]
+        assert crossing["village_slug"] == "sveti-vid" and crossing["municipality"] == "Tivat"
+        # the property a client needs in order to filter the same way this endpoint does
+        assert crossing["municipalities"] == ["Tivat", "Kotor"]
+        assert "gornji-stoliv" in crossing["village_slugs"]
+
+        tivat_now = client.get("/api/map/features", params={"municipality": "Tivat"}).json()
+        assert "sveti-vid-gornji-stoliv" in {f["properties"]["slug"] for f in tivat_now["features"]}
+
+        kotor_village = client.get("/api/map/features", params={"village": "gornji-stoliv"}).json()
+        assert [f["properties"]["slug"] for f in kotor_village["features"]] == ["sveti-vid-gornji-stoliv"]
+
+        # /api/trails answers the same question the same way
+        assert [t["slug"] for t in client.get("/api/trails", params={"municipality": "Kotor"}).json()] == [
+            "sveti-vid-gornji-stoliv"
+        ]
+
+    # the seeded state is back: the crossing is a draft again and Kotor is empty
+    assert client.get("/api/trails/sveti-vid-gornji-stoliv").status_code == 404
+    assert client.get("/api/map/features", params={"municipality": "Kotor"}).json()["features"] == []
 
     only_trails = client.get("/api/map/features", params={"item_type": "trail_segment"}).json()
     assert {f["properties"]["item_type"] for f in only_trails["features"]} == {"trail_segment"}
@@ -155,6 +208,34 @@ def test_trail_list_shows_only_approved_segments_and_the_latest_approved_report(
 
     assert client.get("/api/trails/sample-draft-segment").status_code == 404
     assert client.get("/api/trails/sveti-vid-gornji-stoliv").status_code == 404
+
+
+def test_every_trail_carries_usable_start_coordinates(client, features):
+    """``GET /api/trails`` must carry the start point, not only the two ready-made deep links.
+
+    The visitor app offers "how to get there" for a trail exactly as it does for a heritage entry or
+    a listing, from ``lat``/``lng``; without them the button has nothing to point at.
+    """
+    trails = client.get("/api/trails").json()
+    assert {t["slug"] for t in trails} == APPROVED_TRAILS
+    for trail in trails:
+        lat, lng = trail["lat"], trail["lng"]
+        assert isinstance(lat, (int, float)) and not isinstance(lat, bool), f"{trail['slug']}: no start latitude"
+        assert isinstance(lng, (int, float)) and not isinstance(lng, bool), f"{trail['slug']}: no start longitude"
+        assert -90.0 <= lat <= 90.0 and -180.0 <= lng <= 180.0
+        first = trail["geometry"]["coordinates"][0]
+        assert (lat, lng) == pytest.approx((first[1], first[0])), "the start point is the first vertex of the track"
+        assert trail["directions_walking"] == geo.directions_url(lat, lng, "walking")
+        assert trail["directions_driving"] == geo.directions_url(lat, lng, "driving")
+        assert trail["municipalities"] and trail["municipality"] in trail["municipalities"]
+
+    detail = client.get("/api/trails/donja-gornja-lastva").json()
+    assert detail["lat"] == pytest.approx(42.44, abs=0.05) and detail["lng"] == pytest.approx(18.69, abs=0.05)
+
+    # the same point travels on the map feature
+    trail_props = _props(features)[("trail_segment", "donja-gornja-lastva")]
+    assert trail_props["lat"] == detail["lat"] and trail_props["lng"] == detail["lng"]
+    assert trail_props["municipalities"] == ["Tivat"]
 
 
 def test_trail_list_can_be_filtered_by_village(client):
@@ -270,6 +351,37 @@ def test_directions_endpoint_and_its_validation(client):
         geo.directions_url(42.4, 18.6, "teleport")
     with pytest.raises(ValueError):
         geo.directions_url(95.0, 18.6, "walking")
+
+
+PLAIN_DECIMAL = re.compile(r"^-?\d+\.\d{1,6}$")
+
+
+def test_directions_coordinates_are_always_plain_decimals(client):
+    """A coordinate very close to zero must not be written as ``1e-06``: Google will not parse it.
+
+    Null Island is off Vrmac, but the formatter is the one every deep link and every itinerary stop
+    goes through, and a coordinate arrives from the query string of ``/api/map/directions`` and from
+    a visitor's device — not only from the seed.
+    """
+    for lat, lng in [(4e-7, 9e-7), (0.0, 0.0), (-1e-9, -2.5e-8), (1e-7, -1e-7), (42.4468, 18.6985)]:
+        url = geo.directions_url(lat, lng)
+        destination = url.split("&destination=")[1].split("&")[0]
+        assert "e" not in destination.lower(), f"scientific notation in {url}"
+        for part in destination.split(","):
+            assert PLAIN_DECIMAL.match(part), f"{part!r} is not a plain decimal ({url})"
+
+    assert geo.directions_url(4e-7, 9e-7).startswith(
+        "https://www.google.com/maps/dir/?api=1&destination=0.0,0.000001&"
+    )
+    assert geo.directions_url(-1e-9, -2.5e-8, "driving") == (
+        "https://www.google.com/maps/dir/?api=1&destination=0.0,0.0&travelmode=driving"
+    )
+    # the ordinary case is unchanged: rounded to 6 decimals, no trailing zeros
+    assert geo.format_coord(42.4468) == "42.4468" and geo.format_coord(18.685) == "18.685"
+    assert geo.format_coord(42.0) == "42.0" and geo.format_coord(42.44680049) == "42.4468"
+
+    tiny = client.get("/api/map/directions", params={"lat": 4e-7, "lng": 9e-7, "mode": "walking"}).json()
+    assert tiny["url"].endswith("&destination=0.0,0.000001&travelmode=walking")
 
 
 def test_haversine_matches_the_seed_loader(db):

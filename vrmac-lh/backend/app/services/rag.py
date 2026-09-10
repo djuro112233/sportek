@@ -82,6 +82,7 @@ from ..providers.support import SupportVerdict, get_support_checker
 from ..schemas import Citation, SupportResult
 from . import budget
 from .budget import SpendCapReached
+from .indexing import strip_title_prefix
 from .validation import approved_only
 
 log = logging.getLogger(__name__)
@@ -345,25 +346,46 @@ class RetrievedChunk:
     text: str
     similarity: float
     same_lang: bool
+    #: IDF-weighted coverage of the question over title **and** body — the entry-level match, and
+    #: what the confidence gate and the reported confidence use.
     coverage: float = 0.0
     coverage_plain: float = 0.0
+    #: The same measure over the chunk's own body only — what *ranks* the chunks (see rank_score).
+    body_coverage: float = 0.0
+    body_coverage_plain: float = 0.0
     stems: set[str] = field(default_factory=set)
+    body_stems: set[str] = field(default_factory=set)
+    title_stems: set[str] = field(default_factory=set)
 
     def title(self, lang: str) -> str:
         return self.title_local if lang == LOCAL_LANG else self.title_en
 
+    def own_title(self) -> str:
+        """The title in the chunk's own language — the one ``build_chunks`` prepended."""
+        return self.title_local if self.chunk_lang == "local" else self.title_en
+
     def body(self) -> str:
         """Chunk text without the prepended entry title (see services.indexing.build_chunks)."""
-        own_title = self.title_local if self.chunk_lang == "local" else self.title_en
-        prefix = f"{own_title}. "
-        return self.text[len(prefix):] if self.text.startswith(prefix) else self.text
+        return strip_title_prefix(self.text, self.own_title())
 
     @property
     def rank_score(self) -> float:
+        """Ranking score. Deliberately **body** coverage, not full-text coverage.
+
+        ``build_chunks`` prepends the entry title to every chunk, so the title is a constant across
+        the entry's chunks: it says the question is about this *entry*, never which *chunk* answers
+        it. Scoring a chunk on the full text let a chunk whose body is one line of boilerplate
+        ("Coordinates are approximate (village location).") reach coverage 1.000 on a question about
+        the entry, because the title alone matched every question word, and then outrank the chunk
+        that actually holds the answer. Ranking on the body fixes that; retrieval of a short
+        question naming the entry is unaffected, because the SQL candidate set comes from the
+        embedding of the full chunk text (title included) and the confidence gate still uses the
+        entry-level ``coverage``.
+        """
         return (
             self.similarity
             + (LANG_PREFERENCE_BONUS if self.same_lang else 0.0)
-            + COVERAGE_RANK_WEIGHT * self.coverage
+            + COVERAGE_RANK_WEIGHT * self.body_coverage
         )
 
 
@@ -426,15 +448,20 @@ def retrieve(
                     text=chunk.text,
                     similarity=max(0.0, min(1.0, round(1.0 - float(dist), 6))),
                     same_lang=(chunk.lang == wanted),
-                    stems=text_stems(chunk.text),
                 )
             )
+    for c in out:
+        title = c.own_title()
+        c.title_stems = text_stems(title)
+        c.body_stems = text_stems(strip_title_prefix(c.text, title))
+        c.stems = c.title_stems | c.body_stems
     return out
 
 
 def rank_candidates(candidates: list[RetrievedChunk], q_stems: list[str], idf: Idf, top_k: int) -> list[RetrievedChunk]:
     for c in candidates:
         c.coverage, c.coverage_plain = coverage_of(q_stems, c.stems, idf)
+        c.body_coverage, c.body_coverage_plain = coverage_of(q_stems, c.body_stems, idf)
     candidates.sort(key=lambda c: (-c.rank_score, -c.similarity, c.slug, c.chunk_lang, c.chunk_index))
     return candidates[:top_k]
 

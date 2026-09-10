@@ -3,6 +3,11 @@
  * The visible half of the offline capture queue: what is stored on this device, what state each
  * recording is in, and how to retry or delete one. The status line is a live region, so a screen
  * reader hears "saved on this device" as soon as connectivity drops.
+ *
+ * A recording the queue has stopped trying — the API will never accept it, the attempts ran out, or
+ * the listing was confirmed while it waited — is never silently retried in the background: it is
+ * listed with the reason in the host's own language, a "try again" for the ones that could still
+ * work, and a delete for all of them.
  */
 import { useState } from "react";
 import { useLang, useT } from "@/lib/i18n";
@@ -14,7 +19,8 @@ import { formatBytes, formatDate, mmss } from "./utils";
 export default function OfflineQueuePanel({ sessionId = null }: { sessionId?: string | null }) {
   const t = useT();
   const { lang } = useLang();
-  const { ready, supported, items, pending, online, busy, error, remove, retryAll } = useOfflineQueue();
+  const { ready, supported, items, pending, blocked, online, busy, error, remove, retry, retryAll } =
+    useOfflineQueue();
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   const statusText = !supported
@@ -42,6 +48,11 @@ export default function OfflineQueuePanel({ sessionId = null }: { sessionId?: st
           {error}
         </p>
       ) : null}
+      {blocked.length > 0 ? (
+        <p className="alert alert-warn small" role="note">
+          {t("host.queue.blockedSummary", { count: blocked.length })}
+        </p>
+      ) : null}
       {items.length > 0 && (
         <>
           <ul className={styles.queueList}>
@@ -67,6 +78,16 @@ export default function OfflineQueuePanel({ sessionId = null }: { sessionId?: st
                   {r.last_error ? <div className="small muted">{r.last_error}</div> : null}
                 </div>
                 <div className="row">
+                  {r.state === "rejected" && confirmDelete !== r.id ? (
+                    <button
+                      type="button"
+                      className="btn btn-small btn-secondary"
+                      onClick={() => void retry(r.id)}
+                      disabled={busy || !online}
+                    >
+                      {t("host.queue.retryOne")}
+                    </button>
+                  ) : null}
                   {confirmDelete === r.id ? (
                     <>
                       <span className="small">{t("host.queue.deleteConfirm")}</span>
@@ -113,6 +134,10 @@ function stateSymbol(r: QueuedRecording): string {
       return "↑";
     case "failed":
       return "!";
+    case "rejected":
+      return "✕";
+    case "obsolete":
+      return "⊘";
     default:
       return "•";
   }

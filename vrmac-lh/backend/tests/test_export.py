@@ -183,11 +183,16 @@ def test_every_entity_carries_its_village_and_municipality(db, keyvalues, record
 def test_village_anchor_is_an_ngsi_ld_relationship(keyvalues, normalized):
     """Items link to the PointOfInterest of their own village with a real NGSI-LD Relationship."""
     by_slug = {ex.entity_slug(kv): kv for kv in keyvalues}
-    assert by_slug["crkva-sv-marije"]["refSeeAlso"] == [ex.ID_PREFIX + "gornja-lastva"]
-    assert by_slug["apartman-lastva-sample"]["refSeeAlso"] == [ex.ID_PREFIX + "donja-lastva"]
+    # The village anchor is itself a heritage entry, so its id carries the item type too — build it
+    # with the same helper the exporter uses, so the two cannot drift apart again.
+    village_poi = ex._entity_id(ex.HERITAGE_ITEM_TYPE, "gornja-lastva")
+    assert by_slug["crkva-sv-marije"]["refSeeAlso"] == [village_poi]
+    assert by_slug["apartman-lastva-sample"]["refSeeAlso"] == [
+        ex._entity_id(ex.HERITAGE_ITEM_TYPE, "donja-lastva")
+    ]
     assert "refSeeAlso" not in by_slug["gornja-lastva"], "a village must not point at itself"
     rel = next(n for n in normalized if n["id"].endswith("crkva-sv-marije"))["refSeeAlso"]
-    assert rel == {"type": "Relationship", "object": [ex.ID_PREFIX + "gornja-lastva"]}
+    assert rel == {"type": "Relationship", "object": [ex._entity_id(ex.HERITAGE_ITEM_TYPE, "gornja-lastva")]}
 
 
 # (4) listings use the host-confirmed structured fields --------------------------------------------

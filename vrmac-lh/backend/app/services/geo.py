@@ -116,6 +116,20 @@ WHY_BY_KIND: dict[str, dict[str, str]] = {
 # --- pure helpers ----------------------------------------------------------------------------
 
 
+def format_coord(value: float) -> str:
+    """A coordinate as a **plain decimal** string, rounded to 6 decimals (≈0.1 m).
+
+    ``str(round(x, 6))`` falls back to scientific notation near zero (``round(9e-7, 6)`` prints as
+    ``1e-06``), and a destination like ``1e-06`` is not a coordinate Google Maps will parse. Fixed
+    formatting never does that; the trailing zeros are trimmed afterwards so the links stay short
+    and stable, and one decimal is always kept (``42.4468``, ``0.000001``, ``0.0``).
+    """
+    text = f"{float(value):.6f}".rstrip("0")
+    if text.endswith("."):
+        text += "0"
+    return "0.0" if text == "-0.0" else text  # there is no negative zero on a map
+
+
 def directions_url(lat: float, lng: float, mode: str = "walking") -> str:
     """Google Maps navigation deep link to ``lat, lng``.
 
@@ -125,14 +139,14 @@ def directions_url(lat: float, lng: float, mode: str = "walking") -> str:
         https://www.google.com/maps/dir/?api=1&destination=<lat>,<lng>&travelmode=walking|driving
 
     Coordinates are rounded to 6 decimals (≈0.1 m — far finer than our approximate seed data) so the
-    links stay short and stable.
+    links stay short and stable, and always written as plain decimals (see :func:`format_coord`).
     """
     if mode not in TRAVEL_MODES:
         raise ValueError(f"travel mode must be one of {TRAVEL_MODES}, got {mode!r}")
     lat_f, lng_f = float(lat), float(lng)
     if not (-90.0 <= lat_f <= 90.0) or not (-180.0 <= lng_f <= 180.0):
         raise ValueError("coordinates out of WGS84 range")
-    return f"{DIRECTIONS_BASE}&destination={round(lat_f, 6)},{round(lng_f, 6)}&travelmode={mode}"
+    return f"{DIRECTIONS_BASE}&destination={format_coord(lat_f)},{format_coord(lng_f)}&travelmode={mode}"
 
 
 def directions_pair(lat: float | None, lng: float | None) -> tuple[str | None, str | None]:
@@ -226,6 +240,21 @@ def segment_villages(seg: TrailSegment, by_id: dict, by_slug: dict) -> list[Vill
         if v is not None and v.id not in seen:
             out.append(v)
             seen.add(v.id)
+    return out
+
+
+def segment_municipalities(seg: TrailSegment, by_id: dict, by_slug: dict) -> list[str]:
+    """Every municipality a segment touches, start village first.
+
+    A segment is matched by ``?municipality=`` when **any** of the villages it connects is in that
+    municipality (see :func:`approved_segments`), so a client that filters on the single
+    ``municipality`` of the start village would disagree with this API about every trail that
+    crosses the ridge. The list travels on the feature so it does not have to.
+    """
+    out: list[str] = []
+    for v in segment_villages(seg, by_id, by_slug):
+        if v.municipality and v.municipality not in out:
+            out.append(v.municipality)
     return out
 
 
@@ -380,11 +409,27 @@ def listing_feature(l: Listing, village: Village | None) -> dict[str, Any]:
 
 
 def trail_feature(
-    seg: TrailSegment, village: Village | None, latest: TrailReport | None, report_village: Village | None = None
+    seg: TrailSegment,
+    village: Village | None,
+    latest: TrailReport | None,
+    report_village: Village | None = None,
+    *,
+    municipalities: Sequence[str] | None = None,
 ) -> dict[str, Any]:
-    """LineString feature of an approved segment with its latest **approved** condition report."""
+    """LineString feature of an approved segment with its latest **approved** condition report.
+
+    ``lat``/``lng`` are the **start point** of the segment (the stored one, else the first vertex of
+    the geometry) — the same point the two directions links point at — so a client can offer "how to
+    get there" for a trail exactly as it does for a heritage entry or a listing.
+
+    ``municipalities`` lists every municipality the segment touches (start village first). Pass the
+    result of :func:`segment_municipalities`; it falls back to the start village's own municipality.
+    """
     start = trail_start(seg)
     walking, driving = directions_pair(*(start or (None, None)))
+    touched = list(municipalities) if municipalities is not None else [
+        m for m in ((village.municipality if village else None),) if m
+    ]
     props: dict[str, Any] = {
         "item_type": "trail_segment",
         "id": str(seg.id),
@@ -392,6 +437,11 @@ def trail_feature(
         "title_local": seg.name_local,
         "title_en": seg.name_en,
         **_village_props(village),
+        # every municipality the trail touches — ?municipality= matches on any of them
+        "municipalities": touched,
+        # the start of the track: what the directions links below point at
+        "lat": start[0] if start else None,
+        "lng": start[1] if start else None,
         "coords_approximate": bool(seg.coords_approximate),
         "coords_source": seg.source,
         "directions_walking": walking,
@@ -442,12 +492,14 @@ def features(
         for l in approved_listings_with_coords(db, village=village, municipality=municipality):
             feats.append(listing_feature(l, by_id.get(l.village_id)))
     if wanted in (None, "trail_segment"):
+        by_slug = {v.slug: v for v in by_id.values()}
         for seg in approved_segments(db, village=village, municipality=municipality):
             latest = latest_approved_report(db, seg.id)
             feats.append(
                 trail_feature(
                     seg, by_id.get(seg.village_id), latest,
                     by_id.get(latest.village_id) if latest is not None else None,
+                    municipalities=segment_municipalities(seg, by_id, by_slug),
                 )
             )
 
@@ -463,8 +515,10 @@ def features(
 def trail_payload(db: Session, seg: TrailSegment, by_id: dict, *, with_reports: bool = False) -> dict[str, Any]:
     """Trail segment as the ``/api/trails`` endpoints return it (feature properties + geometry)."""
     latest = latest_approved_report(db, seg.id)
+    by_slug = {v.slug: v for v in by_id.values()}
     feature = trail_feature(
-        seg, by_id.get(seg.village_id), latest, by_id.get(latest.village_id) if latest is not None else None
+        seg, by_id.get(seg.village_id), latest, by_id.get(latest.village_id) if latest is not None else None,
+        municipalities=segment_municipalities(seg, by_id, by_slug),
     )
     payload = dict(feature["properties"])
     payload["geometry"] = feature["geometry"]

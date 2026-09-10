@@ -69,17 +69,23 @@ export interface AudioUpload {
   /** ISO timestamp of the moment the host recorded it (not the moment of upload). */
   capturedAt: string;
   offlineCaptured: boolean;
-  durationSeconds?: number;
 }
 
+/**
+ * The multipart form carries exactly the three members the endpoint declares: `file`,
+ * `captured_at` and `offline_captured`.
+ *
+ * It used to send a fourth, `audio_duration_s`, which `POST …/sessions/{id}/audio` never declared
+ * and FastAPI therefore dropped without a word. It is gone rather than added to the endpoint: the
+ * API measures the duration from the file itself (`services/onboarding.audio_duration`) and that
+ * number feeds the `transcript_ready` event and the per-audio-minute spend record, so it may not
+ * come from the client. The browser keeps its own `duration_s` for the queue display only.
+ */
 export function uploadAudio(id: string, u: AudioUpload): Promise<AudioResponse> {
   const form = new FormData();
   form.append("file", u.blob, u.filename);
   form.append("captured_at", u.capturedAt);
   form.append("offline_captured", u.offlineCaptured ? "true" : "false");
-  if (u.durationSeconds !== undefined && Number.isFinite(u.durationSeconds)) {
-    form.append("audio_duration_s", String(Math.round(u.durationSeconds)));
-  }
   return api<AudioResponse>(`/api/onboarding/sessions/${id}/audio`, { method: "POST", body: form });
 }
 
