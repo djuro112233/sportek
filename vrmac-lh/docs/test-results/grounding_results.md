@@ -1,8 +1,8 @@
 # Grounding test results — grounded answers or refusal
 
-*Prototype built for the SMART ERA application, September–October 2026. Sample data.* — generated 2026-09-10T04:58:44+00:00 by `python -m app.cli grounding-test` / `tests/test_grounding.py`.
+*Prototype built for the SMART ERA application, September–October 2026. Sample data.* — generated 2026-09-10T05:02:41+00:00 by `python -m app.cli grounding-test` / `tests/test_grounding.py`.
 
-**Result: PASS** — answerable 40/40 (100%, floor 90%) answered with an approved citation; unanswerable 20/20 (100%) withheld.
+**Result: PASS** — answerable 39/40 (98%, floor 90%) answered with an approved citation; unanswerable 20/20 (100%) withheld.
 
 Providers: embeddings `hash` (`hashed-lexical-v1`, 768-d, top-k 5), LLM `none`, support check `lexical` (min score 0.75).
 
@@ -13,7 +13,7 @@ Gate: similarity ≥ 0.35 AND IDF-weighted coverage ≥ 0.34 (stems: first 4 cha
 | language | answerable answered | rate | unanswerable withheld | rate | pass |
 |---|---|---|---|---|---|
 | cnr | 20/20 | 100% | 10/10 | 100% | PASS |
-| en | 20/20 | 100% | 10/10 | 100% | PASS |
+| en | 19/20 | 95% | 10/10 | 100% | PASS |
 
 ## Signal distribution (how the thresholds were calibrated)
 
@@ -98,7 +98,7 @@ Gate: similarity ≥ 0.35 AND IDF-weighted coverage ≥ 0.34 (stems: first 4 cha
 | en-a14 | en | What is Tivat? | answer | answer | 0.815 | 0.630 | 1.000 | tivat | 1 | 0 | PASS |
 | en-a15 | en | Between which bays does the hill of Vrmac lie? | answer | answer | 0.542 | 0.423 | 0.661 | vrmac-plateau | 1 | 0 | PASS |
 | en-a16 | en | Is there a footpath from Donja Lastva up to Gornja Lastva? | answer | answer | 0.851 | 0.701 | 1.000 | donja-lastva | 2 | 0 | PASS |
-| en-a17 | en | Which churches does the village of Gornja Lastva have? | answer | answer | 0.742 | 0.485 | 1.000 | crkva-sv-marije | 2 | 0 | PASS |
+| en-a17 | en | Which churches does the village of Gornja Lastva have? | answer | answer | 0.742 | 0.485 | 1.000 | crkva-sv-marije | 2 | 0 | FAIL |
 | en-a18 | en | What are the Landscape Days dedicated to? | answer | answer | 0.771 | 0.542 | 1.000 | dani-pejzaza | 2 | 0 | PASS |
 | en-a19 | en | What takes place in the culture house Ilija Marković? | answer | answer | 0.729 | 0.676 | 0.781 | dom-kulture-ilija-markovic, gornja-lastva | 2 | 0 | PASS |
 | en-a20 | en | How is the church of St Vitus reached from the village? | answer | answer | 0.779 | 0.558 | 1.000 | crkva-sv-vida | 2 | 0 | PASS |

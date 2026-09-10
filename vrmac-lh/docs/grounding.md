@@ -47,13 +47,29 @@ never pass.
 
 ## Result
 
+Two rates are reported side by side, because they answer different questions.
+
 | | Montenegrin | English |
 |---|---|---|
-| answerable questions answered with an approved citation | 20 / 20 | 20 / 20 |
+| **cited**: answered, citing an approved entry with a source — the definition of done's wording | 20 / 20 | 20 / 20 |
+| **strict**: the same, in the question's language, **and** carrying the decisive facts of the independently prepared expected answer | 20 / 20 | 19 / 20 |
 | unanswerable questions withheld | 10 / 10 | 10 / 10 |
 
-The brief's floor is 90 % of the answerable set and 100 % of the unanswerable set. Regenerate with
-`make grounding` or `pytest tests/test_grounding.py`; the full table lands in `docs/test-results/`.
+The strict rate is the one that gates the run, against the brief's floor of 90 %. It exists because a
+citation is not an answer: an early version of this report counted
+`"Coordinates are approximate (village location). [1]"` as a success for a question about the
+village's churches, since it cited the right entry. The criterion now requires every number of the
+expected answer to appear in the served text, and any phrase a question names in `expected_contains`.
+
+**The one strict failure is real and worth stating.** `en-a17` asks which churches Gornja Lastva has.
+The expected answer names both — St Mary from the 14th century and St Vitus from the 9th, at 440 m —
+and the served answer covers only St Mary. It is correct, cited and incomplete. The corpus does hold
+both in one sentence of the village overview, so this is a sentence-selection limit of the offline
+extractive mode on questions that ask for a list, not a grounding failure. It is left visible rather
+than tuned away.
+
+Regenerate with `make grounding` or `pytest tests/test_grounding.py`; the full table, both rates and
+every per-question row land in `docs/test-results/`.
 
 The unanswerable set deliberately mixes three kinds of question: facts that exist **only in
 non-approved entries** (the invented golden bell of 1687, the old school's 41 pupils, the Roman villa),

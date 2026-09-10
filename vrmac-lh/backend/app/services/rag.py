@@ -1071,10 +1071,64 @@ def _distribution(values: list[float]) -> dict[str, float | int | None]:
     }
 
 
+#: A question passes only when the served answer carries the decisive facts of the independently
+#: prepared expected answer. Without this, an answer that cites the right entry but says something
+#: else — "Coordinates are approximate (village location)." to a question about the village's
+#: churches — counted as a success.
+_DECISIVE_NUMBER = re.compile(r"\d[\d.,]*")
+
+
+def decisive_facts(expected_answer: str, explicit: list[str] | None = None) -> list[str]:
+    """The facts an answer must contain: every number of the expected answer, plus any phrase the
+    question file names explicitly in ``expected_contains``.
+
+    Numbers are the load-bearing part of almost every fact in this corpus (a century, a year, an
+    altitude, a date), and they cannot be produced by a vague answer that happens to share
+    vocabulary with the question. Proper nouns are deliberately *not* required automatically: the
+    two languages spell them differently and the extraction would be noisy, so where a name is the
+    answer the question file states it in ``expected_contains``.
+    """
+    facts = [f.strip() for f in (explicit or []) if f and f.strip()]
+    for number in _DECISIVE_NUMBER.findall(expected_answer or ""):
+        cleaned = number.rstrip(".,")
+        if cleaned and cleaned not in facts:
+            facts.append(cleaned)
+    return facts
+
+
+def answer_contains(answer: str, facts: list[str]) -> tuple[bool, list[str]]:
+    """``(all present, the missing ones)`` — comparison folds diacritics and case."""
+    if not facts:
+        return True, []
+    haystack = normalize(answer or "")
+    stems = text_stems(answer or "")
+    missing = []
+    for fact in facts:
+        needle = normalize(fact)
+        if not needle:
+            continue
+        if needle in haystack:
+            continue
+        # a multi-word phrase may be inflected: require every one of its stems instead
+        wanted = {stem(t) for t in content_tokens(fact)}
+        if wanted and wanted <= stems:
+            continue
+        missing.append(fact)
+    return (not missing), missing
+
+
 def evaluate_question(item: dict[str, Any], result: AskResult) -> dict[str, Any]:
-    """One row of the report. Pass criteria: expected ``withhold`` → not answered; expected
-    ``answer`` → answered, with ≥1 citation of an approved entry that has a non-empty source and
-    (when given) one of the ``expected_slugs``."""
+    """One row of the report.
+
+    Pass criteria:
+
+    * expected ``withhold`` → the answer was not served;
+    * expected ``answer`` → served, with at least one citation of an approved entry that has a
+      non-empty source, one of the ``expected_slugs`` where the file names them, **and the decisive
+      facts of the independently prepared expected answer actually present in the served text**
+      (:func:`decisive_facts`). The last condition is what stops a well-cited answer to a different
+      question from counting as a success.
+    """
     expected = item["expected"]
     cited_slugs: list[str] = []
     for c in result.citations:
@@ -1082,12 +1136,15 @@ def evaluate_question(item: dict[str, Any], result: AskResult) -> dict[str, Any]
             cited_slugs.append(c.slug)
     expected_slugs = list(item.get("expected_slugs") or [])
     slug_ok = (not expected_slugs) or any(s in expected_slugs for s in cited_slugs)
+    facts = decisive_facts(item.get("expected_answer", ""), item.get("expected_contains"))
+    facts_ok, missing_facts = answer_contains(result.answer or "", facts)
+    lang_ok = (not item.get("lang")) or result.lang == item["lang"]
     if expected == "withhold":
         passed = not result.answered
     else:
         passed = (
             result.answered and bool(result.citations)
-            and all(c.source for c in result.citations) and slug_ok
+            and all(c.source for c in result.citations) and slug_ok and facts_ok and lang_ok
         )
     return {
         "id": item["id"],
@@ -1108,6 +1165,10 @@ def evaluate_question(item: dict[str, Any], result: AskResult) -> dict[str, Any]
         "refusal_reason": result.refusal_reason,
         "cited_slugs": cited_slugs,
         "slug_ok": slug_ok,
+        "decisive_facts": facts,
+        "facts_ok": facts_ok,
+        "missing_facts": missing_facts,
+        "lang_ok": lang_ok,
         "supported_sentences": sum(1 for s in result.support if s.supported),
         "dropped_sentences": result.dropped_sentences,
         "served_from_cache": result.served_from_cache,
@@ -1160,11 +1221,23 @@ def run_grounding_test(
     return report
 
 
+def _cited_ok(row: dict[str, Any]) -> bool:
+    """The brief's own criterion: answered, citing an approved entry that has a source."""
+    return bool(row["outcome"] == "answer" and row["cited_slugs"] and row["slug_ok"])
+
+
 def _summarise(results: list[dict[str, Any]], files: list[tuple[str, str]]) -> dict[str, Any]:
     answerable = [r for r in results if r["expected"] == "answer"]
     unanswerable = [r for r in results if r["expected"] == "withhold"]
     answered_ok = sum(1 for r in answerable if r["passed"])
     withheld_ok = sum(1 for r in unanswerable if r["passed"])
+    # Two rates are reported side by side, because they answer two different questions:
+    #   * "cited"  — the definition of done's wording: answered, citing an approved entry.
+    #   * "strict" — the same, and the decisive facts of the independently prepared expected answer
+    #                are actually present in the served text, in the question's language.
+    # The strict rate is the one that gates the run; the cited rate is kept so the brief's own
+    # number stays visible and the difference between them is never hidden.
+    cited_ok = sum(1 for r in answerable if _cited_ok(r))
     per_language: dict[str, Any] = {}
     lang_pass = True
     for lg, path in files:
@@ -1185,6 +1258,8 @@ def _summarise(results: list[dict[str, Any]], files: list[tuple[str, str]]) -> d
             "answered_ok": a_ok,
             "withheld_ok": u_ok,
             "answerable_rate": round(rate_a, 4),
+            "answered_cited_ok": sum(1 for r in a if _cited_ok(r)),
+            "answerable_rate_cited": round(sum(1 for r in a if _cited_ok(r)) / len(a), 4) if a else 0.0,
             "withheld_rate": round(rate_u, 4),
             "passed": ok,
             "failures": [r["id"] for r in rows if not r["passed"]],
@@ -1207,6 +1282,12 @@ def _summarise(results: list[dict[str, Any]], files: list[tuple[str, str]]) -> d
         "answerable": len(answerable),
         "unanswerable": len(unanswerable),
         "answered_ok": answered_ok,
+        "answered_cited_ok": cited_ok,
+        "answerable_rate_cited": round(cited_ok / len(answerable), 4) if answerable else 0.0,
+        "criterion": (
+            "answered, citing an approved entry with a source and one of the expected slugs, in the "
+            "question's language, and containing the decisive facts of the expected answer"
+        ),
         "withheld_ok": withheld_ok,
         "answerable_rate": round(answered_ok / len(answerable), 4) if answerable else 0.0,
         "withheld_rate": round(withheld_ok / len(unanswerable), 4) if unanswerable else 0.0,

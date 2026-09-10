@@ -4,9 +4,12 @@
     "total": 60,
     "answerable": 40,
     "unanswerable": 20,
-    "answered_ok": 40,
+    "answered_ok": 39,
+    "answered_cited_ok": 40,
+    "answerable_rate_cited": 1.0,
+    "criterion": "answered, citing an approved entry with a source and one of the expected slugs, in the question's language, and containing the decisive facts of the expected answer",
     "withheld_ok": 20,
-    "answerable_rate": 1.0,
+    "answerable_rate": 0.975,
     "withheld_rate": 1.0,
     "answerable_floor": 0.9,
     "languages": {
@@ -18,6 +21,8 @@
         "answered_ok": 20,
         "withheld_ok": 10,
         "answerable_rate": 1.0,
+        "answered_cited_ok": 20,
+        "answerable_rate_cited": 1.0,
         "withheld_rate": 1.0,
         "passed": true,
         "failures": [],
@@ -69,12 +74,16 @@
         "total": 30,
         "answerable": 20,
         "unanswerable": 10,
-        "answered_ok": 20,
+        "answered_ok": 19,
         "withheld_ok": 10,
-        "answerable_rate": 1.0,
+        "answerable_rate": 0.95,
+        "answered_cited_ok": 20,
+        "answerable_rate_cited": 1.0,
         "withheld_rate": 1.0,
         "passed": true,
-        "failures": [],
+        "failures": [
+          "en-a17"
+        ],
         "similarity": {
           "answerable": {
             "min": 0.4231,
@@ -119,7 +128,9 @@
         }
       }
     },
-    "failures": [],
+    "failures": [
+      "en-a17"
+    ],
     "thresholds": {
       "min_similarity": 0.35,
       "min_coverage": 0.34,
@@ -180,7 +191,7 @@
         "n": 20
       }
     },
-    "generated_at": "2026-09-10T04:58:44+00:00",
+    "generated_at": "2026-09-10T05:02:41+00:00",
     "prototype": "Prototype built for the SMART ERA application, September–October 2026. Sample data."
   },
   "results": [
@@ -208,13 +219,19 @@
         "crkva-sv-marije"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "14"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Crkva Svete Marije u Gornjoj Lastvi potiče iz 14. vijeka. [1]",
       "citations": [
         {
-          "entry_id": "94affda6-2680-4679-8ec6-eb85e80ff74b",
+          "entry_id": "34f16f2d-93df-40fb-9896-3f1bc0b35a64",
           "slug": "crkva-sv-marije",
           "title": "Crkva Svete Marije, Gornja Lastva",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org",
@@ -262,13 +279,19 @@
         "crkva-sv-vida"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "9"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Crkva Svetog Vida iz 9. vijeka nalazi se na 440 metara nadmorske visine iznad Gornje Lastve. [1]",
       "citations": [
         {
-          "entry_id": "1f1f1eb5-01c8-43fa-9cff-58baaa4676e3",
+          "entry_id": "8f26d378-6177-4598-b7ee-9ecf24a77379",
           "slug": "crkva-sv-vida",
           "title": "Crkva Svetog Vida",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org",
@@ -317,13 +340,19 @@
         "crkva-sv-vida"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "440"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Crkva Svetog Vida iz 9. vijeka nalazi se na 440 metara nadmorske visine iznad Gornje Lastve. [1]",
       "citations": [
         {
-          "entry_id": "1f1f1eb5-01c8-43fa-9cff-58baaa4676e3",
+          "entry_id": "8f26d378-6177-4598-b7ee-9ecf24a77379",
           "slug": "crkva-sv-vida",
           "title": "Crkva Svetog Vida",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org",
@@ -371,13 +400,17 @@
         "lastovska-festa"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Lastovska fešta se održava svake prve subote u avgustu od 1974. godine; 53. fešta je 7. avgusta 2027. [1]",
       "citations": [
         {
-          "entry_id": "9446ae9e-77bb-4150-99ea-bbd93d470908",
+          "entry_id": "e3b8995c-2cf0-4d4f-8d29-99f04ecffb49",
           "slug": "lastovska-festa",
           "title": "Lastovska fešta",
           "source": "gornjalastva.org; hr.wikipedia — Gornja Lastva",
@@ -425,13 +458,19 @@
         "lastovska-festa"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "1974"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Lastovska fešta se održava svake prve subote u avgustu od 1974. godine; 53. fešta je 7. avgusta 2027. [1]",
       "citations": [
         {
-          "entry_id": "9446ae9e-77bb-4150-99ea-bbd93d470908",
+          "entry_id": "e3b8995c-2cf0-4d4f-8d29-99f04ecffb49",
           "slug": "lastovska-festa",
           "title": "Lastovska fešta",
           "source": "gornjalastva.org; hr.wikipedia — Gornja Lastva",
@@ -478,13 +517,20 @@
         "lastovska-festa"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "7",
+        "2027"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Lastovska fešta se održava svake prve subote u avgustu od 1974. godine; 53. fešta je 7. avgusta 2027. [1]",
       "citations": [
         {
-          "entry_id": "9446ae9e-77bb-4150-99ea-bbd93d470908",
+          "entry_id": "e3b8995c-2cf0-4d4f-8d29-99f04ecffb49",
           "slug": "lastovska-festa",
           "title": "Lastovska fešta",
           "source": "gornjalastva.org; hr.wikipedia — Gornja Lastva",
@@ -532,13 +578,19 @@
         "dani-pejzaza"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "2015"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Dani pejzaža se u Gornjoj Lastvi održavaju od 2015. godine. [1]",
       "citations": [
         {
-          "entry_id": "38e76dd7-9194-4377-8ec8-810b6e6f08c3",
+          "entry_id": "d742605f-b6e4-4f29-8e70-16a68440ad49",
           "slug": "dani-pejzaza",
           "title": "Dani pejzaža",
           "source": "gornjalastva.org; Expeditio (2015)",
@@ -586,13 +638,17 @@
         "dom-kulture-ilija-markovic"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Dom kulture „Ilija Marković“ je mjesto kulturnih događaja u Gornjoj Lastvi. [1]",
       "citations": [
         {
-          "entry_id": "cafa63c2-07ef-4fc7-80ca-2b34394b8b9d",
+          "entry_id": "9617d848-90b2-49ad-bd50-30eeb4daa405",
           "slug": "dom-kulture-ilija-markovic",
           "title": "Dom kulture „Ilija Marković“",
           "source": "gornjalastva.org",
@@ -640,13 +696,19 @@
         "mlinovi-za-masline"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "1945"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "U Gornjoj Lastvi su do 1945. godine radili mlinovi za masline. [1]",
       "citations": [
         {
-          "entry_id": "53ca8ab4-179e-4153-888e-692fb99878d0",
+          "entry_id": "ddb5ee18-73fe-4e8d-beb0-f20c3e24bf15",
           "slug": "mlinovi-za-masline",
           "title": "Mlinovi za masline u Gornjoj Lastvi",
           "source": "hr.wikipedia — Gornja Lastva; Expeditio (2015)",
@@ -694,13 +756,19 @@
         "popis-2011"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "2011"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Po popisu iz 2011. godine Gornja Lastva nije imala stalnih stanovnika. [1]",
       "citations": [
         {
-          "entry_id": "c030d53f-e9a3-4204-92b3-6b693a6fd180",
+          "entry_id": "99e0f721-81bc-41ac-9dac-2baf734a63e7",
           "slug": "popis-2011",
           "title": "Stanovništvo Gornje Lastve (popis 2011)",
           "source": "hr.wikipedia — Gornja Lastva (2011 census)",
@@ -748,13 +816,17 @@
         "gornja-lastva"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Gornja Lastva je staro naselje na padinama Vrmca iznad Donje Lastve i Tivta, u Crnoj Gori. [1]",
       "citations": [
         {
-          "entry_id": "a807ce72-d975-4a58-8c5d-bdf9e1fc5e48",
+          "entry_id": "09371bcf-437d-4176-aa78-13992b91bf42",
           "slug": "gornja-lastva",
           "title": "Gornja Lastva",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org; Expeditio (2015)",
@@ -803,13 +875,17 @@
         "tivat"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Tivat je grad i opština u Boki Kotorskoj; Gornja i Donja Lastva pripadaju opštini Tivat. [1]",
       "citations": [
         {
-          "entry_id": "d5d1c089-d9f8-4756-93cd-c9272d82af10",
+          "entry_id": "68c0b575-5447-479a-bf86-39433c0695e7",
           "slug": "tivat",
           "title": "Tivat",
           "source": "hr.wikipedia — Tivat",
@@ -856,13 +932,17 @@
         "donja-lastva"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Donja Lastva is the coastal settlement below Gornja Lastva on the shore of the Bay of Tivat. [1]",
       "citations": [
         {
-          "entry_id": "45437333-0ce7-48b8-af5f-be759620fc18",
+          "entry_id": "4b177ed8-be23-49aa-a146-f7c0ba3c90d2",
           "slug": "donja-lastva",
           "title": "Donja Lastva",
           "source": "hr.wikipedia — Donja Lastva",
@@ -909,13 +989,17 @@
         "tivat"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Tivat je grad i opština u Boki Kotorskoj; Gornja i Donja Lastva pripadaju opštini Tivat. [1]",
       "citations": [
         {
-          "entry_id": "d5d1c089-d9f8-4756-93cd-c9272d82af10",
+          "entry_id": "68c0b575-5447-479a-bf86-39433c0695e7",
           "slug": "tivat",
           "title": "Tivat",
           "source": "hr.wikipedia — Tivat",
@@ -962,13 +1046,17 @@
         "vrmac-plateau"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Vrmac je brdo između Tivatskog i Kotorskog zaliva; Gornja Lastva leži na njegovim padinama. [1]",
       "citations": [
         {
-          "entry_id": "f4b307df-d804-4148-8f83-d2a04f016fee",
+          "entry_id": "3295a296-8d31-4704-9129-283ab4fd45ac",
           "slug": "vrmac-plateau",
           "title": "Vrmac",
           "source": "hr.wikipedia — Gornja Lastva; hr.wikipedia — Tivat",
@@ -1016,13 +1104,17 @@
         "donja-lastva"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 2,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Donja Lastva je naselje na obali Tivatskog zaliva, sjeverozapadno od centra Tivta. [1] Iz Donje Lastve vodi pješačka staza uzbrdo do Gornje Lastve. [1]",
       "citations": [
         {
-          "entry_id": "45437333-0ce7-48b8-af5f-be759620fc18",
+          "entry_id": "4b177ed8-be23-49aa-a146-f7c0ba3c90d2",
           "slug": "donja-lastva",
           "title": "Donja Lastva",
           "source": "hr.wikipedia — Donja Lastva",
@@ -1079,13 +1171,21 @@
         "gornja-lastva"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "14",
+        "9",
+        "440"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 2,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Gornja Lastva je staro seosko naselje na obroncima brda Vrmac, iznad Donje Lastve i grada Tivta u Boki Kotorskoj. [1] Selo ima crkvu Svete Marije iz 14. vijeka i, na visini od 440 metara, crkvu Svetog Vida iz 9. vijeka. [1]",
       "citations": [
         {
-          "entry_id": "a807ce72-d975-4a58-8c5d-bdf9e1fc5e48",
+          "entry_id": "09371bcf-437d-4176-aa78-13992b91bf42",
           "slug": "gornja-lastva",
           "title": "Gornja Lastva",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org; Expeditio (2015)",
@@ -1140,13 +1240,17 @@
         "dani-pejzaza"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Dani pejzaža su manifestacija posvećena kulturnom pejzažu Vrmca i Gornje Lastve. [1]",
       "citations": [
         {
-          "entry_id": "38e76dd7-9194-4377-8ec8-810b6e6f08c3",
+          "entry_id": "d742605f-b6e4-4f29-8e70-16a68440ad49",
           "slug": "dani-pejzaza",
           "title": "Dani pejzaža",
           "source": "gornjalastva.org; Expeditio (2015)",
@@ -1194,13 +1298,17 @@
         "gornja-lastva"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 2,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Dom kulture „Ilija Marković“ je mjesto kulturnih događaja u Gornjoj Lastvi. [1] Kulturni život odvija se u Domu kulture „Ilija Marković“. [2]",
       "citations": [
         {
-          "entry_id": "cafa63c2-07ef-4fc7-80ca-2b34394b8b9d",
+          "entry_id": "9617d848-90b2-49ad-bd50-30eeb4daa405",
           "slug": "dom-kulture-ilija-markovic",
           "title": "Dom kulture „Ilija Marković“",
           "source": "gornjalastva.org",
@@ -1212,7 +1320,7 @@
           "village_slug": "gornja-lastva"
         },
         {
-          "entry_id": "a807ce72-d975-4a58-8c5d-bdf9e1fc5e48",
+          "entry_id": "09371bcf-437d-4176-aa78-13992b91bf42",
           "slug": "gornja-lastva",
           "title": "Gornja Lastva",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org; Expeditio (2015)",
@@ -1267,13 +1375,19 @@
         "crkva-sv-vida"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "440"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Crkva Svetog Vida iz 9. vijeka nalazi se na 440 metara nadmorske visine iznad Gornje Lastve. [1]",
       "citations": [
         {
-          "entry_id": "1f1f1eb5-01c8-43fa-9cff-58baaa4676e3",
+          "entry_id": "8f26d378-6177-4598-b7ee-9ecf24a77379",
           "slug": "crkva-sv-vida",
           "title": "Crkva Svetog Vida",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org",
@@ -1316,6 +1430,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -1343,6 +1461,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -1370,6 +1492,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -1397,6 +1523,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -1424,6 +1554,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -1451,6 +1585,10 @@
       "refusal_reason": "no_approved_source",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -1478,6 +1616,10 @@
       "refusal_reason": "no_approved_source",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -1505,6 +1647,10 @@
       "refusal_reason": "no_approved_source",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -1532,6 +1678,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -1559,6 +1709,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -1591,13 +1745,19 @@
         "crkva-sv-marije"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "14"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The church of St Mary in Gornja Lastva dates from the 14th century. [1]",
       "citations": [
         {
-          "entry_id": "94affda6-2680-4679-8ec6-eb85e80ff74b",
+          "entry_id": "34f16f2d-93df-40fb-9896-3f1bc0b35a64",
           "slug": "crkva-sv-marije",
           "title": "Church of St Mary, Gornja Lastva",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org",
@@ -1645,13 +1805,19 @@
         "crkva-sv-vida"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "9"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The 9th-century church of St Vitus stands at 440 metres above sea level above Gornja Lastva. [1]",
       "citations": [
         {
-          "entry_id": "1f1f1eb5-01c8-43fa-9cff-58baaa4676e3",
+          "entry_id": "8f26d378-6177-4598-b7ee-9ecf24a77379",
           "slug": "crkva-sv-vida",
           "title": "Church of St Vitus",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org",
@@ -1700,13 +1866,19 @@
         "crkva-sv-vida"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "440"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 2,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The church of St Vitus (Sv. Vid) is a small church from the 9th century, one of the oldest in this part of the Bay of Kotor. [1] It stands at an altitude of 440 metres above sea level on the hill above Gornja Lastva and is reached by a footpath from the village. [1]",
       "citations": [
         {
-          "entry_id": "1f1f1eb5-01c8-43fa-9cff-58baaa4676e3",
+          "entry_id": "8f26d378-6177-4598-b7ee-9ecf24a77379",
           "slug": "crkva-sv-vida",
           "title": "Church of St Vitus",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org",
@@ -1762,13 +1934,17 @@
         "lastovska-festa"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The Lastovska fešta is held every first Saturday of August since 1974; the 53rd festival is on 7 August 2027. [1]",
       "citations": [
         {
-          "entry_id": "9446ae9e-77bb-4150-99ea-bbd93d470908",
+          "entry_id": "e3b8995c-2cf0-4d4f-8d29-99f04ecffb49",
           "slug": "lastovska-festa",
           "title": "Lastovska fešta (Lastva Festival)",
           "source": "gornjalastva.org; hr.wikipedia — Gornja Lastva",
@@ -1816,13 +1992,19 @@
         "lastovska-festa"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "1974"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The Lastovska fešta is held every first Saturday of August since 1974; the 53rd festival is on 7 August 2027. [1]",
       "citations": [
         {
-          "entry_id": "9446ae9e-77bb-4150-99ea-bbd93d470908",
+          "entry_id": "e3b8995c-2cf0-4d4f-8d29-99f04ecffb49",
           "slug": "lastovska-festa",
           "title": "Lastovska fešta (Lastva Festival)",
           "source": "gornjalastva.org; hr.wikipedia — Gornja Lastva",
@@ -1869,13 +2051,20 @@
         "lastovska-festa"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "7",
+        "2027"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 2,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The Lastovska fešta is the traditional summer festival of Gornja Lastva. [1] The 53rd Lastovska fešta will be held on Saturday, 7 August 2027. [1]",
       "citations": [
         {
-          "entry_id": "9446ae9e-77bb-4150-99ea-bbd93d470908",
+          "entry_id": "e3b8995c-2cf0-4d4f-8d29-99f04ecffb49",
           "slug": "lastovska-festa",
           "title": "Lastovska fešta (Lastva Festival)",
           "source": "gornjalastva.org; hr.wikipedia — Gornja Lastva",
@@ -1931,13 +2120,19 @@
         "dani-pejzaza"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "2015"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The Landscape Days (Dani pejzaža) have been held in Gornja Lastva since 2015. [1]",
       "citations": [
         {
-          "entry_id": "38e76dd7-9194-4377-8ec8-810b6e6f08c3",
+          "entry_id": "d742605f-b6e4-4f29-8e70-16a68440ad49",
           "slug": "dani-pejzaza",
           "title": "Dani pejzaža (Landscape Days)",
           "source": "gornjalastva.org; Expeditio (2015)",
@@ -1985,13 +2180,17 @@
         "dom-kulture-ilija-markovic"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The culture house \"Ilija Marković\" is the venue of cultural events in Gornja Lastva. [1]",
       "citations": [
         {
-          "entry_id": "cafa63c2-07ef-4fc7-80ca-2b34394b8b9d",
+          "entry_id": "9617d848-90b2-49ad-bd50-30eeb4daa405",
           "slug": "dom-kulture-ilija-markovic",
           "title": "Culture house \"Ilija Marković\"",
           "source": "gornjalastva.org",
@@ -2039,13 +2238,19 @@
         "mlinovi-za-masline"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "1945"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Olive mills operated in Gornja Lastva until 1945. [1]",
       "citations": [
         {
-          "entry_id": "53ca8ab4-179e-4153-888e-692fb99878d0",
+          "entry_id": "ddb5ee18-73fe-4e8d-beb0-f20c3e24bf15",
           "slug": "mlinovi-za-masline",
           "title": "Olive mills of Gornja Lastva",
           "source": "hr.wikipedia — Gornja Lastva; Expeditio (2015)",
@@ -2093,13 +2298,19 @@
         "popis-2011"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "2011"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "In the 2011 census Gornja Lastva had no resident population. [1]",
       "citations": [
         {
-          "entry_id": "c030d53f-e9a3-4204-92b3-6b693a6fd180",
+          "entry_id": "99e0f721-81bc-41ac-9dac-2baf734a63e7",
           "slug": "popis-2011",
           "title": "Population of Gornja Lastva (2011 census)",
           "source": "hr.wikipedia — Gornja Lastva (2011 census)",
@@ -2147,13 +2358,17 @@
         "gornja-lastva"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Gornja Lastva is an old settlement on the slopes of Vrmac above Donja Lastva and Tivat, Montenegro. [1]",
       "citations": [
         {
-          "entry_id": "a807ce72-d975-4a58-8c5d-bdf9e1fc5e48",
+          "entry_id": "09371bcf-437d-4176-aa78-13992b91bf42",
           "slug": "gornja-lastva",
           "title": "Gornja Lastva",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org; Expeditio (2015)",
@@ -2202,13 +2417,17 @@
         "tivat"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Tivat is a town and municipality in the Bay of Kotor; Gornja and Donja Lastva belong to the municipality of Tivat. [1]",
       "citations": [
         {
-          "entry_id": "d5d1c089-d9f8-4756-93cd-c9272d82af10",
+          "entry_id": "68c0b575-5447-479a-bf86-39433c0695e7",
           "slug": "tivat",
           "title": "Tivat",
           "source": "hr.wikipedia — Tivat",
@@ -2255,13 +2474,17 @@
         "donja-lastva"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Donja Lastva is the coastal settlement below Gornja Lastva on the shore of the Bay of Tivat. [1]",
       "citations": [
         {
-          "entry_id": "45437333-0ce7-48b8-af5f-be759620fc18",
+          "entry_id": "4b177ed8-be23-49aa-a146-f7c0ba3c90d2",
           "slug": "donja-lastva",
           "title": "Donja Lastva",
           "source": "hr.wikipedia — Donja Lastva",
@@ -2308,13 +2531,17 @@
         "tivat"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Tivat je grad i opština u Boki Kotorskoj; Gornja i Donja Lastva pripadaju opštini Tivat. [1]",
       "citations": [
         {
-          "entry_id": "d5d1c089-d9f8-4756-93cd-c9272d82af10",
+          "entry_id": "68c0b575-5447-479a-bf86-39433c0695e7",
           "slug": "tivat",
           "title": "Tivat",
           "source": "hr.wikipedia — Tivat",
@@ -2361,13 +2588,17 @@
         "vrmac-plateau"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 1,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Vrmac is the hill between the Bay of Tivat and the Bay of Kotor; Gornja Lastva lies on its slopes. [1]",
       "citations": [
         {
-          "entry_id": "f4b307df-d804-4148-8f83-d2a04f016fee",
+          "entry_id": "3295a296-8d31-4704-9129-283ab4fd45ac",
           "slug": "vrmac-plateau",
           "title": "Vrmac",
           "source": "hr.wikipedia — Gornja Lastva; hr.wikipedia — Tivat",
@@ -2415,13 +2646,17 @@
         "donja-lastva"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 2,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "Donja Lastva is a settlement on the shore of the Bay of Tivat, north-west of the centre of Tivat. [1] A footpath leads uphill from Donja Lastva to Gornja Lastva. [1]",
       "citations": [
         {
-          "entry_id": "45437333-0ce7-48b8-af5f-be759620fc18",
+          "entry_id": "4b177ed8-be23-49aa-a146-f7c0ba3c90d2",
           "slug": "donja-lastva",
           "title": "Donja Lastva",
           "source": "hr.wikipedia — Donja Lastva",
@@ -2467,7 +2702,7 @@
       "expected_answer": "The church of St Mary from the 14th century and the church of St Vitus from the 9th century at 440 metres.",
       "note": "Both churches of the village.",
       "outcome": "answer",
-      "passed": true,
+      "passed": false,
       "confidence": 0.742,
       "similarity": 0.484928,
       "top_similarity": 0.495177,
@@ -2478,13 +2713,24 @@
         "crkva-sv-marije"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "14",
+        "9",
+        "440"
+      ],
+      "facts_ok": false,
+      "missing_facts": [
+        "9",
+        "440"
+      ],
+      "lang_ok": true,
       "supported_sentences": 2,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The church of St Mary (Sv. Marija) is the village church of Gornja Lastva and dates from the 14th century. [1] It stands in the village itself and is the centre of the community's religious and social life, including the Lastovska fešta. [1]",
       "citations": [
         {
-          "entry_id": "94affda6-2680-4679-8ec6-eb85e80ff74b",
+          "entry_id": "34f16f2d-93df-40fb-9896-3f1bc0b35a64",
           "slug": "crkva-sv-marije",
           "title": "Church of St Mary, Gornja Lastva",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org",
@@ -2539,13 +2785,17 @@
         "dani-pejzaza"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 2,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The Landscape Days (Dani pejzaža) are an event dedicated to the cultural landscape of Vrmac and Gornja Lastva. [1] Held since 2015, they bring together experts, residents and visitors around the protection and revival of heritage and landscape. [1]",
       "citations": [
         {
-          "entry_id": "38e76dd7-9194-4377-8ec8-810b6e6f08c3",
+          "entry_id": "d742605f-b6e4-4f29-8e70-16a68440ad49",
           "slug": "dani-pejzaza",
           "title": "Dani pejzaža (Landscape Days)",
           "source": "gornjalastva.org; Expeditio (2015)",
@@ -2601,13 +2851,17 @@
         "gornja-lastva"
       ],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 2,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The culture house \"Ilija Marković\" is the venue of cultural events in Gornja Lastva. [1] Cultural life takes place in the culture house Dom kulture \"Ilija Marković\". [2]",
       "citations": [
         {
-          "entry_id": "cafa63c2-07ef-4fc7-80ca-2b34394b8b9d",
+          "entry_id": "9617d848-90b2-49ad-bd50-30eeb4daa405",
           "slug": "dom-kulture-ilija-markovic",
           "title": "Culture house \"Ilija Marković\"",
           "source": "gornjalastva.org",
@@ -2619,7 +2873,7 @@
           "village_slug": "gornja-lastva"
         },
         {
-          "entry_id": "a807ce72-d975-4a58-8c5d-bdf9e1fc5e48",
+          "entry_id": "09371bcf-437d-4176-aa78-13992b91bf42",
           "slug": "gornja-lastva",
           "title": "Gornja Lastva",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org; Expeditio (2015)",
@@ -2674,13 +2928,19 @@
         "crkva-sv-vida"
       ],
       "slug_ok": true,
+      "decisive_facts": [
+        "440"
+      ],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 2,
       "dropped_sentences": 0,
       "served_from_cache": false,
       "answer": "The church of St Vitus (Sv. Vid) is a small church from the 9th century, one of the oldest in this part of the Bay of Kotor. [1] It stands at an altitude of 440 metres above sea level on the hill above Gornja Lastva and is reached by a footpath from the village. [1]",
       "citations": [
         {
-          "entry_id": "1f1f1eb5-01c8-43fa-9cff-58baaa4676e3",
+          "entry_id": "8f26d378-6177-4598-b7ee-9ecf24a77379",
           "slug": "crkva-sv-vida",
           "title": "Church of St Vitus",
           "source": "hr.wikipedia — Gornja Lastva; gornjalastva.org",
@@ -2731,6 +2991,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -2758,6 +3022,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -2785,6 +3053,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -2812,6 +3084,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -2839,6 +3115,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -2866,6 +3146,10 @@
       "refusal_reason": "no_approved_source",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -2893,6 +3177,10 @@
       "refusal_reason": "no_approved_source",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -2920,6 +3208,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -2947,6 +3239,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
@@ -2974,6 +3270,10 @@
       "refusal_reason": "low_confidence",
       "cited_slugs": [],
       "slug_ok": true,
+      "decisive_facts": [],
+      "facts_ok": true,
+      "missing_facts": [],
+      "lang_ok": true,
       "supported_sentences": 0,
       "dropped_sentences": 0,
       "served_from_cache": false,
