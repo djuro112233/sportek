@@ -66,12 +66,19 @@ def cap_reached(db: Session, when: datetime | None = None) -> bool:
     return spent_this_month(db, when) >= settings.llm_monthly_cap_eur
 
 
-def guard(db: Session, purpose: str) -> None:
-    """Raise :class:`SpendCapReached` when the month's budget for paid calls is exhausted."""
+def guard(db: Session, purpose: str, *, billable: bool | None = None) -> None:
+    """Raise :class:`SpendCapReached` when the month's budget for paid calls is exhausted.
+
+    ``billable`` says whether *this particular* call costs money. It defaults to whether the text
+    model is paid, which is the wrong test for an embedding or a transcription bought from a hosted
+    service while the text model is self-hosted, so those callers pass the flag explicitly.
+    """
     from ..providers.llm import get_llm
 
-    if not getattr(get_llm(), "billable", False):
-        return  # self-hosted model: no euro cost, no cap
+    if billable is None:
+        billable = bool(getattr(get_llm(), "billable", False))
+    if not billable:
+        return  # self-hosted: no euro cost, no cap
     spent = spent_this_month(db)
     if settings.llm_monthly_cap_eur > 0 and spent >= settings.llm_monthly_cap_eur:
         log.warning("spend cap reached (%.2f €), refusing paid call for %s", spent, purpose)

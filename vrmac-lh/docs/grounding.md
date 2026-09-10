@@ -103,6 +103,9 @@ Exact hits key on a hash of the normalised question and the language; semantic h
 cites, and a hit is served only if every one of those entries is still approved and still at that
 version; otherwise the row is marked invalidated with the reason. When the monthly spend cap is reached,
 a valid cache hit is still served — with its citations — and everything else becomes a polite pause.
+The exact-hash half of the lookup deliberately needs no vector, because embedding a question is
+itself a paid call: an assistant that has run out of budget can still answer from what it has
+already produced and checked, and pays for nothing.
 
 ## Adding a launch language
 

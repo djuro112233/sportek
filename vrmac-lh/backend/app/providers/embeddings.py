@@ -69,12 +69,14 @@ class Embeddings(Protocol):
     name: str
     model: str
     dim: int
+    billable: bool
 
     def embed(self, texts: list[str]) -> list[list[float]]: ...
 
 
 class HashEmbeddings:
     name = "hash"
+    billable = False
     model = "hashed-lexical-v1"
 
     def __init__(self, dim: int):
@@ -98,6 +100,7 @@ class HashEmbeddings:
 
 class OllamaEmbeddings:
     name = "ollama"
+    billable = False
 
     def __init__(self, base_url: str, model: str, dim: int, timeout: float = 120.0):
         self.base_url = base_url.rstrip("/")
@@ -125,6 +128,8 @@ class OpenAICompatibleEmbeddings:
     """EU inference provider (or any OpenAI-compatible /embeddings endpoint)."""
 
     name = "eu_api"
+    #: Paid per token, so the monthly cap has to guard it (services/budget.py).
+    billable = True
 
     def __init__(self, base_url: str, api_key: str, model: str, dim: int, timeout: float = 120.0):
         self.base_url = base_url.rstrip("/")
@@ -157,6 +162,7 @@ class OpenAICompatibleEmbeddings:
 
 class SentenceTransformersEmbeddings:
     name = "sentence-transformers"
+    billable = False
 
     def __init__(self, model: str, dim: int):
         from sentence_transformers import SentenceTransformer  # lazy: optional dependency
@@ -213,3 +219,8 @@ def min_similarity() -> float:
     if settings.rag_min_similarity is not None:
         return settings.rag_min_similarity
     return DEFAULT_MIN_SIMILARITY.get(settings.embeddings_provider, 0.6)
+
+
+def embeddings_are_billable() -> bool:
+    """Whether the configured embedding provider charges per call."""
+    return bool(getattr(get_embeddings(), "billable", False))

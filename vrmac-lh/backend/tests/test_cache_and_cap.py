@@ -200,3 +200,107 @@ def test_spend_cap_serves_cache_then_pauses(db, public_db, monkeypatch):
     assert budget.cap_reached(db) is False
     recovered = rag.ask(public_db, db, fresh_question, lang="cnr")
     assert recovered.answered and recovered.citations
+
+
+def _exhaust_the_budget(db) -> None:
+    """Book one month's worth of paid usage past the cap."""
+    db.add(
+        LlmUsage(
+            month_key=budget.month_key(), provider="eu_api", model="test-model", purpose="answer",
+            input_tokens=1_000_000, output_tokens=1_000_000,
+            cost_eur=settings.llm_monthly_cap_eur + 1.0, billable=True,
+        )
+    )
+    db.commit()
+    assert budget.cap_reached(db) is True
+
+
+# --- the cap covers every paid call, not only the answer -------------------------------------------
+class _BillableEmbeddings:
+    """Stand-in for a hosted embedding provider: only `billable` matters to the guard."""
+
+    name = "eu_api"
+    model = "paid-embeddings"
+    billable = True
+    dim = 768
+
+    def __init__(self, inner):
+        self._inner = inner
+        self.calls = 0
+
+    def embed(self, texts):
+        self.calls += 1
+        return self._inner.embed(texts)
+
+
+def test_an_exhausted_cap_stops_the_paid_embedding_but_still_serves_the_exact_cache(
+    db, public_db, monkeypatch
+):
+    """Embedding a question costs money with a hosted provider. When the budget is gone the
+    assistant must still answer from what it has already checked, and otherwise pause — it may
+    never spend, and it may never answer without a source."""
+    from app.providers import embeddings as embeddings_provider
+
+    question = "Od koje godine se održavaju Dani pejzaža?"
+    first = rag.ask(public_db, db, question, lang="cnr")
+    assert first.answered and not first.served_from_cache
+
+    paid = _BillableEmbeddings(embeddings_provider.get_embeddings())
+    monkeypatch.setattr(embeddings_provider, "get_embeddings", lambda: paid)
+    monkeypatch.setattr(rag, "get_embeddings", lambda: paid)
+    monkeypatch.setattr(rag, "embeddings_are_billable", lambda: True)
+    _exhaust_the_budget(db)
+
+    # (a) the same question: an exact cache hit needs no vector, so it is still served
+    cached = rag.ask(public_db, db, question, lang="cnr")
+    assert cached.answered and cached.served_from_cache
+    assert cached.citations, "a cached answer keeps its citations"
+    assert paid.calls == 0, "an exact cache hit must not pay for an embedding"
+
+    # (b) a question that is not cached: pause, do not spend, do not invent
+    fresh = rag.ask(public_db, db, "Koliko traje staza do Svetog Vida?", lang="cnr")
+    assert not fresh.answered
+    assert fresh.refusal_reason == rag.REFUSAL_PAUSED
+    assert fresh.answer is None and fresh.citations == []
+    assert paid.calls == 0, "the guard must run before the paid embedding, not after"
+
+
+def test_an_exhausted_cap_refuses_to_transcribe_rather_than_spending(db, monkeypatch):
+    """The same rule for speech-to-text: a paid transcription is refused, the host keeps the
+    recording and is told the assistant is paused."""
+    from pathlib import Path
+
+    from app.config import settings
+    from app.providers import stt as stt_provider
+    from app.services import onboarding
+
+    class _PaidSTT:
+        name = "eu_api"
+        model = "whisper-paid"
+        billable = True
+
+        def __init__(self):
+            self.calls = 0
+
+        def transcribe(self, path, language=None):  # pragma: no cover - must never run
+            self.calls += 1
+            raise AssertionError("the cap must stop this call before it is made")
+
+    host = db.scalars(select(User).where(User.email == "host1@example.org")).one()
+    session = onboarding.start_session(db, actor=host, language="cnr")
+    db.commit()
+
+    paid = _PaidSTT()
+    monkeypatch.setattr(stt_provider, "get_stt", lambda: paid)
+    monkeypatch.setattr(onboarding, "get_stt", lambda: paid)
+    _exhaust_the_budget(db)
+
+    audio = Path(settings.upload_dir) / "cap-test.wav"
+    audio.parent.mkdir(parents=True, exist_ok=True)
+    audio.write_bytes(b"RIFF0000WAVE")
+    result = onboarding.transcribe(db, session.id, audio)
+
+    assert result["status"] == "paused" and result["error"] == "spend_cap_reached"
+    assert paid.calls == 0
+    db.refresh(session)
+    assert session.transcript == "", "no transcript was bought, so none was stored"

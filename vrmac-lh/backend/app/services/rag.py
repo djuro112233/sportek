@@ -76,7 +76,12 @@ from ..events import emit_event
 from ..models import AnswerRecord, EntryChunk, HeritageEntry, ResponseCache, Village, utcnow
 from ..providers import embeddings as embeddings_provider
 from ..providers import llm as llm_provider
-from ..providers.embeddings import content_tokens, get_embeddings, normalize
+from ..providers.embeddings import (
+    content_tokens,
+    embeddings_are_billable,
+    get_embeddings,
+    normalize,
+)
 from ..providers.llm import LLMResult, LLMUnavailable, get_llm, llm_enabled
 from ..providers.support import SupportVerdict, get_support_checker
 from ..schemas import Citation, SupportResult
@@ -744,9 +749,11 @@ def _invalidate(db: Session, row: ResponseCache, reason: str) -> None:
     log.info("cache row %s invalidated: %s", row.id, reason)
 
 
-def cache_lookup(db: Session, question: str, lang: str, vector: list[float]) -> CacheHit | None:
-    """Exact hash hit first, then a semantic hit computed in SQL with pgvector. Rows that are no
-    longer valid (entry version bumped, entry unapproved, too old) are marked invalidated here."""
+def cache_lookup_exact(db: Session, question: str, lang: str) -> CacheHit | None:
+    """The exact-hash half of the cache. It needs **no embedding**, which matters when the monthly
+    cap is exhausted: an assistant that can no longer pay for a vector can still serve the answers
+    it has already produced and checked. Rows that are no longer valid (a cited entry changed
+    version, left ``approved``, or the row aged out) are marked invalidated here."""
     if not settings.cache_enabled:
         return None
     q_hash = question_hash(question, lang)
@@ -765,7 +772,13 @@ def cache_lookup(db: Session, question: str, lang: str, vector: list[float]) -> 
             _invalidate(db, row, reason)
             continue
         return CacheHit(row, "exact", 1.0)
+    return None
 
+
+def cache_lookup_semantic(db: Session, lang: str, vector: list[float]) -> CacheHit | None:
+    """The semantic half: nearest cached question above ``CACHE_SEMANTIC_MIN_SIMILARITY``."""
+    if not settings.cache_enabled:
+        return None
     distance = ResponseCache.embedding.cosine_distance(vector).label("distance")
     stmt = (
         select(ResponseCache, distance)
@@ -783,6 +796,11 @@ def cache_lookup(db: Session, question: str, lang: str, vector: list[float]) -> 
             continue
         return CacheHit(row, "semantic", round(similarity, 6))
     return None
+
+
+def cache_lookup(db: Session, question: str, lang: str, vector: list[float]) -> CacheHit | None:
+    """Both halves in order, for callers that already hold a vector."""
+    return cache_lookup_exact(db, question, lang) or cache_lookup_semantic(db, lang, vector)
 
 
 def cache_store(
@@ -904,7 +922,6 @@ def ask(
     # The coarse length is enough for the KPI specs that use it.
     base_props = {"lang": lang, "question_len": len(question)}
     debug: dict[str, Any] = {"lang": lang, "mode": "llm" if llm_enabled() else "extractive"}
-    vector = get_embeddings().embed([question])[0]
 
     def withhold(
         reason: str,
@@ -971,15 +988,33 @@ def ask(
             event="answer_served", lang=lang, provider=providers_info(), debug=debug,
         )
 
-    # 1. cache (exact, then semantic) -------------------------------------------------------
-    hit = cache_lookup(db_app, question, lang, vector) if use_cache else None
-    if hit is not None:
+    def serve_cached(hit: CacheHit) -> AskResult:
         hit.row.hits += 1
         hit.row.last_used_at = utcnow()
         db_app.add(hit.row)
         citations = [Citation.model_validate(c) for c in (hit.row.citations or [])]
         debug.update({"cache": hit.kind, "cache_similarity": hit.similarity})
         return serve(hit.row.answer, citations, hit.row.confidence, [], 0, True)
+
+    # 1a. exact cache hit — costs nothing, so it is tried before any paid call ----------------
+    exact = cache_lookup_exact(db_app, question, lang) if use_cache else None
+    if exact is not None:
+        return serve_cached(exact)
+
+    # 1b. embedding the question is itself a paid call with a hosted provider ----------------
+    try:
+        budget.guard(db_app, "embeddings", billable=embeddings_are_billable())
+    except SpendCapReached as exc:
+        debug["spend_cap"] = {"spent_eur": round(exc.spent, 4), "cap_eur": exc.cap, "at": "embeddings"}
+        return withhold(
+            REFUSAL_PAUSED, 0.0, message=PAUSED_MESSAGES.get(lang, PAUSED_MESSAGES["en"]), paused=True
+        )
+    vector = get_embeddings().embed([question])[0]
+
+    # 1c. semantic cache hit -------------------------------------------------------------------
+    hit = cache_lookup_semantic(db_app, lang, vector) if use_cache else None
+    if hit is not None:
+        return serve_cached(hit)
 
     # 2. spend cap: no cache, no budget → pause politely, never unsourced text ----------------
     try:

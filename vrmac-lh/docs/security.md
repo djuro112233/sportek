@@ -13,7 +13,7 @@
 | Answer review sample | `answer_records` deliberately carries **no** session, device or actor pseudonym, so the monthly human review sheet cannot be tied back to a person |
 | Disclosure control | k≥5 primary suppression, secondary suppression against subtraction, small `date × activity × gender` cells suppressed outright, then a human review before a KPI run is published |
 | Model provider | pilot: an EU inference provider under a no-data-retention contract; `APP_ENV=prod` refuses to start with `LLM_PROVIDER=eu_api` unless `LLM_NO_DATA_RETENTION_CONFIRMED=true` |
-| Spend cap | every billable call priced into `llm_usage`; at `LLM_MONTHLY_CAP_EUR` generation stops and only cached, cited answers are served |
+| Spend cap | every billable call priced into `llm_usage`; at `LLM_MONTHLY_CAP_EUR` **every** paid call stops — answering, the support check, embedding a question and transcribing a recording — and only cached, cited answers are served. An exact cache hit needs no embedding, so previously checked answers survive an exhausted budget |
 | Audio | deleted immediately after transcription unless `KEEP_AUDIO=true`; offline recordings live only in the host's own browser until uploaded |
 | Passwords | bcrypt (cost 12); JWT HS256, 12 h expiry |
 | RBAC on every write | `require_role(...)` dependencies; state-machine role rules in `services/validation.TRANSITIONS`; tests in `tests/test_rbac.py` |

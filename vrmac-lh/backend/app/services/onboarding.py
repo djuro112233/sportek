@@ -48,6 +48,7 @@ from ..events import emit_event
 from ..models import ConsentRecord, Listing, OnboardingSession, User, Village, utcnow
 from ..providers.stt import audio_duration_seconds, get_stt
 from . import budget, content, extraction, validation
+from .budget import SpendCapReached
 
 log = logging.getLogger(__name__)
 
@@ -364,8 +365,25 @@ def transcribe(db: Session, session_id: str | uuid.UUID, path: Path) -> dict:
     if session is None:  # pragma: no cover - the row is committed before the job is enqueued
         log.error("transcription job for unknown onboarding session")
         return {"status": "failed", "error": "unknown_session"}
+    stt = get_stt()
+    # Transcription is a paid call with a hosted provider, so the monthly cap guards it as well as
+    # it guards answering. Refusing here keeps the recording: the host is told the assistant is
+    # paused for the month and can type the description instead, or upload again next month.
     try:
-        stt = get_stt()
+        budget.guard(db, "stt", billable=bool(getattr(stt, "billable", False)))
+    except SpendCapReached as exc:
+        log.warning("spend cap reached — refusing to transcribe (%s)", exc)
+        session.status = "captured_offline" if session.offline_captured else "started"
+        db.commit()
+        return {
+            "status": "paused",
+            "error": "spend_cap_reached",
+            "message": (
+                "The monthly model budget is used up, so the recording was not transcribed. "
+                "Type the description instead, or try again after the budget resets."
+            ),
+        }
+    try:
         result = stt.transcribe(path, language=_stt_language(session.language))
         duration = result.duration_s if result.duration_s else audio_duration(path)
     except Exception as exc:
