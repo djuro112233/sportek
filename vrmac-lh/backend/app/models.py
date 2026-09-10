@@ -207,6 +207,16 @@ class HeritageEntry(Base):
     village: Mapped[Village] = relationship()
     chunks: Mapped[list["EntryChunk"]] = relationship(back_populates="entry", cascade="all, delete-orphan")
 
+    @property
+    def village_slug(self) -> str | None:
+        """Convenience for the read models, so a client need not join /api/villages by hand."""
+        return self.village.slug if self.village else None
+
+    @property
+    def municipality(self) -> str | None:
+        return self.village.municipality if self.village else None
+
+
 
 class EntryChunk(Base):
     """Embedded text chunk of an *approved* heritage entry (index for retrieval)."""
@@ -305,6 +315,15 @@ class Listing(Base):
 
     village: Mapped[Village] = relationship()
 
+    @property
+    def village_slug(self) -> str | None:
+        """Convenience for the read models, so a client need not join /api/villages by hand."""
+        return self.village.slug if self.village else None
+
+    @property
+    def municipality(self) -> str | None:
+        return self.village.municipality if self.village else None
+
 
 class TrailSegment(Base):
     """A trail segment. It starts in ``village_id`` and may connect several villages (``village_slugs``)."""
@@ -349,6 +368,16 @@ class TrailSegment(Base):
     village: Mapped[Village] = relationship()
     reports: Mapped[list["TrailReport"]] = relationship(back_populates="segment", cascade="all, delete-orphan")
 
+    @property
+    def village_slug(self) -> str | None:
+        """Convenience for the read models, so a client need not join /api/villages by hand."""
+        return self.village.slug if self.village else None
+
+    @property
+    def municipality(self) -> str | None:
+        return self.village.municipality if self.village else None
+
+
 
 class TrailReport(Base):
     """Geotagged condition report (segment + point). Goes through the same validation gate."""
@@ -384,6 +413,17 @@ class TrailReport(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
 
     segment: Mapped[TrailSegment] = relationship(back_populates="reports")
+    village: Mapped[Village | None] = relationship()
+
+    @property
+    def village_slug(self) -> str | None:
+        """Convenience for the read models, so a client need not join /api/villages by hand."""
+        return self.village.slug if self.village else None
+
+    @property
+    def municipality(self) -> str | None:
+        return self.village.municipality if self.village else None
+
 
 
 class Provenance(Base):

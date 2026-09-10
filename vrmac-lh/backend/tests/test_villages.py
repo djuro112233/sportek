@@ -11,7 +11,7 @@ import uuid
 import pytest
 from sqlalchemy import func, select
 
-from app.models import HeritageEntry, Listing, TrailSegment, Village
+from app.models import HeritageEntry, Listing, TrailSegment, User, Village
 
 SEEDED_SLUGS = {
     "gornja-lastva", "donja-lastva", "sveti-vid", "tivat", "gornji-stoliv", "pasiglav",
@@ -150,3 +150,50 @@ def test_villages_are_reference_data_the_visitor_role_may_read(public_db):
     """Villages carry no claim of their own, so the visitor DB role reads them in full."""
     slugs = set(public_db.scalars(select(Village.slug)))
     assert slugs == SEEDED_SLUGS
+
+
+def test_public_read_models_carry_the_village_and_its_municipality(client):
+    """A client must not have to fetch /api/villages and join by hand: every public content read
+    model names its village and the municipality that village belongs to."""
+    checks = [
+        ("/api/heritage", "heritage entries"),
+        ("/api/listings", "listings"),
+        ("/api/trails", "trail segments"),
+    ]
+    for path, what in checks:
+        rows = client.get(path).json()
+        assert rows, f"no {what} to check"
+        for row in rows:
+            assert row.get("village_id"), f"{what}: {row.get('slug')} has no village"
+            assert row.get("village_slug"), f"{what}: {row.get('slug')} does not name its village"
+            assert row.get("municipality") in ("Tivat", "Kotor"), (
+                f"{what}: {row.get('slug')} has municipality {row.get('municipality')!r}"
+            )
+
+
+def test_approved_content_events_carry_the_territory(db, client, login):
+    """entry_approved must record the village AND its municipality, so KPIs can be broken down by
+    territory without joining back to the content tables."""
+    from app.models import Event
+    from app.services import validation as validation_service
+
+    validator = db.scalars(select(User).where(User.email == "validator1@example.org")).one()
+    entry = db.scalars(select(HeritageEntry).where(HeritageEntry.slug == "dani-pejzaza")).one()
+    try:
+        validation_service.transition(db, "heritage_entry", entry.id, "draft", actor=validator, note="t")
+        validation_service.transition(db, "heritage_entry", entry.id, "approved", actor=validator, note="t")
+        event = db.scalars(
+            select(Event)
+            .where(Event.event_type == "entry_approved", Event.item_id == entry.id)
+            .order_by(Event.occurred_at.desc())
+        ).first()
+        assert event is not None
+        assert event.village_id == entry.village_id
+        assert event.municipality in ("Tivat", "Kotor"), (
+            "the event names a village but not the municipality it belongs to"
+        )
+    finally:
+        if entry.status != "approved":
+            validation_service.transition(
+                db, "heritage_entry", entry.id, "approved", actor=validator, note="restore"
+            )

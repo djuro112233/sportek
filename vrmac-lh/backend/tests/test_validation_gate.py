@@ -34,23 +34,40 @@ from app.models import (
 )
 from app.services import indexing
 
-#: Seeded entries that must never be visible: two samples, one rejected sample and one entry whose
-#: facts could not be checked in the build environment.
-HIDDEN_SLUGS = [
-    "sample-draft-zlatno-zvono",
-    "sample-reviewed-stara-skola",
-    "sample-rejected-rimska-vila",
-    "gornji-stoliv",
-]
+def hidden_slugs(db) -> list[str]:
+    """Every seeded content item that is not approved, read from the database rather than listed.
+
+    A hardcoded list silently stops covering new sample content: it named four slugs while the seed
+    carries six, so the two draft trail segments were never checked.
+    """
+    slugs: list[str] = []
+    for model in (HeritageEntry, Listing, TrailSegment):
+        slugs += list(db.scalars(select(model.slug).where(model.status != "approved")))
+    assert len(slugs) >= 6, "the seed must keep exercising the gate with non-approved content"
+    return slugs
+
 
 #: Content tables the visitor role may read (approved rows only).
 GATED_TABLES = ("heritage_entries", "listings", "trail_segments", "trail_reports")
 
-#: Tables the visitor role must not be able to read at all.
-PRIVATE_TABLES = (
-    "users", "events", "audit_log", "provenance", "consent_records", "onboarding_sessions",
-    "answer_records", "llm_usage", "kpi_aggregates",
-)
+#: Reference tables the visitor role may read in full (they carry no unvalidated claim).
+PUBLIC_REFERENCE_TABLES = ("villages",)
+
+
+def private_tables() -> list[str]:
+    """Every other table in the schema, derived from the models.
+
+    Also derived rather than listed: the previous fixed tuple named 9 of the schema's 20 tables, so
+    kpi_runs, kpi_heat_cells, response_cache, stt_evaluations and visitor_requests were never tested
+    against the visitor role, and any table added later would have been missed too.
+    """
+    from app import models as _models  # noqa: F401 - registers every table on the metadata
+    from app.db import Base
+
+    known = set(GATED_TABLES) | set(PUBLIC_REFERENCE_TABLES) | {"entry_chunks"}
+    tables = sorted(set(Base.metadata.tables) - known)
+    assert len(tables) >= 10, "the schema should have more private tables than this"
+    return tables
 
 
 def _denied(session, statement: str) -> None:
@@ -78,16 +95,19 @@ def test_public_heritage_api_returns_approved_entries_only(client, db):
     assert {e["status"] for e in entries} == {"approved"}
 
     published = {e["slug"] for e in entries}
-    for slug in HIDDEN_SLUGS:
+    for slug in hidden_slugs(db):
         assert slug not in published, f"{slug} must not be listed"
         assert client.get(f"/api/heritage/{slug}").status_code == 404, f"{slug} must 404"
 
     # …while the rows do exist in the database: they are gated, not missing.
-    stored = db.scalars(select(HeritageEntry.slug).where(HeritageEntry.slug.in_(HIDDEN_SLUGS))).all()
-    assert set(stored) == set(HIDDEN_SLUGS)
-    assert {e.status for e in db.scalars(select(HeritageEntry).where(HeritageEntry.slug.in_(HIDDEN_SLUGS)))} == {
-        "draft", "reviewed", "rejected"
-    }
+    hidden = hidden_slugs(db)
+    for model in (HeritageEntry, Listing, TrailSegment):
+        rows = list(db.scalars(select(model).where(model.slug.in_(hidden))))
+        assert all(r.status != "approved" for r in rows)
+    hidden_entries = list(db.scalars(select(HeritageEntry).where(HeritageEntry.slug.in_(hidden))))
+    assert {e.status for e in hidden_entries} == {"draft", "reviewed", "rejected"}, (
+        "the seed must exercise every non-approved status"
+    )
 
     # The gate holds for the other public collections too.
     for path in ("/api/listings", "/api/trails"):
@@ -143,7 +163,7 @@ def test_visitor_role_cannot_write(public_db):
 
 
 def test_visitor_role_cannot_read_the_private_tables(public_db):
-    for table in PRIVATE_TABLES:
+    for table in private_tables():
         _denied(public_db, f"SELECT * FROM {table} LIMIT 1")
 
 

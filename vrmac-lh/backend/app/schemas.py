@@ -77,6 +77,8 @@ class HeritageEntryOut(ORMModel):
     id: uuid.UUID
     slug: str
     village_id: uuid.UUID
+    village_slug: str | None = None
+    municipality: str | None = None
     kind: str
     title_local: str
     title_en: str
@@ -107,6 +109,8 @@ class ListingOut(ORMModel):
     id: uuid.UUID
     slug: str
     village_id: uuid.UUID
+    village_slug: str | None = None
+    municipality: str | None = None
     category: str
     title_local: str
     title_en: str
@@ -145,6 +149,8 @@ class TrailReportOut(ORMModel):
     id: uuid.UUID
     segment_id: uuid.UUID
     village_id: uuid.UUID | None
+    village_slug: str | None = None
+    municipality: str | None = None
     lat: float
     lng: float
     condition: str
@@ -162,6 +168,8 @@ class TrailSegmentOut(ORMModel):
     id: uuid.UUID
     slug: str
     village_id: uuid.UUID
+    village_slug: str | None = None
+    municipality: str | None = None
     village_slugs: list
     name_local: str
     name_en: str

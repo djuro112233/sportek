@@ -213,14 +213,17 @@ def transition(
         except ImportError:  # pragma: no cover - onboarding module not installed
             published_seconds = None
 
+    # Pass the village object, not just its id: emit_event derives the municipality from it, and a
+    # KPI broken down by territory needs both.
+    village = getattr(item, "village", None)
     if to_status == "approved":
         emit_event(db, "entry_approved", actor=actor, item_type=item_type, item_id=item.id,
-                   version=item.version, from_status=from_status,
+                   version=item.version, from_status=from_status, village=village,
                    village_id=getattr(item, "village_id", None),
                    elapsed_to_publish_seconds=published_seconds)
     elif to_status == "rejected":
         emit_event(db, "item_rejected", actor=actor, item_type=item_type, item_id=item.id,
-                   version=item.version, from_status=from_status,
+                   version=item.version, from_status=from_status, village=village,
                    village_id=getattr(item, "village_id", None))
     db.commit()
     db.refresh(item)

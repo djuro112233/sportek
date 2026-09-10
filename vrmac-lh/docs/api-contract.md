@@ -12,7 +12,9 @@ villages carry their `municipality` (Tivat or Kotor). Itineraries may span villa
 approved rows only: they use the RLS-limited DB role (`get_public_db`) *and* filter `status == 'approved'`.
 
 Shared read models: `app/schemas.py` — `VillageOut`, `HeritageEntryOut`, `ListingOut`, `TrailSegmentOut`,
-`TrailReportOut`, `ProvenanceOut`, `Citation`, `SupportResult`, `UserOut`, `TokenOut`.
+`TrailReportOut`, `ProvenanceOut`, `Citation`, `SupportResult`, `UserOut`, `TokenOut`. Every content
+read model carries `village_id`, `village_slug` and `municipality`, so a client never has to fetch
+`/api/villages` and join by hand.
 
 ## auth (`app/routers/auth.py`)
 | Method | Path | Who | Body → Response |
