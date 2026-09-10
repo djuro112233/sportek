@@ -108,7 +108,7 @@
     {
       "email": "validator1@example.org",
       "role": "validator",
-      "display_name": "Validator — Napredak (sample)",
+      "display_name": "Validator — Expeditio (sample)",
       "gender": "male",
       "gender_self_reported": true,
       "village": null

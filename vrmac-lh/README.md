@@ -7,7 +7,7 @@
 
 The territory is the **rural plateau of Vrmac on both sides of the ridge** — Gornja Lastva, Donja Lastva,
 the St Vitus area and Tivat on the Tivat side, Gornji Stoliv and Pasiglav on the Kotor side — not a single
-village. Hosts describe their offer **by voice** (offline-capable), validators (Napredak) approve every
+village. Hosts describe their offer **by voice** (offline-capable), validators (Expeditio) approve every
 item, visitors get **grounded answers with citations or an honest refusal**, an **interactive map with
 directions and GPX trails**, and institutions read **KPIs computed from pseudonymised events**, published
 only after a disclosure review.
@@ -30,7 +30,7 @@ Sample accounts (password `prototype123`, see `SEED_PASSWORD`):
 |---|---|---|
 | host | `host1@example.org` … `host4@example.org` | `/host` |
 | ambassador | `ambassador1@example.org` | `/host`, `/validate` |
-| validator (Napredak) | `validator1@example.org` | `/validate` |
+| validator (Expeditio) | `validator1@example.org` | `/validate` |
 | institution (read-only) | `institution1@example.org` | `/dashboard` |
 | visitor | anonymous | `/visitor` |
 

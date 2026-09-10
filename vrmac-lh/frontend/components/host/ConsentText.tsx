@@ -26,7 +26,7 @@ const CONSENT_V1: Record<"cnr" | "en", ConsentBlock> = {
     points: [
       "Dijelim svoje riječi: snimak ili tekst koji sam sam/sama napravio/la, i podatke koje sam unio/unijela.",
       "Snimak se pretvara u tekst, a asistent iz mojih riječi predlaže samo naslov i opis. Cijena, sezona, kapacitet, pristupačnost i lokacija nikada se ne pogađaju — njih unosim i potvrđujem ja.",
-      "Prije objave oglas pregleda validator (Napredak, Gornja Lastva). Posjetiocima je vidljivo samo ono što je odobreno.",
+      "Prije objave oglas pregleda validator (Expeditio). Posjetiocima je vidljivo samo ono što je odobreno.",
       "Oglas se objavljuje na crnogorskom i engleskom jeziku.",
       "Nema rezervacija i nema plaćanja. Poruka posjetioca je samo poruka; potvrda nije ugovor.",
       "Ovo je prototip sa uzorkom podataka, izrađen za prijavu SMART ERA — nije komercijalna usluga.",
@@ -42,14 +42,14 @@ const CONSENT_V1: Record<"cnr" | "en", ConsentBlock> = {
     points: [
       "I am sharing my own words: a recording or text I made myself, and the details I typed in.",
       "The recording is turned into text, and the assistant proposes a title and a description from my words only. Price, season, capacity, accessibility and location are never guessed — I enter and confirm them.",
-      "Before publication the listing is reviewed by a validator (Napredak, Gornja Lastva). Visitors only ever see what has been approved.",
+      "Before publication the listing is reviewed by a validator (Expeditio). Visitors only ever see what has been approved.",
       "The listing is published in Montenegrin and in English.",
       "No bookings and no payments. A visitor request is only a message; a confirmation is not a contract.",
       "This is a prototype with sample data, built for the SMART ERA application — not a commercial service.",
       "Statistics are kept in aggregate and pseudonymised; my name and e-mail are not published with the listing.",
     ],
     withdraw:
-      "I may withdraw this consent at any time — the listing is then removed from publication. Withdrawal is requested through Napredak or in this application.",
+      "I may withdraw this consent at any time — the listing is then removed from publication. Withdrawal is requested through Expeditio or in this application.",
   },
 };
 

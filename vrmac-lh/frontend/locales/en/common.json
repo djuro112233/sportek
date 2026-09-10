@@ -43,7 +43,7 @@
   "home.host": "Host app (PWA)",
   "home.host.desc": "Record your offer by voice, confirm the extracted listing, give consent, send it to validation.",
   "home.validate": "Validation queue",
-  "home.validate.desc": "Validators (Napredak) review drafts; only approved items ever reach visitors.",
+  "home.validate.desc": "Validators (Expeditio) review drafts; only approved items ever reach visitors.",
   "home.dashboard": "Institution dashboard",
   "home.dashboard.desc": "KPI table from events only, sex-disaggregated, k≥5 suppression, heat map of measured visits.",
   "home.claims": "What is real in this prototype",

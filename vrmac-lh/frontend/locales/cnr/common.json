@@ -43,7 +43,7 @@
   "home.host": "Aplikacija za domaćine (PWA)",
   "home.host.desc": "Snimite svoju ponudu glasom, potvrdite izvučeni oglas, dajte saglasnost, pošaljite na validaciju.",
   "home.validate": "Red za validaciju",
-  "home.validate.desc": "Validatori (Napredak) pregledaju nacrte; samo odobreno stiže do posjetilaca.",
+  "home.validate.desc": "Validatori (Expeditio) pregledaju nacrte; samo odobreno stiže do posjetilaca.",
   "home.dashboard": "Kontrolna tabla institucija",
   "home.dashboard.desc": "KPI tabela samo iz događaja, razvrstano po polu, potiskivanje k≥5, toplotna mapa izmjerenih posjeta.",
   "home.claims": "Šta je stvarno u ovom prototipu",

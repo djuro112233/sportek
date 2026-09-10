@@ -5,7 +5,7 @@
  * It explains, in the host's own language, what the module does and what it does not do: the
  * assistant drafts the title and the description, the host enters and confirms every fact, the
  * clock measures active authoring time, a recording survives being offline, and nothing is
- * published before Napredak has approved it. The offline capture queue and the voluntary
+ * published before Expeditio has approved it. The offline capture queue and the voluntary
  * self-report about the host's own data live here, next to the links into the flow.
  */
 import Link from "next/link";
