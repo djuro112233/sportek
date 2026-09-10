@@ -1023,7 +1023,7 @@
           "onboarding"
         ],
         "summary": "Upload Audio",
-        "description": "Upload a recording and transcribe it.\n\nThe PWA may record offline (IndexedDB) and upload later: it then sends ``offline_captured=true``\nand ``captured_at``, and the API stores how long the recording waited (``upload_deferred_seconds``).\nThe audio file is deleted as soon as it is transcribed unless ``KEEP_AUDIO=true``.",
+        "description": "Upload a recording and transcribe it.\n\nThe PWA may record offline (IndexedDB) and upload later: it then sends ``offline_captured=true``\nand ``captured_at``, and the API stores how long the recording waited (``upload_deferred_seconds``).\nThe audio file is deleted as soon as it is transcribed unless ``KEEP_AUDIO=true``.\n\nA deferred upload can arrive *after* the host has already confirmed the listing. Transcribing it\nwould push a finished session back to ``transcribed`` while its ``confirmed_at`` and elapsed\nclock stay set, and the timing log institutions read would carry that contradiction. Such an\nupload is refused with **409** before the file is written to disk; the browser then drops the\nrecording from its queue instead of retrying it.",
         "operationId": "upload_audio_api_onboarding_sessions__session_id__audio_post",
         "security": [
           {
@@ -1083,7 +1083,7 @@
           "onboarding"
         ],
         "summary": "Set Transcript",
-        "description": "A typed transcript (no microphone), or the host's correction of the machine transcript.",
+        "description": "A typed transcript (no microphone), or the host's correction of the machine transcript.\n\nRefused with 409 once the session has produced its listing, for the same reason the audio\nupload is: it would set ``transcript_ready_at`` again and reopen a finished session.",
         "operationId": "set_transcript_api_onboarding_sessions__session_id__transcript_post",
         "security": [
           {
@@ -3401,6 +3401,28 @@
             "format": "uuid",
             "title": "Village Id"
           },
+          "village_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Village Slug"
+          },
+          "municipality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Municipality"
+          },
           "kind": {
             "type": "string",
             "title": "Kind"
@@ -4341,6 +4363,28 @@
             "type": "string",
             "format": "uuid",
             "title": "Village Id"
+          },
+          "village_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Village Slug"
+          },
+          "municipality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Municipality"
           },
           "category": {
             "type": "string",
