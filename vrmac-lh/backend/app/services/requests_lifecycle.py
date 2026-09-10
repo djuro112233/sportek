@@ -249,7 +249,38 @@ def expire_stale_requests(db: Session, *, now: datetime | None = None) -> dict[s
 # --- payloads ---------------------------------------------------------------------------------
 
 
-def _listing_summary(listing: Listing, village: Village | None) -> dict[str, Any]:
+#: Everything a visitor may learn about a listing they wrote to, once it is no longer published.
+WITHDRAWN_SUMMARY_LOCAL = "Ovaj oglas trenutno nije objavljen."
+WITHDRAWN_SUMMARY_EN = "This listing is not currently published."
+
+
+def _listing_summary(
+    listing: Listing, village: Village | None, *, for_visitor: bool = False
+) -> dict[str, Any]:
+    """Describe the listing behind a request.
+
+    The visitor side runs on the owner database session (it is keyed by a session id, not by a
+    login, so it cannot use the row-level-security role), which means the validation gate has to be
+    applied here by hand: a listing that is not ``approved`` — a draft, one withdrawn for re-review,
+    or one a validator rejected — must never reach an anonymous caller through this path. The
+    visitor keeps their own request and is told plainly that the listing is not published.
+    """
+    published = listing.status == "approved"
+    if for_visitor and not published:
+        return {
+            "id": str(listing.id),
+            "slug": None,
+            "title_local": WITHDRAWN_SUMMARY_LOCAL,
+            "title_en": WITHDRAWN_SUMMARY_EN,
+            "category": None,
+            "status": "not_published",
+            "village_slug": None,
+            "village_name_local": None,
+            "village_name_en": None,
+            "municipality": None,
+            "is_sample": None,
+            "published": False,
+        }
     return {
         "id": str(listing.id),
         "slug": listing.slug,
@@ -262,16 +293,21 @@ def _listing_summary(listing: Listing, village: Village | None) -> dict[str, Any
         "village_name_en": village.name_en if village else None,
         "municipality": village.municipality if village else None,
         "is_sample": bool(listing.is_sample),
+        "published": published,
     }
 
 
-def _base_payload(req: VisitorRequest, listing: Listing, village: Village | None) -> dict[str, Any]:
+def _base_payload(
+    req: VisitorRequest, listing: Listing, village: Village | None, *, for_visitor: bool = False
+) -> dict[str, Any]:
+    summary = _listing_summary(listing, village, for_visitor=for_visitor)
+    hide = for_visitor and not summary.get("published", True)
     return {
         "id": str(req.id),
         "listing_id": str(req.listing_id),
-        "listing": _listing_summary(listing, village),
-        "village_slug": village.slug if village else None,
-        "municipality": village.municipality if village else None,
+        "listing": summary,
+        "village_slug": None if hide else (village.slug if village else None),
+        "municipality": None if hide else (village.municipality if village else None),
         "status": req.status,
         "message": req.message,
         "requested_date": req.requested_date.isoformat() if req.requested_date else None,
@@ -287,7 +323,7 @@ def _base_payload(req: VisitorRequest, listing: Listing, village: Village | None
 
 def visitor_payload(req: VisitorRequest, listing: Listing, village: Village | None) -> dict[str, Any]:
     """What the visitor sees about their own request (they already hold their session id)."""
-    payload = _base_payload(req, listing, village)
+    payload = _base_payload(req, listing, village, for_visitor=True)
     payload["can_cancel"] = req.status in REQUEST_TRANSITIONS["cancelled"]
     return payload
 

@@ -134,7 +134,10 @@ def cmd_create_user(args):
         u = User(
             email=args.email.lower(), password_hash=hash_password(args.password), role=args.role,
             display_name=args.name or args.email.split("@")[0], gender=args.gender,
-            gender_self_reported=args.gender != "undisclosed", is_sample=False,
+            # Never true from an administrator's command line: a self-report is something the
+            # person does themselves, through POST /api/auth/me/gender. A value set here is
+            # recorded but stays out of every gender-disaggregated KPI.
+            gender_self_reported=False, is_sample=False,
         )
         db.add(u)
         db.commit()
@@ -182,7 +185,9 @@ def main(argv=None):
     s.add_argument("--lang", choices=["cnr", "en"], help="one launch language (default: all)"); s.set_defaults(fn=cmd_grounding_test)
     s = sub.add_parser("create-user"); s.add_argument("--email", required=True); s.add_argument("--password", required=True)
     s.add_argument("--role", required=True, choices=["host", "ambassador", "validator", "institution"])
-    s.add_argument("--gender", choices=["female", "male", "other", "prefer_not_to_say", "undisclosed"], default="undisclosed")
+    s.add_argument("--gender", choices=["female", "male", "other", "prefer_not_to_say", "undisclosed"],
+                   default="undisclosed",
+                   help="recorded but NOT counted as a self-report; only the person can report it")
     s.add_argument("--name"); s.set_defaults(fn=cmd_create_user)
     s = sub.add_parser("worker"); s.set_defaults(fn=cmd_worker)
     s = sub.add_parser("openapi"); s.add_argument("--out"); s.set_defaults(fn=cmd_openapi)

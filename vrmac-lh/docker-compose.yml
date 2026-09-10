@@ -1,4 +1,10 @@
-# VRMAC-LH prototype — runs on a 2 vCPU / 4 GB VPS without GPU (small models).
+# VRMAC-LH prototype.
+#
+# Memory: db 512M + redis 64M + api 900M + worker 640M + scheduler 128M + web 320M is about
+# 2.6 GB and fits a 2 vCPU / 4 GB VPS when the models come from the EU inference provider
+# (LLM_PROVIDER=eu_api with COMPOSE_PROFILES empty). The shipped default also starts Ollama
+# (profile "local-llm", 2.2 GB) so the demo needs no API key; that configuration wants about
+# 6 GB, a laptop rather than the small VPS. See README, "Deploy on a small EU VPS".
 # Prototype built for the SMART ERA application, September–October 2026. Sample data.
 name: vrmac-lh
 
@@ -93,7 +99,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1200M
+          memory: 900M
 
   worker:
     build: ./backend
@@ -108,7 +114,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1200M
+          memory: 640M
 
   scheduler:
     build: ./backend
@@ -121,7 +127,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 256M
+          memory: 128M
 
   web:
     build:
@@ -136,7 +142,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 384M
+          memory: 320M
 
   caddy:
     image: caddy:2-alpine

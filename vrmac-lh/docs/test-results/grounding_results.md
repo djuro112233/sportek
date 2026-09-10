@@ -1,6 +1,6 @@
 # Grounding test results — grounded answers or refusal
 
-*Prototype built for the SMART ERA application, September–October 2026. Sample data.* — generated 2026-09-09T22:11:22+00:00 by `python -m app.cli grounding-test` / `tests/test_grounding.py`.
+*Prototype built for the SMART ERA application, September–October 2026. Sample data.* — generated 2026-09-10T00:25:24+00:00 by `python -m app.cli grounding-test` / `tests/test_grounding.py`.
 
 **Result: PASS** — answerable 40/40 (100%, floor 90%) answered with an approved citation; unanswerable 20/20 (100%) withheld.
 

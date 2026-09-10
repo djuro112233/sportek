@@ -265,10 +265,9 @@ def load_synthetic_events(db: Session, users_by_email: dict, villages_by_slug: d
                             "reason": rng.choice(["no_approved_source", "low_confidence", "unsupported_answer"]),
                             "confidence": round(rng.uniform(0.1, 0.55), 3),
                             "dropped_sentences": rng.randint(0, 2),
-                            # the live emitter carries these; the synthetic history must match it so a
-                            # §11 spec written against real events also reads the demo history
+                            # the live emitter carries the coarse length only — never a digest
+                            # of the question, which would be a join key into answer_records
                             "question_len": rng.randint(18, 90),
-                            "question_sha256": f"{rng.getrandbits(64):016x}",
                         },
                     )
                 else:
@@ -281,7 +280,6 @@ def load_synthetic_events(db: Session, users_by_email: dict, villages_by_slug: d
                             "served_from_cache": rng.random() < 0.3, "llm_provider": "eu_api",
                             "support_provider": "lexical",
                             "question_len": rng.randint(18, 90),
-                            "question_sha256": f"{rng.getrandbits(64):016x}",
                         },
                     )
 

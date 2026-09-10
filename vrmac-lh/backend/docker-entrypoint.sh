@@ -16,6 +16,29 @@ for attempt in range(60):
 else:
     sys.exit("database not reachable")
 PY
+# Seeding embeds every approved entry, so the embedding backend has to answer first. With a hosted
+# provider (eu_api) or the offline hash provider there is nothing to wait for.
+if [ "${EMBEDDINGS_PROVIDER:-ollama}" = "ollama" ] && [ "${SKIP_DB_INIT:-false}" != "true" ]; then
+  python - <<'WAITPY'
+import os, time, urllib.request
+
+url = os.environ.get("OLLAMA_URL", "http://ollama:11434").rstrip("/") + "/api/tags"
+for attempt in range(90):
+    try:
+        urllib.request.urlopen(url, timeout=5)
+        print("embedding model server is up", flush=True)
+        break
+    except Exception as exc:
+        print(f"waiting for the model server ({attempt + 1}/90): {exc.__class__.__name__}", flush=True)
+        time.sleep(5)
+else:
+    raise SystemExit(
+        "the model server never answered; set EMBEDDINGS_PROVIDER to a hosted provider "
+        "or start the local-llm profile"
+    )
+WAITPY
+fi
+
 if [ "${SKIP_DB_INIT:-false}" != "true" ]; then
   python -m app.cli init-db
   python -m app.cli seed

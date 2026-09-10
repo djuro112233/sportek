@@ -246,7 +246,13 @@ def text_stems(text: str) -> set[str]:
 
 
 def question_digest(question: str) -> str:
-    """First 16 hex characters of SHA-256 of the question — enough to spot repeats, not reversible."""
+    """Deliberately unused for the event stream — see :func:`_event_props`.
+
+    Kept only for local debugging. An **unkeyed** digest of the question is a join key: anyone
+    holding both tables can hash every ``answer_records.question`` and match it against an event,
+    which re-identifies the review sample that is meant to be unlinkable and links two anonymous
+    sessions that happened to ask the same thing. Events therefore carry no digest at all.
+    """
     return hashlib.sha256(question.encode("utf-8")).hexdigest()[:16]
 
 
@@ -560,20 +566,46 @@ def compose_answer(
     q_stems: list[str],
     idf: Idf,
     db: Session,
-) -> tuple[str, list[tuple[RetrievedChunk, str]]] | None:
-    """The single seam that produces a candidate answer (model or extractive) before the support
-    check. ``None`` means the model declined because the sources do not contain the answer."""
+) -> tuple[str, list[tuple[RetrievedChunk, str]], bool] | None:
+    """The single seam that produces a candidate answer before the support check.
+
+    Returns ``(answer, cited, generated)``. ``generated`` is true when a model wrote the sentences
+    and false when they were quoted verbatim from an approved passage — the support check needs the
+    difference, because a quotation cannot invent anything while a generated sentence can.
+    ``None`` means the model declined because the sources do not contain the answer.
+    """
     if llm_enabled():
         try:
-            return llm_answer(db, question, lang, sources[:MAX_SOURCES])
+            written = llm_answer(db, question, lang, sources[:MAX_SOURCES])
+            if written is None:
+                return None
+            answer, cited = written
+            return answer, cited, True
         except (LLMUnavailable, SpendCapReached) as exc:
             log.warning("LLM unavailable for answering (%s) — extractive fallback", exc.__class__.__name__)
-    return extractive_answer(sources, q_stems, idf)
+    quoted = extractive_answer(sources, q_stems, idf)
+    if quoted is None:
+        return None
+    answer, cited = quoted
+    return answer, cited, False
 
 
 # --- support check ------------------------------------------------------------------------------
-def check_support(db: Session, answer: str, passages: list[str]) -> list[SupportVerdict]:
-    """One verdict per answer sentence against the cited approved passages (claim 2b)."""
+def check_support(
+    db: Session, answer: str, passages: list[str], *, generated: bool = True
+) -> list[SupportVerdict]:
+    """One verdict per answer sentence against the cited approved passages (claim 2b).
+
+    When the configured check is ``llm_judge`` and the monthly cap stops it from running, the
+    verdict depends on where the sentences came from:
+
+    * **quoted** (extractive) — the lexical check is enough, because the sentence is a verbatim span
+      of the cited passage and cannot contain anything the passage does not;
+    * **generated** — every sentence is marked unsupported, so the answer is withheld. The lexical
+      check is *not* a safe substitute here: a model can recombine the passage's own words and
+      numbers into a false claim ("iz 9. vijeka" becoming "9 metara") that a bag-of-words check
+      accepts. Withholding is the behaviour the brief requires; a weaker check is not.
+    """
     checker = get_support_checker()
     sentences = split_sentences(answer)
     verdicts: list[SupportVerdict] = []
@@ -581,10 +613,23 @@ def check_support(db: Session, answer: str, passages: list[str]) -> list[Support
         try:
             budget.guard(db, "support_check")
         except SpendCapReached:
-            from ..providers.support import LexicalSupport  # conservative degradation, never "supported"
+            from ..providers.support import LexicalSupport
 
+            if generated:
+                log.warning("spend cap reached during a generated answer — withholding it")
+                return [
+                    SupportVerdict(
+                        sentence=sentence,
+                        supported=False,
+                        score=0.0,
+                        method="withheld_cap_reached",
+                        reason="the monthly budget stopped the support check; a generated answer is "
+                               "never served on a weaker check",
+                    )
+                    for sentence in sentences
+                ]
             checker = LexicalSupport(settings.support_min_score)
-            log.warning("spend cap reached — support check degraded to the lexical verdict")
+            log.warning("spend cap reached — quoted answer checked lexically")
     if getattr(checker, "name", "") == "llm_judge":
         with _account_nested_llm_calls(db, "support_check"):
             for sentence in sentences:
@@ -827,7 +872,10 @@ def ask(
     question = " ".join((question or "").split())
     lang = normalize_lang(lang) or detect_lang(question)
     refusal_message = REFUSAL_MESSAGES.get(lang, REFUSAL_MESSAGES["en"])
-    base_props = {"lang": lang, "question_len": len(question), "question_sha256": question_digest(question)}
+    # No digest of the question reaches the event stream: it would be a join key into
+    # answer_records, whose whole point is that it cannot be tied back to a session or a device.
+    # The coarse length is enough for the KPI specs that use it.
+    base_props = {"lang": lang, "question_len": len(question)}
     debug: dict[str, Any] = {"lang": lang, "mode": "llm" if llm_enabled() else "extractive"}
     vector = get_embeddings().embed([question])[0]
 
@@ -952,16 +1000,17 @@ def ask(
 
     # 5. answer -------------------------------------------------------------------------------
     sources = [c for c in candidates if _passes_gate(c, min_sim, min_cov)] or [best]
-    generated = compose_answer(
+    composed = compose_answer(
         question=question, lang=lang, sources=sources, q_stems=q_stems, idf=idf, db=db_app
     )
-    if generated is None:
+    if composed is None:
         return withhold(REFUSAL_LLM_DECLINED, confidence)
-    answer, cited = generated
+    answer, cited, was_generated = composed
+    debug["answer_written_by"] = "model" if was_generated else "quotation"
 
     # 6. support check: every sentence must be attributable to a cited approved passage --------
     passages = [chunk.body() for chunk, _ in cited]
-    verdicts = check_support(db_app, answer, passages)
+    verdicts = check_support(db_app, answer, passages, generated=was_generated)
     support = [SupportResult(**v.as_dict()) for v in verdicts]
     answer, cited, dropped = _prune_to_supported(verdicts, cited)
     debug.update({"dropped_sentences": dropped, "support_provider": settings.support_check_provider})

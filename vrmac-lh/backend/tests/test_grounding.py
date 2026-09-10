@@ -221,7 +221,7 @@ def test_support_check_drops_invented_number(db, public_db, monkeypatch):
     invented = "Fešta se održava od 1682. godine. [1]"
 
     def fake_compose(*, question, lang, sources, q_stems, idf, db):  # noqa: A002 - mirrors the seam
-        return invented, [(sources[0], sources[0].body())]
+        return invented, [(sources[0], sources[0].body())], True  # written by a model
 
     monkeypatch.setattr(rag, "compose_answer", fake_compose)
     result = rag.ask(
@@ -240,7 +240,11 @@ def test_support_check_keeps_only_the_supported_sentence(db, public_db, monkeypa
 
     def fake_compose(*, question, lang, sources, q_stems, idf, db):  # noqa: A002
         good = rag.split_sentences(sources[0].body())[0]
-        return f"{good} [1] Fešta se održava od 1682. godine. [1]", [(sources[0], sources[0].body())]
+        return (
+            f"{good} [1] Fešta se održava od 1682. godine. [1]",
+            [(sources[0], sources[0].body())],
+            True,  # written by a model
+        )
 
     monkeypatch.setattr(rag, "compose_answer", fake_compose)
     result = rag.ask(

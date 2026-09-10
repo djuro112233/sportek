@@ -8,6 +8,8 @@ RUN pip install -r requirements.txt
 COPY app ./app
 COPY seed_data ./seed_data
 COPY schemas ./schemas
+# The KPI engine executes this file rather than hard-coded definitions, so the image needs it.
+COPY kpi_definitions ./kpi_definitions
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh && mkdir -p /data /models && chown -R vrmac:vrmac /data /models /srv
 USER vrmac

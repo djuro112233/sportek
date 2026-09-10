@@ -255,3 +255,66 @@ def test_the_lifecycle_map_matches_the_models(db):
     assert set(REQUEST_STATUS_VALUES) == {"sent"} | set(lifecycle.REQUEST_TRANSITIONS)
     for to_status, froms in lifecycle.REQUEST_TRANSITIONS.items():
         assert froms and set(froms) <= set(lifecycle.OPEN_STATUSES)
+
+
+# --- the validation gate applies to the visitor's own requests too --------------------------------
+def test_a_withdrawn_listing_is_not_disclosed_through_the_visitor_s_own_requests(db, client):
+    """Regression: `/api/requests/mine` runs on the owner database session, which row-level security
+    does not restrict, so the gate has to be applied by hand. A visitor who wrote to a listing must
+    not learn its title, slug or village once it stops being published — including after a validator
+    rejects it."""
+    from app.services import validation as validation_service
+
+    validator = db.scalars(select(User).where(User.email == "validator1@example.org")).one()
+    listing = db.scalars(select(Listing).where(Listing.status == "approved")).first()
+    session_id = "gate-probe-session-01"
+    sent = client.post(
+        "/api/requests",
+        json={"listing_id": str(listing.id), "message": "Dobar dan, da li je slobodno?",
+              "session_id": session_id, "device_id": "gate-probe-device-01"},
+    )
+    assert sent.status_code == 201, sent.text
+
+    published = client.get("/api/requests/mine", params={"session_id": session_id}).json()
+    assert published[0]["listing"]["title_local"] == listing.title_local
+    assert published[0]["listing"]["published"] is True
+
+    title, slug, village = listing.title_local, listing.slug, listing.village_id
+    try:
+        for to_status, note in (("draft", "test: withdraw"), ("rejected", "test: reject")):
+            if to_status == "rejected":
+                validation_service.transition(
+                    db, "listing", listing.id, "rejected", actor=validator, note=note
+                )
+            else:
+                validation_service.transition(
+                    db, "listing", listing.id, "draft", actor=validator, note=note
+                )
+
+            body = client.get("/api/requests/mine", params={"session_id": session_id}).json()
+            row = next(r for r in body if r["listing"]["id"] == str(listing.id))
+            blob = json.dumps(row, ensure_ascii=False)
+            assert title not in blob, f"the title leaked while the listing was {to_status}"
+            assert slug not in blob, f"the slug leaked while the listing was {to_status}"
+            assert row["listing"]["published"] is False
+            assert row["listing"]["status"] == "not_published"
+            assert row["listing"]["village_slug"] is None and row["village_slug"] is None
+            assert str(village) not in blob
+            # the visitor still sees their own request
+            assert row["message"] == "Dobar dan, da li je slobodno?"
+
+        # cancelling returns the same gated payload
+        cancelled = client.post(
+            f"/api/requests/{sent.json()['id']}/cancel", json={"session_id": session_id}
+        )
+        assert cancelled.status_code == 200, cancelled.text
+        assert title not in json.dumps(cancelled.json(), ensure_ascii=False)
+    finally:
+        if listing.status != "approved":
+            if listing.status == "rejected":
+                validation_service.transition(
+                    db, "listing", listing.id, "draft", actor=validator, note="test: restore"
+                )
+            validation_service.transition(
+                db, "listing", listing.id, "approved", actor=validator, note="test: restore"
+            )

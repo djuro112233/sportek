@@ -20,7 +20,10 @@ up: env ## Start the whole stack (db, redis, ollama, api, worker, scheduler, web
 	@echo "web: http://localhost:3000   api docs: http://localhost:8000/api/docs"
 
 up-prod: env ## Start with the Caddy TLS reverse proxy (set DOMAIN in .env)
-	$(COMPOSE) --profile proxy up --build -d
+	@# A --profile flag REPLACES COMPOSE_PROFILES from .env, which would silently drop the
+	@# local model server. Compose the two instead.
+	COMPOSE_PROFILES="$$(sed -n 's/^COMPOSE_PROFILES=//p' .env | tr -d ' \r' | sed 's/^$$//'),proxy" \
+		$(COMPOSE) up --build -d
 
 down: ## Stop the stack
 	$(COMPOSE) down

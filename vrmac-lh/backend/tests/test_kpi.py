@@ -91,7 +91,6 @@ def test_adding_events_moves_the_figures_by_exactly_that_many(db):
         emit_event(
             db, "answer_withheld", session_id=f"kpi-test-{i}", device_id=f"kpi-test-device-{i}",
             lang="cnr", confidence=0.1, reason="no_approved_source", question_len=20,
-            question_sha256="0" * 16,
         )
     db.commit()
 
