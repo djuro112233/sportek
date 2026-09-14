@@ -71,10 +71,17 @@ cd backend && python -m app.cli grounding-test   # against a seeded database, as
 | Full backend test suite, verbatim | `docs/baseline/test_report.txt` | **236 passed**, 0 failed |
 | Grounding test, verbatim | `docs/baseline/grounding_report.txt` | see below |
 | Validation console (validator signed in, queue visible) | `docs/baseline/screenshot_validation_console.png` | signed in as the sample validator account; 6 items waiting, three of them flagged "unverified facts", including the draft `Legend of the golden bell of Vrmac` |
-| A withheld answer (question answerable only from a non-approved draft) | `docs/baseline/screenshot_withheld_answer.png` | question "Gdje je sakriveno zlatno zvono Vrmca?" withheld: no source attached, reason shown, confidence 0.12, providers `none` / `hash` / `lexical` visible in the footer |
+| A withheld answer (question answerable only from a non-approved draft) | `docs/baseline/screenshot_withheld_answer.png` | question `en-u01`, "Where was the golden bell of Vrmac hidden in 1687?", withheld: no source attached, the reason stated, confidence 0.18, providers `none` / `hash` / `lexical` named in the footer |
 | Frontend type-check and production build | (not stored) | clean; 13 routes build |
 
-Both screenshots were taken in a headless Chromium (Playwright 1.56) against the API and the production web build of this revision, seeded with the sample data and running the offline substitute providers. The Montenegrin interface was used; the English one renders the same screens.
+Both screenshots were taken in a headless Chromium (Playwright 1.56) against the API and the production
+web build of this revision, seeded with the sample data and running the offline substitute providers. The
+interface is shown in English; the Montenegrin one renders the same screens.
+
+The two read together. The draft entry `SAMPLE (draft): Legend of the golden bell of Vrmac` is visible in
+the validation queue, waiting for a decision and flagged "unverified facts". The visitor question whose
+only possible source is that draft is refused, with no source attached and the reason stated. This is the
+validation gate and the refusal path shown on the same data, from the two sides.
 
 Grounding test, per launch language, with the offline substitute providers:
 
