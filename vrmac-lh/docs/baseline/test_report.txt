@@ -1,5 +1,5 @@
 # VRMAC-LH baseline — full backend test suite
-# revision: 7b9cdfa369e04e6ab6f75240127ac3815c60ac1f  tag: vrmac-baseline-2026-09
+# revision: 7b9cdfa369e04e6ab6f75240127ac3815c60ac1f  tag: vrmac-baseline-2026-09 (local; see BASELINE_RECORD.md)
 # date: 2026-09-14T02:39:33Z
 # command: TEST_DATABASE_URL=postgresql+psycopg://vrmac:vrmac@127.0.0.1:5432/vrmac_baseline_tests make test-backend
 # providers (tests/conftest.py): EMBEDDINGS_PROVIDER=hash LLM_PROVIDER=none SUPPORT_CHECK_PROVIDER=lexical STT_PROVIDER=fixture QUEUE_MODE=sync

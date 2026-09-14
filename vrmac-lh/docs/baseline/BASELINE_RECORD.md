@@ -11,12 +11,24 @@
 | Repository | `djuro112233/sportek`, directory `vrmac-lh/` |
 | Branch | `claude/vrmac-living-heritage-prototype-l3lxnl` |
 | Commit | `7b9cdfa369e04e6ab6f75240127ac3815c60ac1f` |
-| Tag | `vrmac-baseline-2026-09` — "TRL 4 baseline for SMART ERA application" |
+| Tag | `vrmac-baseline-2026-09` — annotated, "TRL 4 baseline for SMART ERA application", on the commit above; **local only, see below** |
 | Record date | 2026-09-14 (UTC) |
 | Licence | AGPL-3.0-only |
 
 The tag points at the revision that was tested. This record and its reports are committed immediately after
 it, so the tagged code is exactly what the reports describe.
+
+**The commit hash is the authoritative identity.** The tag object was created in the build session but could
+not be pushed from it: that session's credential accepts only the working branch, and refused the tag ref
+with HTTP 403. Anyone with push rights publishes it in one command, from a clone that has the branch:
+
+```bash
+git tag -a vrmac-baseline-2026-09 7b9cdfa369e04e6ab6f75240127ac3815c60ac1f \
+  -m "TRL 4 baseline for SMART ERA application"
+git push origin vrmac-baseline-2026-09
+```
+
+Until that is done, quote the commit hash rather than the tag.
 
 ## Environment in which the reports were produced
 
@@ -32,7 +44,7 @@ it, so the tagged code is exactly what the reports describe.
 
 ```bash
 git clone https://github.com/djuro112233/sportek && cd sportek
-git checkout vrmac-baseline-2026-09
+git checkout 7b9cdfa369e04e6ab6f75240127ac3815c60ac1f   # or the tag, once it is published
 cd vrmac-lh
 
 # The full stack (needs Docker; downloads the small local models on first start):

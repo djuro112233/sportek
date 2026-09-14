@@ -1,5 +1,5 @@
 # VRMAC-LH baseline — grounding test (20 answerable + 10 unanswerable per launch language)
-# revision: 7b9cdfa369e04e6ab6f75240127ac3815c60ac1f  tag: vrmac-baseline-2026-09
+# revision: 7b9cdfa369e04e6ab6f75240127ac3815c60ac1f  tag: vrmac-baseline-2026-09 (local; see BASELINE_RECORD.md)
 # date: 2026-09-14T02:40:21Z
 # command (this record): python -m app.cli grounding-test
 # command (docker stack): make grounding
