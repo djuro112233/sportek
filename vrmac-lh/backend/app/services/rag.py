@@ -1160,7 +1160,7 @@ def evaluate_question(item: dict[str, Any], result: AskResult) -> dict[str, Any]
     * expected ``withhold`` → the answer was not served;
     * expected ``answer`` → served, with at least one citation of an approved entry that has a
       non-empty source, one of the ``expected_slugs`` where the file names them, **and the decisive
-      facts of the independently prepared expected answer actually present in the served text**
+      facts of the pre-registered expected answer actually present in the served text**
       (:func:`decisive_facts`). The last condition is what stops a well-cited answer to a different
       question from counting as a success.
     """
@@ -1268,7 +1268,7 @@ def _summarise(results: list[dict[str, Any]], files: list[tuple[str, str]]) -> d
     withheld_ok = sum(1 for r in unanswerable if r["passed"])
     # Two rates are reported side by side, because they answer two different questions:
     #   * "cited"  — the definition of done's wording: answered, citing an approved entry.
-    #   * "strict" — the same, and the decisive facts of the independently prepared expected answer
+    #   * "strict" — the same, and the decisive facts of the pre-registered expected answer
     #                are actually present in the served text, in the question's language.
     # The strict rate is the one that gates the run; the cited rate is kept so the brief's own
     # number stays visible and the difference between them is never hidden.
@@ -1377,9 +1377,16 @@ def _markdown_report(report: dict[str, Any]) -> str:
         f"*{s['prototype']}* — generated {s['generated_at']} by `python -m app.cli grounding-test` / "
         "`tests/test_grounding.py`.",
         "",
-        f"**Result: {'PASS' if s['passed'] else 'FAIL'}** — answerable {s['answered_ok']}/{s['answerable']} "
-        f"({s['answerable_rate']:.0%}, floor {s['answerable_floor']:.0%}) answered with an approved "
-        f"citation; unanswerable {s['withheld_ok']}/{s['unanswerable']} ({s['withheld_rate']:.0%}) withheld.",
+        # Two different numbers, two different criteria. The headline used to print the strict
+        # count under the wording of the citation criterion, which read as a worse result than
+        # the citation criterion gives and as a better one than the strict criterion gives.
+        f"**Result: {'PASS' if s['passed'] else 'FAIL'}** — of {s['answerable']} answerable questions, "
+        f"{s['answered_cited_ok']}/{s['answerable']} ({s['answerable_rate_cited']:.0%}) were answered "
+        f"citing an approved entry, which is the brief's criterion and its floor is "
+        f"{s['answerable_floor']:.0%}; of those, {s['answered_ok']}/{s['answerable']} "
+        f"({s['answerable_rate']:.0%}) also carried the decisive facts of the expected answer, which is "
+        f"the stricter criterion this report also applies. Unanswerable: {s['withheld_ok']}/"
+        f"{s['unanswerable']} ({s['withheld_rate']:.0%}) withheld.",
         "",
         f"Providers: embeddings `{pv['embeddings']}` (`{pv['embeddings_model']}`, {pv['embedding_dim']}-d, "
         f"top-k {pv['top_k']}), LLM `{pv['llm']}`"
@@ -1392,12 +1399,14 @@ def _markdown_report(report: dict[str, Any]) -> str:
         "",
         "## Per launch language",
         "",
-        "| language | answerable answered | rate | unanswerable withheld | rate | pass |",
-        "|---|---|---|---|---|---|",
+        "| language | answered citing an approved entry | rate | the same, with the decisive facts | rate "
+        "| unanswerable withheld | rate | pass |",
+        "|---|---|---|---|---|---|---|---|",
     ]
     for lg, d in s["languages"].items():
         lines.append(
-            f"| {lg} | {d['answered_ok']}/{d['answerable']} | {d['answerable_rate']:.0%} | "
+            f"| {lg} | {d['answered_cited_ok']}/{d['answerable']} | {d['answerable_rate_cited']:.0%} | "
+            f"{d['answered_ok']}/{d['answerable']} | {d['answerable_rate']:.0%} | "
             f"{d['withheld_ok']}/{d['unanswerable']} | {d['withheld_rate']:.0%} | "
             f"{'PASS' if d['passed'] else 'FAIL'} |"
         )
@@ -1435,7 +1444,7 @@ def _markdown_report(report: dict[str, Any]) -> str:
                 )
             ) + " |"
         )
-    lines += ["", "## Answers against the independently prepared reference", ""]
+    lines += ["", "## Answers against the pre-registered reference", ""]
     for r in report["results"]:
         if r["outcome"] == "answer":
             lines.append(f"- **{r['id']}** — {_md_cell(r['answer'])}")

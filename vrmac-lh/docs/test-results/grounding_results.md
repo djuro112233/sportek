@@ -1,8 +1,8 @@
 # Grounding test results — grounded answers or refusal
 
-*Prototype built for the SMART ERA application, September–October 2026. Sample data.* — generated 2026-09-10T05:12:58+00:00 by `python -m app.cli grounding-test` / `tests/test_grounding.py`.
+*Prototype built for the SMART ERA application, September–October 2026. Sample data.* — generated 2026-09-14T07:56:49+00:00 by `python -m app.cli grounding-test` / `tests/test_grounding.py`.
 
-**Result: PASS** — answerable 39/40 (98%, floor 90%) answered with an approved citation; unanswerable 20/20 (100%) withheld.
+**Result: PASS** — of 40 answerable questions, 40/40 (100%) were answered citing an approved entry, which is the brief's criterion and its floor is 90%; of those, 39/40 (98%) also carried the decisive facts of the expected answer, which is the stricter criterion this report also applies. Unanswerable: 20/20 (100%) withheld.
 
 Providers: embeddings `hash` (`hashed-lexical-v1`, 768-d, top-k 5), LLM `none`, support check `lexical` (min score 0.75).
 
@@ -10,10 +10,10 @@ Gate: similarity ≥ 0.35 AND IDF-weighted coverage ≥ 0.34 (stems: first 4 cha
 
 ## Per launch language
 
-| language | answerable answered | rate | unanswerable withheld | rate | pass |
-|---|---|---|---|---|---|
-| cnr | 20/20 | 100% | 10/10 | 100% | PASS |
-| en | 19/20 | 95% | 10/10 | 100% | PASS |
+| language | answered citing an approved entry | rate | the same, with the decisive facts | rate | unanswerable withheld | rate | pass |
+|---|---|---|---|---|---|---|---|
+| cnr | 20/20 | 100% | 20/20 | 100% | 10/10 | 100% | PASS |
+| en | 20/20 | 100% | 19/20 | 95% | 10/10 | 100% | PASS |
 
 ## Signal distribution (how the thresholds were calibrated)
 
@@ -113,7 +113,7 @@ Gate: similarity ≥ 0.35 AND IDF-weighted coverage ≥ 0.34 (stems: first 4 cha
 | en-u09 | en | When do the banks in Tivat open? | withhold | withhold | 0.234 | 0.292 | 0.175 | — | 0 | 0 | PASS |
 | en-u10 | en | How high is the Njegoš mausoleum on Lovćen? | withhold | withhold | 0.123 | 0.040 | 0.206 | — | 0 | 0 | PASS |
 
-## Answers against the independently prepared reference
+## Answers against the pre-registered reference
 
 - **cnr-a01** — Crkva Svete Marije u Gornjoj Lastvi potiče iz 14. vijeka. [1]
   - *expected:* Crkva Svete Marije u Gornjoj Lastvi potiče iz 14. vijeka.

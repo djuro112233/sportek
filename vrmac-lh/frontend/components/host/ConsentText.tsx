@@ -33,7 +33,7 @@ const CONSENT_V1: Record<"cnr" | "en", ConsentBlock> = {
       "Statistika se vodi zbirno i pseudonimizovano; moje ime i e-pošta ne objavljuju se uz oglas.",
     ],
     withdraw:
-      "Saglasnost mogu povući u svakom trenutku — oglas se tada uklanja iz objave. Povlačenje se traži preko Napretka ili u ovoj aplikaciji.",
+      "Saglasnost mogu povući u svakom trenutku — oglas se tada uklanja iz objave. Povlačenje se traži preko Expeditia ili u ovoj aplikaciji.",
   },
   en: {
     heading: "Host consent — version v1",

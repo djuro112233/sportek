@@ -52,7 +52,7 @@ Two rates are reported side by side, because they answer different questions.
 | | Montenegrin | English |
 |---|---|---|
 | **cited**: answered, citing an approved entry with a source — the definition of done's wording | 20 / 20 | 20 / 20 |
-| **strict**: the same, in the question's language, **and** carrying the decisive facts of the independently prepared expected answer | 20 / 20 | 19 / 20 |
+| **strict**: the same, in the question's language, **and** carrying the decisive facts of the pre-registered expected answer | 20 / 20 | 19 / 20 |
 | unanswerable questions withheld | 10 / 10 | 10 / 10 |
 
 The strict rate is the one that gates the run, against the brief's floor of 90 %. It exists because a
@@ -110,6 +110,6 @@ already produced and checked, and pays for nothing.
 ## Adding a launch language
 
 Add `seed_data/grounding_questions.<lang>.json` with its own 20 answerable and 10 unanswerable
-questions and independently prepared expected answers, translate the refusal messages, and only enable
+questions and pre-registered expected answers, translate the refusal messages, and only enable
 the language once that set passes. The per-language rates are reported separately for exactly this
 reason.
