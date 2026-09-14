@@ -1,0 +1,206 @@
+# VRMAC-LH baseline — grounding test (20 answerable + 10 unanswerable per launch language)
+# revision: 7b9cdfa369e04e6ab6f75240127ac3815c60ac1f  tag: vrmac-baseline-2026-09
+# date: 2026-09-14T02:40:21Z
+# command (this record): python -m app.cli grounding-test
+# command (docker stack): make grounding
+# providers: LLM_PROVIDER=none (extractive answers, offline substitute) EMBEDDINGS_PROVIDER=hash (hashed lexical features, offline substitute for a multilingual model) SUPPORT_CHECK_PROVIDER=lexical
+# question sets: seed_data/grounding_questions.cnr.json, seed_data/grounding_questions.en.json
+
+2026-09-14 02:40:23,269 INFO app.services.rag: grounding test: {'passed': True, 'answered_ok': 39, 'withheld_ok': 20, 'total': 60}
+{
+  "passed": true,
+  "total": 60,
+  "answerable": 40,
+  "unanswerable": 20,
+  "answered_ok": 39,
+  "answered_cited_ok": 40,
+  "answerable_rate_cited": 1.0,
+  "criterion": "answered, citing an approved entry with a source and one of the expected slugs, in the question's language, and containing the decisive facts of the expected answer",
+  "withheld_ok": 20,
+  "answerable_rate": 0.975,
+  "withheld_rate": 1.0,
+  "answerable_floor": 0.9,
+  "languages": {
+    "cnr": {
+      "questions_file": "/home/user/sportek/vrmac-lh/backend/seed_data/grounding_questions.cnr.json",
+      "total": 30,
+      "answerable": 20,
+      "unanswerable": 10,
+      "answered_ok": 20,
+      "withheld_ok": 10,
+      "answerable_rate": 1.0,
+      "answered_cited_ok": 20,
+      "answerable_rate_cited": 1.0,
+      "withheld_rate": 1.0,
+      "passed": true,
+      "failures": [],
+      "similarity": {
+        "answerable": {
+          "min": 0.44,
+          "median": 0.6066,
+          "max": 0.9015,
+          "n": 20
+        },
+        "unanswerable": {
+          "min": 0.0598,
+          "median": 0.1156,
+          "max": 0.4484,
+          "n": 10
+        }
+      },
+      "coverage": {
+        "answerable": {
+          "min": 0.3897,
+          "median": 1.0,
+          "max": 1.0,
+          "n": 20
+        },
+        "unanswerable": {
+          "min": 0.0,
+          "median": 0.1936,
+          "max": 0.4362,
+          "n": 10
+        }
+      },
+      "confidence": {
+        "answerable": {
+          "min": 0.481,
+          "median": 0.781,
+          "max": 0.951,
+          "n": 20
+        },
+        "unanswerable": {
+          "min": 0.03,
+          "median": 0.166,
+          "max": 0.376,
+          "n": 10
+        }
+      }
+    },
+    "en": {
+      "questions_file": "/home/user/sportek/vrmac-lh/backend/seed_data/grounding_questions.en.json",
+      "total": 30,
+      "answerable": 20,
+      "unanswerable": 10,
+      "answered_ok": 19,
+      "withheld_ok": 10,
+      "answerable_rate": 0.95,
+      "answered_cited_ok": 20,
+      "answerable_rate_cited": 1.0,
+      "withheld_rate": 1.0,
+      "passed": true,
+      "failures": [
+        "en-a17"
+      ],
+      "similarity": {
+        "answerable": {
+          "min": 0.4231,
+          "median": 0.594,
+          "max": 0.9049,
+          "n": 20
+        },
+        "unanswerable": {
+          "min": 0.0401,
+          "median": 0.2019,
+          "max": 0.4932,
+          "n": 10
+        }
+      },
+      "coverage": {
+        "answerable": {
+          "min": 0.583,
+          "median": 1.0,
+          "max": 1.0,
+          "n": 20
+        },
+        "unanswerable": {
+          "min": 0.0,
+          "median": 0.1429,
+          "max": 0.287,
+          "n": 10
+        }
+      },
+      "confidence": {
+        "answerable": {
+          "min": 0.542,
+          "median": 0.7705,
+          "max": 0.952,
+          "n": 20
+        },
+        "unanswerable": {
+          "min": 0.045,
+          "median": 0.176,
+          "max": 0.39,
+          "n": 10
+        }
+      }
+    }
+  },
+  "failures": [
+    "en-a17"
+  ],
+  "thresholds": {
+    "min_similarity": 0.35,
+    "min_coverage": 0.34,
+    "stem_len": 4,
+    "lang_preference_bonus": 0.05,
+    "coverage_rank_weight": 0.25,
+    "support_min_score": 0.75,
+    "cache_semantic_min_similarity": 0.92
+  },
+  "providers": {
+    "llm": "none",
+    "llm_model": "-",
+    "embeddings": "hash",
+    "embeddings_model": "hashed-lexical-v1",
+    "embedding_dim": 768,
+    "support_check": "lexical",
+    "top_k": 5
+  },
+  "similarity": {
+    "answerable": {
+      "min": 0.4231,
+      "median": 0.5971,
+      "max": 0.9049,
+      "n": 40
+    },
+    "unanswerable": {
+      "min": 0.0401,
+      "median": 0.1189,
+      "max": 0.4932,
+      "n": 20
+    }
+  },
+  "coverage": {
+    "answerable": {
+      "min": 0.3897,
+      "median": 1.0,
+      "max": 1.0,
+      "n": 40
+    },
+    "unanswerable": {
+      "min": 0.0,
+      "median": 0.1735,
+      "max": 0.4362,
+      "n": 20
+    }
+  },
+  "confidence": {
+    "answerable": {
+      "min": 0.481,
+      "median": 0.774,
+      "max": 0.952,
+      "n": 40
+    },
+    "unanswerable": {
+      "min": 0.03,
+      "median": 0.1695,
+      "max": 0.39,
+      "n": 20
+    }
+  },
+  "generated_at": "2026-09-14T02:40:23+00:00",
+  "prototype": "Prototype built for the SMART ERA application, September\u2013October 2026. Sample data."
+}
+
+# exit status: 0

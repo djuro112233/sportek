@@ -1,0 +1,49 @@
+# VRMAC-LH baseline — full backend test suite
+# revision: 7b9cdfa369e04e6ab6f75240127ac3815c60ac1f  tag: vrmac-baseline-2026-09
+# date: 2026-09-14T02:39:33Z
+# command: TEST_DATABASE_URL=postgresql+psycopg://vrmac:vrmac@127.0.0.1:5432/vrmac_baseline_tests make test-backend
+# providers (tests/conftest.py): EMBEDDINGS_PROVIDER=hash LLM_PROVIDER=none SUPPORT_CHECK_PROVIDER=lexical STT_PROVIDER=fixture QUEUE_MODE=sync
+
+cd backend && ../backend/.venv/bin/pytest -q
+........................................................................ [ 30%]
+.............
+  cnr: answerable 20/20 (100%), unanswerable withheld 10/10 (100%)
+
+  en: answerable 19/20 (95%), unanswerable withheld 10/10 (100%)
+........................................................... [ 61%]
+........................................................................ [ 91%]
+....................                                                     [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/user/sportek/vrmac-lh/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/test_geo.py::test_filter_by_village_and_municipality
+  /home/user/sportek/vrmac-lh/backend/app/routers/map.py:51: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    db, village=village, municipality=municipality, item_type=_check_item_type(item_type)
+
+tests/test_geo.py::test_filter_by_village_and_municipality
+  /home/user/sportek/vrmac-lh/backend/app/services/content.py:157: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    municipality = canonical_municipality(municipality)
+
+tests/test_geo.py::test_report_input_is_validated
+tests/test_itinerary.py::test_interests_narrow_the_result
+  /home/user/sportek/vrmac-lh/backend/.venv/lib/python3.12/site-packages/slowapi/extension.py:770: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    response = func(*args, **kwargs)
+
+tests/test_itinerary.py::test_input_validation
+  /home/user/sportek/vrmac-lh/backend/app/routers/itinerary.py:84: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    municipality = content.canonical_municipality(payload.municipality)  # 422 on a typo
+
+tests/test_validation_gate.py::test_new_entries_need_a_citation_and_a_village_and_start_as_drafts
+  /home/user/sportek/vrmac-lh/backend/app/routers/heritage.py:172: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    village_id = content.resolve_village_id(db, body.village)
+
+tests/test_villages.py::test_municipality_filter_returns_the_kotor_side
+  /home/user/sportek/vrmac-lh/backend/app/routers/villages.py:77: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    wanted = content.canonical_municipality(municipality)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+236 passed, 8 warnings in 42.79s
+
+# exit status: 0
