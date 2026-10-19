@@ -106,7 +106,7 @@ contains any of:
 | Imperative dosing | `uzmi`, `popij`, `uzimaj`, `take`, `apply` followed by a medicine or quantity |
 | Frequency regimens | `dva puta dnevno`, `svakih 6 sati`, `twice a day`, `every 8 hours`, `na 12 sati` |
 | Dose words | `doza`, `doziranje`, `dozu`, `dose`, `dosage`, `mg/kg` |
-| Drug names from the pattern list | e.g. common analgesics, contraceptive and obstetric drugs |
+| Medicine word + imperative or quantity | `uzmi ibuprofen`, `take a painkiller`, `2 tablete paracetamola`; a bare drug or method name in an informational sentence ("emergency pills contain levonorgestrel") does **not** flag |
 
 One flagged sentence sets the gate reason `medication_or_dose` and the **entire answer is
 withheld**, not only the sentence. The reasoning: a dosing sentence next to otherwise correct
@@ -149,8 +149,11 @@ checked. The user is told MILA cannot answer this and is referred to a clinician
 
 ## 4. Known limitations
 
-1. **Lexical judge.** Token overlap cannot detect negation flips ("is safe" vs. "is not
-   safe"), number changes, or paraphrases that invert meaning while reusing words. Until an LLM
+1. **Lexical judge.** Token overlap is a weak verifier. It caps support at 0.3 when a number
+   in the sentence (digits or number words) is absent from the evidence and when the clause
+   polarity flips ("is safe" vs. "is not safe"), but it cannot detect a single swapped content
+   word ("before" for "after") or a paraphrase that inverts meaning while reusing the same
+   words; one such case is pinned by a test as a known limitation. Until an LLM
    or NLI judge is configured and spot-checked against two human raters (see
    [evaluation.md](evaluation.md)), support rates are upper bounds and the clinic review
    (section 6) is the real verifier.

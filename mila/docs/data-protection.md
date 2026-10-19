@@ -15,7 +15,7 @@ enforces, the consent model, the legal alignment and the DPIA skeleton for the p
 | Saved question | `saved_questions` table | Only when the session has `consent_save_questions=true`, on each answer | question text, language, outcome | With the session | Explicit, separate consent (Art. 9(2)(a)); off by default | Deleted with the session (cascade) |
 | Audio upload | File in `MILA_AUDIO_TMP_DIR` (tmpfs in compose) | `POST /api/transcribe` | the recording | Seconds: overwritten and unlinked by `secure_delete` right after transcription, also on error | Consent | Automatic |
 | Transcript | Memory only; returned in the HTTP response | `POST /api/transcribe` | recognised text, language, confidence | Not stored | Consent | n/a |
-| Synthesised audio | Memory only; returned by `POST /api/speak` | On request | WAV bytes of an answer | Not stored | Consent | n/a |
+| Synthesised audio | Memory only; returned by `POST /api/speak`, or held in process memory behind a one-time `GET /api/audio/{token}` URL when an answer was requested with audio | On request | WAV bytes of an answer | Served once, then dropped; unused tokens expire after 300 s; at most 200 entries | Consent | Automatic |
 | Server logs | Host log driver | Continuously | timestamps, paths, levels, redacted messages; never user text | Host log retention (pilot: 14 days recommended) | Legitimate interest (operations, security) | Log rotation |
 | Public metrics | Computed on request from events | `GET /api/metrics/public` | counts per language, topic class, outcome, red-flag category; rows below k=5 suppressed | Not stored separately | n/a (anonymous aggregates) | n/a |
 | Measurement reports | `reports/` in git | By the team | metrics from evaluation datasets and team-written questions; usability sessions as participant ids, not names | Permanent (open source) | Consent of usability participants recorded in `usability_sessions.csv` | Rewrite history only on a verified request |
@@ -71,7 +71,10 @@ linked to their session either (see section 10).
    disk) with a random name.
 3. STT runs locally (`faster_whisper`) or in the mock; no audio leaves the host.
 4. `secure_delete` overwrites the file with zeros and unlinks it in a `finally` block, so it
-   is deleted on success and on failure.
+   is deleted on success and on failure. A failed transcription is counted as an aggregate
+   event (`type=transcribe`, `outcome=error`) that carries no audio and no text.
+   Uploads larger than 1 MB are spooled by the web framework into `TMPDIR` before the handler
+   runs; in compose `/tmp` is a tmpfs mount, so that spool never touches disk either.
 5. The transcript is returned to the client; the client shows it and asks for confirmation
    before sending it as a question.
 
