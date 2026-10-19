@@ -1,0 +1,34 @@
+Metadata-Version: 2.4
+Name: mila
+Version: 0.1.0
+Summary: MILA - open-source, voice-first information and referral assistant for reproductive and maternal health (information + referral, never diagnosis).
+License: Apache-2.0
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi<1,>=0.115
+Requires-Dist: uvicorn[standard]>=0.30
+Requires-Dist: sqlalchemy<3,>=2.0
+Requires-Dist: pydantic<3,>=2.7
+Requires-Dist: pydantic-settings>=2.3
+Requires-Dist: httpx>=0.27
+Requires-Dist: pyyaml>=6
+Requires-Dist: pypdf>=4.2
+Requires-Dist: python-multipart>=0.0.9
+Requires-Dist: numpy>=1.26
+Provides-Extra: voice
+Requires-Dist: faster-whisper>=1.0; extra == "voice"
+Requires-Dist: piper-tts>=1.2; extra == "voice"
+Provides-Extra: embed
+Requires-Dist: sentence-transformers>=3.0; extra == "embed"
+Provides-Extra: postgres
+Requires-Dist: psycopg[binary]>=3.1; extra == "postgres"
+Requires-Dist: pgvector>=0.3; extra == "postgres"
+Provides-Extra: redis
+Requires-Dist: redis>=5; extra == "redis"
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: pytest-cov>=5; extra == "dev"
+Requires-Dist: ruff>=0.5; extra == "dev"
+Requires-Dist: fpdf2>=2.7; extra == "dev"
+Requires-Dist: jiwer>=3.0; extra == "dev"
+Requires-Dist: hypothesis>=6.100; extra == "dev"
