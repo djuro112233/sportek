@@ -12,8 +12,9 @@ from statistics import fmean
 
 from sqlalchemy.orm import Session as DbSession
 
+from app.config import Settings
 from app.core.types import AnswerSentence, GateDecision, RetrievedChunk
-from app.core.verifier import REASON_MEDICATION, REASON_UNSUPPORTED
+from app.core.verifier import REASON_MEDICATION, REASON_UNKNOWN_CITATION, REASON_UNSUPPORTED
 from app.models import GateRecord
 
 GATE_VERSION = "1.0.0"
@@ -40,15 +41,17 @@ KEPT_SUPPORT_WEIGHT = 0.3
 class ValidationGate:
     """Decide whether a verified answer may be shown.
 
-    * ``kept`` = sentences that are supported and not flagged for medication; ``removed`` = the
-      rest, each with a non-empty reason.
+    * ``kept`` = sentences that are supported, not flagged for medication and cite at least one
+      retrieved chunk (a "supported" sentence without a resolvable citation is contradictory
+      and is removed with reason ``unknown_citation``); ``removed`` = the rest, each with a
+      non-empty reason.
     * ``support_ratio`` = supported sentences / all sentences (0 when there are none).
     * ``confidence`` = ``0.7 * support_ratio + 0.3 * mean(support_score of kept)``.
     * Withhold reasons, several may apply: ``no_sentences`` (nothing came in; the only reason
-      then), ``no_citations`` (no kept sentence cites a chunk), ``medication_or_dose`` (any
-      input sentence is flagged; one dosing sentence withholds the whole answer),
-      ``low_support_ratio``, ``low_confidence`` and ``unreviewed_source_outside_demo`` (a cited
-      chunk is not ``reviewed`` while ``demo_mode`` is off).
+      then), ``no_citations`` (no kept sentence cites a retrieved chunk), ``medication_or_dose``
+      (any input sentence is flagged; one dosing sentence withholds the whole answer),
+      ``low_support_ratio``, ``low_confidence`` and ``unreviewed_source_outside_demo`` (a chunk
+      cited by any sentence is not ``reviewed`` while ``demo_mode`` is off).
     """
 
     def __init__(
@@ -58,6 +61,15 @@ class ValidationGate:
         self.min_confidence = min_confidence
         self.demo_mode = demo_mode
 
+    @classmethod
+    def from_settings(cls, settings: Settings) -> ValidationGate:
+        """Gate with the thresholds and demo flag from the settings."""
+        return cls(
+            min_support_ratio=settings.gate_min_support_ratio,
+            min_confidence=settings.gate_min_confidence,
+            demo_mode=settings.demo_mode,
+        )
+
     def decide(self, sentences: list[AnswerSentence], chunks: list[RetrievedChunk]) -> GateDecision:
         if not sentences:
             return GateDecision(status="withheld", gate_version=GATE_VERSION, reasons=[REASON_NO_SENTENCES])
@@ -65,10 +77,16 @@ class ValidationGate:
         kept: list[AnswerSentence] = []
         removed: list[AnswerSentence] = []
         for sentence in sentences:
-            if sentence.supported and not sentence.flagged_medication:
+            cites_chunk = bool(_resolve(sentence.citations, len(chunks)))
+            if sentence.supported and not sentence.flagged_medication and cites_chunk:
                 kept.append(sentence.model_copy(update={"reason": ""}))
             else:
-                reason = REASON_MEDICATION if sentence.flagged_medication else (sentence.reason or REASON_UNSUPPORTED)
+                if sentence.flagged_medication:
+                    reason = REASON_MEDICATION
+                elif sentence.supported and not cites_chunk:
+                    reason = REASON_UNKNOWN_CITATION
+                else:
+                    reason = sentence.reason or REASON_UNSUPPORTED
                 removed.append(sentence.model_copy(update={"reason": reason}))
 
         support_ratio = sum(1 for s in sentences if s.supported) / len(sentences)
@@ -76,7 +94,7 @@ class ValidationGate:
         confidence = SUPPORT_RATIO_WEIGHT * support_ratio + KEPT_SUPPORT_WEIGHT * kept_support
 
         reasons: list[str] = []
-        if not any(s.citations for s in kept):
+        if not kept:
             reasons.append(REASON_NO_CITATIONS)
         if any(s.flagged_medication for s in sentences):
             reasons.append(REASON_MEDICATION_OR_DOSE)
@@ -84,7 +102,9 @@ class ValidationGate:
             reasons.append(REASON_LOW_SUPPORT_RATIO)
         if confidence < self.min_confidence:
             reasons.append(REASON_LOW_CONFIDENCE)
-        if not self.demo_mode and any(c.review_status != "reviewed" for c in _cited_chunks(sentences, chunks)):
+        if not self.demo_mode and any(
+            c.review_status != "reviewed" for c in _cited_chunks(sentences, chunks)
+        ):
             reasons.append(REASON_UNREVIEWED_OUTSIDE_DEMO)
 
         return GateDecision(
@@ -98,13 +118,25 @@ class ValidationGate:
         )
 
 
+def _resolve(markers: list[str], n_chunks: int) -> list[int]:
+    """Chunk indices the markers point to (``S1`` → 0), in order, without duplicates or misses."""
+    indices: list[int] = []
+    for marker in markers:
+        digits = marker[1:]
+        if not digits.isdigit():
+            continue
+        index = int(digits) - 1
+        if 0 <= index < n_chunks and index not in indices:
+            indices.append(index)
+    return indices
+
+
 def _cited_chunks(sentences: list[AnswerSentence], chunks: list[RetrievedChunk]) -> list[RetrievedChunk]:
     """Chunks cited by any sentence (kept or removed), in marker order, without duplicates."""
     indices: list[int] = []
     for sentence in sentences:
-        for marker in sentence.citations:
-            index = int(marker[1:]) - 1
-            if 0 <= index < len(chunks) and index not in indices:
+        for index in _resolve(sentence.citations, len(chunks)):
+            if index not in indices:
                 indices.append(index)
     return [chunks[i] for i in indices]
 

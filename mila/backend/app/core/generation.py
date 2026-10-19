@@ -82,6 +82,8 @@ class Generator:
 
         The user prompt lists the chunks as ``[S1] (title | section | version | lang)`` blocks
         followed by their text, then ``Question:`` with the question and ``Answer in <language>:``.
+        The question is collapsed onto one line so that user text can never add a line that
+        looks like a source header, a ``Question:`` label or an answer label.
         ``is_minor`` appends :data:`MINOR_NOTE` to the system prompt.
         """
         system = f"{SYSTEM_PROMPT}\n\n{MINOR_NOTE}" if is_minor else SYSTEM_PROMPT
@@ -94,10 +96,11 @@ class Generator:
             for index, chunk in enumerate(chunks, start=1)
         ]
         language = LANGUAGE_NAMES_EN[coerce_lang(lang, default="en")]
+        one_line_question = " ".join(question.split())
         user = (
             f"{SOURCES_LABEL}\n"
             + "\n\n".join(blocks)
-            + f"\n\n{QUESTION_LABEL}\n{question.strip()}\n\n{ANSWER_LABEL_PREFIX}{language}:"
+            + f"\n\n{QUESTION_LABEL}\n{one_line_question}\n\n{ANSWER_LABEL_PREFIX}{language}:"
         )
         return system, user
 
@@ -106,10 +109,14 @@ class Generator:
     ) -> RawAnswer:
         """Call the LLM and wrap its output.
 
-        ``NO_ANSWER`` becomes empty text. ``translated`` is True when the answer language belongs
-        to a different language family (sr/bs/me/hr count as one) than every chunk the answer
-        cites; an answer that cites nothing is not translated.
+        Without chunks the model is not called at all and the answer is empty: there is nothing
+        it could cite. ``NO_ANSWER`` (alone or as the first word) becomes empty text.
+        ``translated`` is True when the answer language belongs to a different language family
+        (sr/bs/me/hr count as one) than every chunk the answer cites; an answer that cites
+        nothing is not translated.
         """
+        if not chunks:
+            return RawAnswer(text="", model=self.llm.name)
         system, user = self.build_prompt(question, chunks, lang, is_minor=is_minor)
         text = self.llm.complete(system, user, temperature=0.0, max_tokens=600).strip()
         if _NO_ANSWER_RE.match(text):

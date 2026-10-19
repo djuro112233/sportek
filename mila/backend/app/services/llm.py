@@ -102,7 +102,9 @@ def parse_source_blocks(user_prompt: str) -> tuple[list[SourceBlock], str]:
     Returns ``([], "")`` when the prompt does not follow the layout.
     """
     lines = user_prompt.replace("\r\n", "\n").split("\n")
-    answer_idx = next((i for i in range(len(lines) - 1, -1, -1) if _ANSWER_LABEL_RE.match(lines[i].strip())), -1)
+    answer_idx = next(
+        (i for i in range(len(lines) - 1, -1, -1) if _ANSWER_LABEL_RE.match(lines[i].strip())), -1
+    )
     if answer_idx < 0:
         return [], ""
     question_idx = next((i for i in range(answer_idx - 1, -1, -1) if lines[i].strip() == QUESTION_LABEL), -1)
@@ -117,7 +119,9 @@ def parse_source_blocks(user_prompt: str) -> tuple[list[SourceBlock], str]:
     def flush() -> None:
         if current_header is not None:
             blocks.append(
-                SourceBlock(marker=f"S{len(blocks) + 1}", header=current_header, text="\n".join(current_lines).strip())
+                SourceBlock(
+                    marker=f"S{len(blocks) + 1}", header=current_header, text="\n".join(current_lines).strip()
+                )
             )
 
     for line in lines[:question_idx]:
