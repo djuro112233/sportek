@@ -188,6 +188,31 @@ class AskPipeline:
     def __init__(self, settings, db, *, llm, embedder, judge, redflags, tts=None)
     def ask(self, req: AskRequest, session: Session) -> AskResponse
 ```
+Additions from integration (the signature above still works; `scripts/measure.py` uses it):
+```python
+class AskPipeline:
+    def __init__(self, settings, db, providers: Providers | None = None, *, llm=None, embedder=None,
+                 judge=None, redflags=None, tts=None)   # missing providers are built from settings
+def public_gate(decision: GateDecision | None) -> GateDecision | None   # strips removed/withheld sentence text
+def asks_for_dose(text: str) -> bool   # a question asking for a dose is withheld before generation
+```
+`ask` runs, in this order: language/script/region resolution (request over session) → red-flag
+check (flag ⇒ `redflag` response, `redflag` event) → dose-question guard (⇒ `withheld`,
+reason `medication_or_dose`) → retrieval (`settings.retrieval_top_k`) → generation → verifier →
+gate → referral + disclaimer (+ TTS when `want_audio`, never for `withheld`) → `ask` event →
+`GateRecord` linked to it → `SavedQuestion` when the session opted in. Any exception in a
+stage fails closed: `withheld`, gate reason `pipeline_error`, `ask` event with outcome `error`
+and payload `{"error": "<exception class>", "stage": "<stage>"}`; no traceback reaches the client.
+The gate decision returned in-process is complete; the API applies `public_gate` first.
+
+### `app/core/container.py`
+```python
+@dataclass
+class Providers: llm: LLMClient; embedder: Embedder; judge: SupportJudge; redflags: RedFlagRouter; stt: STT | None; tts: TTS | None
+def build_providers(settings: Settings, *, stt=None, tts=None) -> Providers
+def get_providers(app: FastAPI) -> Providers   # built on first use, cached on app.state.providers;
+                                               # publishes app.state.stt / app.state.tts for the voice routers
+```
 
 ### `app/services/stt.py` / `app/services/tts.py`
 ```python
@@ -209,6 +234,23 @@ def get_stt(settings) -> STT ; def get_tts(settings) -> TTS
 | GET | `/referral?region=&category=&minor=&lang=` | | `Referral` |
 | GET | `/metrics/public` | | aggregates, suppressed below k |
 | GET | `/admin/sources`, POST `/admin/sources/{id}/review` | `X-Admin-Token` | |
+
+Additive endpoints reported by the module authors (same prefix; the table above is unchanged):
+
+| Method | Path | Body / query | Returns |
+|---|---|---|---|
+| GET | `/audio/{token}` | | `audio/wav` served once (404 afterwards or when expired); tokens come from `AskResponse.audio_url` |
+| POST | `/transcribe` | as above | `Transcript` plus `confirm_required: true` (the UI shows the transcript and asks before `/ask`) |
+| GET | `/session/{session_id}` | | `{exists, consent_given, lang, script, region, is_minor, save_questions}` (`exists: false` for unknown ids) |
+| POST | `/session/{session_id}/preferences` | `{save_questions?, lang?, script?, region?, is_minor?}` | the same session info; turning `save_questions` off deletes saved questions |
+| GET | `/ask/topics` | | `{topics: TOPIC_CLASSES, red_flag_categories: RED_FLAG_CATEGORIES}` |
+| GET | `/referral?...&script=` | `script` added | `Referral` rendered in the requested script |
+| GET | `/admin/gate/records?limit=` | `X-Admin-Token` | gate audit trail (reasons and counts, no text) |
+| POST | `/admin/referral/seed` | `X-Admin-Token` | `{seeded}` (idempotent re-seed of the referral directory) |
+| GET | `/metrics/internal?window_days=` | `X-Admin-Token` | public figures plus unsuppressed counts, red-flag categories, gate reasons |
+
+`POST /ask` answers 429 with `Retry-After: 60` when the per-session rate limit
+(`MILA_RATE_LIMIT_PER_MINUTE`) is exceeded; it never logs the request text.
 
 ## Data protection (summary; full text in docs/data-protection.md)
 No question text, audio, IP or device id is stored. Events are aggregate-only. Audio is deleted

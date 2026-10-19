@@ -48,6 +48,7 @@ class _RateLimiter:
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
+    """Application factory (``uvicorn app.main:create_app --factory``); no arguments needed."""
     settings = settings or get_settings()
     _install_logging(settings)
     init_engine(settings.database_url)
@@ -61,6 +62,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
     app.state.settings = settings
     app.state.rate_limiter = _RateLimiter(settings.rate_limit_per_minute)
+    # Providers (LLM, embedder, judge, STT, TTS) are built on the first request through
+    # app.core.container.get_providers, so start-up stays cheap and tests never load a model
+    # they do not use; the voice routers fill stt/tts the same way. A test may place fakes
+    # here before the first request. The referral directory is seeded (idempotently) on the
+    # first request that needs it: the answer pipeline and GET /api/referral both call
+    # app.core.referral.ensure_referral_points.
+    app.state.providers = None
+    app.state.stt = None
+    app.state.tts = None
 
     app.add_middleware(
         CORSMiddleware,
