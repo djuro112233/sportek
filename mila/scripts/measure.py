@@ -140,7 +140,8 @@ def redflag_recall(results: Iterable[dict]) -> float | None:
     n = hits = 0
     for res in results:
         n += 1
-        if _as_bool(res.get("flagged")) and res.get("category") == res.get("expected"):
+        expected = res.get("expected_category") or res.get("expected")
+        if _as_bool(res.get("flagged")) and res.get("category") == expected:
             hits += 1
     return hits / n if n else None
 
@@ -878,6 +879,8 @@ class MeasurementRun:
                         "lang": r.get("lang", ""),
                         "variant": r.get("variant", ""),
                         "expected": r.get("expected"),
+                        # positives carry expected="redflag" and the category in "category"
+                        "expected_category": r.get("category") if r.get("expected") == "redflag" else None,
                         "flagged": bool(res.flagged),
                         "category": res.category,
                         "source": res.source,
@@ -890,9 +893,9 @@ class MeasurementRun:
         payload: dict[str, Any] = {}
         if positives is not None:
             recall = redflag_recall(positives)
-            misses = [p["id"] for p in positives if not (p["flagged"] and p["category"] == p["expected"])]
+            misses = [p["id"] for p in positives if not (p["flagged"] and p["category"] == p["expected_category"])]
             sec.add("Red-flag recall", recall, len(positives), f"{len(positives) - len(misses)} correct")
-            per_cat = grouped_rate(positives, "expected", redflag_recall)
+            per_cat = grouped_rate(positives, "expected_category", redflag_recall)
             per_var = grouped_rate(positives, "variant", redflag_recall)
             for cat, g in per_cat.items():
                 sec.add(f"Recall, {cat}", g["rate"], g["n"])
