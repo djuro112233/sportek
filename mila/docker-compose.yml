@@ -1,0 +1,249 @@
+# MILA local stack. `docker compose up --build` starts db, api and web with deterministic mock
+# providers (no GPU, no model download, no network). Settings come from the environment or an
+# untracked .env (copy .env.example); nothing secret lives in this file.
+#
+# Profiles:
+#   default      db, redis, api, web
+#   local-llm    adds `llm` (vLLM, OpenAI-compatible on port 8001). Needs an NVIDIA GPU and the
+#                NVIDIA container toolkit; set MILA_LLM_PROVIDER=openai_compatible and
+#                MILA_LLM_BASE_URL=http://llm:8001/v1 in .env to use it.
+#                  docker compose --profile local-llm up --build
+#   ingest       one-shot `ingest` service that runs scripts/ingest_kb.py --download, fetching
+#                the public documents listed in kb/manifest.yaml into the `kbdownloads` volume.
+#                  docker compose --profile ingest run --rm ingest
+#
+# Hardening (api, web, redis): non-root user, cap_drop ALL, no-new-privileges, read-only root
+# filesystem with tmpfs for the only writable paths, memory limits, only two published ports.
+# The audio upload directory (MILA_AUDIO_TMP_DIR=/tmp/mila-audio) sits on tmpfs so recordings
+# never touch disk and vanish with the container.
+
+x-hardened: &hardened
+  cap_drop: [ALL]
+  security_opt:
+    - no-new-privileges:true
+  read_only: true
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: mila
+      POSTGRES_DB: mila
+      # Development default; override MILA_DB_PASSWORD in .env for anything beyond a laptop.
+      POSTGRES_PASSWORD: ${MILA_DB_PASSWORD:-mila}
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # No host port by default: only the compose network can reach Postgres.
+    # For psql from the host, add under `ports:` -> "127.0.0.1:5432:5432".
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mila -d mila"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 1g
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    # Reserved for the shared rate limiter (the API currently uses an in-process sliding window
+    # keyed by session id, see backend/app/main.py). Persistence is disabled: nothing stored here
+    # may outlive the process, and no user text is ever written to it.
+    <<: *hardened
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "64mb", "--maxmemory-policy", "allkeys-lru"]
+    user: "999:1000"
+    tmpfs:
+      - /data:size=16m
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    mem_limit: 128m
+
+  api:
+    <<: *hardened
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      args:
+        # Optional dependency groups from pyproject (e.g. "voice,postgres"). Empty = core only;
+        # Postgres needs the "postgres" extra, so the default below includes it.
+        EXTRAS: ${MILA_API_EXTRAS:-postgres}
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      MILA_DATABASE_URL: postgresql+psycopg://mila:${MILA_DB_PASSWORD:-mila}@db:5432/mila
+      MILA_APP_ENV: ${MILA_APP_ENV:-dev}
+      MILA_DEMO_MODE: ${MILA_DEMO_MODE:-true}
+      MILA_CORS_ORIGINS: ${MILA_CORS_ORIGINS:-["http://localhost:3000"]}
+      MILA_RATE_LIMIT_PER_MINUTE: ${MILA_RATE_LIMIT_PER_MINUTE:-60}
+      MILA_LLM_PROVIDER: ${MILA_LLM_PROVIDER:-mock}
+      MILA_LLM_BASE_URL: ${MILA_LLM_BASE_URL:-http://llm:8001/v1}
+      MILA_LLM_API_KEY: ${MILA_LLM_API_KEY:-}
+      MILA_LLM_MODEL: ${MILA_LLM_MODEL:-mistralai/Mistral-7B-Instruct-v0.3}
+      MILA_LLM_TIMEOUT_S: ${MILA_LLM_TIMEOUT_S:-60}
+      MILA_EMBEDDER: ${MILA_EMBEDDER:-hash}
+      MILA_EMBEDDING_DIM: ${MILA_EMBEDDING_DIM:-256}
+      MILA_JUDGE_PROVIDER: ${MILA_JUDGE_PROVIDER:-lexical}
+      MILA_RETRIEVAL_TOP_K: ${MILA_RETRIEVAL_TOP_K:-8}
+      MILA_STT_PROVIDER: ${MILA_STT_PROVIDER:-mock}
+      MILA_STT_MODEL: ${MILA_STT_MODEL:-large-v3}
+      MILA_TTS_PROVIDER: ${MILA_TTS_PROVIDER:-mock}
+      MILA_PIPER_VOICE_DIR: ${MILA_PIPER_VOICE_DIR:-/app/models/piper}
+      MILA_GATE_MIN_SUPPORT_RATIO: ${MILA_GATE_MIN_SUPPORT_RATIO:-0.6}
+      MILA_GATE_MIN_CONFIDENCE: ${MILA_GATE_MIN_CONFIDENCE:-0.35}
+      MILA_VERIFIER_SUPPORT_THRESHOLD: ${MILA_VERIFIER_SUPPORT_THRESHOLD:-0.5}
+      MILA_REDFLAG_CLASSIFIER_THRESHOLD: ${MILA_REDFLAG_CLASSIFIER_THRESHOLD:-0.85}
+      MILA_K_ANONYMITY: ${MILA_K_ANONYMITY:-5}
+      MILA_AUDIO_TMP_DIR: /tmp/mila-audio
+      MILA_ADMIN_TOKEN: ${MILA_ADMIN_TOKEN:-}
+      MILA_CONSENT_VERSION: ${MILA_CONSENT_VERSION:-2026-10-01}
+      MILA_DEFAULT_REGION: ${MILA_DEFAULT_REGION:-BA}
+      MILA_KB_DIR: /app/kb
+      MILA_MANIFEST_PATH: /app/kb/manifest.yaml
+    # Ingest the demo manifest (no downloads) before serving, as docs/architecture.md describes.
+    command: >
+      sh -c "python scripts/ingest_kb.py
+      && exec uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000 --app-dir /app/backend"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+    user: "10001:10001"
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+    volumes:
+      - kbdownloads:/app/kb/downloads
+      - models:/app/models:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys, urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=4).status == 200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    mem_limit: ${MILA_API_MEM_LIMIT:-2g}
+
+  web:
+    <<: *hardened
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        # Inlined at build time by Next.js; the browser calls this origin directly.
+        NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-http://localhost:8000}
+    environment:
+      NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-http://localhost:8000}
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:3000:3000"
+    user: "1001:1001"
+    tmpfs:
+      - /tmp:size=64m
+      - /app/.next/cache:size=64m,uid=1001,gid=1001
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    mem_limit: ${MILA_WEB_MEM_LIMIT:-512m}
+
+  llm:
+    # Optional open-weight model server. Requires an NVIDIA GPU with enough memory for the
+    # model (a 7B model in 16-bit needs about 16 GB; smaller or quantised models fit on less)
+    # and the NVIDIA container toolkit on the host. Pin the image tag before a pilot.
+    profiles: ["local-llm"]
+    image: vllm/vllm-openai:latest
+    command:
+      - --model
+      - ${MILA_LLM_MODEL:-mistralai/Mistral-7B-Instruct-v0.3}
+      - --port
+      - "8001"
+      - --dtype
+      - auto
+      - --max-model-len
+      - "${MILA_LLM_MAX_MODEL_LEN:-8192}"
+    environment:
+      HF_HOME: /root/.cache/huggingface
+      HUGGING_FACE_HUB_TOKEN: ${HUGGING_FACE_HUB_TOKEN:-}
+    volumes:
+      - hfcache:/root/.cache/huggingface
+    ipc: host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=4).status == 200 else 1)\""]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 300s
+    restart: unless-stopped
+    # Not published on the host: only `api` talks to it. For local testing add
+    # ports: ["127.0.0.1:8001:8001"].
+
+  ingest:
+    # One-shot: downloads the public documents from kb/manifest.yaml (those with download: true)
+    # and ingests everything into the shared database. Run it after `up`:
+    #   docker compose --profile ingest run --rm ingest
+    <<: *hardened
+    profiles: ["ingest"]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      args:
+        EXTRAS: ${MILA_API_EXTRAS:-postgres}
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      MILA_DATABASE_URL: postgresql+psycopg://mila:${MILA_DB_PASSWORD:-mila}@db:5432/mila
+      MILA_EMBEDDER: ${MILA_EMBEDDER:-hash}
+      MILA_EMBEDDING_DIM: ${MILA_EMBEDDING_DIM:-256}
+      MILA_KB_DIR: /app/kb
+      MILA_MANIFEST_PATH: /app/kb/manifest.yaml
+      MILA_AUDIO_TMP_DIR: /tmp/mila-audio
+    command: ["python", "scripts/ingest_kb.py", "--download"]
+    depends_on:
+      db:
+        condition: service_healthy
+    user: "10001:10001"
+    tmpfs:
+      - /tmp:size=64m
+    volumes:
+      - kbdownloads:/app/kb/downloads
+    restart: "no"
+    mem_limit: 2g
+
+volumes:
+  pgdata:
+  kbdownloads:
+  hfcache:
+  models:

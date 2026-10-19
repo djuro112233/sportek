@@ -1,0 +1,30 @@
+# Files that must never enter the API image or the build context.
+#
+# docker-compose.yml and CI build with the repository root as context
+# (`docker build -f backend/Dockerfile .`). Docker reads ignore rules from `<context>/.dockerignore`
+# (or, with BuildKit, from `backend/Dockerfile.dockerignore`), so to make these rules effective for
+# the root context copy this file to the repository root as `.dockerignore` or symlink
+# `backend/Dockerfile.dockerignore` to it. The paths below are written relative to the root.
+.git
+.github
+.venv
+**/__pycache__
+**/*.pyc
+*.db
+*.db-journal
+.audio_tmp
+.pytest_cache
+.ruff_cache
+.coverage
+htmlcov
+models
+kb/downloads
+web
+reports
+eval
+docs
+backend/tests
+backend/mila.egg-info
+.env
+.env.*
+!.env.example

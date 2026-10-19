@@ -3,12 +3,24 @@
 Supported UI languages: sr (Latin or Cyrillic output), bs, me, hr, en.
 `normalize_text` is the single canonical normalisation used by the red-flag router,
 BM25 tokenisation and the lexical judge, so all of them see the same text.
+
+Catalogue conventions (see `_MESSAGES`):
+- every key has all five languages; `catalogue_completeness()` must return an empty dict
+  and the unit tests enforce it;
+- BCMS variants stay close to each other on purpose; the deliberate differences are
+  hr: liječnik / nazovi / točno / ponovno, bs: ljekar / "s ljekarom" / tačno,
+  sr and me: ljekar / "sa ljekarom" / tačno;
+- messages that take a value use a positional placeholder (`{0}`) so that Cyrillic
+  rendering leaves it intact: `t("confirm_transcript", lang, script).format(text)`;
+- BCMS texts avoid letters that have no Cyrillic equivalent (q, w, x, y) and digraphs
+  that span a morpheme boundary (e.g. "injekcija"), so Cyrillic rendering is exact.
 """
 
 from __future__ import annotations
 
 import re
 import unicodedata
+from collections.abc import Iterable
 
 from app.core.types import BCMS_LANGS, SUPPORTED_LANGS
 
@@ -165,6 +177,138 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "me": "Demo režim: izvori ispod su javni, ali ih ljekar još nije pregledao.",
         "hr": "Demo način: izvori ispod su javni, ali ih liječnik još nije pregledao.",
     },
+    # --- answer annotations --------------------------------------------------------------
+    "translated_note": {
+        "en": "This answer was composed from an English source and checked sentence by sentence.",
+        "sr": "Ovaj odgovor je sastavljen na osnovu izvora na engleskom i provjeren rečenicu po rečenicu.",
+        "bs": "Ovaj odgovor je sastavljen na osnovu izvora na engleskom i provjeren rečenicu po rečenicu.",
+        "me": "Ovaj odgovor je sastavljen na osnovu izvora na engleskom i provjeren rečenicu po rečenicu.",
+        "hr": "Ovaj odgovor je sastavljen na temelju izvora na engleskom i provjeren rečenicu po rečenicu.",
+    },
+    "minor_note": {
+        "en": "You can also talk to a trusted adult about this.",
+        "sr": "O ovome možeš razgovarati i sa odraslom osobom kojoj vjeruješ.",
+        "bs": "O ovome možeš razgovarati i s odraslom osobom kojoj vjeruješ.",
+        "me": "O ovome možeš razgovarati i sa odraslom osobom kojoj vjeruješ.",
+        "hr": "O ovome možeš razgovarati i s odraslom osobom kojoj vjeruješ.",
+    },
+    "not_medical_advice_banner": {
+        "en": "Not medical advice. MILA gives information and points you to help; it does not diagnose.",
+        "sr": "Nije medicinski savjet. MILA daje informacije i upućuje na pomoć; ne postavlja dijagnozu.",
+        "bs": "Nije medicinski savjet. MILA daje informacije i upućuje na pomoć; ne postavlja dijagnozu.",
+        "me": "Nije medicinski savjet. MILA daje informacije i upućuje na pomoć; ne postavlja dijagnozu.",
+        "hr": "Nije medicinski savjet. MILA daje informacije i upućuje na pomoć; ne postavlja dijagnozu.",
+    },
+    "withheld_title": {
+        "en": "I don't know this - here is where to get help",
+        "sr": "Ovo ne znam - evo gdje možeš dobiti pomoć",
+        "bs": "Ovo ne znam - evo gdje možeš dobiti pomoć",
+        "me": "Ovo ne znam - evo gdje možeš dobiti pomoć",
+        "hr": "Ovo ne znam - evo gdje možeš dobiti pomoć",
+    },
+    "redflag_title": {
+        "en": "This may be urgent",
+        "sr": "Ovo može biti hitno",
+        "bs": "Ovo može biti hitno",
+        "me": "Ovo može biti hitno",
+        "hr": "Ovo može biti hitno",
+    },
+    # --- referral block ---------------------------------------------------------------------
+    "call_now": {
+        "en": "Call now",
+        "sr": "Pozovi odmah",
+        "bs": "Pozovi odmah",
+        "me": "Pozovi odmah",
+        "hr": "Nazovi odmah",
+    },
+    "emergency_number_label": {
+        "en": "Emergency number",
+        "sr": "Broj hitne pomoći",
+        "bs": "Broj hitne pomoći",
+        "me": "Broj hitne pomoći",
+        "hr": "Broj hitne pomoći",
+    },
+    "sources_label": {
+        "en": "Sources",
+        "sr": "Izvori",
+        "bs": "Izvori",
+        "me": "Izvori",
+        "hr": "Izvori",
+    },
+    "confidence_label": {
+        "en": "Confidence",
+        "sr": "Pouzdanost",
+        "bs": "Pouzdanost",
+        "me": "Pouzdanost",
+        "hr": "Pouzdanost",
+    },
+    # --- voice and input controls -----------------------------------------------------------
+    "listen": {
+        "en": "Listen",
+        "sr": "Poslušaj",
+        "bs": "Poslušaj",
+        "me": "Poslušaj",
+        "hr": "Poslušaj",
+    },
+    "ask_by_voice": {
+        "en": "Ask by voice",
+        "sr": "Pitaj glasom",
+        "bs": "Pitaj glasom",
+        "me": "Pitaj glasom",
+        "hr": "Pitaj glasom",
+    },
+    "type_question": {
+        "en": "Type your question",
+        "sr": "Upiši pitanje",
+        "bs": "Upiši pitanje",
+        "me": "Upiši pitanje",
+        "hr": "Upiši pitanje",
+    },
+    "confirm_transcript": {
+        "en": "I heard: \u201c{0}\u201d Is this right?",
+        "sr": "Čula sam: \u201e{0}\u201c Je li tačno?",
+        "bs": "Čula sam: \u201e{0}\u201c Je li tačno?",
+        "me": "Čula sam: \u201e{0}\u201c Je li tačno?",
+        "hr": "Čula sam: \u201e{0}\u201c Je li točno?",
+    },
+    "yes": {"en": "Yes", "sr": "Da", "bs": "Da", "me": "Da", "hr": "Da"},
+    "no": {"en": "No", "sr": "Ne", "bs": "Ne", "me": "Ne", "hr": "Ne"},
+    "try_again": {
+        "en": "Try again",
+        "sr": "Pokušaj ponovo",
+        "bs": "Pokušaj ponovo",
+        "me": "Pokušaj ponovo",
+        "hr": "Pokušaj ponovno",
+    },
+    # --- consent and settings ---------------------------------------------------------------
+    "delete_my_data": {
+        "en": "Delete my data",
+        "sr": "Obriši moje podatke",
+        "bs": "Obriši moje podatke",
+        "me": "Obriši moje podatke",
+        "hr": "Obriši moje podatke",
+    },
+    "save_my_questions": {
+        "en": "Save my questions",
+        "sr": "Sačuvaj moja pitanja",
+        "bs": "Sačuvaj moja pitanja",
+        "me": "Sačuvaj moja pitanja",
+        "hr": "Spremi moja pitanja",
+    },
+    "low_bandwidth_mode": {
+        "en": "Low-bandwidth mode",
+        "sr": "Režim za slabu vezu",
+        "bs": "Režim za slabu vezu",
+        "me": "Režim za slabu vezu",
+        "hr": "Način rada za slabu vezu",
+    },
+    "under_18_question": {
+        "en": "Are you under 18?",
+        "sr": "Imaš li manje od 18 godina?",
+        "bs": "Imaš li manje od 18 godina?",
+        "me": "Imaš li manje od 18 godina?",
+        "hr": "Imaš li manje od 18 godina?",
+    },
 }
 
 
@@ -184,3 +328,40 @@ def available_keys() -> list[str]:
 def register_messages(key: str, translations: dict[str, str]) -> None:
     """Allow other modules (consent, referral) to extend the catalogue at import time."""
     _MESSAGES.setdefault(key, {}).update(translations)
+
+
+# Native names of the supported UI languages (Latin script; `language_name` renders Cyrillic
+# on request for the BCMS languages).
+_LANGUAGE_NAMES: dict[str, str] = {
+    "sr": "srpski",
+    "bs": "bosanski",
+    "me": "crnogorski",
+    "hr": "hrvatski",
+    "en": "English",
+}
+
+
+def language_name(lang: str | None, script: str = "latin") -> str:
+    """Native (endonym) name of a supported language, e.g. ``"sr" -> "srpski"``.
+
+    Unknown or empty codes are coerced the same way as everywhere else (default: sr).
+    """
+    lang = coerce_lang(lang)
+    return render(_LANGUAGE_NAMES[lang], lang, script)
+
+
+def catalogue_completeness(keys: Iterable[str] | None = None) -> dict[str, list[str]]:
+    """Return ``{key: [languages missing or empty]}`` for the catalogue; empty when complete.
+
+    Checks every key in `_MESSAGES` (including keys added through `register_messages`)
+    against `SUPPORTED_LANGS`, or only `keys` when given. The unit tests require an empty
+    result, so a key can never ship with a silent fallback to Serbian.
+    """
+    wanted = list(keys) if keys is not None else sorted(_MESSAGES)
+    missing: dict[str, list[str]] = {}
+    for key in wanted:
+        table = _MESSAGES.get(key, {})
+        gaps = [lang for lang in SUPPORTED_LANGS if not (table.get(lang) or "").strip()]
+        if gaps:
+            missing[key] = gaps
+    return missing

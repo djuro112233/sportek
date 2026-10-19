@@ -1,0 +1,8 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "@next/next/no-img-element": "error",
+    "react/jsx-no-target-blank": ["error", { "allowReferrer": false }],
+    "no-console": ["warn", { "allow": ["warn", "error"] }]
+  }
+}

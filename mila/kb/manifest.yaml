@@ -1,0 +1,356 @@
+# MILA knowledge-base manifest (schema version 1).
+#
+# Every answer MILA gives is tied to a chunk of one of these documents. Fields:
+#   id             stable identifier (lowercase, [a-z0-9._-]); becomes Source.id and the chunk-id prefix
+#   file           path relative to kb/; WHO files live under downloads/ (git-ignored) and are fetched
+#                  with `scripts/ingest_kb.py --download`
+#   sha256         optional; when set, the file (or download) must match or ingestion fails
+#   reviewed_by    non-empty => review_status "reviewed"; empty => "public_unreviewed" (demo mode only)
+#   status         optional; "blocked" keeps the source out of every answer
+#   allowed_topics subset of app.core.types.TOPIC_CLASSES
+#   download       true => scripts/ingest_kb.py --download may fetch `url` when the file is missing
+version: 1
+documents:
+  # --- WHO primary sources (not in the repo; verify licence + sha256 on first download) -------------
+  - id: who-fp-handbook-2022
+    title: "Family planning: a global handbook for providers (2022 edition)"
+    publisher: "World Health Organization and Johns Hopkins Bloomberg School of Public Health"
+    year: 2022
+    url: "https://www.who.int/publications/i/item/9780999203705"
+    file: downloads/who-fp-handbook-2022.pdf
+    licence: "CC BY-NC-SA 3.0 IGO"
+    language: en
+    published_on: "2022-01-01"
+    sha256: ""
+    reviewed_by: ""
+    reviewed_on: ""
+    allowed_topics: [contraception, adolescent, sti, postnatal]
+    download: true
+    notes: "verify licence + sha256 on first download; the url is the WHO landing page - set it to the direct PDF link before downloading"
+  - id: who-anc-2016
+    title: "WHO recommendations on antenatal care for a positive pregnancy experience"
+    publisher: "World Health Organization"
+    year: 2016
+    url: "https://www.who.int/publications/i/item/9789241549912"
+    file: downloads/who-anc-2016.pdf
+    licence: "CC BY-NC-SA 3.0 IGO"
+    language: en
+    published_on: "2016-11-28"
+    sha256: ""
+    reviewed_by: ""
+    reviewed_on: ""
+    allowed_topics: [antenatal_care, pregnancy]
+    download: true
+    notes: "verify licence + sha256 on first download; the url is the WHO landing page - set it to the direct PDF link before downloading"
+  - id: who-self-care-2022
+    title: "WHO guideline on self-care interventions for health and well-being, 2022 revision"
+    publisher: "World Health Organization"
+    year: 2022
+    url: "https://www.who.int/publications/i/item/9789240052192"
+    file: downloads/who-self-care-2022.pdf
+    licence: "CC BY-NC-SA 3.0 IGO"
+    language: en
+    published_on: "2022-06-29"
+    sha256: ""
+    reviewed_by: ""
+    reviewed_on: ""
+    allowed_topics: [contraception, sti, menstruation, pregnancy, adolescent]
+    download: true
+    notes: "verify licence + sha256 on first download; the url is the WHO landing page - set it to the direct PDF link before downloading"
+  - id: who-postnatal-2022
+    title: "WHO recommendations on maternal and newborn care for a positive postnatal experience"
+    publisher: "World Health Organization"
+    year: 2022
+    url: "https://www.who.int/publications/i/item/9789240045989"
+    file: downloads/who-postnatal-2022.pdf
+    licence: "CC BY-NC-SA 3.0 IGO"
+    language: en
+    published_on: "2022-03-30"
+    sha256: ""
+    reviewed_by: ""
+    reviewed_on: ""
+    allowed_topics: [postnatal, mental_health, contraception]
+    download: true
+    notes: "verify licence + sha256 on first download; the url is the WHO landing page - set it to the direct PDF link before downloading"
+  - id: who-adolescent-pregnancy-factsheet
+    title: "Adolescent pregnancy (WHO fact sheet)"
+    publisher: "World Health Organization"
+    year: 2024
+    url: "https://www.who.int/news-room/fact-sheets/detail/adolescent-pregnancy"
+    file: downloads/who-adolescent-pregnancy-factsheet.html
+    licence: "CC BY-NC-SA 3.0 IGO"
+    language: en
+    published_on: "2024-04-10"
+    sha256: ""
+    reviewed_by: ""
+    reviewed_on: ""
+    allowed_topics: [adolescent, pregnancy, contraception]
+    download: true
+    notes: "verify licence + sha256 on first download; this is a web page (saved as .html), not a PDF - WHO publishes no standalone adolescent SRH fact sheet PDF"
+
+  # --- demo documents: project-authored paraphrases of WHO guidance (Apache-2.0, not reviewed) ------
+  - id: demo-en-contraception-methods
+    title: "Contraception methods: an overview (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/en/contraception-methods.md
+    licence: Apache-2.0
+    language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [contraception]
+    download: false
+  - id: demo-en-emergency-contraception
+    title: "Emergency contraception (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/en/emergency-contraception.md
+    licence: Apache-2.0
+    language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [contraception]
+    download: false
+  - id: demo-en-antenatal-care-visits
+    title: "Antenatal care: visits during pregnancy (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/en/antenatal-care-visits.md
+    licence: Apache-2.0
+    language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [antenatal_care, pregnancy]
+    download: false
+  - id: demo-en-pregnancy-danger-signs
+    title: "Danger signs in pregnancy (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/en/pregnancy-danger-signs.md
+    licence: Apache-2.0
+    language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [pregnancy, antenatal_care]
+    download: false
+  - id: demo-en-pregnancy-nutrition
+    title: "Nutrition and supplements in pregnancy (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/en/pregnancy-nutrition.md
+    licence: Apache-2.0
+    language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [pregnancy, antenatal_care]
+    download: false
+  - id: demo-en-postnatal-care
+    title: "Postnatal care: the first weeks after birth (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/en/postnatal-care.md
+    licence: Apache-2.0
+    language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [postnatal]
+    download: false
+  - id: demo-en-breastfeeding-basics
+    title: "Breastfeeding basics (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/en/breastfeeding-basics.md
+    licence: Apache-2.0
+    language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [postnatal]
+    download: false
+  - id: demo-en-menstrual-health
+    title: "Menstrual health (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/en/menstrual-health.md
+    licence: Apache-2.0
+    language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [menstruation, adolescent]
+    download: false
+  - id: demo-en-sti-prevention-testing
+    title: "Sexually transmitted infections: prevention and testing basics (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/en/sti-prevention-testing.md
+    licence: Apache-2.0
+    language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [sti]
+    download: false
+  - id: demo-en-adolescent-srh-rights
+    title: "Adolescents: sexual and reproductive health, rights and consent (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/en/adolescent-srh-rights.md
+    licence: Apache-2.0
+    language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [adolescent, contraception, sti]
+    download: false
+  - id: demo-en-perinatal-mental-health
+    title: "Perinatal mental health: baby blues and when to seek help (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/en/perinatal-mental-health.md
+    licence: Apache-2.0
+    language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [mental_health, postnatal, pregnancy]
+    download: false
+
+  - id: demo-sr-contraception-methods
+    title: "Metode kontracepcije: pregled (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/sr/contraception-methods.md
+    licence: Apache-2.0
+    language: sr
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [contraception]
+    download: false
+  - id: demo-sr-emergency-contraception
+    title: "Hitna kontracepcija (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/sr/emergency-contraception.md
+    licence: Apache-2.0
+    language: sr
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [contraception]
+    download: false
+  - id: demo-sr-antenatal-care-visits
+    title: "Pregledi u trudnoći (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/sr/antenatal-care-visits.md
+    licence: Apache-2.0
+    language: sr
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [antenatal_care, pregnancy]
+    download: false
+  - id: demo-sr-pregnancy-danger-signs
+    title: "Znaci opasnosti u trudnoći (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/sr/pregnancy-danger-signs.md
+    licence: Apache-2.0
+    language: sr
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [pregnancy, antenatal_care]
+    download: false
+  - id: demo-sr-pregnancy-nutrition
+    title: "Ishrana i dodaci ishrani u trudnoći (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/sr/pregnancy-nutrition.md
+    licence: Apache-2.0
+    language: sr
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [pregnancy, antenatal_care]
+    download: false
+  - id: demo-sr-postnatal-care
+    title: "Njega nakon porođaja: prve sedmice (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/sr/postnatal-care.md
+    licence: Apache-2.0
+    language: sr
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [postnatal]
+    download: false
+  - id: demo-sr-breastfeeding-basics
+    title: "Osnove dojenja (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/sr/breastfeeding-basics.md
+    licence: Apache-2.0
+    language: sr
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [postnatal]
+    download: false
+  - id: demo-sr-menstrual-health
+    title: "Menstrualno zdravlje (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/sr/menstrual-health.md
+    licence: Apache-2.0
+    language: sr
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [menstruation, adolescent]
+    download: false
+  - id: demo-sr-sti-prevention-testing
+    title: "Polno prenosive infekcije: osnove prevencije i testiranja (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/sr/sti-prevention-testing.md
+    licence: Apache-2.0
+    language: sr
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [sti]
+    download: false
+  - id: demo-sr-adolescent-srh-rights
+    title: "Adolescenti: seksualno i reproduktivno zdravlje, prava i pristanak (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/sr/adolescent-srh-rights.md
+    licence: Apache-2.0
+    language: sr
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [adolescent, contraception, sti]
+    download: false
+  - id: demo-sr-perinatal-mental-health
+    title: "Mentalno zdravlje u trudnoći i nakon porođaja (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
+    year: 2026
+    url: ""
+    file: demo/sr/perinatal-mental-health.md
+    licence: Apache-2.0
+    language: sr
+    published_on: "2026-10-19"
+    reviewed_by: ""
+    allowed_topics: [mental_health, postnatal, pregnancy]
+    download: false

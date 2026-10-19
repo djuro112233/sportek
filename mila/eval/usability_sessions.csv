@@ -1,0 +1,2 @@
+participant_id,group,task_completed,time_s,comment1,comment2,comment3,consent_recorded
+EXAMPLE-P00,adult,true,214,"Razumjela sam odgovor iz prve, ali bih voljela da mi ponovi sporije.","Nisam bila sigurna gdje da pritisnem da potvrdim transkript.","Dobro je što mi je odmah dala broj doma zdravlja.",true

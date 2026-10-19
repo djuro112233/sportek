@@ -1,0 +1,13 @@
+{
+  "name": "MILA",
+  "short_name": "MILA",
+  "description": "Information and referral for reproductive and maternal health. Not medical advice.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1d4ed8",
+  "lang": "sr",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

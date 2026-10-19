@@ -214,3 +214,37 @@ def get_stt(settings) -> STT ; def get_tts(settings) -> TTS
 No question text, audio, IP or device id is stored. Events are aggregate-only. Audio is deleted
 right after transcription. `SavedQuestion` rows exist only with explicit consent and die with the
 session. Public metrics are suppressed below k=5.
+
+## Deployment
+
+`docker compose up --build` starts the stack below. `docker-compose.yml` is the source of
+truth for service names and flags; this section explains what each piece is for.
+
+| Service | Image / build | Purpose | Notes |
+|---|---|---|---|
+| `db` | Postgres 16 with the pgvector extension | Sources, chunks and embeddings, sessions, events, gate records | Data volume `pgdata`; not exposed outside the compose network |
+| `api` | `backend/` (FastAPI, uvicorn, `app.main:create_app --factory`) | The MILA API on port 8000 | Runs `scripts/ingest_kb.py` against the demo manifest at start-up; health check `GET /api/health` |
+| `web` | `web/` (Next.js 14) | Voice-first UI on port 3000 | Talks to `api` only; no external origins |
+| `llm` (optional profile) | OpenAI-compatible server for an open-weight model (vLLM, llama.cpp or similar) on port 8001 | Real generation and the LLM judge | Enabled with `MILA_LLM_PROVIDER=openai_compatible`; requests carry `store=false` |
+
+Hardening applied to `api` and `web`: non-root user, `cap_drop: [ALL]`,
+`security_opt: [no-new-privileges:true]`, `read_only: true` root filesystem, `tmpfs` for
+`MILA_AUDIO_TMP_DIR` so uploads never touch disk, and only the two published ports. Secrets
+come from the environment or an untracked `.env`, never from the image.
+
+Environment variables (all defined in `backend/app/config.py`, prefix `MILA_`; see the README
+for the full table with defaults):
+
+| Group | Variables |
+|---|---|
+| Runtime | `MILA_APP_ENV`, `MILA_DEMO_MODE`, `MILA_DATABASE_URL`, `MILA_CORS_ORIGINS`, `MILA_RATE_LIMIT_PER_MINUTE` |
+| LLM | `MILA_LLM_PROVIDER`, `MILA_LLM_BASE_URL`, `MILA_LLM_API_KEY`, `MILA_LLM_MODEL`, `MILA_LLM_TIMEOUT_S` |
+| Retrieval and judge | `MILA_EMBEDDER`, `MILA_EMBEDDING_DIM`, `MILA_JUDGE_PROVIDER`, `MILA_RETRIEVAL_TOP_K` |
+| Voice | `MILA_STT_PROVIDER`, `MILA_STT_MODEL`, `MILA_TTS_PROVIDER`, `MILA_PIPER_VOICE_DIR` |
+| Safety thresholds | `MILA_GATE_MIN_SUPPORT_RATIO`, `MILA_GATE_MIN_CONFIDENCE`, `MILA_VERIFIER_SUPPORT_THRESHOLD`, `MILA_REDFLAG_CLASSIFIER_THRESHOLD` |
+| Privacy and admin | `MILA_K_ANONYMITY`, `MILA_AUDIO_TMP_DIR`, `MILA_ADMIN_TOKEN`, `MILA_CONSENT_VERSION`, `MILA_DEFAULT_REGION` |
+| Knowledge base | `MILA_KB_DIR`, `MILA_MANIFEST_PATH` |
+
+A pilot deployment sets `MILA_APP_ENV=prod`, `MILA_DEMO_MODE=false`, a Postgres
+`MILA_DATABASE_URL`, a non-empty `MILA_ADMIN_TOKEN`, the real providers, and puts a
+TLS-terminating reverse proxy in front of `web` and `api`.
