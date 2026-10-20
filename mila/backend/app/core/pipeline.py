@@ -24,7 +24,6 @@ from __future__ import annotations
 
 import logging
 import math
-import re
 import time
 
 from sqlalchemy.orm import Session as DbSession
@@ -32,11 +31,13 @@ from sqlalchemy.orm import Session as DbSession
 from app.config import Settings
 from app.core.container import Providers, router_for
 from app.core.events import classify_topic, log_event
-from app.core.gate import GATE_VERSION, REASON_MEDICATION_OR_DOSE, ValidationGate, record_decision
+from app.core.gate import GATE_VERSION, ValidationGate, record_decision
 from app.core.generation import Generator
-from app.core.i18n import coerce_lang, normalize_text, render, t
+from app.core.i18n import coerce_lang, render, t
 from app.core.referral import ReferralService, ensure_referral_points
+from app.core.relevance import question_relevance
 from app.core.retrieval import Retriever
+from app.core.scope import SCOPE_MESSAGE_KEYS, SCOPE_REASONS, asks_for_dose, classify_scope
 from app.core.types import (
     AnswerSentence,
     AskRequest,
@@ -47,7 +48,7 @@ from app.core.types import (
     Referral,
     RetrievedChunk,
 )
-from app.core.verifier import SupportJudge, Verifier, get_judge, mentions_medication_dose
+from app.core.verifier import SupportJudge, Verifier, get_judge
 from app.kb.embed import Embedder, get_embedder
 from app.models import SavedQuestion, Session
 from app.services.llm import LLMClient, get_llm
@@ -57,16 +58,8 @@ log = logging.getLogger("mila.pipeline")
 
 REASON_PIPELINE_ERROR = "pipeline_error"
 
-# A question that asks for a dose ("koliko mg ibuprofena smijem", "how many tablets", "koja
-# doza") is answered with a referral and never with generated text: MILA does not recommend
-# doses, and an extractive or weak model must not get the chance to answer such a question with
-# loosely related sentences that the gate would approve. Matched on ``normalize_text`` output.
-_DOSE_UNIT = r"(?:mg|mcg|ug|ml|iu|ij|miligram\w*|mikrogram\w*|mililit\w*|tablet\w*|kapsul\w*|doz\w*|dos(?:e|es|age|ing))"
-_DOSE_WORD = r"(?:doz\w*|dos(?:e|es|age|ing))"
-_DOSE_QUESTION_RES = (
-    re.compile(rf"\b(?:koliko|kolika|koliku|kolko|how many|how much)\b(?:\s+\w+){{0,3}}?\s+{_DOSE_UNIT}\b"),
-    re.compile(rf"\b(?:koja|koju|koji|kolika|what|which)\b(?:\s+\w+){{0,2}}?\s+{_DOSE_WORD}\b"),
-)
+__all__ = ["AskPipeline", "asks_for_dose", "public_gate"]
+
 UNREVIEWED_STATUS = "public_unreviewed"
 
 
@@ -77,12 +70,6 @@ class PipelineError(RuntimeError):
         super().__init__(f"{stage} failed: {type(cause).__name__}")
         self.stage = stage
         self.cause = cause
-
-
-def asks_for_dose(text: str) -> bool:
-    """True when the question itself asks for a dose or quantity of a medicine."""
-    normalised = normalize_text(text)
-    return mentions_medication_dose(text) or any(rx.search(normalised) for rx in _DOSE_QUESTION_RES)
 
 
 def elapsed_ms(started: float) -> int:
@@ -201,18 +188,24 @@ class AskPipeline:
             )
             if flag.flagged:
                 return self._finish_redflag(ctx, flag, started)
-            if asks_for_dose(text):
+            scope = self._stage("scope", lambda: classify_scope(text))
+            if scope.kind is not None:
                 decision = GateDecision(
-                    status="withheld", gate_version=GATE_VERSION, reasons=[REASON_MEDICATION_OR_DOSE]
+                    status="withheld", gate_version=GATE_VERSION, reasons=[SCOPE_REASONS[scope.kind]]
                 )
-                return self._finish_decided(ctx, [], decision, False, started)
+                return self._finish_decided(
+                    ctx, [], decision, False, started, message_key=SCOPE_MESSAGE_KEYS[scope.kind]
+                )
             chunks = self._stage("retrieval", lambda: self._retrieve(ctx))
             raw = self._stage(
                 "generation",
                 lambda: self.generator.generate(text, chunks, lang, is_minor=bool(session.is_minor)),
             )
             sentences = self._stage("verification", lambda: self.verifier.verify(raw.text, chunks))
-            decision = self._stage("gate", lambda: self.gate.decide(sentences, chunks))
+            relevance = self._stage("relevance", lambda: self._relevance(ctx, sentences, chunks))
+            decision = self._stage(
+                "gate", lambda: self.gate.decide(sentences, chunks, relevance=relevance)
+            )
         except PipelineError as failure:
             return self._finish_failed(ctx, failure, started)
         return self._finish_decided(ctx, chunks, decision, raw.translated, started)
@@ -224,6 +217,21 @@ class AskPipeline:
             return call()
         except Exception as exc:  # every failure must fail closed
             raise PipelineError(name, exc) from exc
+
+    def _relevance(
+        self, ctx: _Context, sentences: list[AnswerSentence], chunks: list[RetrievedChunk]
+    ) -> float | None:
+        """Question coverage of the evidence behind the supported sentences (None = not assessable)."""
+        if not any(s.supported for s in sentences):
+            return None
+        return question_relevance(
+            ctx.text,
+            ctx.lang,
+            sentences,
+            chunks,
+            self.retriever.stem_idf(),
+            unknown_term_penalty=self.settings.relevance_unknown_term_penalty,
+        )
 
     def _retrieve(self, ctx: _Context) -> list[RetrievedChunk]:
         topic = ctx.topic if ctx.topic != "other" else None
@@ -284,6 +292,7 @@ class AskPipeline:
         decision: GateDecision,
         translated: bool,
         started: float,
+        message_key: str = "withheld",
     ) -> AskResponse:
         approved = decision.status == "approved"
         referral = self._referral(ctx, None)
@@ -314,7 +323,7 @@ class AskPipeline:
             if ctx.req.want_audio:
                 response.audio_url = self._speak(clean_for_speech(" ".join(s.text for s in kept)), ctx)
         else:
-            response.message = t("withheld", ctx.lang, ctx.script)
+            response.message = t(message_key, ctx.lang, ctx.script)
         response.latency_ms = elapsed_ms(started)
 
         event = log_event(
@@ -335,6 +344,7 @@ class AskPipeline:
                 "want_audio": ctx.req.want_audio,
                 "gate_status": decision.status,
                 "gate_reasons": list(decision.reasons),
+                "relevance": decision.relevance,
             },
         )
         record_decision(self.db, decision, event_id=event.id)

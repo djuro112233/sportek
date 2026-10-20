@@ -25,6 +25,7 @@ REASON_MEDICATION_OR_DOSE = "medication_or_dose"
 REASON_LOW_SUPPORT_RATIO = "low_support_ratio"
 REASON_LOW_CONFIDENCE = "low_confidence"
 REASON_UNREVIEWED_OUTSIDE_DEMO = "unreviewed_source_outside_demo"
+REASON_LOW_RELEVANCE = "low_relevance"
 WITHHOLD_REASONS: tuple[str, ...] = (
     REASON_NO_SENTENCES,
     REASON_NO_CITATIONS,
@@ -55,11 +56,16 @@ class ValidationGate:
     """
 
     def __init__(
-        self, min_support_ratio: float = 0.6, min_confidence: float = 0.35, demo_mode: bool = True
+        self,
+        min_support_ratio: float = 0.6,
+        min_confidence: float = 0.35,
+        demo_mode: bool = True,
+        min_relevance: float = 0.35,
     ) -> None:
         self.min_support_ratio = min_support_ratio
         self.min_confidence = min_confidence
         self.demo_mode = demo_mode
+        self.min_relevance = min_relevance
 
     @classmethod
     def from_settings(cls, settings: Settings) -> ValidationGate:
@@ -68,9 +74,19 @@ class ValidationGate:
             min_support_ratio=settings.gate_min_support_ratio,
             min_confidence=settings.gate_min_confidence,
             demo_mode=settings.demo_mode,
+            min_relevance=settings.gate_min_relevance,
         )
 
-    def decide(self, sentences: list[AnswerSentence], chunks: list[RetrievedChunk]) -> GateDecision:
+    def decide(
+        self,
+        sentences: list[AnswerSentence],
+        chunks: list[RetrievedChunk],
+        *,
+        relevance: float | None = None,
+    ) -> GateDecision:
+        """Approve or withhold. ``relevance`` is the question coverage of the cited evidence
+        (:func:`app.core.relevance.question_relevance`); ``None`` means not assessable and the
+        relevance rule is skipped."""
         if not sentences:
             return GateDecision(status="withheld", gate_version=GATE_VERSION, reasons=[REASON_NO_SENTENCES])
 
@@ -106,6 +122,8 @@ class ValidationGate:
             c.review_status != "reviewed" for c in _cited_chunks(sentences, chunks)
         ):
             reasons.append(REASON_UNREVIEWED_OUTSIDE_DEMO)
+        if relevance is not None and relevance < self.min_relevance:
+            reasons.append(REASON_LOW_RELEVANCE)
 
         return GateDecision(
             status="approved" if not reasons else "withheld",
@@ -113,6 +131,7 @@ class ValidationGate:
             reasons=reasons,
             support_ratio=round(support_ratio, 4),
             confidence=round(confidence, 4),
+            relevance=relevance,
             kept=kept,
             removed=removed,
         )

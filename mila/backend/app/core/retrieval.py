@@ -17,7 +17,7 @@ from collections import Counter
 from dataclasses import dataclass
 
 import numpy as np
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session as DbSession
 
 from app.config import Settings
@@ -29,6 +29,7 @@ from app.models import Chunk, Source, SourceVersion
 log = logging.getLogger("mila.retrieval")
 
 RRF_K = 60
+_IDF_CACHE: dict[tuple, object] = {}
 LANG_BOOST = 1.3
 BM25_K1 = 1.5
 BM25_B = 0.75
@@ -148,6 +149,30 @@ class Retriever:
         sims = (matrix @ query_vec) / (norms * q_norm)
         order = sorted(range(len(usable)), key=lambda j: (-float(sims[j]), usable[j]))
         return [(usable[j], float(sims[j])) for j in order]
+
+    def stem_idf(self, allowed_statuses: tuple[str, ...] | None = None):
+        """Inverse document frequency over 5-character stems of every current chunk.
+
+        Used by :mod:`app.core.relevance`. Cached per (database, chunk count, newest version)
+        so the corpus is tokenised once per ingest, not once per request.
+        """
+        from app.core.relevance import make_idf, stems
+
+        wanted = self.default_statuses() if allowed_statuses is None else allowed_statuses
+        statuses = tuple(s for s in wanted if s not in _NEVER_RETURNED)
+        bind = self.db.get_bind()
+        n_chunks = self.db.execute(select(func.count(Chunk.id))).scalar_one()
+        newest = self.db.execute(select(func.max(SourceVersion.id))).scalar_one()
+        key = (str(getattr(bind, "url", bind)), statuses, int(n_chunks or 0), int(newest or 0))
+        cached = _IDF_CACHE.get(key)
+        if cached is not None:
+            return cached
+        rows = self._candidates(statuses, None)
+        idf = make_idf(stems(f"{r.chunk.heading_path} {r.chunk.text}") for r in rows)
+        if len(_IDF_CACHE) >= 8:
+            _IDF_CACHE.clear()
+        _IDF_CACHE[key] = idf
+        return idf
 
     @staticmethod
     def _bm25_ranking(query_tokens: list[str], rows: list[_Candidate]) -> Ranking:

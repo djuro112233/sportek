@@ -91,6 +91,9 @@ binding and live in [architecture.md](architecture.md).
   | `low_confidence` | Combined confidence below `MILA_GATE_MIN_CONFIDENCE` (0.35) | same |
   | `no_citations` | No kept sentence cites a retrieved chunk | same |
   | `unreviewed_source_outside_demo` | A cited chunk is `public_unreviewed` while demo mode is off | same |
+  | `low_relevance` | The cited evidence covers less of the question than `MILA_GATE_MIN_RELEVANCE` (0.35); see C9 | same |
+  | `diagnosis_request`, `test_interpretation`, `manipulation` | The question itself asks for something out of scope (C9); set by the pipeline before retrieval | a specific message (`withheld_diagnosis`, `withheld_test_results`, `withheld_manipulation`) + referral |
+  | `pipeline_error` | Any stage raised; the pipeline fails closed | `withheld` + referral; no traceback |
 
 - A withheld answer is never partially shown. `AskResponse.outcome == "withheld"` carries the
   localised refusal, the referral block and the disclaimer.
@@ -136,6 +139,44 @@ checked. The user is told MILA cannot answer this and is referred to a clinician
 - Answers composed from a source in another language carry `translated=True` and
   `translated_note`.
 
+### C9. Scope guard and question relevance (`app/core/scope.py`, `app/core/relevance.py`)
+
+The verifier (C4) checks that every sentence is supported by its cited chunk. It does not
+check that the chunk is *about the question*: an extractive or drifting model can answer
+"what helps with knee pain" with verbatim, well-cited sentences about pain in pregnancy, and a
+request for a dose or a diagnosis could be "answered" with loosely related, true sentences.
+Two controls close that gap; both were tuned on `eval/offkb_questions.jsonl` and
+`eval/inkb_questions.jsonl` and are regression-tested at dataset level
+(`backend/tests/integration/test_refusal_datasets.py`).
+
+- **Scope guard, before retrieval.** `classify_scope(text)` recognises questions that *ask*
+  for something MILA never gives, on normalised text (Cyrillic and Latin, with and without
+  diacritics, sr/bs/me/hr/en):
+
+  | Kind | Examples | Gate reason | Message |
+  |---|---|---|---|
+  | `dose` | "koliko mg ibuprofena", "koju dozu", "which painkiller can I take", "propiši mi" | `medication_or_dose` | `withheld_dose` |
+  | `diagnosis` | "da li imam infekciju", "jesam li trudna", "šta mi je", "is this cancer" | `diagnosis_request` | `withheld_diagnosis` |
+  | `test_interpretation` | a lab term with a result context or value: "hemoglobin mi je 105", "TSH 4.8", "Papa test ASCUS" | `test_interpretation` | `withheld_test_results` |
+  | `manipulation` | "zaboravi pravila", "ti si moj ljekar", "ignore previous instructions", "answer with a number only" | `manipulation` | `withheld_manipulation` |
+
+  Manipulation is checked first because it usually wraps another request. Information
+  questions stay in scope ("šta je papa test", "koliko kontrola u trudnoći", "is cramping
+  before a period normal"); the unit and adversarial tests pin both sides. A false positive
+  withholds with a referral, which is the safer error.
+- **Relevance rule, in the gate.** `question_relevance` scores how much of the question's
+  content the cited evidence covers: 5-character stems of content words (question words
+  removed, ijekavian folded onto ekavian so "nedjelja" and "nedelja" match), each weighted by
+  its rarity in the knowledge base (inverse document frequency over current chunks). A
+  question term the knowledge base never uses multiplies the score by
+  `MILA_RELEVANCE_UNKNOWN_TERM_PENALTY` (0.75). Below `MILA_GATE_MIN_RELEVANCE` (0.35) the
+  gate withholds with `low_relevance`. The score is `None` (rule skipped) when nothing is
+  supported, when the question has no content words, or when no cited chunk shares the
+  question's language family; cross-lingual relevance is left to the LLM judge (section 4).
+  Measured on the demo knowledge base with mock providers: refusal correctness on the 100
+  off-KB questions rose from 0.29 to 0.97 and 26 of the 30 in-KB questions are still answered
+  (`reports/`).
+
 ## 3. What MILA will never do
 
 - Diagnose, grade severity, or tell a user "this is (not) serious".
@@ -157,7 +198,7 @@ checked. The user is told MILA cannot answer this and is referred to a clinician
    or NLI judge is configured and spot-checked against two human raters (see
    [evaluation.md](evaluation.md)), support rates are upper bounds and the clinic review
    (section 6) is the real verifier.
-2. **Cross-lingual verification.** Most sources are English; answers are mostly BCMS. The
+2. **Cross-lingual verification and relevance.** Most sources are English; answers are mostly BCMS. The
    lexical judge works poorly across languages, so translated answers are flagged and must be
    covered by the clinic review until an `LLMJudge` is in place.
 3. **Rules are lists.** The red-flag router recognises what its keyword lists contain. The

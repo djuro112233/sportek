@@ -235,7 +235,7 @@ def test_dosing_question_is_withheld_and_returns_no_dose_text(
     returned = [s["text"] for s in body["sentences"]]
     returned += [s["text"] for s in body["gate"]["kept"]] + [s["text"] for s in body["gate"]["removed"]]
     assert not any(re.search(r"\bmg\b", text) for text in returned)
-    assert body["message"] == t("withheld", "sr") and body["referral"]["points"]
+    assert body["message"] == t("withheld_dose", "sr") and body["referral"]["points"]
 
 
 def test_demo_mode_off_withholds_when_only_unreviewed_sources_exist(kb_settings: Settings) -> None:
@@ -343,7 +343,9 @@ def test_gate_record_is_linked_to_the_ask_event(client: TestClient, kb_settings:
         "want_audio": False,
         "gate_status": "approved",
         "gate_reasons": [],
+        "relevance": body["gate"]["relevance"],
     }
+    assert body["gate"]["relevance"] is not None and body["gate"]["relevance"] >= kb_settings.gate_min_relevance
 
 
 # --- audio ----------------------------------------------------------------------------------------
@@ -410,6 +412,7 @@ def test_generator_failure_fails_closed(client: TestClient, kb_settings: Setting
         "reasons": [REASON_PIPELINE_ERROR],
         "support_ratio": 0.0,
         "confidence": 0.0,
+        "relevance": None,
         "kept": [],
         "removed": [],
     }

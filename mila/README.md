@@ -170,6 +170,8 @@ third party.** Source of truth: `backend/app/config.py`.
 | `MILA_RETRIEVAL_TOP_K` | `8` | Chunks passed to generation. |
 | `MILA_GATE_MIN_SUPPORT_RATIO` | `0.6` | Gate withholds below this share of supported sentences. |
 | `MILA_GATE_MIN_CONFIDENCE` | `0.35` | Gate withholds below this confidence. |
+| `MILA_GATE_MIN_RELEVANCE` | `0.35` | Gate withholds when the cited evidence covers less of the question than this (`low_relevance`). |
+| `MILA_RELEVANCE_UNKNOWN_TERM_PENALTY` | `0.75` | Relevance multiplier when the question contains a term the knowledge base never uses. |
 | `MILA_VERIFIER_SUPPORT_THRESHOLD` | `0.5` | Judge score at or above which a sentence counts as supported. |
 | `MILA_REDFLAG_CLASSIFIER_THRESHOLD` | `0.85` | Score above which the (secondary) classifier flags; rules always win. |
 | `MILA_K_ANONYMITY` | `5` | Public metrics rows with a count below this are suppressed. |

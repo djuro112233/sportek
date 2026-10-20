@@ -143,7 +143,10 @@ class ValidationGate:
 def record_decision(db: Session, decision: GateDecision, event_id: int | None = None) -> GateRecord
 ```
 Withhold reasons (stable strings): `no_sentences`, `low_support_ratio`, `medication_or_dose`,
-`low_confidence`, `no_citations`, `unreviewed_source_outside_demo`.
+`low_confidence`, `no_citations`, `unreviewed_source_outside_demo`, `low_relevance` (question
+coverage of the cited evidence below `gate_min_relevance`; see `app/core/relevance.py`). The
+pipeline adds `diagnosis_request`, `test_interpretation`, `manipulation` (scope guard,
+`app/core/scope.py`) and `pipeline_error` (fail-closed).
 
 ### `app/core/redflags.py`
 ```python
@@ -194,12 +197,21 @@ class AskPipeline:
     def __init__(self, settings, db, providers: Providers | None = None, *, llm=None, embedder=None,
                  judge=None, redflags=None, tts=None)   # missing providers are built from settings
 def public_gate(decision: GateDecision | None) -> GateDecision | None   # strips removed/withheld sentence text
-def asks_for_dose(text: str) -> bool   # a question asking for a dose is withheld before generation
+def asks_for_dose(text: str) -> bool   # kept for compatibility; see app.core.scope.classify_scope
+```
+```python
+# app/core/scope.py and app/core/relevance.py (docs/safety.md C9)
+def classify_scope(text: str) -> ScopeResult   # kind in dose|diagnosis|test_interpretation|manipulation|None
+def question_relevance(question, lang, sentences, chunks, idf=None, *, unknown_term_penalty=0.75) -> float | None
+Retriever.stem_idf()   # cached inverse document frequency over current chunks, fed to question_relevance
+ValidationGate.decide(sentences, chunks, *, relevance=None)   # adds reason low_relevance below gate_min_relevance
 ```
 `ask` runs, in this order: language/script/region resolution (request over session) → red-flag
-check (flag ⇒ `redflag` response, `redflag` event) → dose-question guard (⇒ `withheld`,
-reason `medication_or_dose`) → retrieval (`settings.retrieval_top_k`) → generation → verifier →
-gate → referral + disclaimer (+ TTS when `want_audio`, never for `withheld`) → `ask` event →
+check (flag ⇒ `redflag` response, `redflag` event) → scope guard (`classify_scope`; a dose,
+diagnosis, test-interpretation or manipulation request ⇒ `withheld` with its own reason and
+message, no retrieval) → retrieval (`settings.retrieval_top_k`) → generation → verifier →
+question relevance (`question_relevance`, logged as `relevance` in the gate decision and event
+payload) → gate (`relevance=` kwarg) → referral + disclaimer (+ TTS when `want_audio`, never for `withheld`) → `ask` event →
 `GateRecord` linked to it → `SavedQuestion` when the session opted in. Any exception in a
 stage fails closed: `withheld`, gate reason `pipeline_error`, `ask` event with outcome `error`
 and payload `{"error": "<exception class>", "stage": "<stage>"}`; no traceback reaches the client.
@@ -283,7 +295,7 @@ for the full table with defaults):
 | LLM | `MILA_LLM_PROVIDER`, `MILA_LLM_BASE_URL`, `MILA_LLM_API_KEY`, `MILA_LLM_MODEL`, `MILA_LLM_TIMEOUT_S` |
 | Retrieval and judge | `MILA_EMBEDDER`, `MILA_EMBEDDING_DIM`, `MILA_JUDGE_PROVIDER`, `MILA_RETRIEVAL_TOP_K` |
 | Voice | `MILA_STT_PROVIDER`, `MILA_STT_MODEL`, `MILA_TTS_PROVIDER`, `MILA_PIPER_VOICE_DIR` |
-| Safety thresholds | `MILA_GATE_MIN_SUPPORT_RATIO`, `MILA_GATE_MIN_CONFIDENCE`, `MILA_VERIFIER_SUPPORT_THRESHOLD`, `MILA_REDFLAG_CLASSIFIER_THRESHOLD` |
+| Safety thresholds | `MILA_GATE_MIN_SUPPORT_RATIO`, `MILA_GATE_MIN_CONFIDENCE`, `MILA_GATE_MIN_RELEVANCE`, `MILA_RELEVANCE_UNKNOWN_TERM_PENALTY`, `MILA_VERIFIER_SUPPORT_THRESHOLD`, `MILA_REDFLAG_CLASSIFIER_THRESHOLD` |
 | Privacy and admin | `MILA_K_ANONYMITY`, `MILA_AUDIO_TMP_DIR`, `MILA_ADMIN_TOKEN`, `MILA_CONSENT_VERSION`, `MILA_DEFAULT_REGION` |
 | Knowledge base | `MILA_KB_DIR`, `MILA_MANIFEST_PATH` |
 

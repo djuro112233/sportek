@@ -84,6 +84,7 @@ class GateDecision(BaseModel):
     reasons: list[str] = Field(default_factory=list)
     support_ratio: float = 0.0
     confidence: float = 0.0
+    relevance: float | None = None  # question coverage of the evidence (None = not assessable)
     kept: list[AnswerSentence] = Field(default_factory=list)
     removed: list[AnswerSentence] = Field(default_factory=list)
 
