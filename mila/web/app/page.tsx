@@ -9,10 +9,22 @@ import EmergencyCard from '@/components/EmergencyCard';
 import Footer, { type DeleteResult } from '@/components/Footer';
 import MicButton, { type MicState } from '@/components/MicButton';
 import TranscriptConfirm from '@/components/TranscriptConfirm';
-import { ask, deleteSession, errorMessageKey, getSession, isApiError, postPreferences, resolveAudioUrl, speak, transcribe } from '@/lib/api';
+import {
+  ask,
+  deleteSession,
+  errorMessageKey,
+  getAudio,
+  getSession,
+  isApiError,
+  isSessionGone,
+  postPreferences,
+  retryAfterSeconds,
+  speak,
+  transcribe,
+} from '@/lib/api';
 import { DEFAULT_LOCALE, detectLocale, htmlLang, translator, type MsgKey } from '@/lib/i18n';
-import { clearAll, loadPrefs, loadSession, prefsLocale, saveSession, savePrefs } from '@/lib/storage';
-import type { AskResponse, Citation, InputMode, Locale, StoredSession } from '@/lib/types';
+import { clearAll, clearSession, loadPrefs, loadSession, prefsLocale, saveSession, savePrefs } from '@/lib/storage';
+import { isPipelineError, type AskResponse, type Citation, type InputMode, type Locale, type StoredSession } from '@/lib/types';
 import { isRecordingSupported, Player, Recorder, RecorderError, type PlayerState } from '@/lib/voice';
 
 type Stage =
@@ -32,14 +44,18 @@ interface Result {
 interface UiError {
   key: MsgKey;
   retry: (() => void) | null;
+  /** Epoch ms before which "Try again" stays disabled (429 Retry-After). */
+  retryAt?: number;
 }
 
-/** Text that "Listen" reads aloud when the server did not attach audio. */
+/** Text that "Listen" reads aloud when the server did not attach audio (or the token is gone). */
 function speakableText(response: AskResponse): string {
-  if (response.outcome === 'answered') {
-    return response.sentences.map((s) => s.text.trim()).filter(Boolean).join(' ');
-  }
-  return [response.message, response.referral?.message ?? ''].map((s) => s.trim()).filter(Boolean).join(' ');
+  const parts =
+    response.outcome === 'answered'
+      ? response.sentences.map((s) => s.text)
+      : [response.message, response.referral?.message ?? ''];
+  parts.push(response.minor_note || '');
+  return parts.map((s) => s.trim()).filter(Boolean).join(' ');
 }
 
 function prefersReducedMotion(): boolean {
@@ -48,6 +64,11 @@ function prefersReducedMotion(): boolean {
   } catch {
     return false;
   }
+}
+
+function retryAtFor(err: unknown): number | undefined {
+  const seconds = retryAfterSeconds(err);
+  return seconds === null ? undefined : Date.now() + seconds * 1000;
 }
 
 export default function Page() {
@@ -61,12 +82,17 @@ export default function Page() {
   const [seconds, setSeconds] = useState(0);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<UiError | null>(null);
+  const [now, setNow] = useState(0);
   const [citation, setCitation] = useState<Citation | null>(null);
   const [playerState, setPlayerState] = useState<PlayerState>('idle');
   const [audioBusy, setAudioBusy] = useState(false);
 
   const recorderRef = useRef<Recorder | null>(null);
   const playerRef = useRef<Player | null>(null);
+  // One-time audio token: fetched at most once per audio_url, whatever happens to the fetch.
+  const tokenAudioRef = useRef<{ url: string; blob: Promise<Blob> } | null>(null);
+  // The decoded answer audio, replayed from memory by every later "Listen".
+  const answerAudioRef = useRef<{ response: AskResponse; blob: Blob } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLElement>(null);
@@ -83,6 +109,18 @@ export default function Page() {
     return recorderRef.current;
   }, []);
 
+  /** The server no longer accepts the stored session: forget it and ask for consent again. */
+  const expireSession = useCallback(() => {
+    recorderRef.current?.cancel();
+    player().stop();
+    clearSession();
+    setSession(null);
+    setResult(null);
+    setCitation(null);
+    setStage({ kind: 'consent' });
+    setError({ key: 'session_expired', retry: null });
+  }, [player]);
+
   // --- boot: read storage, detect language, validate the stored session -----------------------
   useEffect(() => {
     const prefs = loadPrefs();
@@ -94,22 +132,23 @@ export default function Page() {
       setLocale({ lang: stored.lang, script: stored.script });
       setStage({ kind: 'ready' });
       const controller = new AbortController();
-      getSession(stored.session_id, controller.signal).catch((err: unknown) => {
-        if (controller.signal.aborted) return;
-        if (isApiError(err) && err.kind === 'http' && err.status === 403) {
-          clearAll();
-          setSession(null);
-          setStage({ kind: 'consent' });
-          setError({ key: 'session_expired', retry: null });
-        }
-        // Network trouble or a missing route: keep the stored session; a later request surfaces the error.
-      });
+      getSession(stored.session_id, controller.signal)
+        .then((info) => {
+          if (controller.signal.aborted) return;
+          // An unknown id answers 200 {exists: false}; a session without consent must not resume.
+          if (info.exists === false || info.consent_given === false) expireSession();
+        })
+        .catch((err: unknown) => {
+          if (controller.signal.aborted) return;
+          if (isSessionGone(err)) expireSession();
+          // Network trouble or a missing route: keep the stored session; a later request surfaces the error.
+        });
       return () => controller.abort();
     }
     setLocale(prefsLocale(prefs) ?? detectLocale(typeof navigator !== 'undefined' ? navigator.languages : undefined));
     setStage({ kind: 'consent' });
     return undefined;
-  }, []);
+  }, [expireSession]);
 
   useEffect(() => {
     document.documentElement.lang = htmlLang(locale);
@@ -136,6 +175,19 @@ export default function Page() {
     return () => clearInterval(id);
   }, [stage.kind]);
 
+  // rate-limit countdown: tick once a second until "Try again" may be pressed
+  useEffect(() => {
+    const retryAt = error?.retryAt;
+    if (!retryAt || retryAt <= Date.now()) return undefined;
+    setNow(Date.now());
+    const id = setInterval(() => {
+      const current = Date.now();
+      setNow(current);
+      if (current >= retryAt) clearInterval(id);
+    }, 1000);
+    return () => clearInterval(id);
+  }, [error]);
+
   // bring a new result into view
   useEffect(() => {
     if (result && resultRef.current) {
@@ -153,11 +205,13 @@ export default function Page() {
         saveSession(updated);
         setSession(updated);
         postPreferences(session.session_id, { lang: next.lang, script: next.script, region: session.region }).catch(
-          () => undefined,
+          (err: unknown) => {
+            if (isSessionGone(err)) expireSession();
+          },
         );
       }
     },
-    [session],
+    [session, expireSession],
   );
 
   const handleLowBandwidth = useCallback(
@@ -178,6 +232,51 @@ export default function Page() {
     setStage({ kind: 'ready' });
   }, []);
 
+  const handleConsentTextChanged = useCallback(() => {
+    setError(null);
+  }, []);
+
+  // --- audio for the answer -----------------------------------------------------------------
+  /**
+   * The answer audio as a Blob. `audio_url` is served once by the server, so it is fetched into
+   * memory at most once and every replay (including after a refused autoplay) uses the Blob.
+   * When the fetch fails (expired token, network) the text is synthesised through /api/speak.
+   */
+  const answerAudio = useCallback(
+    async (response: AskResponse): Promise<Blob> => {
+      const cached = answerAudioRef.current;
+      if (cached && cached.response === response) return cached.blob;
+      let blob: Blob | null = null;
+      const url = response.audio_url;
+      if (url) {
+        if (!tokenAudioRef.current || tokenAudioRef.current.url !== url) {
+          tokenAudioRef.current = { url, blob: getAudio(url) };
+        }
+        try {
+          blob = await tokenAudioRef.current.blob;
+        } catch {
+          blob = null; // the token is gone for good; fall back to synthesis
+        }
+      }
+      if (!blob) {
+        blob = await speak({
+          text: speakableText(response),
+          lang: locale.lang,
+          script: locale.script,
+          low_bandwidth: lowBandwidth,
+        });
+      }
+      answerAudioRef.current = { response, blob };
+      return blob;
+    },
+    [locale, lowBandwidth],
+  );
+
+  const forgetAudio = useCallback(() => {
+    tokenAudioRef.current = null;
+    answerAudioRef.current = null;
+  }, []);
+
   // --- ask ----------------------------------------------------------------------------------
   const submitQuestion = useCallback(
     (text: string, mode: InputMode) => {
@@ -185,6 +284,7 @@ export default function Page() {
       const question = text.trim();
       if (!question) return;
       player().stop();
+      forgetAudio();
       setError(null);
       setResult(null);
       setCitation(null);
@@ -201,30 +301,34 @@ export default function Page() {
         low_bandwidth: lowBandwidth,
       })
         .then((response) => {
+          setStage({ kind: 'ready' });
+          if (isPipelineError(response)) {
+            // An infrastructure failure, not a knowledge gap: keep the question, offer a retry.
+            setDraft(question);
+            setError({ key: 'error_server', retry: () => submitQuestion(question, mode) });
+            return;
+          }
           setResult({ response, question });
           setDraft('');
-          setStage({ kind: 'ready' });
           if (wantAudio && response.audio_url) {
-            player()
-              .play(resolveAudioUrl(response.audio_url))
-              .catch(() => undefined); // autoplay can be refused; the Listen button still works
+            // Fetch first, then play: a refused autoplay (iOS) must not consume the one-time token.
+            answerAudio(response)
+              .then((blob) => player().play(blob))
+              .catch(() => undefined); // the Listen button still works from the cached Blob
           }
         })
         .catch((err: unknown) => {
           const key = errorMessageKey(err);
           if (key === 'session_expired') {
-            clearAll();
-            setSession(null);
-            setStage({ kind: 'consent' });
-            setError({ key, retry: null });
+            expireSession();
             return;
           }
           setStage({ kind: 'ready' });
           setDraft(question);
-          setError({ key, retry: () => submitQuestion(question, mode) });
+          setError({ key, retry: () => submitQuestion(question, mode), retryAt: retryAtFor(err) });
         });
     },
-    [session, locale, lowBandwidth, player],
+    [session, locale, lowBandwidth, player, answerAudio, forgetAudio, expireSession],
   );
 
   // --- voice --------------------------------------------------------------------------------
@@ -258,13 +362,12 @@ export default function Page() {
         }
         const key = errorMessageKey(err);
         if (key === 'session_expired') {
-          clearAll();
-          setSession(null);
-          setStage({ kind: 'consent' });
+          expireSession();
+          return;
         }
-        setError({ key, retry: null });
+        setError({ key, retry: null, retryAt: retryAtFor(err) });
       });
-  }, [session, locale.lang, recorder]);
+  }, [session, locale.lang, recorder, expireSession]);
 
   const handleMicPress = useCallback(() => {
     if (stage.kind === 'recording') {
@@ -300,36 +403,39 @@ export default function Page() {
     setStage({ kind: 'ready' });
   }, []);
 
-  // --- audio for the answer -----------------------------------------------------------------
   const handleListen = useCallback(() => {
     if (!result) return;
     const { response } = result;
     setAudioBusy(true);
     setError((e) => (e?.key === 'audio_error' ? null : e));
-    const playback = response.audio_url
-      ? player().play(resolveAudioUrl(response.audio_url))
-      : speak({ text: speakableText(response), lang: locale.lang, script: locale.script, low_bandwidth: lowBandwidth }).then(
-          (blob) => player().play(blob),
-        );
-    playback
-      .catch(() => setError({ key: 'audio_error', retry: null }))
+    answerAudio(response)
+      .then((blob) => player().play(blob))
+      .catch((err: unknown) => {
+        if (errorMessageKey(err) === 'session_expired') {
+          expireSession();
+          return;
+        }
+        setError({ key: 'audio_error', retry: null, retryAt: retryAtFor(err) });
+      })
       .finally(() => setAudioBusy(false));
-  }, [result, locale, lowBandwidth, player]);
+  }, [result, answerAudio, player, expireSession]);
 
   const handleNewQuestion = useCallback(() => {
     player().stop();
+    forgetAudio();
     setResult(null);
     setCitation(null);
     setError(null);
     setStage({ kind: 'ready' });
     composerRef.current?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
     textareaRef.current?.focus({ preventScroll: true });
-  }, [player]);
+  }, [player, forgetAudio]);
 
   // --- delete -------------------------------------------------------------------------------
   const resetToConsent = useCallback(() => {
     recorderRef.current?.cancel();
     player().stop();
+    forgetAudio();
     clearAll();
     setSession(null);
     setResult(null);
@@ -337,7 +443,7 @@ export default function Page() {
     setDraft('');
     setError(null);
     setStage({ kind: 'consent' });
-  }, [player]);
+  }, [player, forgetAudio]);
 
   const handleDeleteData = useCallback(async (): Promise<DeleteResult> => {
     if (!session) {
@@ -364,6 +470,7 @@ export default function Page() {
         : stage.kind === 'asking'
           ? t('thinking')
           : '';
+  const waitSeconds = error?.retryAt ? Math.max(0, Math.ceil((error.retryAt - Math.max(now, Date.now())) / 1000)) : 0;
   const citationFor = useCallback(
     (marker: string) => {
       const found = result?.response.citations.find((c) => c.marker === marker) ?? null;
@@ -386,7 +493,7 @@ export default function Page() {
         {t('banner_not_advice')}
       </div>
       <header className="app-header">
-        <div className="brand">{t('app_name')}</div>
+        <h1 className="brand">{t('app_name')}</h1>
         <p className="tagline">{t('tagline')}</p>
       </header>
 
@@ -411,6 +518,7 @@ export default function Page() {
               lowBandwidth={lowBandwidth}
               player={player()}
               onDone={handleConsentDone}
+              onConsentTextChanged={handleConsentTextChanged}
             />
           </>
         ) : null}
@@ -487,8 +595,8 @@ export default function Page() {
                 <p>{t(error.key)}</p>
                 <div className="row">
                   {error.retry ? (
-                    <button type="button" className="btn btn--primary" onClick={error.retry}>
-                      {t('retry')}
+                    <button type="button" className="btn btn--primary" disabled={waitSeconds > 0} onClick={error.retry}>
+                      {waitSeconds > 0 ? `${t('retry')} (${waitSeconds} s)` : t('retry')}
                     </button>
                   ) : null}
                   <button type="button" className="btn btn--ghost" onClick={() => setError(null)}>
@@ -501,7 +609,15 @@ export default function Page() {
             <div ref={resultRef} aria-live="polite">
               {result ? (
                 result.response.outcome === 'redflag' ? (
-                  <EmergencyCard response={result.response} locale={locale} onNewQuestion={handleNewQuestion} />
+                  <EmergencyCard
+                    response={result.response}
+                    locale={locale}
+                    playing={playerState === 'playing'}
+                    audioBusy={audioBusy || playerState === 'loading'}
+                    onListen={handleListen}
+                    onStopAudio={() => player().stop()}
+                    onNewQuestion={handleNewQuestion}
+                  />
                 ) : (
                   <AnswerView
                     response={result.response}

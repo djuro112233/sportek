@@ -146,6 +146,7 @@ def test_forged_session_get_reports_not_exists_without_error(client, db):
     assert r.status_code == 200
     assert r.json() == {
         "exists": False,
+        "consent_version": None,
         "consent_given": None,
         "lang": None,
         "script": None,
@@ -159,7 +160,9 @@ def test_forged_session_get_reports_not_exists_without_error(client, db):
 def test_forged_session_delete_is_200_with_zero_counts(client, db):
     r = client.delete("/api/session/forged-session-id-0000000000000000")
     assert r.status_code == 200
-    assert r.json() == {"deleted": {"saved_questions": 0, "gate_records": 0, "events": 0, "sessions": 0}}
+    assert r.json() == {
+        "deleted": {"saved_questions": 0, "gate_records": 0, "events": 0, "sessions": 0, "audio_tokens": 0}
+    }
     assert _count(db, Session) == 0
     assert _count(db, Event, type="delete") == 1  # the deletion attempt itself is counted anonymously
 
@@ -218,7 +221,9 @@ def test_repeated_delete_is_idempotent(client, settings, db):
     second = client.delete(f"/api/session/{sid}")
     assert first.status_code == 200 and second.status_code == 200
     assert first.json()["deleted"]["sessions"] == 1
-    assert second.json()["deleted"] == {"saved_questions": 0, "gate_records": 0, "events": 0, "sessions": 0}
+    assert second.json()["deleted"] == {
+        "saved_questions": 0, "gate_records": 0, "events": 0, "sessions": 0, "audio_tokens": 0
+    }  # fmt: skip
     assert client.get(f"/api/session/{sid}").json()["exists"] is False
     assert _count(db, Session) == 0
 

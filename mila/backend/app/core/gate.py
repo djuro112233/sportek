@@ -26,6 +26,7 @@ REASON_LOW_SUPPORT_RATIO = "low_support_ratio"
 REASON_LOW_CONFIDENCE = "low_confidence"
 REASON_UNREVIEWED_OUTSIDE_DEMO = "unreviewed_source_outside_demo"
 REASON_LOW_RELEVANCE = "low_relevance"
+REASON_OFF_TOPIC = "off_topic"  # per-sentence: the sentence does not address the question
 WITHHOLD_REASONS: tuple[str, ...] = (
     REASON_NO_SENTENCES,
     REASON_NO_CITATIONS,
@@ -60,12 +61,14 @@ class ValidationGate:
         min_support_ratio: float = 0.6,
         min_confidence: float = 0.35,
         demo_mode: bool = True,
-        min_relevance: float = 0.35,
+        min_relevance: float = 0.3,
+        min_sentence_relevance: float = 0.1,
     ) -> None:
         self.min_support_ratio = min_support_ratio
         self.min_confidence = min_confidence
         self.demo_mode = demo_mode
         self.min_relevance = min_relevance
+        self.min_sentence_relevance = min_sentence_relevance
 
     @classmethod
     def from_settings(cls, settings: Settings) -> ValidationGate:
@@ -75,6 +78,7 @@ class ValidationGate:
             min_confidence=settings.gate_min_confidence,
             demo_mode=settings.demo_mode,
             min_relevance=settings.gate_min_relevance,
+            min_sentence_relevance=settings.gate_min_sentence_relevance,
         )
 
     def decide(
@@ -83,19 +87,31 @@ class ValidationGate:
         chunks: list[RetrievedChunk],
         *,
         relevance: float | None = None,
+        sentence_relevance: dict[int, float] | None = None,
     ) -> GateDecision:
-        """Approve or withhold. ``relevance`` is the question coverage of the cited evidence
-        (:func:`app.core.relevance.question_relevance`); ``None`` means not assessable and the
-        relevance rule is skipped."""
+        """Approve or withhold.
+
+        ``relevance`` is the question coverage of the cited evidence
+        (:func:`app.core.relevance.question_relevance`); ``None`` means not assessable (nothing
+        supported) and the answer-level rule is skipped because other reasons already apply.
+        ``sentence_relevance`` maps sentence index to its own coverage; a supported sentence
+        below ``min_sentence_relevance`` is removed with reason ``off_topic`` so one on-topic
+        chunk cannot carry unrelated sentences into the answer.
+        """
         if not sentences:
             return GateDecision(status="withheld", gate_version=GATE_VERSION, reasons=[REASON_NO_SENTENCES])
+        per_sentence = sentence_relevance or {}
 
         kept: list[AnswerSentence] = []
         removed: list[AnswerSentence] = []
-        for sentence in sentences:
+        for index, sentence in enumerate(sentences):
             cites_chunk = bool(_resolve(sentence.citations, len(chunks)))
+            own = per_sentence.get(index)
             if sentence.supported and not sentence.flagged_medication and cites_chunk:
-                kept.append(sentence.model_copy(update={"reason": ""}))
+                if own is not None and own < self.min_sentence_relevance:
+                    removed.append(sentence.model_copy(update={"reason": REASON_OFF_TOPIC}))
+                else:
+                    kept.append(sentence.model_copy(update={"reason": ""}))
             else:
                 if sentence.flagged_medication:
                     reason = REASON_MEDICATION

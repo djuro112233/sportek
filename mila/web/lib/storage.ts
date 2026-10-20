@@ -1,9 +1,11 @@
 /**
- * Safe localStorage wrappers. Everything is wrapped in try/catch because storage can be
+ * Safe web-storage wrappers. Everything is wrapped in try/catch because storage can be
  * missing (old WebViews), blocked (private mode) or full. The client stores only:
- *   - the pseudonymous session id plus lang / script / region / is_minor (needed for requests)
- *   - display preferences (low-bandwidth mode and the chosen language)
- * Never question text, transcripts or answers.
+ *   - in sessionStorage (one tab, cleared when the browser closes): the pseudonymous session id
+ *     plus the lang / script / region / is_minor fixed at consent (needed for requests). A shared
+ *     clinic phone therefore never resumes a previous person's session without a new consent.
+ *   - in localStorage: non-identifying display preferences only (language, script, low-data mode).
+ * Never question text, transcripts or answers, and never the session id in localStorage.
  */
 
 import type { Lang, Locale, Region, Script, StoredSession } from './types';
@@ -13,6 +15,8 @@ import { isLang, isRegion, isScript } from './types.ts';
 export const SESSION_KEY = 'mila.session.v1';
 export const PREFS_KEY = 'mila.prefs.v1';
 
+export type StorageArea = 'session' | 'local';
+
 export interface Prefs {
   low_bandwidth: boolean;
   lang: Lang | null;
@@ -21,9 +25,10 @@ export interface Prefs {
 
 const DEFAULT_PREFS: Prefs = { low_bandwidth: false, lang: null, script: null };
 
-function storage(): Storage | null {
+function storage(area: StorageArea): Storage | null {
   try {
-    const candidate = (globalThis as { localStorage?: Storage }).localStorage;
+    const g = globalThis as { localStorage?: Storage; sessionStorage?: Storage };
+    const candidate = area === 'session' ? g.sessionStorage : g.localStorage;
     if (!candidate || typeof candidate.getItem !== 'function') return null;
     return candidate;
   } catch {
@@ -31,18 +36,18 @@ function storage(): Storage | null {
   }
 }
 
-export function readRaw(key: string): string | null {
+export function readRaw(key: string, area: StorageArea = 'local'): string | null {
   try {
-    const s = storage();
+    const s = storage(area);
     return s ? s.getItem(key) : null;
   } catch {
     return null;
   }
 }
 
-export function writeRaw(key: string, value: string): boolean {
+export function writeRaw(key: string, value: string, area: StorageArea = 'local'): boolean {
   try {
-    const s = storage();
+    const s = storage(area);
     if (!s) return false;
     s.setItem(key, value);
     return true;
@@ -51,16 +56,16 @@ export function writeRaw(key: string, value: string): boolean {
   }
 }
 
-export function removeRaw(key: string): void {
+export function removeRaw(key: string, area: StorageArea = 'local'): void {
   try {
-    storage()?.removeItem(key);
+    storage(area)?.removeItem(key);
   } catch {
     // ignore: nothing to remove or storage blocked
   }
 }
 
-export function readJson<T>(key: string, validate: (value: unknown) => value is T): T | null {
-  const raw = readRaw(key);
+export function readJson<T>(key: string, validate: (value: unknown) => value is T, area: StorageArea = 'local'): T | null {
+  const raw = readRaw(key, area);
   if (raw === null) return null;
   try {
     const parsed: unknown = JSON.parse(raw);
@@ -70,9 +75,9 @@ export function readJson<T>(key: string, validate: (value: unknown) => value is 
   }
 }
 
-export function writeJson(key: string, value: unknown): boolean {
+export function writeJson(key: string, value: unknown, area: StorageArea = 'local'): boolean {
   try {
-    return writeRaw(key, JSON.stringify(value));
+    return writeRaw(key, JSON.stringify(value), area);
   } catch {
     return false;
   }
@@ -101,8 +106,10 @@ export function isPrefs(v: unknown): v is Prefs {
   return typeof v.low_bandwidth === 'boolean' && langOk && scriptOk;
 }
 
+/** The session of this tab, if any. Older builds kept it in localStorage; that copy is dropped. */
 export function loadSession(): StoredSession | null {
-  return readJson(SESSION_KEY, isStoredSession);
+  removeRaw(SESSION_KEY, 'local');
+  return readJson(SESSION_KEY, isStoredSession, 'session');
 }
 
 export function saveSession(session: StoredSession): boolean {
@@ -114,20 +121,28 @@ export function saveSession(session: StoredSession): boolean {
     region: session.region,
     is_minor: session.is_minor,
   };
-  return writeJson(SESSION_KEY, minimal);
+  return writeJson(SESSION_KEY, minimal, 'session');
 }
 
+/** Forget the session (expired, deleted, or refused by the server) but keep display preferences. */
 export function clearSession(): void {
-  removeRaw(SESSION_KEY);
+  removeRaw(SESSION_KEY, 'session');
+  removeRaw(SESSION_KEY, 'local');
 }
 
 export function loadPrefs(): Prefs {
-  return readJson(PREFS_KEY, isPrefs) ?? { ...DEFAULT_PREFS };
+  return readJson(PREFS_KEY, isPrefs, 'local') ?? { ...DEFAULT_PREFS };
 }
 
 export function savePrefs(prefs: Partial<Prefs>): Prefs {
-  const merged: Prefs = { ...loadPrefs(), ...prefs };
-  writeJson(PREFS_KEY, merged);
+  // Explicit field list, as for the session: only these three preferences are persisted.
+  const current = loadPrefs();
+  const merged: Prefs = {
+    low_bandwidth: prefs.low_bandwidth ?? current.low_bandwidth,
+    lang: prefs.lang === undefined ? current.lang : prefs.lang,
+    script: prefs.script === undefined ? current.script : prefs.script,
+  };
+  writeJson(PREFS_KEY, merged, 'local');
   return merged;
 }
 
@@ -140,8 +155,9 @@ export function regionOrDefault(value: unknown, fallback: Region = 'BA'): Region
   return isRegion(value) ? value : fallback;
 }
 
-/** Remove everything MILA ever wrote to this browser. */
+/** Remove everything MILA ever wrote to this browser ("Delete my data"). */
 export function clearAll(): void {
-  removeRaw(SESSION_KEY);
-  removeRaw(PREFS_KEY);
+  clearSession();
+  removeRaw(PREFS_KEY, 'local');
+  removeRaw(PREFS_KEY, 'session');
 }

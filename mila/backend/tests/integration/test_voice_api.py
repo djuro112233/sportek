@@ -111,7 +111,8 @@ def test_transcribe_413_for_oversized_upload(client: TestClient, db, settings) -
     sid = _session(db)
     resp = _post_audio(client, sid, b"\x00" * (MAX_UPLOAD_BYTES + 1))
     assert resp.status_code == 413
-    assert list(_audio_dir(settings).iterdir()) == []
+    audio_dir = _audio_dir(settings)
+    assert not audio_dir.exists() or list(audio_dir.iterdir()) == []
 
 
 def test_transcribe_mock_payload_returns_transcript(client: TestClient, db, settings) -> None:
@@ -282,14 +283,18 @@ def test_speak_unknown_session_is_logged_anonymously(client: TestClient, db) -> 
 
 
 def test_speak_is_rate_limited_per_session(tmp_path: Path) -> None:
-    app = create_app(make_test_settings(tmp_path, rate_limit_per_minute=2))
+    settings = make_test_settings(tmp_path, rate_limit_per_minute=2)
+    app = create_app(settings)
     with TestClient(app) as client:
+        consent = {"lang": "sr", "is_minor": False, "accepted": True, "consent_version": settings.consent_version}
+        abc = client.post("/api/consent", json=consent).json()["session_id"]
+        xyz = client.post("/api/consent", json=consent).json()["session_id"]
         codes = [
-            client.post("/api/speak?session_id=abc", json={"text": "Pozovi odmah.", "lang": "sr"}).status_code
+            client.post(f"/api/speak?session_id={abc}", json={"text": "Pozovi odmah.", "lang": "sr"}).status_code
             for _ in range(3)
         ]
-        other = client.post("/api/speak?session_id=xyz", json={"text": "Pozovi odmah.", "lang": "sr"})
-        limited = client.post("/api/speak?session_id=abc", json={"text": "Pozovi odmah.", "lang": "sr"})
+        other = client.post(f"/api/speak?session_id={xyz}", json={"text": "Pozovi odmah.", "lang": "sr"})
+        limited = client.post(f"/api/speak?session_id={abc}", json={"text": "Pozovi odmah.", "lang": "sr"})
     assert codes == [200, 200, 429]
     assert other.status_code == 200
     assert limited.status_code == 429 and limited.headers["retry-after"] == "60"

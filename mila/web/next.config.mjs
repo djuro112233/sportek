@@ -1,9 +1,9 @@
 // MILA web client. Output is a standalone server (used by the Dockerfile).
-// The API base is inlined at build time from NEXT_PUBLIC_API_BASE and also
-// allow-listed in the Content-Security-Policy below.
+// By default the browser calls the same origin (/api/*) and app/api/[...path]/route.ts forwards
+// to MILA_API_URL at runtime. NEXT_PUBLIC_API_BASE is an optional build-time override for static
+// deployments; when set, that origin is also allow-listed in the Content-Security-Policy below.
 
-const rawBase = process.env.NEXT_PUBLIC_API_BASE;
-const API_BASE = (rawBase === undefined ? 'http://localhost:8000' : rawBase).replace(/\/+$/, '');
+const API_BASE = (process.env.NEXT_PUBLIC_API_BASE ?? '').trim().replace(/\/+$/, '');
 const isDev = process.env.NODE_ENV !== 'production';
 
 const apiOrigin = API_BASE ? ` ${API_BASE}` : '';

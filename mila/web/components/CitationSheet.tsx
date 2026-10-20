@@ -11,25 +11,59 @@ interface Props {
   onClose: () => void;
 }
 
-/** Bottom sheet with the source behind a [S1] chip. Escape or backdrop tap closes it. */
+/**
+ * Bottom sheet with the source behind a [S1] chip. A native <dialog> opened with showModal()
+ * traps focus and makes the rest of the page inert; Escape (the dialog's cancel event) or a tap
+ * on the backdrop closes it, and focus returns to the chip that opened it.
+ */
 export default function CitationSheet({ citation, locale, onClose }: Props) {
   const t = translator(locale);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const previousFocus = useRef<Element | null>(null);
 
   useEffect(() => {
-    if (!citation) return undefined;
+    const dialog = dialogRef.current;
+    if (!citation || !dialog) return undefined;
     previousFocus.current = document.activeElement;
+    if (!dialog.open) {
+      if (typeof dialog.showModal === 'function') {
+        try {
+          dialog.showModal();
+        } catch {
+          dialog.setAttribute('open', '');
+        }
+      } else {
+        dialog.setAttribute('open', '');
+      }
+    }
     closeRef.current?.focus();
-    const onKey = (ev: KeyboardEvent) => {
-      if (ev.key === 'Escape') onClose();
+    // Escape: the modal dialog fires `cancel`; the keydown fallback covers browsers without showModal.
+    const onCancel = (ev: Event) => {
+      ev.preventDefault();
+      onClose();
     };
-    document.addEventListener('keydown', onKey);
+    const onKey = (ev: KeyboardEvent) => {
+      if (ev.key === 'Escape') {
+        ev.preventDefault();
+        onClose();
+      }
+    };
+    dialog.addEventListener('cancel', onCancel);
+    dialog.addEventListener('keydown', onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
-      document.removeEventListener('keydown', onKey);
+      dialog.removeEventListener('cancel', onCancel);
+      dialog.removeEventListener('keydown', onKey);
       document.body.style.overflow = prevOverflow;
+      if (dialog.open && typeof dialog.close === 'function') {
+        try {
+          dialog.close();
+        } catch {
+          // already closed
+        }
+      }
       const prev = previousFocus.current;
       if (prev instanceof HTMLElement) prev.focus();
     };
@@ -47,13 +81,17 @@ export default function CitationSheet({ citation, locale, onClose }: Props) {
   ];
 
   return (
-    <div
-      className="sheet-backdrop"
+    <dialog
+      ref={dialogRef}
+      className="sheet-dialog"
+      aria-modal="true"
+      aria-labelledby="citation-title"
       onClick={(ev) => {
+        // A click on the ::backdrop targets the dialog element itself; clicks inside hit .sheet.
         if (ev.target === ev.currentTarget) onClose();
       }}
     >
-      <div className="sheet" role="dialog" aria-modal="true" aria-labelledby="citation-title">
+      <div className="sheet">
         <div className="row" style={{ justifyContent: 'space-between' }}>
           <h2 id="citation-title">
             [{citation.marker}] {t('citation_title')}
@@ -78,6 +116,6 @@ export default function CitationSheet({ citation, locale, onClose }: Props) {
           <p className="badge badge--ok">{t('status_reviewed')}</p>
         )}
       </div>
-    </div>
+    </dialog>
   );
 }

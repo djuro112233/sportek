@@ -64,6 +64,21 @@ test('t falls back to English for unknown languages and transliterates sr-Cyrl',
   assert.equal(t('yes', { lang: 'xx' as 'en', script: 'latin' }), 'Da');
 });
 
+test('the keys added for the reviewed findings exist everywhere and transliterate cleanly', () => {
+  const keys = ['unverified_contact', 'error_rate_limited', 'consent_text_changed', 'session_expired'] as const;
+  for (const key of keys) {
+    for (const lang of ['sr', 'bs', 'me', 'hr', 'en'] as const) {
+      assert.ok(MESSAGES[lang][key].trim().length > 0, `${lang}.${key}`);
+    }
+    // Cyrillic output must contain no Latin letters at all (every BCMS letter has a mapping).
+    assert.doesNotMatch(t(key, { lang: 'sr', script: 'cyrillic' }), /[A-Za-z]/, `${key} in Cyrillic`);
+  }
+  assert.equal(t('unverified_contact', { lang: 'sr', script: 'latin' }), 'Kontakt još nije provjeren');
+  assert.equal(t('unverified_contact', { lang: 'sr', script: 'cyrillic' }), 'Контакт још није провјерен');
+  assert.equal(t('unverified_contact', { lang: 'en', script: 'latin' }), 'Contact not yet verified');
+  assert.notEqual(t('error_rate_limited', { lang: 'en', script: 'latin' }), t('error_server', { lang: 'en', script: 'latin' }));
+});
+
 test('language options are unique and round-trip through localeId/localeFromId', () => {
   const ids = LANGUAGE_OPTIONS.map((o) => o.id);
   assert.equal(new Set(ids).size, ids.length);

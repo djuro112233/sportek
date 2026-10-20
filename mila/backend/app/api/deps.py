@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hmac
 from collections.abc import Generator
 
 from fastapi import Depends, Header, HTTPException, Request
@@ -26,15 +27,19 @@ def require_admin(
 ) -> None:
     if not settings.admin_token:
         raise HTTPException(status_code=404, detail="admin disabled")
-    if x_admin_token != settings.admin_token:
+    if not x_admin_token or not hmac.compare_digest(x_admin_token.encode(), settings.admin_token.encode()):
         raise HTTPException(status_code=403, detail="forbidden")
 
 
-def require_consented_session(session_id: str, db: DbSession) -> Session:
-    """A session must exist and carry consent before any question is processed."""
+def require_consented_session(session_id: str, db: DbSession, settings: Settings | None = None) -> Session:
+    """A session must exist, carry consent, and (when ``settings`` is given) consent to the
+    current consent text; an older consent version answers 403 ``consent_version_outdated``
+    so the client asks again."""
     sess = db.get(Session, session_id)
     if sess is None:
         raise HTTPException(status_code=403, detail="unknown session; give consent first")
     if not sess.consent_given:
         raise HTTPException(status_code=403, detail="consent required")
+    if settings is not None and sess.consent_version != settings.consent_version:
+        raise HTTPException(status_code=403, detail="consent_version_outdated")
     return sess

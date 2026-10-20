@@ -97,7 +97,9 @@ jobs:
           exit "${status}"
 
   web:
-    name: web (node 20)
+    # Node 22: `npm test` runs the .ts suites with node:test's built-in type stripping (22.18+).
+    # The app itself still runs on Node 20 (see web/Dockerfile).
+    name: web (node 22)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
@@ -107,23 +109,26 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: npm
           cache-dependency-path: web/package-lock.json
       - name: Install
         run: npm ci --no-audit --no-fund
       - name: Lint
         run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test
+        run: npm test
       - name: Build
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: "1"
-          NEXT_PUBLIC_API_BASE: http://localhost:8000
 
   docker:
-    name: docker build (api)
+    name: docker build (api, web)
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
@@ -137,5 +142,15 @@ jobs:
           push: false
           load: false
           tags: mila-api:ci
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+      - name: Build web image (no push)
+        uses: docker/build-push-action@v6
+        with:
+          context: web
+          file: web/Dockerfile
+          push: false
+          load: false
+          tags: mila-web:ci
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web

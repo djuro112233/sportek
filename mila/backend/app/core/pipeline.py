@@ -35,7 +35,7 @@ from app.core.gate import GATE_VERSION, ValidationGate, record_decision
 from app.core.generation import Generator
 from app.core.i18n import coerce_lang, render, t
 from app.core.referral import ReferralService, ensure_referral_points
-from app.core.relevance import question_relevance
+from app.core.relevance import question_relevance, sentence_relevance
 from app.core.retrieval import Retriever
 from app.core.scope import SCOPE_MESSAGE_KEYS, SCOPE_REASONS, asks_for_dose, classify_scope
 from app.core.types import (
@@ -202,9 +202,14 @@ class AskPipeline:
                 lambda: self.generator.generate(text, chunks, lang, is_minor=bool(session.is_minor)),
             )
             sentences = self._stage("verification", lambda: self.verifier.verify(raw.text, chunks))
-            relevance = self._stage("relevance", lambda: self._relevance(ctx, sentences, chunks))
+            relevance, per_sentence = self._stage(
+                "relevance", lambda: self._relevance(ctx, sentences, chunks)
+            )
             decision = self._stage(
-                "gate", lambda: self.gate.decide(sentences, chunks, relevance=relevance)
+                "gate",
+                lambda: self.gate.decide(
+                    sentences, chunks, relevance=relevance, sentence_relevance=per_sentence
+                ),
             )
         except PipelineError as failure:
             return self._finish_failed(ctx, failure, started)
@@ -220,18 +225,55 @@ class AskPipeline:
 
     def _relevance(
         self, ctx: _Context, sentences: list[AnswerSentence], chunks: list[RetrievedChunk]
-    ) -> float | None:
-        """Question coverage of the evidence behind the supported sentences (None = not assessable)."""
+    ) -> tuple[float | None, dict[int, float]]:
+        """Answer-level and per-sentence question coverage (see ``app.core.relevance``).
+
+        Fails closed: a question without content words scores 0.0. When no cited chunk shares
+        the question's language family the lexical score is meaningless, so the LLM judge is
+        asked instead when one is configured; without it the cross-lingual answer is withheld.
+        """
         if not any(s.supported for s in sentences):
-            return None
-        return question_relevance(
-            ctx.text,
-            ctx.lang,
-            sentences,
-            chunks,
-            self.retriever.stem_idf(),
-            unknown_term_penalty=self.settings.relevance_unknown_term_penalty,
+            return None, {}
+        idf = self.retriever.stem_idf()
+        penalty = self.settings.relevance_unknown_term_penalty
+        per_sentence = sentence_relevance(ctx.text, sentences, chunks, idf, unknown_term_penalty=penalty)
+        floor = self.settings.gate_min_sentence_relevance
+        survivors = [
+            s for i, s in enumerate(sentences) if i not in per_sentence or per_sentence[i] >= floor
+        ]
+        answer = question_relevance(
+            ctx.text, ctx.lang, survivors, chunks, idf, unknown_term_penalty=penalty
         )
+        if answer is not None:
+            # An LLM judge, when configured, decides relevance (it understands paraphrases and
+            # other languages); the lexical score remains the fallback and the only check when
+            # the judge is lexical. Without a judge, a cross-lingual answer fails closed.
+            judged = self._llm_relevance(ctx.text, sentences, chunks)
+            if judged is not None:
+                answer = judged
+                per_sentence = {} if judged >= self.settings.gate_min_relevance else per_sentence
+        return answer, per_sentence
+
+    def _llm_relevance(
+        self, question: str, sentences: list[AnswerSentence], chunks: list[RetrievedChunk]
+    ) -> float | None:
+        judge = self.providers.judge
+        relevance_fn = getattr(judge, "relevance", None)
+        if relevance_fn is None:
+            return None
+        cited: list[str] = []
+        for sentence in sentences:
+            if not sentence.supported or sentence.flagged_medication:
+                continue
+            for marker in sentence.citations:
+                digits = marker[1:]
+                if digits.isdigit() and 0 < int(digits) <= len(chunks):
+                    text = chunks[int(digits) - 1].text
+                    if text not in cited:
+                        cited.append(text)
+        if not cited:
+            return None
+        return float(relevance_fn(question, "\n\n".join(cited)))
 
     def _retrieve(self, ctx: _Context) -> list[RetrievedChunk]:
         topic = ctx.topic if ctx.topic != "other" else None
@@ -260,6 +302,7 @@ class AskPipeline:
             message=referral.message,
             referral=referral,
             disclaimer_short=t("disclaimer_short", ctx.lang, ctx.script),
+            minor_note=t("minor_note", ctx.lang, ctx.script) if ctx.session.is_minor else "",
             redflag_category=flag.category,
         )
         if ctx.req.want_audio:
@@ -306,6 +349,7 @@ class AskPipeline:
             support_ratio=decision.support_ratio,
             referral=referral,
             disclaimer_short=t("disclaimer_short", ctx.lang, ctx.script),
+            minor_note=t("minor_note", ctx.lang, ctx.script) if ctx.session.is_minor else "",
             gate=decision,
         )
         if approved:
@@ -404,18 +448,24 @@ class AskPipeline:
             if tts is None:
                 tts = self.providers.tts = get_tts(self.settings)
             wav = tts.synthesize(spoken, ctx.lang, low_bandwidth=ctx.req.low_bandwidth)
-            return audio_url(register_audio(wav))
+            return audio_url(register_audio(wav, session_id=ctx.session.id))
         except Exception:  # the text answer stands even when speech fails
             log.exception("speech synthesis failed")
             return None
 
     def _save_question(self, ctx: _Context, outcome: str) -> None:
+        """Store the question only with the separate consent; a storage failure never fails the
+        response and never logs the text (the exception class name only)."""
         if not ctx.session.consent_save_questions:
             return
-        self.db.add(
-            SavedQuestion(session_id=ctx.session.id, text=ctx.req.text, lang=ctx.lang, outcome=outcome)
-        )
-        self.db.commit()
+        try:
+            self.db.add(
+                SavedQuestion(session_id=ctx.session.id, text=ctx.req.text, lang=ctx.lang, outcome=outcome)
+            )
+            self.db.commit()
+        except Exception as exc:  # noqa: BLE001 - fail open for storage, closed for privacy
+            self.db.rollback()
+            log.warning("saved question not stored: %s", type(exc).__name__)
 
 
 class _Context:

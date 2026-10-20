@@ -66,7 +66,7 @@ def test_log_event_rejects_mixed_payload_entirely(db):
 
 
 def test_log_event_error_message_names_the_bad_keys_only(db):
-    with pytest.raises(ValueError, match=r"\['phone', 'text'\]"):
+    with pytest.raises(ValueError, match=r"user content keys: '(?:text|phone)'"):
         log_event(db, type="ask", session_id=None, payload={"Text": "x", "phone": "y", "ok": 1})
 
 

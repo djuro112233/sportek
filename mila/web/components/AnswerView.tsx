@@ -36,6 +36,8 @@ export default function AnswerView({
   const sentences = response.sentences.filter((s) => s.text.trim().length > 0);
   const hasSpeakable = withheld ? response.message.trim().length > 0 : sentences.length > 0;
   const knownMarkers = new Set(response.citations.map((c) => c.marker));
+  const minorNote = (response.minor_note || '').trim();
+  const referral = response.referral;
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -85,6 +87,8 @@ export default function AnswerView({
         </>
       )}
 
+      {minorNote ? <p className="minor-note">{minorNote}</p> : null}
+
       <div className="row">
         {hasSpeakable ? (
           playing ? (
@@ -104,8 +108,12 @@ export default function AnswerView({
 
       {response.disclaimer_short ? <p className="disclaimer">{response.disclaimer_short}</p> : null}
 
-      {response.referral && (withheld || response.referral.points.length > 0) ? (
-        <ReferralCard referral={response.referral} locale={locale} />
+      {referral && (withheld || referral.points.length > 0) ? (
+        <ReferralCard
+          referral={referral}
+          locale={locale}
+          hideMessage={withheld && referral.message.trim() === response.message.trim()}
+        />
       ) : null}
     </section>
   );

@@ -92,7 +92,8 @@ binding and live in [architecture.md](architecture.md).
   | `low_confidence` | Combined confidence below `MILA_GATE_MIN_CONFIDENCE` (0.35) | same |
   | `no_citations` | No kept sentence cites a retrieved chunk | same |
   | `unreviewed_source_outside_demo` | A cited chunk is `public_unreviewed` while demo mode is off | same |
-  | `low_relevance` | The cited evidence covers less of the question than `MILA_GATE_MIN_RELEVANCE` (0.35); see C9 | same |
+  | `low_relevance` | The cited evidence covers less of the question than `MILA_GATE_MIN_RELEVANCE` (0.3); see C9 | same |
+  | `off_topic` (per sentence) | A supported sentence covers less of the question than `MILA_GATE_MIN_SENTENCE_RELEVANCE` (0.1); the sentence is removed, the answer may still be approved | the sentence is absent |
   | `diagnosis_request`, `test_interpretation`, `manipulation` | The question itself asks for something out of scope (C9); set by the pipeline before retrieval | a specific message (`withheld_diagnosis`, `withheld_test_results`, `withheld_manipulation`) + referral |
   | `pipeline_error` | Any stage raised; the pipeline fails closed | `withheld` + referral; no traceback |
 
@@ -124,9 +125,9 @@ checked. The user is told MILA cannot answer this and is referred to a clinician
   the minors' items and the shorter spoken text.
 - `Generator.build_prompt(..., is_minor=True)` appends `MINOR_NOTE` ("the user may be under
   18") to the system prompt; simpler wording therefore depends on the real model (the mock LLM
-  is extractive and ignores it). The catalogue holds a `minor_note` text ("you can also talk to
-  a trusted adult") but no response field or UI element shows it yet; see the README
-  limitations.
+  is extractive and ignores it). Every response for a minor's session carries
+  `AskResponse.minor_note` ("you can also talk to a trusted adult"), on answered, withheld and
+  red-flag outcomes alike, and the web client shows it under the text.
 - `ReferralService.for_context(..., is_minor=True)` keeps only referral points with the
   `for_minors` flag and appends the `child_protection` kind to every plan that does not
   already contain it, so a minor always sees a children's helpline.
@@ -176,10 +177,20 @@ Two controls close that gap; both were tuned on `eval/offkb_questions.jsonl` and
   removed, ijekavian folded onto ekavian so "nedjelja" and "nedelja" match), each weighted by
   its rarity in the knowledge base (inverse document frequency over current chunks). A
   question term the knowledge base never uses multiplies the score by
-  `MILA_RELEVANCE_UNKNOWN_TERM_PENALTY` (0.75). Below `MILA_GATE_MIN_RELEVANCE` (0.35) the
-  gate withholds with `low_relevance`. The score is `None` (rule skipped) when nothing is
-  supported, when the question has no content words, or when no cited chunk shares the
-  question's language family; cross-lingual relevance is left to the LLM judge (section 4).
+  `MILA_RELEVANCE_UNKNOWN_TERM_PENALTY` (0.85). A small domain thesaurus maps common
+  paraphrases onto the knowledge base's wording before stemming ("doktor" and "ljekar",
+  "zaštita od trudnoće" and "kontracepcija", "sisa" and "doji"). Below
+  `MILA_GATE_MIN_RELEVANCE` (0.3) the gate withholds with `low_relevance`. Each supported
+  sentence is also scored on its own (sentence text plus the heading path of its cited chunk);
+  below `MILA_GATE_MIN_SENTENCE_RELEVANCE` (0.1) the sentence is removed as `off_topic`, so one
+  on-topic chunk cannot carry unrelated sentences into the answer. The rule fails closed: a
+  question without content words scores 0.0, and evidence in another language than the
+  question scores low and is withheld unless an LLM judge is configured, in which case the
+  judge decides relevance for every answer (`LLMJudge.relevance`, strict rubric, fails closed
+  on error). Numbers and generic words ("six people", "dobar način") are not question terms.
+  The lexical check cannot bridge every paraphrase: on `eval/inkb_paraphrases.jsonl` (30
+  natural rephrasings) about two thirds are answered with the lexical judge; the dataset test
+  pins a floor of 0.6 and the pilot configuration relies on the LLM judge for the rest.
   The committed dry run `reports/2026-10-20_measurement.md` (mock providers, demo knowledge
   base) records refusal correctness 0.970 on the 100 off-KB questions (the three misses are
   `unsupported_in_kb` questions that were answered) with 26 of the 30 in-KB questions still

@@ -129,12 +129,13 @@ def test_counts_at_k_are_disclosed(db):
     assert m["sessions_total"] == K
     assert m["sessions_per_day"] == [{"date": "2026-10-15", "count": K}]
     assert m["outcomes"] == {"answered": K, "withheld": None, "redflag": None}
-    assert m["ratios"] == {"answered": 1.0, "withheld": None, "redflag": None}
+    # two outcome cells are suppressed, so nothing that would let a reader recover them is shown
+    assert m["ratios"] == {"answered": None, "withheld": None, "redflag": None}
     assert m["top_topics"] == [{"topic": "pregnancy", "count": K}]
-    assert m["input_modes"] == {"text": K, "voice": None}
+    assert m["input_modes"] == {"text": None, "voice": None}
     assert m["median_latency_ms"] == 300.0 and m["p90_latency_ms"] == 500.0
     assert m["mean_support_ratio"] == 0.8
-    assert m["translated_rate"] == 1.0
+    assert m["translated_rate"] is None
     assert m["referral_rate"] is None and m["redflag_rate"] is None
 
 
@@ -160,15 +161,22 @@ def test_ratio_with_small_numerator_is_null_even_when_n_is_large(db):
     m = compute_public_metrics(db, K, 30, NOW).model_dump()
     assert m["outcomes"]["redflag"] is None
     assert m["ratios"]["redflag"] is None and m["redflag_rate"] is None
-    assert m["ratios"]["answered"] == round(10 / 12, 3)
+    # 10 / ratio would reveal n = 12 and therefore the suppressed 2, so the ratio is withheld too
+    assert m["ratios"]["answered"] is None
 
 
 def test_per_day_rows_below_k_are_dropped(db):
     _add_sessions(db, K, when=NOW - timedelta(days=2), prefix="a")
     _add_sessions(db, K - 2, when=NOW - timedelta(days=1), prefix="b")
     m = compute_public_metrics(db, K, 30, NOW).model_dump()
+    # total (8) minus the one publishable day (5) would reveal the suppressed day (3): the day
+    # row is dropped and the total, now safe on its own, is published
     assert m["sessions_total"] == 2 * K - 2
-    assert m["sessions_per_day"] == [{"date": "2026-10-13", "count": K}]
+    assert m["sessions_per_day"] == []
+    _add_sessions(db, K, when=NOW - timedelta(days=3), prefix="c")
+    m = compute_public_metrics(db, K, 30, NOW).model_dump()
+    # two publishable days (5 + 5) leave a remainder of 3: the smallest row goes, the other stays
+    assert m["sessions_total"] == 3 * K - 2 and m["sessions_per_day"] == [{"date": "2026-10-13", "count": K}]
 
 
 def test_topics_below_k_dropped_sorted_and_capped(db):
@@ -215,17 +223,25 @@ def test_latency_percentiles_use_nearest_rank(db):
 def test_translated_rate_needs_k_translated_answers(db):
     _add_events(db, 5, translated=True)
     _add_events(db, 5, translated=False)
+    # every outcome cell must be public before any ratio is
+    assert compute_public_metrics(db, K, 30, NOW).translated_rate is None
+    _add_events(db, 5, outcome="withheld")
+    _add_events(db, 5, ev_type="redflag", outcome="redflag")
     assert compute_public_metrics(db, K, 30, NOW).translated_rate == 0.5
     _add_events(db, 10, translated=False)
     assert compute_public_metrics(db, K, 30, NOW).translated_rate == 0.25
     assert compute_public_metrics(db, 6, 30, NOW).translated_rate is None
 
 
-def test_input_modes_are_suppressed_independently(db):
+def test_input_modes_are_published_only_together_with_a_public_total(db):
     _add_events(db, 6, input_mode="voice")
     _add_events(db, 4, input_mode="text")
     m = compute_public_metrics(db, K, 30, NOW).input_modes
-    assert m.voice == 6 and m.text is None
+    assert m.voice is None and m.text is None  # text < k and the question total is not public
+    _add_events(db, 5, outcome="withheld")
+    _add_events(db, 5, ev_type="redflag", outcome="redflag")
+    m = compute_public_metrics(db, K, 30, NOW).input_modes
+    assert m.voice == 6 and m.text == 14
 
 
 def test_non_question_events_are_not_counted_as_questions(db):
@@ -334,13 +350,11 @@ def test_public_endpoint_returns_json_without_session_ids(client, db):
     assert "session_id" not in dumped and "sess-" not in dumped
 
 
-def test_public_endpoint_clamps_the_window(client):
-    assert (
-        client.get("/api/metrics/public", params={"window_days": 1000}).json()["window_days"]
-        == MAX_WINDOW_DAYS
-    )
-    assert client.get("/api/metrics/public", params={"window_days": 0}).json()["window_days"] == 1
-    assert client.get("/api/metrics/public", params={"window_days": "many"}).status_code == 422
+def test_public_endpoint_accepts_only_fixed_windows(client):
+    for bad in (1000, 0, 29, "many"):
+        assert client.get("/api/metrics/public", params={"window_days": bad}).status_code == 422, bad
+    for good in (7, 30, 90, 365):
+        assert client.get("/api/metrics/public", params={"window_days": good}).json()["window_days"] == good
 
 
 def test_public_endpoint_is_open_without_token(client):

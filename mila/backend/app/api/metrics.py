@@ -28,7 +28,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from statistics import median
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session as DbSession
@@ -42,6 +42,7 @@ router = APIRouter(prefix="/metrics", tags=["metrics"])
 
 DEFAULT_WINDOW_DAYS = 30
 MAX_WINDOW_DAYS = 365
+PUBLIC_WINDOWS: tuple[int, ...] = (7, 30, 90, 365)  # fixed windows: no differencing attacks
 TOP_TOPICS = 10
 QUESTION_EVENT_TYPES: tuple[str, ...] = ("ask", "redflag")
 OUTCOMES: tuple[str, ...] = ("answered", "withheld", "redflag")
@@ -233,42 +234,81 @@ def _topic_rows(counter: Counter[str]) -> list[dict]:
     ]
 
 
+def _complement(rows: list[dict], total: int, k: int) -> tuple[list[dict], int]:
+    """Drop the smallest published rows until the unpublished remainder is 0 or at least k.
+
+    Without this, ``total - sum(shown rows)`` would reveal a suppressed cell.
+    """
+    rows = list(rows)
+    rest = total - sum(int(r["count"]) for r in rows)
+    while rows and 0 < rest < k:
+        smallest = min(rows, key=lambda r: int(r["count"]))
+        rows.remove(smallest)
+        rest += int(smallest["count"])
+    return rows, rest
+
+
 def _public_fields(stats: _WindowStats, k: int) -> dict:
+    """Assemble the public figures with complementary suppression.
+
+    Every count below k is null. A total is published only when it cannot be combined with
+    its published parts to recover a suppressed part; ratios only when every component is at
+    least k (a ratio times a public total would reveal a suppressed count); input modes and
+    topics only while the question total they complement is itself public.
+    """
     n = stats.questions
     answered = stats.outcomes["answered"]
     withheld = stats.outcomes["withheld"]
     redflag = stats.outcomes["redflag"]
     enough_latency = len(stats.latencies) >= k
     enough_support = len(stats.support_ratios) >= k
+
+    day_rows, day_rest = _complement(k_anonymize(_day_rows(stats.sessions_per_day), "count", k), stats.sessions_total, k)
+    sessions_total = stats.sessions_total if (day_rest == 0 or day_rest >= k) and stats.sessions_total >= k else None
+
+    outcomes_public = all(c >= k for c in (answered, withheld, redflag))
+    # n is derivable only when all three outcome counts are public (or when ratios are shown).
+    n_public = outcomes_public
+    ratio = (lambda num, den: _ratio(num, den, k)) if outcomes_public else (lambda num, den: None)
+
+    text, voice = stats.input_modes["text"], stats.input_modes["voice"]
+    modes_public = n_public and text >= k and voice >= k
+    topic_rows: list[dict] = k_anonymize(_topic_rows(stats.topics), "count", k)
+    if n_public:
+        topic_rows, _ = _complement(topic_rows, n, k)
+    else:
+        topic_rows, _ = _complement(topic_rows, sum(stats.topics.values()), k)
+    translated_ok = outcomes_public and stats.translated >= k and (answered - stats.translated) >= k
+
     return {
         "generated_at": stats.now.isoformat(),
         "k": k,
         "window_days": stats.window_days,
-        "sessions_total": suppress_small(stats.sessions_total, k),
-        "sessions_per_day": k_anonymize(_day_rows(stats.sessions_per_day), "count", k),
+        "sessions_total": sessions_total,
+        "sessions_per_day": day_rows,
         "outcomes": OutcomeCounts(
             answered=suppress_small(answered, k),
             withheld=suppress_small(withheld, k),
             redflag=suppress_small(redflag, k),
         ),
         "ratios": OutcomeRatios(
-            answered=_ratio(answered, n, k),
-            withheld=_ratio(withheld, n, k),
-            redflag=_ratio(redflag, n, k),
+            answered=ratio(answered, n),
+            withheld=ratio(withheld, n),
+            redflag=ratio(redflag, n),
         ),
-        "top_topics": k_anonymize(_topic_rows(stats.topics), "count", k)[:TOP_TOPICS],
-        "referral_rate": _ratio(withheld + redflag, n, k),
-        "redflag_rate": _ratio(redflag, n, k),
+        "top_topics": topic_rows[:TOP_TOPICS],
+        "referral_rate": ratio(withheld + redflag, n),
+        "redflag_rate": ratio(redflag, n),
         "input_modes": InputModeCounts(
-            text=suppress_small(stats.input_modes["text"], k),
-            voice=suppress_small(stats.input_modes["voice"], k),
+            text=text if modes_public else None,
+            voice=voice if modes_public else None,
         ),
         "median_latency_ms": float(median(stats.latencies)) if enough_latency else None,
         "p90_latency_ms": _percentile(stats.latencies, 0.9) if enough_latency else None,
         "mean_support_ratio": (
             round(sum(stats.support_ratios) / len(stats.support_ratios), 3) if enough_support else None
         ),
-        "translated_rate": _ratio(stats.translated, answered, k),
+        "translated_rate": _ratio(stats.translated, answered, k) if translated_ok else None,
     }
 
 
@@ -319,10 +359,12 @@ def compute_internal_metrics(
 
 @router.get("/public", response_model=PublicMetrics)
 def public_metrics(
-    window_days: int = Query(DEFAULT_WINDOW_DAYS, description=f"1..{MAX_WINDOW_DAYS}, clamped"),
+    window_days: int = Query(DEFAULT_WINDOW_DAYS, description=f"one of {PUBLIC_WINDOWS}"),
     db: DbSession = Depends(get_db),
     settings: Settings = Depends(get_settings_dep),
 ) -> PublicMetrics:
+    if window_days not in PUBLIC_WINDOWS:
+        raise HTTPException(status_code=422, detail=f"window_days must be one of {list(PUBLIC_WINDOWS)}")
     return compute_public_metrics(db, settings.k_anonymity, window_days)
 
 

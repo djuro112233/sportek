@@ -8,6 +8,8 @@ interface Props {
   locale: Locale;
   emergency?: boolean;
   title?: string;
+  /** Hide `referral.message` when the parent already showed the same text (red-flag card). */
+  hideMessage?: boolean;
 }
 
 /** Digits and a leading "+" only, so tel: links work with spaces, slashes or dashes in the data. */
@@ -27,12 +29,22 @@ function safeHttpUrl(url: string | undefined): string | null {
   }
 }
 
+/** Emergency numbers are standard; every other point counts as verified only with a `verified_on` date. */
+export function isUnverified(point: ReferralPoint): boolean {
+  return !point.emergency && (point.verified_on ?? '').trim() === '';
+}
+
+/**
+ * One referral point. Only name, kind, address, hours, a call button (when a phone exists) and a
+ * website link are shown; internal fields never reach the screen.
+ */
 function Point({ point, locale, emergency }: { point: ReferralPoint; locale: Locale; emergency: boolean }) {
   const t = translator(locale);
   const phone = (point.phone ?? '').trim();
   const url = safeHttpUrl(point.url);
   const isEmergency = emergency || Boolean(point.emergency);
   const place = [point.address, point.city].filter((s) => s && s.trim()).join(', ');
+  const unverified = isUnverified(point);
 
   return (
     <li className={isEmergency ? 'referral__point referral__point--emergency' : 'referral__point'}>
@@ -44,24 +56,26 @@ function Point({ point, locale, emergency }: { point: ReferralPoint; locale: Loc
           {t('hours')}: {point.hours}
         </div>
       ) : null}
-      {point.notes ? <div className="referral__detail muted">{point.notes}</div> : null}
-      <div className="row">
-        {phone ? (
-          <a className={isEmergency ? 'btn btn--danger' : 'btn btn--primary'} href={telHref(phone)}>
-            {t('call')} {phone}
-          </a>
-        ) : null}
-        {url ? (
-          <a className="btn btn--ghost" href={url} target="_blank" rel="noopener noreferrer">
-            {t('website')}
-          </a>
-        ) : null}
-      </div>
+      {unverified ? <div className="badge badge--warn referral__unverified">{t('unverified_contact')}</div> : null}
+      {phone || url ? (
+        <div className="row">
+          {phone ? (
+            <a className={isEmergency ? 'btn btn--danger' : 'btn btn--primary'} href={telHref(phone)}>
+              {t('call')} {phone}
+            </a>
+          ) : null}
+          {url ? (
+            <a className="btn btn--ghost" href={url} target="_blank" rel="noopener noreferrer">
+              {t('website')}
+            </a>
+          ) : null}
+        </div>
+      ) : null}
     </li>
   );
 }
 
-export default function ReferralCard({ referral, locale, emergency = false, title }: Props) {
+export default function ReferralCard({ referral, locale, emergency = false, title, hideMessage = false }: Props) {
   const t = translator(locale);
   const isEmergency = emergency || referral.emergency;
   // Emergency points first so the most important number is at the top on a small screen.
@@ -70,7 +84,7 @@ export default function ReferralCard({ referral, locale, emergency = false, titl
   return (
     <section className={isEmergency ? 'card card--danger stack' : 'card stack'} aria-label={title ?? t('referral_title')}>
       <h3>{title ?? t('referral_title')}</h3>
-      {referral.message ? <p>{referral.message}</p> : null}
+      {referral.message && !hideMessage ? <p>{referral.message}</p> : null}
       {points.length > 0 ? (
         <ul className="referral__list">
           {points.map((p, i) => (

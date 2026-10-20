@@ -18,7 +18,8 @@ _SessionLocal: sessionmaker[Session] | None = None
 
 
 def make_engine(database_url: str) -> Engine:
-    kwargs: dict = {"future": True}
+    # hide_parameters: SQL errors never carry bound values (a saved question, a session id) into logs
+    kwargs: dict = {"future": True, "hide_parameters": True}
     if database_url.startswith("sqlite"):
         kwargs["connect_args"] = {"check_same_thread": False}
         if ":memory:" in database_url:

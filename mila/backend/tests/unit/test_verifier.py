@@ -432,7 +432,8 @@ def test_verifier_takes_the_maximum_over_cited_chunks() -> None:
     [sentence] = Verifier(LexicalJudge()).verify(
         "They work better the sooner they are taken. [S1][S2]", chunks
     )
-    assert sentence.supported and sentence.support_score == 1.0 and sentence.citations == ["S1", "S2"]
+    # the maximum decides support; only the marker whose chunk supports the sentence is kept
+    assert sentence.supported and sentence.support_score == 1.0 and sentence.citations == ["S2"]
 
 
 def test_verifier_flags_medication_regardless_of_support() -> None:

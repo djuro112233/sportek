@@ -16,7 +16,7 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Session as DbSession
 
-from app.core.i18n import coerce_lang, t
+from app.core.i18n import coerce_lang, is_bcms, render, t
 from app.core.types import RED_FLAG_CATEGORIES, Referral, ReferralPointOut
 from app.models import ReferralPoint
 
@@ -46,8 +46,8 @@ def referral_plan(
     if category is not None and category not in RED_FLAG_CATEGORIES:
         raise ValueError(f"unknown red-flag category: {category!r}")
     if emergency or category in EMERGENCY_CATEGORIES:
-        return _PLAN_EMERGENCY, "redflag_emergency", True
-    if category == "suicidal_ideation":
+        kinds, key, urgent = _PLAN_EMERGENCY, "redflag_emergency", True
+    elif category == "suicidal_ideation":
         kinds, key, urgent = _PLAN_SUICIDAL, "redflag_support", True
     elif category == "violence_coercion":
         kinds, key, urgent = _PLAN_VIOLENCE, "redflag_support", False
@@ -72,8 +72,10 @@ def to_out(point: ReferralPoint) -> ReferralPointOut:
         hours=point.hours or "",
         emergency=bool(point.emergency),
         verified_on=point.verified_on or "",
-        notes=point.notes or "",
     )
+
+
+REGIONS: frozenset[str] = frozenset({"BA", "ME"})  # countries with seeded referral points
 
 
 class ReferralService:
@@ -86,6 +88,15 @@ class ReferralService:
         region = (region or "").strip().upper()
         regional = [p for p in points if (p.region or "").upper() == region]
         chosen = regional or points
+        if not regional:  # unknown region: every region, but one row per (name, phone)
+            seen: set[tuple[str, str]] = set()
+            deduped: list[ReferralPoint] = []
+            for p in sorted(chosen, key=lambda p: (p.priority, p.region)):
+                key = (p.name, p.phone or "")
+                if key not in seen:
+                    seen.add(key)
+                    deduped.append(p)
+            chosen = deduped
         if is_minor:
             chosen = [p for p in chosen if p.for_minors]
         return chosen
@@ -110,9 +121,12 @@ class ReferralService:
         rank = {kind: i for i, kind in enumerate(kinds)}
         candidates = [p for p in self._candidates(region, is_minor) if p.kind in rank]
         candidates.sort(key=lambda p: (rank[p.kind], p.priority, p.name))
-        return Referral(
-            emergency=urgent, message=t(key, lang, script), points=[to_out(p) for p in candidates]
-        )
+        points = [to_out(p) for p in candidates]
+        if script == "cyrillic" and is_bcms(lang):
+            for point in points:
+                point.name = render(point.name, lang, script)
+                point.address = render(point.address, lang, script)
+        return Referral(emergency=urgent, message=t(key, lang, script), points=points)
 
 
 # ---------------------------------------------------------------------------------------------

@@ -5,9 +5,11 @@ from __future__ import annotations
 from app.core.relevance import (
     UNKNOWN_TERM_PENALTY,
     coverage,
+    evidence_shares_language,
     fold_yat,
     make_idf,
     question_relevance,
+    sentence_relevance,
     stems,
 )
 from app.core.types import AnswerSentence, RetrievedChunk
@@ -38,7 +40,6 @@ def test_stems_drop_question_words_and_dedupe() -> None:
         "metod",
         "kontr",
         "posto",
-        "najbo",
     ]
     assert stems("Šta da radim?") == []
 
@@ -82,7 +83,7 @@ def test_question_relevance_uses_only_supported_cited_evidence() -> None:
     assert question_relevance("Koje metode kontracepcije postoje?", "sr", [flagged], chunks) is None
 
 
-def test_question_relevance_is_not_assessed_across_language_families() -> None:
+def test_cross_language_evidence_scores_low_instead_of_being_skipped() -> None:
     chunks = [_chunk("contraceptive methods condom pill", lang="en")]
     sentence = AnswerSentence(
         text="Condoms and pills are contraceptive methods.",
@@ -90,8 +91,43 @@ def test_question_relevance_is_not_assessed_across_language_families() -> None:
         supported=True,
         support_score=1.0,
     )
-    assert question_relevance("Koje metode kontracepcije postoje?", "sr", [sentence], chunks) is None
+    assert evidence_shares_language("sr", [sentence], chunks) is False
+    assert evidence_shares_language("en", [sentence], chunks) is True
+    score = question_relevance("Koje metode kontracepcije postoje?", "sr", [sentence], chunks)
+    assert score is not None and score < 0.35
     assert question_relevance("Which contraceptive methods are there?", "en", [sentence], chunks) == 1.0
+
+
+def test_question_without_content_words_scores_zero() -> None:
+    chunks = [_chunk("masturbation is normal and harmless")]
+    sentence = AnswerSentence(
+        text="Masturbation is normal and harmless.", citations=["S1"], supported=True, support_score=1.0
+    )
+    assert question_relevance("Is that normal?", "en", [sentence], chunks) == 0.0
+    assert question_relevance("Da li je to normalno?", "sr", [sentence], chunks) == 0.0
+    assert sentence_relevance("Is that normal?", [sentence], chunks) == {}
+
+
+def test_sentence_relevance_scores_each_supported_sentence_on_its_own() -> None:
+    chunks = [
+        _chunk("metode kontracepcije kondom pilula", lang="sr"),
+        _chunk("krvarenje u trudnoci", lang="sr"),
+    ]
+    on_topic = AnswerSentence(
+        text="Kondom i pilula su metode kontracepcije.", citations=["S1"], supported=True, support_score=1.0
+    )
+    off_topic = AnswerSentence(
+        text="Krvarenje u trudnoci je razlog za hitan pregled.",
+        citations=["S2"],
+        supported=True,
+        support_score=1.0,
+    )
+    unsupported = AnswerSentence(text="Nesto drugo.", citations=["S1"], supported=False)
+    scores = sentence_relevance(
+        "Koje metode kontracepcije postoje?", [on_topic, off_topic, unsupported], chunks
+    )
+    assert set(scores) == {0, 1}
+    assert scores[0] > 0.5 and scores[1] == 0.0
 
 
 def test_question_relevance_ignores_unknown_markers() -> None:

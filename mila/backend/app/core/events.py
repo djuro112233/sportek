@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import re
+import unicodedata
+
 from sqlalchemy.orm import Session as DbSession
 
-from app.core.i18n import normalize_text
+from app.core.i18n import cyrillic_to_latin, normalize_text
 from app.core.types import TOPIC_CLASSES
 from app.models import Event
 
@@ -22,6 +25,34 @@ _TOPIC_KEYWORDS: dict[str, tuple[str, ...]] = {
     "mental_health": ("depres", "anksio", "anxie", "tuzna", "tuzno", "sad", "stres", "stress", "panik", "panic", "mental", "psihic", "psiholog", "bebi bluz", "baby blues"),
     "adolescent": ("tinejdz", "teen", "adolescen", "pubert", "prvi put", "first time", "maloljetn", "maloletn", "minor"),
 }
+
+
+_CODE_RE = re.compile(r"[A-Za-z0-9_.:\-]{1,48}")
+
+
+def _check_payload(value, path: str = "payload") -> None:
+    """Allow only codes and numbers, recursively: a payload can never carry user text.
+
+    Keys are NFKC-normalised and transliterated before the forbidden-name check (a Cyrillic
+    homoglyph of ``text`` is still ``text``); strings must look like codes (no spaces or punctuation, at most 48
+    characters); lists and nested dicts are checked element by element.
+    """
+    if isinstance(value, dict):
+        for key, item in value.items():
+            name = cyrillic_to_latin(unicodedata.normalize("NFKC", str(key))).lower()
+            if name in _FORBIDDEN_PAYLOAD_KEYS:
+                raise ValueError(f"event payload must not contain user content keys: {name!r}")
+            _check_payload(item, f"{path}.{name}")
+    elif isinstance(value, (list, tuple)):
+        for index, item in enumerate(value):
+            _check_payload(item, f"{path}[{index}]")
+    elif isinstance(value, str):
+        if not _CODE_RE.fullmatch(value):
+            raise ValueError(f"event payload string at {path} must be a short code, not free text")
+    elif value is None or isinstance(value, (bool, int, float)):
+        return
+    else:
+        raise ValueError(f"event payload value at {path} has unsupported type {type(value).__name__}")
 
 
 def classify_topic(text: str) -> str:
@@ -48,9 +79,7 @@ def log_event(
 ) -> Event:
     """Persist an aggregate-only event. Raises if a payload key could carry user content."""
     payload = dict(payload or {})
-    bad = _FORBIDDEN_PAYLOAD_KEYS.intersection(k.lower() for k in payload)
-    if bad:
-        raise ValueError(f"event payload must not contain user content keys: {sorted(bad)}")
+    _check_payload(payload)
     if topic_class and topic_class not in TOPIC_CLASSES:
         topic_class = "other"
     ev = Event(

@@ -329,6 +329,8 @@ class _Matchers:
         self.tier1 = TermMatcher(r.SEVERE_TIER1)
         self.tier2 = TermMatcher(r.SEVERE_TIER2)
         self.functional = TermMatcher(r.FUNCTIONAL_IMPACT_TERMS)
+        self.contraction = TermMatcher(r.CONTRACTION_TERMS)
+        self.contraction_qualifier = TermMatcher(r.CONTRACTION_QUALIFIERS)
         self.suicide = TermMatcher(r.SUICIDE_TERMS)
         self.violence = TermMatcher(r.VIOLENCE_TERMS)
         self.minor = TermMatcher(r.MINOR_TERMS)
@@ -341,8 +343,38 @@ class _Matchers:
         self.contact = TermMatcher(r.SEXUAL_CONTACT_BY_OTHER_TERMS)
 
 
+def expand_number_words(normalised: str) -> str:
+    """Rewrite spelled-out numbers as digits ("dvadeset osam" -> "28", "fifteen" -> "15").
+
+    Runs on normalised text before the age and temperature regexes, so "imam petnaest godina a
+    decko ima dvadeset osam" and "trideset osam i po" are seen as numbers. Units after a tens word
+    are merged; a lone unit word ("jedan", "one") stays a word because it is rarely an age.
+    """
+    tokens = normalised.split()
+    out: list[str] = []
+    i = 0
+    while i < len(tokens):
+        tok = tokens[i]
+        if tok in rules.NUMBER_WORD_TENS:
+            value = rules.NUMBER_WORD_TENS[tok]
+            if i + 1 < len(tokens) and tokens[i + 1] in rules.NUMBER_WORD_UNITS:
+                value += rules.NUMBER_WORD_UNITS[tokens[i + 1]]
+                i += 1
+            out.append(str(value))
+        elif tok in rules.NUMBER_WORD_TEENS:
+            out.append(str(rules.NUMBER_WORD_TEENS[tok]))
+        else:
+            out.append(tok)
+        i += 1
+    return " ".join(out)
+
+
 class _Patterns:
     def __init__(self) -> None:
+        self.pregnancy_weeks = re.compile(rules.PREGNANCY_WEEKS_RE)
+        self.information_frame = _compile(rules.INFORMATION_FRAME_PATTERNS)
+        self.first_person_symptom = re.compile(rules.FIRST_PERSON_SYMPTOM_RE)
+        self.contraction_interval = re.compile(rules.CONTRACTION_INTERVAL_RE)
         r = rules
         self.hypothetical_pregnancy = _compile(r.HYPOTHETICAL_PREGNANCY_PATTERNS)
         self.bleeding_exclusion = _compile(r.BLEEDING_EXCLUSION_PATTERNS)
@@ -385,7 +417,28 @@ class _Analysis:
         return text
 
     def pregnancy(self) -> TermHit | None:
-        return self.view("pregnancy", P.hypothetical_pregnancy).first(M.pregnancy)
+        hit = self.view("pregnancy", P.hypothetical_pregnancy).first(M.pregnancy)
+        if hit:
+            return hit
+        match = P.pregnancy_weeks.search(self.base.text)
+        if match:
+            start = len(self.base.text[: match.start()].split())
+            end = start + max(1, len(match.group(0).split()))
+            return TermHit("gestation_weeks", start, end)
+        return None
+
+    @property
+    def information_question(self) -> bool:
+        """An information question about danger signs with no present, first-person symptom.
+
+        Such a question is answered from the knowledge base (the danger-signs documents); the
+        obstetric rules are skipped. A message that also reports a symptom ("koji su znaci
+        preeklampsije, imam jaku glavobolju") is still routed.
+        """
+        text = self.base.text
+        if not any(rx.search(text) for rx in P.information_frame):
+            return False
+        return P.first_person_symptom.search(text) is None
 
     def pregnancy_or_postpartum(self) -> TermHit | None:
         return self.pregnancy() or self.base.first(M.postpartum)
@@ -398,7 +451,7 @@ class _Analysis:
 _NEAR_HEAVY = 6  # tokens between a bleeding term and a heaviness qualifier
 _NEAR_NON_GYN = 2  # tokens between a bleeding term and "nos" / "desni" / "stolica"
 _NEAR_SEVERITY = 5  # tokens between a pain / headache term and its qualifier
-_NEAR_PAIN_SITE = 6  # tokens between a pain term and an abdomen term
+_NEAR_PAIN_SITE = 8  # tokens between a pain term and an abdomen term
 _NEAR_SWELLING = 4  # tokens between "otekle" and "ruke" / "lice"
 _NEAR_REDUCTION = 3  # tokens between "pokreti" and "slabiji"
 _ADULT_GAP_YEARS = 3  # minimum stated age gap for a partner to count as an adult
@@ -519,6 +572,18 @@ def _rule_reduced_fetal_movement(a: _Analysis) -> str | None:
 
 def _rule_severe_abdominal_pain(a: _Analysis) -> str | None:
     text = a.base
+    pregnancy = a.pregnancy_or_postpartum()
+    if pregnancy:
+        contraction = text.first(M.contraction)
+        if contraction:
+            if P.contraction_interval.search(text.text):
+                return f"{contraction.term}+interval+{pregnancy.term}"
+            qualifier = text.first(M.contraction_qualifier)
+            if qualifier and _near(qualifier, contraction, _NEAR_SEVERITY):
+                return f"{contraction.term}+{qualifier.term}+{pregnancy.term}"
+        functional = text.first(M.functional)
+        if functional and text.has(M.abdomen):
+            return f"{functional.term}+abdomen+{pregnancy.term}"
     sites = text.hits(M.abdomen)
     if not sites:
         return None
@@ -587,6 +652,10 @@ def _rule_minor_sexual_adult(a: _Analysis) -> str | None:
         return f"{minor}+{other.term}+{sexual.term}"
     return None
 
+
+OBSTETRIC_CATEGORIES: frozenset[str] = frozenset(
+    {"bleeding_pregnancy", "fever_pregnancy", "preeclampsia", "reduced_fetal_movement", "severe_abdominal_pain"}
+)
 
 _RULES: dict[str, Callable[[_Analysis], str | None]] = {
     "minor_sexual_adult": _rule_minor_sexual_adult,
@@ -727,11 +796,14 @@ class RedFlagRouter:
 
     def check(self, text: str, *, lang: str | None = None, is_minor: bool | None = None) -> RedFlagResult:
         """Classify one input. ``lang`` is accepted for the contract; the rules cover every language at once."""
-        normalised = normalize_text(text or "")
+        normalised = expand_number_words(normalize_text(text or ""))
         if not normalised:
             return RedFlagResult()
         analysis = _Analysis(normalised, is_minor)
+        info_question = analysis.information_question
         for category in rules.RULE_ORDER:
+            if info_question and category in OBSTETRIC_CATEGORIES:
+                continue
             matched = _RULES[category](analysis)
             if matched:
                 return RedFlagResult(
@@ -749,6 +821,7 @@ class RedFlagRouter:
             and margin >= self.classifier_margin
             and len(analysis.base.tokens) >= _CLASSIFIER_MIN_TOKENS
             and label not in analysis.vetoes
+            and not (info_question and label in OBSTETRIC_CATEGORIES)
             and _CLASSIFIER_GATES[label](analysis)
         ):
             return RedFlagResult(

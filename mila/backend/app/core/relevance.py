@@ -21,7 +21,7 @@ import math
 import re
 from collections.abc import Callable, Iterable
 
-from app.core.i18n import coerce_lang, is_bcms
+from app.core.i18n import coerce_lang, is_bcms, normalize_text
 from app.core.types import AnswerSentence, RetrievedChunk
 from app.core.verifier import content_tokens
 
@@ -44,17 +44,96 @@ QUESTION_WORDS: frozenset[str] = frozenset(
         "done", "being", "year", "years", "day", "days", "today", "yesterday", "tomorrow",
         "znam", "znas", "znati", "znamo", "uzme", "uzmem", "uzeti", "uzima", "uzimati", "uzimam",
         "koristi", "koristim", "koristiti", "use", "using", "used",
+        # numbers and generic nouns carry no topic ("six people", "dvije osobe")
+        "jedan", "jedna", "jedno", "dva", "dvije", "dve", "tri", "cetiri", "pet", "sest", "sedam", "osam",
+        "devet", "deset", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+        "ljudi", "ljude", "osoba", "osobe", "osobu", "people", "person", "persons", "someone", "somebody",
+        "stvari", "stvar", "things", "thing", "nacin", "way", "ways", "dobar", "dobra", "najbolji",
+        "najbolja", "najbolje", "best", "great",
     }
 )  # fmt: skip
 
 # A question term the knowledge base never uses is strong evidence the question is off the
 # knowledge base; relevance is multiplied by this factor when such a term stays unmatched.
-UNKNOWN_TERM_PENALTY = 0.75
+UNKNOWN_TERM_PENALTY = 0.85
 
 IdfFn = Callable[[str], float]
 
 
 _YAT_RE = re.compile(r"(?<=[bcdfghklmnprstvz])i?je")
+
+# Domain thesaurus applied to question and evidence alike before stemming, so paraphrases a
+# user is likely to type map onto the knowledge base's wording. Phrases first (on normalised
+# text), then single tokens. Canonical forms are chosen so their 5-character stem is distinct.
+_PHRASE_SYNONYMS: tuple[tuple[re.Pattern[str], str], ...] = tuple(
+    (re.compile(rx), repl)
+    for rx, repl in (
+        (r"\bzastit\w* (?:od|protiv) trudnoc\w*", "kontracepcija"),
+        (r"\bsredstv\w* za zastitu\b", "kontracepcija"),
+        (r"\bbirth control\b", "contraception"),
+        (r"\bmorning after pill\b", "emergency contraception"),
+        (r"\bpilul\w* za dan posl\w*", "hitna kontracepcija"),
+        (r"\bpolno prenosiv\w*|\bspolno prenosiv\w*|\bpoln\w* bolest\w*|\bspoln\w* bolest\w*|\bvenericn\w*", "ppi"),
+        (r"\bsexually transmitted\w*|\bstds?\b|\bstis?\b", "sti"),
+        (r"\bbebi bluz\b|\bbaby blues\b", "bebibluz"),
+        (r"\bcheck ?ups?\b|\bantenatal (?:visits?|contacts?|appointments?)\b", "visit"),
+        (r"\bkod (?:doktor|ljekar|lekar|lijecni|ginekolog)\w*", "pregled"),
+        (r"\bpupcan\w* vrpc\w*|\bpupcanik\w*|\bpupak\b|\bpupka\b", "pupcana"),
+        (r"\bumbilical cord\b|\bcord stump\b|\bbelly button\b", "umbilical"),
+    )
+)
+_TOKEN_SYNONYMS: dict[str, str] = {}
+for canonical, variants in {
+    "lekar": ("doktor", "doktora", "doktoru", "doktorka", "doktorica", "ljekar", "ljekara", "ljekaru", "lekar", "lekara",
+              "lekaru", "lijecnik", "lijecnika", "lijecniku", "ginekolog", "ginekologa", "ginekologu", "ginekologinja", "babica"),
+    "clinician": ("doctor", "doctors", "clinician", "clinicians", "midwife", "midwives", "nurse", "nurses", "gp", "physician"),
+    "pregled": ("pregled", "pregleda", "pregledi", "preglede", "kontrola", "kontrole", "kontrolu", "kontrola", "posjeta", "posjete", "poseta", "posete"),
+    "visit": ("visit", "visits", "appointment", "appointments", "contact", "contacts", "checkup", "checkups"),
+    "dojenje": ("dojenje", "dojenja", "doji", "dojim", "dojiti", "dojenjem", "podoj", "podoja", "sisa", "sisanje", "sisati", "cica"),
+    "breastfeeding": ("breastfeeding", "breastfeed", "breastfed", "nursing", "feeding", "feeds", "latch", "latching"),
+    "beba": ("beba", "bebe", "bebu", "bebi", "bebom", "novorodjence", "novorodjenceta", "novorodjencetu", "novorodjene", "dijete", "dete", "djete", "djeteta", "deteta"),
+    "baby": ("baby", "babies", "newborn", "newborns", "infant", "infants"),
+    "menstruacija": ("menstruacija", "menstruacije", "menstruaciju", "menstruacijom", "mjesecnica", "mjesecnice", "mesecnica", "mesecnice", "ciklus", "ciklusa"),
+    "menstruation": ("menstruation", "menstrual", "period", "periods", "cycle", "cycles"),
+    "seks": ("seks", "seksa", "odnos", "odnosa", "odnosi", "snosaj", "snosaja", "spavanje"),
+    "sex": ("sex", "intercourse"),
+    "efikasan": ("efikasan", "efikasna", "efikasne", "efikasno", "najefikasnija", "najefikasnije", "sigurna", "sigurne", "sigurno",
+                 "najsigurnija", "najsigurnije", "pouzdan", "pouzdana", "pouzdane", "najpouzdanija", "najpouzdanije", "djelotvorna", "delotvorna"),
+    "effective": ("effective", "reliable", "safest", "best", "works"),
+    "neplodnost": ("neplodnost", "neplodnosti", "neplodna", "neplodnom", "sterilitet", "steriliteta", "jalovost"),
+    "infertility": ("infertility", "infertile", "sterility", "sterile"),
+    "povjerljivo": ("povjerljivo", "poverljivo", "povjerljivost", "poverljivost", "tajna", "tajno", "saznati", "sazna", "znati", "zna", "diskretno", "anonimno"),
+    "confidential": ("confidential", "confidentiality", "private", "privacy", "secret", "anonymous"),
+    "nabaviti": ("nabaviti", "nabavim", "nabavka", "kupiti", "kupim", "dobiti", "dobijem", "uzeti", "uzmem"),
+    "get": ("get", "buy", "obtain", "access"),
+    "bolnica": ("bolnica", "bolnicu", "bolnici", "hitna", "hitnu", "hitne", "hitno"),
+    "hospital": ("hospital", "emergency", "urgent", "urgently"),
+    "znak": ("znak", "znaci", "znakovi", "znakove", "simptom", "simptomi", "simptome", "simptoma", "upozorenja", "opasnosti", "opasnost"),
+    "sign": ("sign", "signs", "symptom", "symptoms", "warning", "warnings", "danger"),
+    "vitamin": ("vitamin", "vitamini", "vitamine", "vitamina", "suplement", "suplementi", "suplemente", "dodaci", "dodatak", "dodatke", "preparati", "preparate"),
+    "supplement": ("supplement", "supplements", "vitamins", "vitamin"),
+    "hrana": ("hrana", "hranu", "hrane", "jesti", "jedem", "ishrana", "ishranu", "ishrane", "prehrana", "prehranu"),
+    "food": ("food", "foods", "eat", "eating", "diet", "nutrition"),
+    "porodjaj": ("porodjaj", "porodjaja", "poroda", "porod", "porodu", "porodjaju", "rodila", "rodjenja"),
+    "birth": ("birth", "delivery", "labour", "labor", "postpartum", "postnatal"),
+    "tuga": ("tuga", "tuzna", "tuzno", "tugu", "depresija", "depresije", "depresivna", "plakanje", "placem", "potistenost"),
+    "sad": ("sad", "sadness", "depressed", "depression", "crying", "low"),
+    "testiranje": ("testiranje", "testiram", "testirati", "testiranja", "test", "testovi", "analiza", "analize"),
+    "testing": ("testing", "test", "tests", "tested", "screening"),
+    "roditelji": ("roditelji", "roditeljima", "roditelja", "mama", "mami", "tata", "tati", "majka", "majci", "otac", "ocu"),
+    "parents": ("parents", "parent", "mum", "mom", "dad", "mother", "father"),
+    "mlijeko": ("mlijeko", "mleko", "mlijeka", "mleka"),
+    "milk": ("milk",),
+}.items():
+    for variant in variants:
+        _TOKEN_SYNONYMS[variant] = canonical
+
+
+def canonicalise(normalised: str) -> str:
+    """Apply the domain thesaurus to normalised text (phrases, then tokens)."""
+    for rx, repl in _PHRASE_SYNONYMS:
+        normalised = rx.sub(repl, normalised)
+    return " ".join(_TOKEN_SYNONYMS.get(tok, tok) for tok in normalised.split())
 
 
 def fold_yat(token: str) -> str:
@@ -70,7 +149,7 @@ def fold_yat(token: str) -> str:
 def stems(text: str) -> list[str]:
     """Ordered, de-duplicated stems of the content tokens of ``text`` (question words removed)."""
     seen: list[str] = []
-    for tok in content_tokens(text):
+    for tok in content_tokens(canonicalise(normalize_text(text))):
         if tok in QUESTION_WORDS:
             continue
         stem = fold_yat(tok)[:STEM_LEN]
@@ -129,6 +208,57 @@ def coverage(
     return round(score, 4)
 
 
+def _cited(sentence: AnswerSentence, chunks: list[RetrievedChunk]) -> list[RetrievedChunk]:
+    found: list[RetrievedChunk] = []
+    for marker in sentence.citations:
+        digits = marker[1:]
+        if digits.isdigit() and 0 < int(digits) <= len(chunks):
+            chunk = chunks[int(digits) - 1]
+            if chunk not in found:
+                found.append(chunk)
+    return found
+
+
+def _usable(sentences: list[AnswerSentence]) -> list[AnswerSentence]:
+    return [s for s in sentences if s.supported and not s.flagged_medication]
+
+
+def evidence_shares_language(lang: str, sentences: list[AnswerSentence], chunks: list[RetrievedChunk]) -> bool:
+    """True when at least one chunk cited by a supported sentence is in the question's language family."""
+    family_bcms = is_bcms(coerce_lang(lang))
+    for sentence in _usable(sentences):
+        for chunk in _cited(sentence, chunks):
+            if is_bcms(coerce_lang(chunk.lang)) == family_bcms:
+                return True
+    return False
+
+
+def sentence_relevance(
+    question: str,
+    sentences: list[AnswerSentence],
+    chunks: list[RetrievedChunk],
+    idf: IdfFn | None = None,
+    *,
+    unknown_term_penalty: float = UNKNOWN_TERM_PENALTY,
+) -> dict[int, float]:
+    """Per-sentence relevance: coverage of the question by the sentence plus the heading path of
+    the chunks it cites. Keyed by sentence index; only supported, unflagged sentences with a
+    resolvable citation are scored. Empty when the question has no content words."""
+    if not stems(question):
+        return {}
+    scores: dict[int, float] = {}
+    for index, sentence in enumerate(sentences):
+        if not (sentence.supported and not sentence.flagged_medication):
+            continue
+        cited = _cited(sentence, chunks)
+        if not cited:
+            continue
+        texts = [sentence.text] + [c.heading_path for c in cited if c.heading_path]
+        score = coverage(question, texts, idf, unknown_term_penalty=unknown_term_penalty)
+        scores[index] = 0.0 if score is None else score
+    return scores
+
+
 def question_relevance(
     question: str,
     lang: str,
@@ -141,25 +271,21 @@ def question_relevance(
     """Relevance of the evidence behind the supported sentences to the question.
 
     Evidence = the supported sentences' texts plus the heading path and text of every chunk
-    they cite. Returns ``None`` when nothing is supported, when the question has no content
-    terms, or when no cited chunk shares the question's language family.
+    they cite, whatever its language: stems are script-agnostic after normalisation and a
+    genuinely cross-lingual answer scores low, which fails closed (the pipeline may ask the
+    LLM judge instead; see ``AskPipeline._relevance``). Returns ``None`` only when nothing is
+    supported or nothing is cited; a question without content words scores 0.0.
     """
-    supported = [s for s in sentences if s.supported and not s.flagged_medication]
-    if not supported:
+    usable = _usable(sentences)
+    if not usable:
         return None
     cited: list[RetrievedChunk] = []
-    for sentence in supported:
-        for marker in sentence.citations:
-            digits = marker[1:]
-            if digits.isdigit() and 0 < int(digits) <= len(chunks):
-                chunk = chunks[int(digits) - 1]
-                if chunk not in cited:
-                    cited.append(chunk)
+    for sentence in usable:
+        for chunk in _cited(sentence, chunks):
+            if chunk not in cited:
+                cited.append(chunk)
     if not cited:
         return None
-    family_bcms = is_bcms(coerce_lang(lang))
-    same_family = [c for c in cited if is_bcms(coerce_lang(c.lang)) == family_bcms]
-    if not same_family:
-        return None
-    texts = [s.text for s in supported] + [f"{c.heading_path} {c.text}" for c in same_family]
-    return coverage(question, texts, idf, unknown_term_penalty=unknown_term_penalty)
+    texts = [s.text for s in usable] + [f"{c.heading_path} {c.text}" for c in cited]
+    score = coverage(question, texts, idf, unknown_term_penalty=unknown_term_penalty)
+    return 0.0 if score is None else score

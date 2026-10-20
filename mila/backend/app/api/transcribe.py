@@ -108,7 +108,9 @@ def transcribe(
     settings: Settings = Depends(get_settings_dep),
     db: DbSession = Depends(get_db),
 ) -> TranscribeResponse:
-    sess = require_consented_session(session_id, db)
+    sess = require_consented_session(session_id, db, settings)
+    if not request.app.state.rate_limiter.allow(sess.id):
+        raise HTTPException(status_code=429, detail="rate limited", headers={"Retry-After": "60"})
     content_type = _normalised_content_type(file)
     if content_type not in ALLOWED_CONTENT_TYPES:
         raise HTTPException(status_code=415, detail="unsupported audio type")

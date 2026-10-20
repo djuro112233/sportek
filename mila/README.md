@@ -193,8 +193,9 @@ third party.** Source of truth: `backend/app/config.py`.
 | `MILA_RETRIEVAL_TOP_K` | `8` | Chunks passed to generation. |
 | `MILA_GATE_MIN_SUPPORT_RATIO` | `0.6` | Gate withholds below this share of supported sentences. |
 | `MILA_GATE_MIN_CONFIDENCE` | `0.35` | Gate withholds below this confidence. |
-| `MILA_GATE_MIN_RELEVANCE` | `0.35` | Gate withholds when the cited evidence covers less of the question than this (`low_relevance`). |
-| `MILA_RELEVANCE_UNKNOWN_TERM_PENALTY` | `0.75` | Relevance multiplier when the question contains a term the knowledge base never uses. |
+| `MILA_GATE_MIN_RELEVANCE` | `0.3` | Gate withholds when the cited evidence covers less of the question than this (`low_relevance`). |
+| `MILA_GATE_MIN_SENTENCE_RELEVANCE` | `0.1` | A supported sentence covering less of the question than this is dropped as `off_topic`. |
+| `MILA_RELEVANCE_UNKNOWN_TERM_PENALTY` | `0.85` | Relevance multiplier when the question contains a term the knowledge base never uses. |
 | `MILA_VERIFIER_SUPPORT_THRESHOLD` | `0.5` | Judge score at or above which a sentence counts as supported. |
 | `MILA_REDFLAG_CLASSIFIER_THRESHOLD` | `0.85` | Score above which the (secondary) classifier flags; rules always win. |
 | `MILA_K_ANONYMITY` | `5` | Public metrics rows with a count below this are suppressed. |
@@ -351,16 +352,18 @@ network, GPU or model downloads; real providers are imported lazily.
   and a `to verify: <number>` or "fill before pilot" note; the pilot clinic must fill and verify
   them before launch.
 - **Minors.** The minor flag selects the minors' consent text, adds child-protection services to
-  referrals and tells the red-flag router; in generation it only appends a note to the system
-  prompt, so "adapted wording" depends on the real model, and the `minor_note` text in the
-  catalogue is not yet shown in the UI.
+  every referral plan, tells the red-flag router and adds the `minor_note` line ("you can also
+  talk to a trusted adult") to every response; in generation it only appends a note to the
+  system prompt, so "adapted wording" depends on the real model.
 - No accounts, no history, no WhatsApp or phone-line channel: the web UI is the only channel.
 - Voice quality depends on the open-weight STT/TTS models and has not yet been measured on the
   consented utterance set (no recordings exist yet). The UI shows the transcript and asks for
   confirmation but does not yet react to a low STT confidence.
 - No automatic retention timer: sessions persist until the user deletes them or the maintainers
-  purge at the end of the pilot. The session id is kept in the browser's `localStorage` until
-  "Delete my data".
+  purge at the end of the pilot. The browser keeps the session id in `sessionStorage` (gone
+  when the tab or browser closes) and only language and display preferences in `localStorage`;
+  a session whose consent version is older than the server's is refused with 403 and the client
+  asks for consent again.
 - One-time answer audio (`audio_url`) lives in process memory: run a single uvicorn worker or
   put a shared store behind it.
 - Montenegrin-specific letters (ś, ź) are transliterated on input only.

@@ -48,7 +48,7 @@ def ask(
     db: DbSession = Depends(get_db),
     settings: Settings = Depends(get_settings_dep),
 ) -> AskResponse:
-    session = require_consented_session(body.session_id, db)
+    session = require_consented_session(body.session_id, db, settings)
     if not request.app.state.rate_limiter.allow(session.id):
         raise HTTPException(status_code=429, detail="rate limited", headers={"Retry-After": "60"})
     response = AskPipeline(settings, db, get_providers(request.app)).ask(body, session)

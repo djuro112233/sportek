@@ -202,9 +202,10 @@ def parse_markers(sentence: str) -> tuple[str, list[str]]:
 
 
 # --- medication / dose rule -------------------------------------------------------------------
+# A spelled-out number must end at a word boundary: "jednog" (genitive of "one") is not "jedno"+"g".
 _NUMBER_WORD = (
-    r"(?:\d+(?:[.,]\d+)?|jedan|jedn[aeuo]m?|jednu|dvije|dve|dva|tri|cetiri|pet|sest|sedam|osam|devet|deset"
-    r"|pola|half|one|two|three|four|five|six|seven|eight|nine|ten)"
+    r"(?:\d+(?:[.,]\d+)?|(?:jedan|jedn[aeuo]m?|jednu|dvije|dve|dva|tri|cetiri|pet|sest|sedam|osam|devet|deset"
+    r"|pola|half|one|two|three|four|five|six|seven|eight|nine|ten)(?![a-z]))"
 )
 _RANGE = r"(?:\s*(?:-|–|to|do|ili|or)\s*\d+(?:[.,]\d+)?)?"
 _UNIT = (
@@ -228,6 +229,11 @@ _DRUG = (
     r"|analgeti[ck]\w*|painkiller\w*|antipireti[ck]\w*|sirup\w*|syrup|suplement\w*|supplement\w*"
     r"|lijek\w*|lekov\w*|lek|lekove|lekovi|medicine\w*|medication\w*|drugs?)"
 )
+_NOT_NEGATED = (
+    r"(?<!ne )(?<!nemoj )(?<!nemojte )(?<!nikad )(?<!nikada )(?<!not )(?<!don't )(?<!dont )(?<!never )"
+    r"(?<!ne smijes )(?<!ne smes )(?<!ne smije )(?<!ne sme )(?<!ne treba )(?<!ne smijete )(?<!ne smete )"
+    r"(?<!nemojte da )(?<!nemoj da )(?<!shouldn't )(?<!should not )(?<!must not )(?<!mustn't )"
+)
 _IMPERATIVE = (
     r"(?:uzmi|uzmite|uzimaj|uzimajte|popij|popijte|progutaj|progutajte|nanesi|nanesite|take|swallow|apply)"
 )
@@ -242,9 +248,11 @@ MEDICATION_PATTERNS: list[re.Pattern[str]] = [
     re.compile(rf"(?<![a-z0-9]){_NUMBER_WORD}{_RANGE}\s*{_UNIT}(?![a-z])"),
     # counted tablets / capsules / pills ("2 tablete", "jednu tabletu", "two tablets", "half a tablet")
     re.compile(rf"(?<![a-z0-9]){_NUMBER_WORD}{_RANGE}(?:\s+(?:a|of))?\s*{_TABLET}(?![a-z])"),
-    # imperative + drug / tablet word within the same clause ("uzmi ibuprofen", "take the pill")
-    re.compile(rf"(?<![a-z]){_IMPERATIVE}(?![a-z])[^.;!?]{{0,60}}?(?<![a-z]){_DRUG}(?![a-z])"),
-    re.compile(rf"(?<![a-z]){_IMPERATIVE}(?![a-z])[^.;!?]{{0,60}}?(?<![a-z]){_TABLET}(?![a-z])"),
+    # imperative + drug / tablet word within the same clause ("uzmi ibuprofen", "take the pill");
+    # a negated imperative ("ne uzimaj lijekove na svoju ruku", "do not take medicines") is advice
+    # against self-medication, not a dose
+    re.compile(rf"(?<![a-z]){_NOT_NEGATED}{_IMPERATIVE}(?![a-z])[^.;!?]{{0,60}}?(?<![a-z]){_DRUG}(?![a-z])"),
+    re.compile(rf"(?<![a-z]){_NOT_NEGATED}{_IMPERATIVE}(?![a-z])[^.;!?]{{0,60}}?(?<![a-z]){_TABLET}(?![a-z])"),
     # frequency per day ("2 puta dnevno", "dva puta na dan", "twice a day", "2-3 times daily", "2x dnevno")
     re.compile(
         rf"(?<![a-z0-9]){_FREQ_COUNT}{_RANGE}\s*(?:x|puta?|times?)?\s*(?:dnevno|na dan|daily|a day|per day|each day)(?![a-z])"
@@ -497,6 +505,34 @@ class LLMJudge:
                 return score
         return 0.0
 
+    def relevance(self, question: str, evidence: str) -> float:
+        """1.0 when the LLM says the evidence addresses the question, else 0.0 (fails closed).
+
+        Used for cross-lingual answers, where lexical coverage cannot be computed.
+        """
+        if not question.strip() or not evidence.strip():
+            return 0.0
+        user = (
+            f"QUESTION:\n{question.strip()}\n\nEVIDENCE:\n{evidence.strip()}\n\n"
+            "Does the EVIDENCE directly address the QUESTION (same topic, same request)? "
+            "Reply with exactly one word: RELEVANT or IRRELEVANT."
+        )
+        try:
+            reply = self.llm.complete(RELEVANCE_SYSTEM_PROMPT, user, temperature=0.0, max_tokens=4)
+        except LLMError:
+            return 0.0
+        upper = reply.upper()
+        if "IRRELEVANT" in upper or "NOT RELEVANT" in upper:
+            return 0.0
+        return 1.0 if "RELEVANT" in upper else 0.0
+
+
+RELEVANCE_SYSTEM_PROMPT = (
+    "You judge whether evidence passages address a user's question. Be strict: evidence about a "
+    "neighbouring topic, or that only shares a few words with the question, is IRRELEVANT. "
+    "The question and the evidence may be in different languages."
+)
+
 
 # --- verifier ---------------------------------------------------------------------------------
 class Verifier:
@@ -545,15 +581,26 @@ class Verifier:
             elif not evidence:
                 reason = REASON_NO_EVIDENCE
             else:
-                score = max(self.judge.support(clean, chunk_text) for chunk_text in evidence)
+                per_chunk = [
+                    (marker, self.judge.support(clean, chunk.text))
+                    for marker, chunk in cited
+                    if chunk.text.strip()
+                ]
+                score = max(value for _, value in per_chunk)
                 reason = "" if score >= self.threshold else REASON_UNSUPPORTED
             supported = bool(evidence) and score >= self.threshold
             if flagged:
                 reason = REASON_MEDICATION
+            citations = [marker for marker, _ in cited]
+            if evidence and supported:
+                # keep only the markers whose chunk supports the sentence (at least the best one)
+                citations = [marker for marker, value in per_chunk if value >= self.threshold] or [
+                    max(per_chunk, key=lambda item: item[1])[0]
+                ]
             results.append(
                 AnswerSentence(
                     text=clean,
-                    citations=[marker for marker, _ in cited],
+                    citations=citations,
                     supported=supported,
                     support_score=round(score, 4),
                     flagged_medication=flagged,

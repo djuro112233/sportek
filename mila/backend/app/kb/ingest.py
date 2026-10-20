@@ -304,9 +304,21 @@ def _upsert_source(db: DbSession, doc: ManifestDoc) -> Source:
     source.licence = doc.licence
     source.lang = doc.language
     source.allowed_topics = list(doc.allowed_topics)
-    source.review_status = doc.review_status
-    source.reviewed_by = doc.reviewed_by
-    source.reviewed_on = _parse_date(doc.reviewed_on)
+    # A review status set at runtime through the admin API survives a manifest re-ingest:
+    # a block always wins, and a clinician's sign-off is kept unless the manifest itself
+    # names a reviewer (then the manifest is the record).
+    runtime_blocked = source.review_status == "blocked" and doc.status != "blocked"
+    runtime_reviewed = (
+        source.review_status == "reviewed" and bool(source.reviewed_by) and not doc.reviewed_by.strip()
+    )
+    if runtime_blocked:
+        log.warning("ingest: %s stays blocked (set at runtime); manifest status ignored", doc.id)
+    elif runtime_reviewed:
+        log.info("ingest: %s keeps its runtime review by %s", doc.id, source.reviewed_by)
+    else:
+        source.review_status = doc.review_status
+        source.reviewed_by = doc.reviewed_by
+        source.reviewed_on = _parse_date(doc.reviewed_on)
     return source
 
 

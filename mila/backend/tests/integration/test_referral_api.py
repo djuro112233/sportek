@@ -72,9 +72,13 @@ def test_cyrillic_script_renders_message_for_bcms_only(client):
     assert en["message"] == t("referral_general", "en")
 
 
-def test_unknown_region_falls_back_to_all_regions(client):
-    body = client.get("/api/referral", params={"region": "XX", "category": "fever_pregnancy"}).json()
-    assert {p["region"] for p in body["points"]} == {"BA", "ME"}
+def test_unknown_region_is_rejected(client):
+    assert client.get("/api/referral", params={"region": "XX", "category": "fever_pregnancy"}).status_code == 422
+    body = client.get("/api/referral", params={"region": "ME", "category": "fever_pregnancy"}).json()
+    assert body["points"] and body["points"][0]["kind"] == "er"
+    pairs = [(p["name"], p["phone"]) for p in body["points"]]
+    assert len(pairs) == len(set(pairs))
+    assert all("notes" not in p for p in body["points"])
 
 
 def test_region_is_case_insensitive(client):
@@ -89,8 +93,10 @@ def test_invalid_category_and_script_are_rejected(client):
 
 
 def test_seed_numbers_are_only_the_standard_emergency_numbers(client):
-    body = client.get("/api/referral", params={"region": "XX", "category": "minor_sexual_adult"}).json()
-    for point in body["points"]:
+    points = []
+    for region in ("BA", "ME"):
+        points += client.get("/api/referral", params={"region": region, "category": "minor_sexual_adult"}).json()["points"]
+    for point in points:
         assert point["verified_on"] == ""
         assert point["phone"] in {"", "124", "122"}
 

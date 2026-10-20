@@ -40,10 +40,11 @@ The `log_event` function raises if a payload contains any of the keys `text`, `q
 - **Version string.** `MILA_CONSENT_VERSION` (default `2026-10-01`) is returned by
   `GET /api/consent/text` and stored on the session when consent is given. Changing the
   text requires changing the version: `POST /api/consent` with any other version is refused
-  with `409 consent_version_outdated` and the current version. Sessions that consented to an
-  older version are not re-prompted automatically in v0.1 (the version is not part of
-  `GET /api/session/{id}`); when the text changes, the operator purges existing sessions so
-  that everyone consents again.
+  with `409 consent_version_outdated` and the current version. A session that consented to an
+  older version is refused by `/api/ask`, `/api/transcribe` and the preferences endpoint with
+  `403 consent_version_outdated` (`require_consented_session`), `GET /api/session/{id}` reports
+  the stored `consent_version`, and the web client then clears the session and shows the
+  consent screen again; nothing stored under the old consent is used after the change.
 - **Plain language, written and spoken.** `GET /api/consent/text?lang=&script=&is_minor=`
   returns `text` (shown), `spoken_text` (shorter, read aloud by TTS for voice-first use) and
   `items[]` (one line per thing MILA does and does not do). The texts exist in sr, bs, me, hr
@@ -64,10 +65,11 @@ The `log_event` function raises if a payload contains any of the keys `text`, `q
 ## 4. Pseudonymous sessions
 
 `new_session_id()` returns `secrets.token_urlsafe(24)`: 192 random bits, never derived from a
-device, an IP or the time. The web client keeps the id in the browser's `localStorage`
-(together with language, script, region, the minor flag and display preferences, nothing
-else) until "Delete my data" clears it, so a returning user on the same browser continues her
-session; on load the client checks it with `GET /api/session/{id}` and drops it when the
+device, an IP or the time. The web client keeps the id in the browser's `sessionStorage`
+(per tab; gone when the tab or browser closes, so a shared clinic device does not hand one
+person's session to the next) together with region and the minor flag; only language, script
+and the low-bandwidth preference live in `localStorage`. "Delete my data" clears both. On load
+the client checks the id with `GET /api/session/{id}` and drops it when the
 server answers 403. Nothing in the server can link a session to a person; conversely, a person
 who loses the id cannot be linked to their session either (see section 10).
 
@@ -95,10 +97,16 @@ level is DEBUG in `dev` and INFO otherwise.
 
 ## 7. Metrics and k-anonymity
 
-`GET /api/metrics/public` aggregates events by language, topic class, outcome and red-flag
-category. `k_anonymize(rows, count_key, k)` drops any row whose count is below
-`MILA_K_ANONYMITY` (default 5) by suppression, not by adding noise. The endpoint never returns
-per-session data. Measurement reports use the same rule.
+`GET /api/metrics/public` aggregates events by topic class, outcome, input mode and day. Every
+count below `MILA_K_ANONYMITY` (default 5) is suppressed, not noised, and suppression is
+**complementary** (`app/api/metrics.py::_public_fields`): a total is published only when it
+cannot be combined with its published parts to recover a suppressed part (the smallest
+published day or topic rows are dropped until the remainder is 0 or at least k); ratios and
+rates are published only when every outcome count is at least k (a ratio times a public total
+would reveal a suppressed count); input modes only together with a public question total.
+The public endpoint accepts only the fixed windows 7, 30, 90 and 365 days, so two windows
+cannot be differenced to isolate a short period. The endpoint never returns per-session data.
+Measurement reports use the same rule.
 
 ## 8. Hosting
 

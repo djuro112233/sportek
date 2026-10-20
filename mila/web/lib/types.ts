@@ -41,6 +41,30 @@ export interface AnswerSentence {
   reason?: string;
 }
 
+/** The validation gate's decision as the API exposes it (`public_gate`: removed text is blank). */
+export interface GateDecision {
+  status: 'approved' | 'withheld';
+  gate_version?: string;
+  reasons: string[]; // e.g. low_support_ratio, medication_or_dose, pipeline_error
+  support_ratio: number;
+  confidence: number;
+  relevance: number | null;
+  kept: AnswerSentence[];
+  removed: AnswerSentence[];
+}
+
+/** Gate reason set by the backend when a pipeline stage failed (infrastructure, not a knowledge gap). */
+export const GATE_REASON_PIPELINE_ERROR = 'pipeline_error';
+
+export function isPipelineError(response: Pick<AskResponse, 'gate'>): boolean {
+  const reasons = response.gate?.reasons;
+  return Array.isArray(reasons) && reasons.includes(GATE_REASON_PIPELINE_ERROR);
+}
+
+/**
+ * A referral point as the API returns it. There is no `notes` field on the wire any more and
+ * the UI must never show internal notes; `verified_on` is '' until the clinic verified the entry.
+ */
 export interface ReferralPoint {
   name: string;
   kind: string; // clinic | er | helpline | child_protection | violence | mental_health
@@ -51,8 +75,7 @@ export interface ReferralPoint {
   url?: string;
   hours?: string;
   emergency?: boolean;
-  verified_on?: string;
-  notes?: string;
+  verified_on?: string; // ISO date, '' = not yet verified
 }
 
 export interface Referral {
@@ -88,6 +111,9 @@ export interface AskResponse {
   translated: boolean;
   demo_unreviewed_sources: boolean;
   redflag_category: string | null;
+  gate: GateDecision | null;
+  /** One localised line for minors ("you can also talk to a trusted adult"); '' otherwise. */
+  minor_note: string;
   audio_url: string | null;
   latency_ms: number;
 }
@@ -121,7 +147,12 @@ export interface ConsentRequest {
 
 export interface ConsentResponse {
   session_id: string;
-  consent_version?: string;
+  consent_version: string;
+  lang?: string;
+  script?: string;
+  region?: string;
+  is_minor?: boolean;
+  save_questions?: boolean;
 }
 
 export interface SessionPreferences {
@@ -131,14 +162,16 @@ export interface SessionPreferences {
   low_bandwidth?: boolean;
 }
 
+/** `GET /api/session/{id}`: `exists: false` (everything else null) for an unknown id, never a 403. */
 export interface SessionInfo {
-  session_id?: string;
-  id?: string;
-  lang?: string;
-  script?: string;
-  region?: string;
-  is_minor?: boolean | null;
-  consent_given?: boolean;
+  exists: boolean;
+  consent_given: boolean | null;
+  consent_version: string | null;
+  lang: string | null;
+  script: string | null;
+  region: string | null;
+  is_minor: boolean | null;
+  save_questions: boolean | null;
 }
 
 export interface SpeakRequest {
@@ -148,7 +181,11 @@ export interface SpeakRequest {
   low_bandwidth: boolean;
 }
 
-/** What the client keeps in localStorage: the pseudonymous id and display preferences only. */
+/**
+ * What the client keeps in sessionStorage (one tab, gone when the browser closes): the
+ * pseudonymous id and the settings fixed at consent. Nothing identifying ever lands in
+ * localStorage; see lib/storage.ts.
+ */
 export interface StoredSession {
   session_id: string;
   lang: Lang;

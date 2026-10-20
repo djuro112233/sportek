@@ -43,6 +43,7 @@ log = logging.getLogger("mila.api.speak")
 router = APIRouter()
 
 AUDIO_MAX_ENTRIES = 200
+AUDIO_PER_SESSION = 3
 AUDIO_DEFAULT_TTL_S = 300.0
 _WAV_HEADERS = {"Content-Disposition": 'inline; filename="mila.wav"', "Cache-Control": "no-store"}
 
@@ -59,6 +60,7 @@ class SpeakRequest(BaseModel):
 class _Entry:
     wav: bytes
     expires_at: float
+    session_id: str | None = None
 
 
 class AudioStore:
@@ -75,7 +77,9 @@ class AudioStore:
         self._entries: dict[str, _Entry] = {}  # insertion-ordered: the first key is the oldest
         self._lock = threading.Lock()
 
-    def put(self, wav: bytes, ttl_s: float = AUDIO_DEFAULT_TTL_S) -> str:
+    def put(self, wav: bytes, ttl_s: float = AUDIO_DEFAULT_TTL_S, session_id: str | None = None) -> str:
+        """Store ``wav`` for one fetch. A session keeps at most ``AUDIO_PER_SESSION`` tokens
+        (its oldest is evicted first), so one caller cannot evict everyone else's answers."""
         if not wav:
             raise ValueError("audio must not be empty")
         if ttl_s <= 0:
@@ -84,10 +88,22 @@ class AudioStore:
         now = self.clock()
         with self._lock:
             self._purge_expired(now)
+            if session_id is not None:
+                own = [t for t, e in self._entries.items() if e.session_id == session_id]
+                while len(own) >= AUDIO_PER_SESSION:
+                    del self._entries[own.pop(0)]
             while len(self._entries) >= self.max_entries:
                 del self._entries[next(iter(self._entries))]
-            self._entries[token] = _Entry(wav=wav, expires_at=now + ttl_s)
+            self._entries[token] = _Entry(wav=wav, expires_at=now + ttl_s, session_id=session_id)
         return token
+
+    def drop_session(self, session_id: str) -> int:
+        """Forget every token registered for ``session_id`` (called when the session is deleted)."""
+        with self._lock:
+            tokens = [t for t, e in self._entries.items() if e.session_id == session_id]
+            for token in tokens:
+                del self._entries[token]
+        return len(tokens)
 
     def pop(self, token: str) -> bytes | None:
         now = self.clock()
@@ -112,9 +128,9 @@ class AudioStore:
 audio_store = AudioStore()
 
 
-def register_audio(wav_bytes: bytes, ttl_s: float = AUDIO_DEFAULT_TTL_S) -> str:
+def register_audio(wav_bytes: bytes, ttl_s: float = AUDIO_DEFAULT_TTL_S, session_id: str | None = None) -> str:
     """Store WAV bytes for one fetch within ``ttl_s`` seconds and return the token."""
-    return audio_store.put(wav_bytes, ttl_s)
+    return audio_store.put(wav_bytes, ttl_s, session_id=session_id)
 
 
 def audio_url(token: str) -> str:
@@ -157,7 +173,12 @@ def speak(
     settings: Settings = Depends(get_settings_dep),
     db: DbSession = Depends(get_db),
 ) -> Response:
-    if not request.app.state.rate_limiter.allow(session_id or "anonymous"):
+    limiter = request.app.state.rate_limiter
+    known = session_id if session_id and db.get(SessionRow, session_id) is not None else None
+    # Known sessions get their own budget; everyone else (the spoken consent text before a
+    # session exists) shares one bucket with a 10x budget, so a forged id cannot open a bucket.
+    allowed = limiter.allow(known) if known else limiter.allow("anonymous", limit=limiter.per_minute * 10)
+    if not allowed:
         raise HTTPException(status_code=429, detail="rate limited", headers={"Retry-After": "60"})
     text = prepare_speech_text(body.text, body.lang, body.script)
     if not text:
@@ -165,7 +186,7 @@ def speak(
 
     started = time.perf_counter()
     wav = _tts_for(request, settings).synthesize(text, body.lang, low_bandwidth=body.low_bandwidth)
-    known_session = session_id if session_id and db.get(SessionRow, session_id) is not None else None
+    known_session = known
     log_event(
         db,
         type="speak",

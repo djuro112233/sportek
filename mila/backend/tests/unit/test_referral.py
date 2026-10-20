@@ -142,7 +142,7 @@ def test_no_category_lists_clinics_first_with_general_message(seeded):
     assert not any(p.kind == "er" for p in referral.points)
 
 
-def test_minor_sees_a_child_line_for_support_and_general_but_not_in_emergencies(seeded):
+def test_minor_sees_a_child_line_in_every_plan(seeded):
     service = ReferralService(seeded)
     for category in (None, "suicidal_ideation", "violence_coercion"):
         kinds = [
@@ -151,7 +151,8 @@ def test_minor_sees_a_child_line_for_support_and_general_but_not_in_emergencies(
         ]
         assert "child_protection" in kinds and kinds[-1] == "child_protection", category
     emergency = service.for_context(region="BA", lang="sr", category="bleeding_pregnancy", is_minor=True)
-    assert "child_protection" not in {p.kind for p in emergency.points}
+    kinds = [p.kind for p in emergency.points]
+    assert kinds[0] == "er" and "child_protection" in kinds and emergency.emergency
 
 
 # --- filtering and ordering ---------------------------------------------------------------------
@@ -164,8 +165,10 @@ def test_points_are_filtered_by_region(seeded, region):
 
 def test_unknown_region_falls_back_to_all_regions(seeded):
     referral = ReferralService(seeded).for_context(region="XX", lang="sr", category="bleeding_pregnancy")
-    assert {p.region for p in referral.points} == {"BA", "ME"}
     assert referral.points[0].kind == "er"
+    pairs = [(p.name, p.phone) for p in referral.points]
+    assert len(pairs) == len(set(pairs)), "fallback must not repeat the same number per region"
+    assert sum(1 for p in referral.points if p.phone == "124") == 1
 
 
 def test_for_minors_filter_hides_adult_only_points(seeded):
@@ -230,7 +233,6 @@ def test_output_is_the_shared_referral_model(seeded):
         "region",
         "phone",
         "verified_on",
-        "notes",
         "emergency",
     }
 

@@ -26,6 +26,7 @@ from tests.conftest import REPO_ROOT, make_test_settings
 
 MIN_REFUSAL_CORRECTNESS = 0.90
 MIN_INKB_ANSWERED_SHARE = 0.85
+MIN_PARAPHRASE_ANSWERED_SHARE = 0.6  # lexical relevance; the LLM judge path is not measured here
 
 
 def _rows(name: str) -> list[dict]:
@@ -87,3 +88,11 @@ def test_in_kb_questions_are_answered(pipeline) -> None:
     withheld = sorted(i for i, o in outcomes.items() if o != "answered")
     share = 1 - len(withheld) / len(rows)
     assert share >= MIN_INKB_ANSWERED_SHARE, f"answered share {share:.2f}; not answered: {withheld}"
+
+
+def test_in_kb_paraphrases_are_mostly_answered(pipeline) -> None:
+    rows = _rows("inkb_paraphrases.jsonl")
+    outcomes = _outcomes(pipeline, rows)
+    withheld = sorted(i for i, o in outcomes.items() if o != "answered")
+    share = 1 - len(withheld) / len(rows)
+    assert share >= MIN_PARAPHRASE_ANSWERED_SHARE, f"paraphrase answered share {share:.2f}; not answered: {withheld}"

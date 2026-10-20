@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
-from collections import defaultdict, deque
+from collections import OrderedDict, deque
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,22 +29,52 @@ def _install_logging(settings: Settings) -> None:
             handler.addFilter(flt)
 
 
+_SECURITY_HEADERS = {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+    "Cache-Control": "no-store",
+    "Permissions-Policy": "camera=(), geolocation=()",
+}
+MAX_JSON_BODY_BYTES = 1_000_000
+MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+
+
 class _RateLimiter:
-    """Tiny in-memory sliding-window limiter keyed by session id (never by IP; IPs are not stored)."""
+    """Tiny in-memory sliding-window limiter keyed by session id (never by IP; IPs are not stored).
 
-    def __init__(self, per_minute: int) -> None:
+    Bounded: at most ``max_keys`` keys are tracked (least recently used first out) and empty
+    windows are dropped, so a flood of fresh ids cannot grow memory without limit.
+    """
+
+    def __init__(self, per_minute: int, max_keys: int = 10_000) -> None:
         self.per_minute = per_minute
-        self._hits: dict[str, deque[float]] = defaultdict(deque)
+        self.max_keys = max_keys
+        self._hits: OrderedDict[str, deque[float]] = OrderedDict()
 
-    def allow(self, key: str) -> bool:
+    def allow(self, key: str, limit: int | None = None) -> bool:
         now = time.monotonic()
-        q = self._hits[key]
+        q = self._hits.get(key)
+        if q is None:
+            q = deque()
+        else:
+            self._hits.move_to_end(key)
         while q and now - q[0] > 60:
             q.popleft()
-        if len(q) >= self.per_minute:
+        if len(q) >= (limit or self.per_minute):
+            self._hits[key] = q
             return False
         q.append(now)
+        self._hits[key] = q
+        while len(self._hits) > self.max_keys:
+            self._hits.popitem(last=False)
         return True
+
+    def forget(self, key: str) -> None:
+        self._hits.pop(key, None)
+
+    def __len__(self) -> int:
+        return len(self._hits)
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -81,19 +111,26 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.middleware("http")
     async def security_headers(request: Request, call_next):
+        # Oversized bodies are refused before they are read (Content-Length is a hint; the upload
+        # endpoint enforces its own limit while reading as well).
+        length = request.headers.get("content-length")
+        if length and length.isdigit():
+            content_type = request.headers.get("content-type", "")
+            limit = MAX_UPLOAD_BYTES if content_type.startswith("multipart/") else MAX_JSON_BODY_BYTES
+            if int(length) > limit:
+                return JSONResponse(
+                    status_code=413, content={"detail": "request too large"}, headers=_SECURITY_HEADERS
+                )
         response = await call_next(request)
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["X-Frame-Options"] = "DENY"
-        response.headers["Referrer-Policy"] = "no-referrer"
-        response.headers["Cache-Control"] = "no-store"
-        response.headers["Permissions-Policy"] = "camera=(), geolocation=()"
+        for name, value in _SECURITY_HEADERS.items():
+            response.headers[name] = value
         return response
 
     @app.exception_handler(Exception)
     async def _unhandled(request: Request, exc: Exception):
         # Never leak internals (or user text) in error bodies.
-        log.exception("unhandled error on %s", request.url.path)
-        return JSONResponse(status_code=500, content={"detail": "internal error"})
+        log.exception("unhandled error on %s", request.url.path)  # path is redacted by the filter
+        return JSONResponse(status_code=500, content={"detail": "internal error"}, headers=_SECURITY_HEADERS)
 
     from app.api import admin, ask, consent, metrics, referral, speak, transcribe
 

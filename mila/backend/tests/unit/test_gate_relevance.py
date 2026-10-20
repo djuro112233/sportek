@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from app.config import Settings
-from app.core.gate import REASON_LOW_RELEVANCE, ValidationGate
+from app.core.gate import REASON_LOW_RELEVANCE, REASON_OFF_TOPIC, ValidationGate
 from app.core.types import AnswerSentence, RetrievedChunk
 
 
@@ -40,3 +40,18 @@ def test_from_settings_reads_the_relevance_threshold() -> None:
     gate = ValidationGate.from_settings(Settings(gate_min_relevance=0.9, database_url="sqlite:///:memory:"))
     assert gate.min_relevance == 0.9
     assert gate.decide([_supported()], [_chunk()], relevance=0.8).status == "withheld"
+
+
+def test_off_topic_sentences_are_removed_per_sentence() -> None:
+    gate = ValidationGate(min_relevance=0.35, min_sentence_relevance=0.2)
+    sentences = [_supported(), _supported().model_copy(update={"text": "unrelated but cited."})]
+    decision = gate.decide(sentences, [_chunk()], relevance=0.8, sentence_relevance={0: 0.9, 1: 0.1})
+    assert decision.status == "approved"
+    assert [s.text for s in decision.kept] == ["evidence."]
+    assert decision.removed[0].reason == REASON_OFF_TOPIC
+
+
+def test_all_sentences_off_topic_withholds_with_no_citations() -> None:
+    gate = ValidationGate(min_sentence_relevance=0.2)
+    decision = gate.decide([_supported()], [_chunk()], relevance=0.0, sentence_relevance={0: 0.0})
+    assert decision.status == "withheld" and "no_citations" in decision.reasons

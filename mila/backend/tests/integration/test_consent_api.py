@@ -19,7 +19,8 @@ CONSENT_RESPONSE_KEYS = {
     "is_minor",
     "save_questions",
 }
-SESSION_INFO_KEYS = {"exists", "consent_given", "lang", "script", "region", "is_minor", "save_questions"}
+SESSION_INFO_KEYS = {
+    "consent_version","exists", "consent_given", "lang", "script", "region", "is_minor", "save_questions"}
 
 
 def _consent(client, settings, **overrides):
@@ -150,6 +151,7 @@ def test_get_session_known(client, settings):
     assert r.status_code == 200
     assert r.json() == {
         "exists": True,
+        "consent_version": "2026-10-01",
         "consent_given": True,
         "lang": "hr",
         "script": "latin",
@@ -220,7 +222,9 @@ def test_delete_session_returns_counts_and_logs_an_anonymous_delete_event(client
 
     r = client.delete(f"/api/session/{sid}")
     assert r.status_code == 200
-    assert r.json() == {"deleted": {"saved_questions": 1, "gate_records": 0, "events": 1, "sessions": 1}}
+    assert r.json() == {
+        "deleted": {"saved_questions": 1, "gate_records": 0, "events": 1, "sessions": 1, "audio_tokens": 0}
+    }
 
     db.expire_all()
     assert db.get(Session, sid) is None

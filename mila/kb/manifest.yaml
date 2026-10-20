@@ -95,6 +95,7 @@ documents:
     year: 2026
     url: ""
     file: demo/en/contraception-methods.md
+    sha256: 309c15c57dbdfa680bb60e4ad60e89f31d9a14f410067aebd61e52d38bd409e0
     licence: Apache-2.0
     language: en
     published_on: "2026-10-19"
@@ -107,6 +108,7 @@ documents:
     year: 2026
     url: ""
     file: demo/en/emergency-contraception.md
+    sha256: 2cb98b104dbd8581bdb6db904efef86580d40b3352401ef79be7a4274c8d9bb3
     licence: Apache-2.0
     language: en
     published_on: "2026-10-19"
@@ -119,6 +121,7 @@ documents:
     year: 2026
     url: ""
     file: demo/en/antenatal-care-visits.md
+    sha256: adb1e53251dc08785aaf9de6ee37774b7814ad4e8965845a1b859d491f757ac9
     licence: Apache-2.0
     language: en
     published_on: "2026-10-19"
@@ -131,6 +134,7 @@ documents:
     year: 2026
     url: ""
     file: demo/en/pregnancy-danger-signs.md
+    sha256: 63e53b00d32945386970223549cb32982f70867a7b9bd3275d6088a5d9a30de6
     licence: Apache-2.0
     language: en
     published_on: "2026-10-19"
@@ -143,6 +147,7 @@ documents:
     year: 2026
     url: ""
     file: demo/en/pregnancy-nutrition.md
+    sha256: 6ffbe1a9f9f8496a49a0b0a31e883fe56ec8fa628260904ec49b9ab29b932fad
     licence: Apache-2.0
     language: en
     published_on: "2026-10-19"
@@ -155,6 +160,7 @@ documents:
     year: 2026
     url: ""
     file: demo/en/postnatal-care.md
+    sha256: ee4ebbf42f0605f2f6616a4a6aea96e2ac58feaae7a15ae0a1b8b5eade4ccc8a
     licence: Apache-2.0
     language: en
     published_on: "2026-10-19"
@@ -167,6 +173,7 @@ documents:
     year: 2026
     url: ""
     file: demo/en/breastfeeding-basics.md
+    sha256: b2f33427ea3ecd8942e45dcacbefe01e7e7b7a7bcfa87869271473b06c675919
     licence: Apache-2.0
     language: en
     published_on: "2026-10-19"
@@ -179,6 +186,7 @@ documents:
     year: 2026
     url: ""
     file: demo/en/menstrual-health.md
+    sha256: 5e376b7fbe1c37695913bf1509d87b303bb4d3007ac8cb6e77db9aa1bd3f4252
     licence: Apache-2.0
     language: en
     published_on: "2026-10-19"
@@ -191,6 +199,7 @@ documents:
     year: 2026
     url: ""
     file: demo/en/sti-prevention-testing.md
+    sha256: a2246860c04f42dba68bf027a1dab037b81401fb3db326314223b0ad3981ea69
     licence: Apache-2.0
     language: en
     published_on: "2026-10-19"
@@ -203,6 +212,7 @@ documents:
     year: 2026
     url: ""
     file: demo/en/adolescent-srh-rights.md
+    sha256: 46aef9cef82d8f110d0aad4cc9056dfd781f2bbe3a7697f807bc150a22a07b8a
     licence: Apache-2.0
     language: en
     published_on: "2026-10-19"
@@ -215,6 +225,7 @@ documents:
     year: 2026
     url: ""
     file: demo/en/perinatal-mental-health.md
+    sha256: d06cbb0f7233c468ddfa86b2542d83794ef8723bf97c404017057291013e485b
     licence: Apache-2.0
     language: en
     published_on: "2026-10-19"
@@ -228,6 +239,7 @@ documents:
     year: 2026
     url: ""
     file: demo/sr/contraception-methods.md
+    sha256: ee7b5169b665b3989dda70395243132c8a0a862f956d16b3ce32badee657745c
     licence: Apache-2.0
     language: sr
     published_on: "2026-10-19"
@@ -240,6 +252,7 @@ documents:
     year: 2026
     url: ""
     file: demo/sr/emergency-contraception.md
+    sha256: 7d31c778649e91ae198822d820e98faa355e9f73d2f819656d0718b70144b86e
     licence: Apache-2.0
     language: sr
     published_on: "2026-10-19"
@@ -252,6 +265,7 @@ documents:
     year: 2026
     url: ""
     file: demo/sr/antenatal-care-visits.md
+    sha256: c2608646c9fd2f82150e8a113d05d3eb0fe81bf82abf976eae5cedf7a2021c77
     licence: Apache-2.0
     language: sr
     published_on: "2026-10-19"
@@ -264,6 +278,7 @@ documents:
     year: 2026
     url: ""
     file: demo/sr/pregnancy-danger-signs.md
+    sha256: 248c8b933abb77ebdbc78853d9e00a2777e5404fc1c83c5154cae938a33b0964
     licence: Apache-2.0
     language: sr
     published_on: "2026-10-19"
@@ -276,6 +291,7 @@ documents:
     year: 2026
     url: ""
     file: demo/sr/pregnancy-nutrition.md
+    sha256: 1eebb957dfc4168d97c19b28aaaeee8dffbaa694d479dc90692356a0e1008829
     licence: Apache-2.0
     language: sr
     published_on: "2026-10-19"
@@ -288,6 +304,7 @@ documents:
     year: 2026
     url: ""
     file: demo/sr/postnatal-care.md
+    sha256: d59c3fed96bceb1b8c7579fdcf8e26e7841fbc3190d3ccb9d367cb3aaae740ce
     licence: Apache-2.0
     language: sr
     published_on: "2026-10-19"
@@ -300,6 +317,7 @@ documents:
     year: 2026
     url: ""
     file: demo/sr/breastfeeding-basics.md
+    sha256: 7307a5337057aa1ed70af69300a740b136f105d17f0e7709496fb5242bc2c884
     licence: Apache-2.0
     language: sr
     published_on: "2026-10-19"
@@ -312,6 +330,7 @@ documents:
     year: 2026
     url: ""
     file: demo/sr/menstrual-health.md
+    sha256: b8debda539a1fb32cf840fe84fe3afe0e9b3ea66c41605a53e5810444022a5f9
     licence: Apache-2.0
     language: sr
     published_on: "2026-10-19"
@@ -324,6 +343,7 @@ documents:
     year: 2026
     url: ""
     file: demo/sr/sti-prevention-testing.md
+    sha256: b2988eb9c6be9ff372dddcd3048683ccd20e9969809b82a736b436d29c3a96a2
     licence: Apache-2.0
     language: sr
     published_on: "2026-10-19"
@@ -336,6 +356,7 @@ documents:
     year: 2026
     url: ""
     file: demo/sr/adolescent-srh-rights.md
+    sha256: a7a803c2cbd88604281a4c5bbc23dcfdbdc7e4f51f1e125ac04443273053abb9
     licence: Apache-2.0
     language: sr
     published_on: "2026-10-19"
@@ -348,6 +369,7 @@ documents:
     year: 2026
     url: ""
     file: demo/sr/perinatal-mental-health.md
+    sha256: e2688389dd189d7000a4c2f04717e2875fccfdbc93b53c571a8d48c314ca01e4
     licence: Apache-2.0
     language: sr
     published_on: "2026-10-19"

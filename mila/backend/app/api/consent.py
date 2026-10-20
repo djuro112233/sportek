@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import re
 
-from fastapi import APIRouter, Depends, Path, Query
+from fastapi import APIRouter, Depends, HTTPException, Path, Query, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from sqlalchemy import delete
@@ -20,6 +20,7 @@ from app.config import Settings
 from app.core.consent_texts import ConsentText, build_consent_text
 from app.core.events import log_event
 from app.core.privacy import delete_session_data, new_session_id
+from app.core.referral import REGIONS
 from app.core.types import Lang, Script
 from app.models import SavedQuestion, Session, utcnow
 
@@ -36,6 +37,8 @@ def _normalise_region(value: str | None) -> str | None:
     code = value.strip().upper()
     if not _REGION_RE.match(code):
         raise ValueError("region must be a 2-letter ISO country code")
+    if code not in REGIONS:
+        raise ValueError(f"region must be one of {sorted(REGIONS)}")
     return code
 
 
@@ -73,6 +76,7 @@ class SessionInfo(BaseModel):
 
     exists: bool
     consent_given: bool | None = None
+    consent_version: str | None = None
     lang: str | None = None
     script: str | None = None
     region: str | None = None
@@ -106,6 +110,7 @@ def _session_info(sess: Session) -> SessionInfo:
     return SessionInfo(
         exists=True,
         consent_given=sess.consent_given,
+        consent_version=sess.consent_version,
         lang=sess.lang,
         script=sess.script,
         region=sess.region,
@@ -128,10 +133,14 @@ def consent_text(
 @router.post("/consent", response_model=ConsentResponse, responses={403: {}, 409: {}, 422: {}})
 def give_consent(
     body: ConsentRequest,
+    request: Request,
     db: DbSession = Depends(get_db),
     settings: Settings = Depends(get_settings_dep),
 ) -> ConsentResponse | JSONResponse:
     """Create a pseudonymous session. Nothing is stored unless the current text was accepted."""
+    limiter = request.app.state.rate_limiter
+    if not limiter.allow("consent", limit=limiter.per_minute * 10):
+        raise HTTPException(status_code=429, detail="rate limited", headers={"Retry-After": "60"})
     if not body.accepted:
         return JSONResponse(status_code=403, content={"detail": "consent_required"})
     if body.consent_version != settings.consent_version:
@@ -185,13 +194,14 @@ def update_preferences(
     body: PreferencesRequest,
     session_id: str = _SESSION_ID,
     db: DbSession = Depends(get_db),
+    settings: Settings = Depends(get_settings_dep),
 ) -> SessionInfo:
     """Change language, script, region, minor flag or the save-questions opt-in.
 
     Turning ``save_questions`` off deletes the session's saved questions immediately, so the
     switch is a withdrawal of that consent and not just a flag.
     """
-    sess = require_consented_session(session_id, db)
+    sess = require_consented_session(session_id, db, settings)
     if body.lang is not None:
         sess.lang = body.lang
     if body.script is not None:
@@ -210,8 +220,16 @@ def update_preferences(
 
 
 @router.delete("/session/{session_id}", response_model=DeleteResponse)
-def delete_session(session_id: str = _SESSION_ID, db: DbSession = Depends(get_db)) -> DeleteResponse:
+def delete_session(
+    request: Request, session_id: str = _SESSION_ID, db: DbSession = Depends(get_db)
+) -> DeleteResponse:
     """ "Delete my data": erase the session and everything linked to it. Idempotent."""
     counts = delete_session_data(db, session_id)
+    from app.api.speak import audio_store  # local import: speak imports deps too
+
+    counts["audio_tokens"] = audio_store.drop_session(session_id)
+    limiter = getattr(request.app.state, "rate_limiter", None)
+    if limiter is not None:
+        limiter.forget(session_id)
     log_event(db, type="delete", session_id=None)
     return DeleteResponse(deleted=counts)

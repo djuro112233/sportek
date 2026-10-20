@@ -9,7 +9,7 @@ from app.api.deps import get_db, get_settings_dep
 from app.config import Settings
 from app.core.events import log_event
 from app.core.i18n import coerce_lang
-from app.core.referral import ReferralService, ensure_referral_points
+from app.core.referral import REGIONS, ReferralService, ensure_referral_points
 from app.core.types import RED_FLAG_CATEGORIES, Referral, Script
 
 router = APIRouter()
@@ -29,6 +29,8 @@ def get_referral(
     if category is not None and category not in RED_FLAG_CATEGORIES:
         raise HTTPException(status_code=422, detail="unknown category")
     region_code = (region or settings.default_region).strip().upper()
+    if region_code not in REGIONS:
+        raise HTTPException(status_code=422, detail=f"region must be one of {sorted(REGIONS)}")
     language = coerce_lang(lang)
     ensure_referral_points(db)
     referral = ReferralService(db).for_context(

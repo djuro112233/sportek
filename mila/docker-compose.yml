@@ -120,7 +120,7 @@ services:
     # Ingest the demo manifest (no downloads) before serving, as docs/architecture.md describes.
     command: >
       sh -c "python scripts/ingest_kb.py
-      && exec uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000 --app-dir /app/backend"
+      && exec uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000 --app-dir /app/backend --no-access-log"
     depends_on:
       db:
         condition: service_healthy
@@ -145,11 +145,11 @@ services:
     build:
       context: ./web
       dockerfile: Dockerfile
-      args:
-        # Inlined at build time by Next.js; the browser calls this origin directly.
-        NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-http://localhost:8000}
     environment:
-      NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-http://localhost:8000}
+      # The browser calls /api/* on the web origin; the Next.js server forwards those requests
+      # to the API over the compose network at runtime (web/app/api/[...path]/route.ts). Nothing
+      # about the API address is baked into the image.
+      MILA_API_URL: ${MILA_API_URL:-http://api:8000}
       NODE_ENV: production
       NEXT_TELEMETRY_DISABLED: "1"
       PORT: "3000"

@@ -1,5 +1,8 @@
 /* MILA web client. Plain CSS, no web fonts, no images. Mobile-first, 18px base, 48px tap targets.
-   Colour pairs below were checked for WCAG AA (>= 4.5:1 for text, >= 3:1 for large text / UI). */
+   Colour pairs below were checked for WCAG AA (>= 4.5:1 for text, >= 3:1 for large text / UI).
+   --border (#6b7280) outlines inputs, selects, choices and ghost buttons: 4.83:1 on #ffffff,
+   4.39:1 on #f3f4f6 and 4.42:1 on #fef2f2 (WCAG 1.4.11 needs 3:1). --border-soft (#d1d5db,
+   1.47:1) is decorative only: card outlines, separators and the spinner track. */
 
 :root {
   color-scheme: light;
@@ -7,7 +10,8 @@
   --bg-soft: #f3f4f6;
   --text: #111827;
   --muted: #4b5563;
-  --border: #d1d5db;
+  --border: #6b7280;
+  --border-soft: #d1d5db;
   --primary: #1d4ed8;
   --primary-dark: #1e40af;
   --on-primary: #ffffff;
@@ -179,7 +183,7 @@ textarea {
 
 .card {
   background: var(--bg);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-soft);
   border-radius: var(--radius);
   padding: 16px;
 }
@@ -449,7 +453,7 @@ textarea {
   display: inline-block;
   width: 18px;
   height: 18px;
-  border: 3px solid var(--border);
+  border: 3px solid var(--border-soft);
   border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
@@ -544,10 +548,19 @@ textarea {
 }
 
 .disclaimer {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-soft);
   padding-top: 10px;
   font-size: 0.9rem;
   color: var(--muted);
+}
+
+/* "You can also talk to a trusted adult": one quiet line under the answer for minors. */
+.minor-note {
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  border-left: 4px solid var(--primary-dark);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 8px 12px;
 }
 
 /* --- referral / emergency ----------------------------------------------------------------- */
@@ -562,7 +575,7 @@ textarea {
 }
 
 .referral__point {
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-soft);
   border-radius: var(--radius);
   padding: 12px;
   background: var(--bg);
@@ -586,6 +599,14 @@ textarea {
 
 .referral__detail {
   font-size: 0.95rem;
+}
+
+.referral__unverified {
+  align-self: flex-start;
+}
+
+.emergency__message {
+  font-size: 1.1rem;
 }
 
 .emergency {
@@ -612,21 +633,29 @@ textarea {
   flex: 0 0 auto;
 }
 
-/* --- bottom sheet ------------------------------------------------------------------------- */
+/* --- bottom sheet (native <dialog>, opened with showModal) ------------------------------- */
 
-.sheet-backdrop {
+.sheet-dialog {
   position: fixed;
-  inset: 0;
-  background: rgba(17, 24, 39, 0.55);
+  inset: auto 0 0 0;
+  margin: 0 auto;
+  width: 100%;
+  max-width: var(--max-width);
+  max-height: 85vh;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  overflow: visible;
   z-index: 40;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
+}
+
+.sheet-dialog::backdrop {
+  background: rgba(17, 24, 39, 0.55);
 }
 
 .sheet {
   width: 100%;
-  max-width: var(--max-width);
   max-height: 85vh;
   overflow: auto;
   background: var(--bg);
@@ -675,7 +704,7 @@ textarea {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 16px 16px 32px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-soft);
   display: flex;
   flex-direction: column;
   gap: 14px;

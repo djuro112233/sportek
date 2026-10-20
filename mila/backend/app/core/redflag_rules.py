@@ -3809,3 +3809,158 @@ NEGATIVE_SEEDS: tuple[str, ...] = (
     "how much cough syrup can a three year old have",
     "my child has a rash on the stomach for two days",
 )
+
+
+# ---------------------------------------------------------------------------------------------
+# Additions from the 2026-10-20 adversarial review (findings RF-1 .. RF-6). Kept as extensions so
+# the original lists above stay readable; the matchers are built after this module loads.
+# ---------------------------------------------------------------------------------------------
+
+# Number words -> digits, applied to the normalised text before the age and temperature regexes
+# ("imam petnaest godina", "decko ima dvadeset osam", "trideset osam i po", "thirty eight").
+NUMBER_WORD_UNITS: dict[str, int] = {
+    "jedan": 1, "jedna": 1, "jedno": 1, "dva": 2, "dvije": 2, "dve": 2, "tri": 3, "cetiri": 4,
+    "pet": 5, "sest": 6, "sedam": 7, "osam": 8, "devet": 9,
+    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
+}  # fmt: skip
+NUMBER_WORD_TEENS: dict[str, int] = {
+    "deset": 10, "jedanaest": 11, "dvanaest": 12, "trinaest": 13, "cetrnaest": 14, "petnaest": 15,
+    "sesnaest": 16, "sedamnaest": 17, "osamnaest": 18, "devetnaest": 19,
+    "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14, "fifteen": 15,
+    "sixteen": 16, "seventeen": 17, "eighteen": 18, "nineteen": 19,
+}  # fmt: skip
+NUMBER_WORD_TENS: dict[str, int] = {
+    "dvadeset": 20, "trideset": 30, "cetrdeset": 40, "pedeset": 50, "sezdeset": 60,
+    "twenty": 20, "thirty": 30, "forty": 40, "fourty": 40, "fifty": 50, "sixty": 60,
+}  # fmt: skip
+
+# Self-referential gestational age counts as a pregnancy context for the obstetric rules
+# ("u 30. nedjelji sam i krvarim", "10 weeks, bleeding and cramping", "32 weeks pregnant").
+PREGNANCY_WEEKS_RE: str = (
+    r"(?<!kasni )(?<!kasnim )(?<!kasnila )(?<!prije )(?<!pre )(?<!nakon )(?<!poslije )(?<!posle )"
+    r"(?<!vec )(?<!zadnjih )(?<!poslednjih )(?<!posljednjih )(?<!unazad )(?<!od )(?<!za )(?<!ima )"
+    r"(?:"
+    r"\bu (?:[1-9]|[1-3][0-9]|4[0-2]) ?(?:nedelj|nedjelj|tjed|sedmic)\w*\b"
+    r"|\b(?:[4-9]|[1-3][0-9]|4[0-2]) ?(?:nedelj|nedjelj|tjed|sedmic)\w* (?:sam\b|trudn\w*|trudnoc\w*)"
+    r"|\b(?:[4-9]|[1-3][0-9]|4[0-2]) ?(?:weeks?|wks?) (?:pregnant|along|gone|preg)\b"
+    r"|\b(?:i m|im|i am|sam u|ja sam u|trudna sam) (?:[4-9]|[1-3][0-9]|4[0-2]) ?(?:weeks?|wks?|nedelj\w*|nedjelj\w*|tjed\w*|sedmic\w*)\b"
+    r"|\b(?:[1-9]|[1-3][0-9]|4[0-2]) ?(?:weeks?|wks?|nedelj\w*|nedjelj\w*|tjed\w*|sedmic\w*)"
+    r"(?= ?(?:i |and |)?(?:krvar\w*|curi|bleed\w*|temperatur\w*|fever|groznic\w*|vrucic\w*|boli|bol\b|bolov\w*|pain\w*|cramp\w*|grc\w*|kontrakcij\w*|contraction\w*|otekl\w*|glavobolj\w*|headache))"
+    r")"
+)
+# "Water broke" wording is a late-pregnancy context on its own.
+PREGNANCY_CTX_EXTRA: TermList = (
+    "pukao mi vodenjak", "pukao vodenjak", "puk* vodenjak", "vodenjak", "plodova voda", "curi mi voda",
+    "curi mi plodova", "water broke", "waters broke", "my waters", "waters breaking", "amniotic",
+)  # fmt: skip
+
+# Information questions about danger signs are answered from the knowledge base, not routed to
+# "call 124 now" - unless the same message also reports a present symptom in the first person.
+INFORMATION_FRAME_PATTERNS: tuple[str, ...] = (
+    r"\b(?:kada|kad|da li|dal|jel|je li|koliko|zasto|zbog cega|u kojim slucajevima) (?:je|su|moze|moze biti|treba|bi|bude|bilo bi)\b.{0,40}\b(?:opasn\w*|normaln\w*|znak\w*|razlog\w*|rizic\w*|uobicajen\w*|ozbiljn\w*|hitn\w*|zabrinjav\w*|za brigu)",
+    r"\b(?:koji|koje|koja|kakvi|kakve|sta|sto) su (?:sve )?(?:znaci|znakovi|simptomi|razlozi|uzroci|opasnosti|rizici|upozoravajuci)\b",
+    r"\b(?:koji|koje|koja|kakvi|kakve) (?:znaci|znakovi|simptomi|razlozi|uzroci)\b",
+    r"\b(?:what|which) are (?:the |some )?(?:signs|symptoms|warning signs|causes|danger signs|red flags)\b",
+    r"\bwhen (?:should|is|does|do|would) (?:i|you|a woman|one|it|someone)\b.{0,40}\b(?:worry|worried|dangerous|normal|serious|a sign|an emergency|call|go to)\b",
+    r"\bda li je (?:tacno|istina|normalno|opasno|uobicajeno|cesto|moguce) da\b",
+    r"\bis it (?:true|normal|common|dangerous|possible) that\b",
+    r"\b(?:how|kako) (?:do i|can i|to|da) (?:tell|know|recogni[sz]e|znam|prepoznam|razlikujem)\b.{0,40}\b(?:dangerous|serious|normal|opasn\w*|ozbiljn\w*|normaln\w*|znak\w*)",
+    r"\b(?:what|sta|sto) (?:should|do|does|treba|znaci|znace) (?:i|you|one|a woman)? ?(?:do|happen|uraditi|raditi|znaci)\b.{0,40}\b(?:if|ako|kada|kad)\b",
+    r"\b(?:prije|pre|prosle|prosli|proslog) (?:[0-9]+ )?(?:godin\w*|mjesec\w*|mesec\w*)\b.{0,60}\b(?:sad|sada|opet|ponovo|na sta da pazim|what should i watch)\b",
+)
+FIRST_PERSON_SYMPTOM_RE: str = (
+    r"\b(?:krvarim|krvarila sam|krvari mi|curi mi|boli me|bole me|bolovi su|imam (?:jak|jaku|jake|temperatur|groznic|krvar|bol|otok|glavobolj|kontrakcij)\w*|"
+    r"osjecam|osecam|ne osjecam|ne osecam|nisam osjetila|nisam osetila|temperatura mi je|gorim|tresem se|drhtim|povracam|"
+    r"ne mogu da|ne mogu disati|vidim (?:mutno|zvjezdice|zvezdice|musice)|otekle su mi|natekle su mi|natekla sam|otekla sam|"
+    r"i am bleeding|i m bleeding|im bleeding|i bleed|i have (?:a |severe |heavy |bad )?(?:fever|bleeding|pain|headache|swelling|contractions)|"
+    r"i feel|i can t feel|i cant feel|i haven t felt|i havent felt|it hurts|hurts so|my (?:head|belly|stomach|tummy|abdomen) (?:hurts|is killing)|"
+    r"my (?:face|hands|feet|legs) (?:are|is) swollen|i can t breathe|i cant breathe|i threw up|i keep vomiting|i see spots)\b"
+)
+
+# Contractions and functional wording for pregnant abdominal pain (RF-6).
+CONTRACTION_TERMS: TermList = ("kontrakcij*", "trudov*", "trud", "contraction*", "=labour pains", "=labor pains")
+CONTRACTION_INTERVAL_RE: str = r"\b(?:svakih|svake|svaka|svako|na svakih|na|every|each) ?[0-9]+ ?(?:min\b|minut\w*|minutes?|mins?)\b"
+CONTRACTION_QUALIFIERS: TermList = (
+    "jake", "jaki", "jaku", "jako", "bolne", "bolni", "redovne", "redovni", "pravilne", "pravilni",
+    "ne prestaju", "sve jace", "sve cesce", "strong", "painful", "regular", "intense", "timed",
+    "closer together", "every few minutes",
+)  # fmt: skip
+FUNCTIONAL_IMPACT_TERMS_EXTRA: TermList = (
+    "ne mogu da disem", "ne mogu disati", "ne mogu da dishem", "ne mogu udahnuti", "cant breathe",
+    "can t breathe", "cannot breathe", "kao da ce da pukne", "kao da ce pukn*", "ce da pukne", "ce pukn*",
+    "da pukne", "tvrd kao kamen", "tvrd kao daska", "kao kamen", "hard as a rock", "hard as rock",
+    "going to burst", "will burst", "about to burst", "savijam se od bola", "presavijam se", "savijena od bola",
+    "doubled over", "od bola ne mogu", "ne mogu od bola",
+)  # fmt: skip
+
+# Minor and adult age phrasings without a unit or with a relative (RF-1).
+_AGE_CONTINUATION = (
+    r"(?= ?(?:$|i\b|a\b|ali\b|god|decko|momak|moj|moja|moje|on\b|ona\b|zelim|hocu|trudna|trudn|starij|ocuh|komsija|"
+    r"ujak|stric|tata|otac|partner|muskarac|covjek|covek|tip\b|lik\b|profesor|nastavnik|trener|sef\b|nekad|ponekad|ne\b|"
+    r"nisam|imam|imala|mene|me\b|mi\b|se\b|da\b|jer\b|pa\b|al\b|i po|a on|a moj|a decko|a momak|spavala|spavam|spavamo|"
+    r"dira|pipa|ljubi|u vezi|imali|sam\b|je\b|njen|njegov|a njen|a njegov|a tip|a muskarac|a muz|i on|i moj|i decko))"
+)
+MINOR_AGE_PATTERNS_EXTRA: tuple[str, ...] = (
+    r"\b(?:ja sam|sam ja|ja imam|imam ja) (1[0-7]|9)\b" + _AFTER_NUMBER_EXCL + _AGE_CONTINUATION,
+    r"\b(1[0-7]|9) (?:mi je|su mi|mi je bilo|mi ima) (?:godin\w*|god\b)",
+    r"\b(?:sestra|drugarica|prijateljica|cerka|kcerka|kci|rodjaka|rodica|komsinica|sestricina|necaka|unuka|drugarica mi|sestra mi|cerka mi|kcerka mi|kci mi|rodjaka mi|komsinica mi|unuka mi|sestra joj|drugarica joj) (?:mi |joj |nam |ti )?(?:ima|je napunila|puni|je|ce napuniti|je imala) (?:tek |samo |skoro )?(1[0-7]|9)(?: i po)?\b"
+    + _AFTER_NUMBER_EXCL,
+    r"\b(?:my sister|my friend|my cousin|my daughter|my niece|my best friend|her friend|a girl|this girl|my classmate|a friend of mine) (?:is|just turned|turned|is only|is just|who is|who s) (1[0-7]|9)\b(?! ?(?:weeks?|days?|months?|cm|kg|pounds?|lbs|hours?|minutes?|pills?|tablets?|times|percent|years? (?:married|together|into|ago|older|younger)))",
+    r"\b(?:i m|i am|im|i ve just turned|i just turned|i turned) (?:only |just )?(1[0-7]|9)\b(?! ?(?:weeks?|days?|months?|cm|kg|pounds?|lbs|hours?|minutes?|pills?|tablets?|times|percent|years? (?:married|together|into|ago|older|younger)))",
+)
+ADULT_AGE_PATTERNS_EXTRA: tuple[str, ...] = (
+    r"\b(?:sa |s |kod |za |uz )?(?:tipom|likom|muskarcem|covjekom|covekom|deckom|momkom|partnerom|frajerom|nastavnikom|profesorom|trenerom|komsijom|susjedom|susedom|ujakom|stricem|ocuhom|sefom|rodjakom|muzem|ljubavnikom|drugom|prijateljem|onim|nekim|jednim|starijim) (?:(?:od|koji ima|koji je|star|starim|starijim|od nekih|od oko|sa|s) )?(?:oko |nekih |preko |skoro |vec )?(1[89]|[2-6][0-9])(?: i po)? ?(?:godina|godine|god\b|g\b|gdn)?\b(?! ?(?:nedelj|nedjelj|tjed|sedmic|dan|kg|kil|cm|sat|min|tabl|mg|ml|posto|procen|puta|put|mjesec|mesec|week|day|month|pound|lbs|hour|minute|pill|tablet|time))",
+    r"\b(?:njen|njezin|njegov|moj|moja|a njen|a njegov) (?:momak|decko|partner|muz|tip|frajer|ljubavnik|dasa|ortak|verenik|vjerenik|drug) (?:mi |joj |nam )?(?:ima|je|je star|je napunio|ima oko|ima nekih|ima preko) (?:oko |nekih |preko |skoro |vec )?(1[89]|[2-6][0-9])\b",
+    r"\b(?:a |with |to |by )?(?:a |the |some |this |that )?(?:guy|man|dude|bloke|boyfriend|partner|teacher|coach|neighbou?r|uncle|boss|cousin|lover|friend|someone|somebody|him) (?:who is |who s |that is |that s |of |aged |age )(?:about |around |over |almost |like |nearly )?(1[89]|[2-6][0-9])\b(?! ?(?:weeks?|days?|months?|cm|kg|pounds?|lbs|hours?|minutes?|pills?|tablets?|times?|percent))",
+)
+SEXUAL_TERMS_EXTRA: TermList = (
+    "spavamo zajedno", "spavamo", "spavam sa", "spavam s njim", "spavam sa njim", "spavala sam s", "spavala sam sa",
+    "spava sa mnom", "spavao je sa mnom", "hoce seks", "hoce da spavamo", "hoce da spava", "trazi seks", "trazi da spavamo",
+    "we sleep together", "sleep together", "sleeping together", "slept together", "we have sex", "we had sex",
+    "wants to have sex", "wants sex", "he wants to", "he wants me to", "asked me for sex", "sex with him",
+    "had sex with", "having sex with",
+)  # fmt: skip
+SUICIDE_TERMS_EXTRA: TermList = (
+    "presud* sebi", "sebi presud*", "da presudim", "presudila bih", "presudio bih", "presudim sebi", "presudicu sebi",
+    "oduzela bih sebi", "oduzeo bih sebi", "oduzela bi sebi", "oduzeo bi sebi", "oduzm* sebi", "oduzeti sebi",
+    "oduzimam sebi", "bih sebi zivot", "bi sebi zivot", "nacin da umrem", "nacin da se ubijem", "nacin da nestanem",
+    "najbezbolnij*", "bezbolno umrem", "bezbolno da umrem", "da popijem da umrem", "popijem da umrem",
+    "tableta da umrem", "tablete da umrem", "tableta treba da umrem", "da umrem", "zelim umrijeti", "zelim umreti",
+    "hocu umrijeti", "hocu umreti", "necu dozivjeti sutra", "necu doziveti sutra", "ne zelim da se probudim",
+    "ne zelim se probuditi", "da se ne probudim", "da se vise ne probudim", "da se vise nikad ne probudim",
+    "zelim da nestanem", "hocu da nestanem", "da nestanem zauvijek", "da nestanem zauvek", "najbolje da nestanem",
+    "bolje da nestanem", "bolje mrtva", "bolje da sam mrtva", "radije mrtva", "radije bih bila mrtva",
+    "painless way", "way to die", "pills to die", "pills do i need to die", "take to die", "to kill myself",
+    "pills to kill", "pills would kill", "enough to die", "enough pills", "pills would it take", "want to die",
+    "wanna die", "wish i was dead", "wish i were dead", "dont want to wake up", "don t want to wake up",
+    "not wake up tomorrow", "never wake up", "not to wake up", "end my life", "end it all", "better off dead",
+    "take my own life", "hurt myself", "harm myself", "cut myself", "da se povrijedim", "da se povredim",
+    "da se posijecem", "da se posecem", "sijecem se", "secem se", "rezem se",
+)  # fmt: skip
+VIOLENCE_TERMS_EXTRA: TermList = (
+    "samara*", "osamar*", "isamar*", "osamario", "momak me gura", "decko me gura", "muz me gura", "partner me gura",
+    "on me gura", "me gura kad", "me gura i", "gura me i", "gura me kad", "me gura po", "gura me po", "gurnuo me",
+    "gurnula me", "gurne me", "gurnuo me je", "mi je slomio", "mi je slomila", "slomio mi", "slomila mi", "polomio mi",
+    "polomila mi", "slomio mi je", "forsira me", "forsir* me", "forsira da", "natjerao me", "naterao me", "natjera me",
+    "natera me", "tjera me da", "tera me da", "prisilio me", "prisiljava me", "ne da mi da koristim", "ne da mi da uzimam",
+    "ne da mi da pijem", "ne da mi da uzmem", "ne da mi zastitu", "ne da mi kondom", "ne da mi pilule", "ne da mi da stavim",
+    "ne dozvoljava mi zastitu", "ne dozvoljava mi da koristim", "ne dozvoljava mi kondom", "zabranjuje mi zastitu",
+    "zabranjuje mi pilule", "zabranjuje mi kontracepciju", "baca mi pilule", "bacio mi pilule", "baca pilule",
+    "uzeo mi pilule", "uzima mi pilule", "krije mi pilule", "sakrio mi pilule", "sakriva mi pilule", "skida kondom",
+    "skinuo kondom", "skinuo je kondom", "skida kondom bez", "moram da zatrudnim", "tjera me da zatrudnim",
+    "tera me da zatrudnim", "won t let me use", "wont let me use", "doesn t let me use", "doesnt let me use",
+    "won t let me take", "wont let me take", "throws away my pills", "threw away my pills", "took my pills",
+    "takes my pills", "hides my pills", "hid my pills", "flushed my pills", "forces me", "forcing me", "forced me",
+    "pushes me", "shoves me", "pushed me", "shoved me", "slaps me", "slapped me", "slapping me", "hits me", "hit me",
+    "beats me", "beat me", "broke my arm", "broke my nose", "broke my rib", "broke my", "choked me", "chokes me",
+    "strangled me", "strangles me", "davio me", "davi me", "gusi me", "gusio me", "stealthing", "took the condom off",
+    "removed the condom", "makes me pregnant", "wants me pregnant", "threatens me", "threatened me",
+)  # fmt: skip
+
+PREGNANCY_CTX = PREGNANCY_CTX + tuple(t for t in PREGNANCY_CTX_EXTRA if t not in PREGNANCY_CTX)
+FUNCTIONAL_IMPACT_TERMS = FUNCTIONAL_IMPACT_TERMS + tuple(t for t in FUNCTIONAL_IMPACT_TERMS_EXTRA if t not in FUNCTIONAL_IMPACT_TERMS)
+MINOR_AGE_PATTERNS = MINOR_AGE_PATTERNS + MINOR_AGE_PATTERNS_EXTRA
+ADULT_AGE_PATTERNS = ADULT_AGE_PATTERNS + ADULT_AGE_PATTERNS_EXTRA
+SEXUAL_EXPLICIT_TERMS = SEXUAL_EXPLICIT_TERMS + tuple(t for t in SEXUAL_TERMS_EXTRA if t not in SEXUAL_EXPLICIT_TERMS)
+SUICIDE_TERMS = SUICIDE_TERMS + tuple(t for t in SUICIDE_TERMS_EXTRA if t not in SUICIDE_TERMS)
+VIOLENCE_TERMS = VIOLENCE_TERMS + tuple(t for t in VIOLENCE_TERMS_EXTRA if t not in VIOLENCE_TERMS)

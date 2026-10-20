@@ -47,8 +47,9 @@ class Settings(BaseSettings):
     retrieval_top_k: int = 8
     gate_min_support_ratio: float = 0.6
     gate_min_confidence: float = 0.35
-    gate_min_relevance: float = 0.35  # question coverage of the cited evidence (docs/safety.md)
-    relevance_unknown_term_penalty: float = 0.75
+    gate_min_relevance: float = 0.3  # question coverage of the cited evidence (docs/safety.md)
+    gate_min_sentence_relevance: float = 0.1  # per-sentence coverage below which a sentence is off_topic
+    relevance_unknown_term_penalty: float = 0.85
     verifier_support_threshold: float = 0.5
     redflag_classifier_threshold: float = 0.85
 

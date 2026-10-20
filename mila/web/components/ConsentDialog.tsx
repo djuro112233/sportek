@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { errorMessageKey, getConsentText, postConsent, speak } from '@/lib/api';
+import { errorMessageKey, getConsentText, isConsentVersionOutdated, postConsent, speak } from '@/lib/api';
 import { LANGUAGE_OPTIONS, localeId, translator, type MsgKey } from '@/lib/i18n';
 import type { ConsentItem, ConsentText, Locale, Region, StoredSession } from '@/lib/types';
 import { SUPPORTED_REGIONS } from '@/lib/types';
@@ -15,6 +15,8 @@ interface Props {
   lowBandwidth: boolean;
   player: Player;
   onDone: (session: StoredSession) => void;
+  /** The consent text changed under the user (409): the page clears its own note so only this one shows. */
+  onConsentTextChanged?: () => void;
 }
 
 function itemText(item: ConsentItem): string {
@@ -22,8 +24,19 @@ function itemText(item: ConsentItem): string {
   return item.text ?? item.label ?? '';
 }
 
-/** First-visit screen: language, under-18, region, consent text (+ Listen), save toggle, I agree. */
-export default function ConsentDialog({ locale, onLocaleChange, initialRegion, lowBandwidth, player, onDone }: Props) {
+/**
+ * First-visit screen: language, under-18, region, consent text (+ Listen), save toggle, I agree.
+ * A 409 `consent_version_outdated` on submit reloads the text and shows "the text changed".
+ */
+export default function ConsentDialog({
+  locale,
+  onLocaleChange,
+  initialRegion,
+  lowBandwidth,
+  player,
+  onDone,
+  onConsentTextChanged,
+}: Props) {
   const t = translator(locale);
   const [isMinor, setIsMinor] = useState<boolean | null>(null);
   const [region, setRegion] = useState<Region>(initialRegion);
@@ -33,6 +46,7 @@ export default function ConsentDialog({ locale, onLocaleChange, initialRegion, l
   const [loadError, setLoadError] = useState<MsgKey | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<MsgKey | null>(null);
+  const [notice, setNotice] = useState<MsgKey | null>(null);
   const [needMinor, setNeedMinor] = useState(false);
   const [playerState, setPlayerState] = useState<PlayerState>('idle');
   const [audioBusy, setAudioBusy] = useState(false);
@@ -89,6 +103,7 @@ export default function ConsentDialog({ locale, onLocaleChange, initialRegion, l
     }
     setSubmitting(true);
     setSubmitError(null);
+    setNotice(null);
     try {
       const res = await postConsent({
         lang: locale.lang,
@@ -102,17 +117,26 @@ export default function ConsentDialog({ locale, onLocaleChange, initialRegion, l
       player.stop();
       onDone({ session_id: res.session_id, lang: locale.lang, script: locale.script, region, is_minor: isMinor });
     } catch (err) {
-      setSubmitError(errorMessageKey(err));
+      if (isConsentVersionOutdated(err)) {
+        // The server has a newer text: fetch it, say so, and ask for a fresh "I agree".
+        player.stop();
+        setConsent(null);
+        setReloadToken((n) => n + 1);
+        setNotice('consent_text_changed');
+        onConsentTextChanged?.();
+      } else {
+        setSubmitError(errorMessageKey(err));
+      }
       setSubmitting(false);
     }
-  }, [consent, isMinor, locale, region, saveQuestions, player, onDone]);
+  }, [consent, isMinor, locale, region, saveQuestions, player, onDone, onConsentTextChanged]);
 
   const playing = playerState === 'playing' || playerState === 'loading';
   const paragraphs = consent ? consent.text.split(/\n+/).map((p) => p.trim()).filter(Boolean) : [];
 
   return (
     <section className="card stack" aria-labelledby="consent-title">
-      <h1 id="consent-title">{t('consent_title')}</h1>
+      <h2 id="consent-title">{t('consent_title')}</h2>
       <p className="muted">{t('consent_intro')}</p>
 
       <div>
@@ -195,6 +219,12 @@ export default function ConsentDialog({ locale, onLocaleChange, initialRegion, l
           ))}
         </div>
       </div>
+
+      {notice ? (
+        <div className="alert" role="status">
+          <p>{t(notice)}</p>
+        </div>
+      ) : null}
 
       <div className="card card--soft stack" aria-live="polite">
         {loading ? (

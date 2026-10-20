@@ -74,6 +74,10 @@ _DRUG = (
     r"antipiretik\w*|lijek\w*|lek|leka|lekov\w*|lekove|lijekov\w*|tablet\w*|kapsul\w*|sirup\w*|"
     r"medicin\w*|medication\w*|drug\w*|pill\w*|terapij\w*|therapy|treatment)"
 )
+_SUPPLEMENT = (
+    r"(?:folna\w*|folne|folnu|folic|gvozdj\w*|zeljez\w*|iron|kalcij\w*|calcium|vitamin\w*|magnezij\w*|"
+    r"magnesium|omega\w*|jod\w*|iodine|cink\w*|zinc|suplement\w*|supplement\w*|dodat\w*|probiotik\w*|probiotic\w*)"
+)
 _DOSE_RES: tuple[re.Pattern[str], ...] = (
     re.compile(rf"\b(?:koliko|kolika|koliku|kolko|how many|how much)\b(?:\s+\w+){{0,3}}?\s+{_DOSE_UNIT}\b"),
     re.compile(rf"\b(?:koja|koju|koji|kojoj|kojem|kojim|kolika|what|which)\b(?:\s+\w+){{0,2}}?\s+{_DOSE_WORD}\b"),
@@ -94,9 +98,19 @@ _DOSE_RES: tuple[re.Pattern[str], ...] = (
         rf"(?:\s+\w+){{0,3}}?\s+{_DRUG}\b"
     ),
     re.compile(rf"\b{_DRUG}\b(?:\s+\w+){{0,2}}?\s+(?:smijem|smem|mogu|moze|sme|smije)\b"),
-    # prescriptions
-    re.compile(r"\b(?:propis\w*|prescri\w*|prescription)\b"),
-    re.compile(r"\brecept\w*\s+za\s+(?:lijek\w*|lek\w*|pilul\w*|tablet\w*|antibiot\w*|kontracep\w*|terapij\w*)\b"),
+    # requests to prescribe (a question whether something NEEDS a prescription stays in scope)
+    re.compile(r"\b(?:propis|prepis)\w*\s+(?:mi|me|meni)\b"),
+    re.compile(r"\b(?:mozes|mozete|hoces|hocete|bi|da)\s+(?:li\s+)?(?:mi\s+|da\s+mi\s+)?(?:propis|prepis)\w*\b"),
+    re.compile(r"\b(?:napisi|napisite|daj|dajte|izdaj|izdajte)\s+(?:mi\s+)?recept\b"),
+    re.compile(r"\b(?:prescribe\s+(?:me|for\s+me|something|some)|can\s+you\s+prescribe|write\s+(?:me\s+)?a\s+prescription|give\s+me\s+a\s+prescription)\b"),
+    # quantity of a supplement or nutrient, with or without a unit (AS-3)
+    re.compile(
+        rf"\b(?:koliko|kolika|koliku|kolko|how\s+much|how\s+many)\b(?:\s+\w+){{0,3}}?\s+{_SUPPLEMENT}\b"
+    ),
+    # frequency regimen request ("koliko puta dnevno da pijem ...", "how often should i take ...")
+    re.compile(
+        rf"\b(?:koliko\s+puta|koliko\s+cesto|how\s+often|how\s+many\s+times)\b(?:\s+\w+){{0,5}}?\s+(?:uzim\w*|uzm\w*|pij\w*|popij\w*|korist\w*|take|taking|use)\b(?:\s+\w+){{0,3}}?\s+(?:{_DRUG}|{_SUPPLEMENT})\b"
+    ),
     re.compile(r"\b(?:tacn[au]|exact)\s+(?:doz\w*|dose|dosage|kolicin\w*|amount)\b"),
     re.compile(r"\b(?:reci|kazi|daj)\s+(?:mi\s+)?(?:tacn[au]\s+)?(?:doz\w*|dose|dosage)\b"),
     re.compile(r"\b(?:koliko|how (?:much|many))\b(?:\s+\w+){0,3}?\s+(?:kapi|drops)\b"),
@@ -136,29 +150,34 @@ _DIAGNOSIS_RES: tuple[re.Pattern[str], ...] = (
 )
 
 # --- test interpretation --------------------------------------------------------------------
-_LAB_TERM = (
-    r"(?:hemoglobin\w*|haemoglobin\w*|leukocit\w*|eritrocit\w*|trombocit\w*|tsh|ft4|ft3|hcg|bhcg|"
-    r"beta\s+hcg|prolaktin\w*|prolactin\w*|progesteron\w*|progesterone|estradiol\w*|fsh|lh|amh|"
-    r"glukoz\w*|glucose|secer\w*|sugar|insulin\w*|feritin\w*|ferritin|gvozdj\w*|zeljez\w*|iron|"
-    r"crl|bpd|nuhaln\w*|nuchal|papa\s+test\w*|pap\s+(?:test|smear)|papanikolau|bris\w*|swab\w*|"
-    r"urin\w*|urine|nalaz\w*|rezultat\w*|result\w*|analiz\w*|lab\w*|ultrazvuk\w*|ultrasound|scan|"
-    r"ctg|hba1c|crp|sedimentacij\w*|vitamin\s+d|holesterol\w*|cholesterol|bilirubin\w*|"
-    r"kreatinin\w*|creatinine|leukocyte\w*|platelet\w*|test\w*|reading\w*|level\w*|vrijednost\w*|vrednost\w*)"
+_ANALYTE = (
+    r"(?:hemoglobin\w*|haemoglobin\w*|hgb|hb\b|leukocit\w*|eritrocit\w*|trombocit\w*|tsh|ft4|ft3|hcg|bhcg|"
+    r"beta\s+hcg|prolaktin\w*|prolactin\w*|progesteron\w*|progesterone|estradiol\w*|fsh|lh\b|amh|"
+    r"glukoz\w*|glucose|insulin\w*|feritin\w*|ferritin|crl|bpd|nuhaln\w*|nuchal|papa\s+test\w*|pap\s+(?:test|smear)|"
+    r"papanikolau|hba1c|crp|sedimentacij\w*|holesterol\w*|cholesterol|bilirubin\w*|kreatinin\w*|creatinine|"
+    r"leukocyte\w*|platelet\w*|white\s+cells?|red\s+cells?|vitamin\s+d\b|secer\s+u\s+krvi|blood\s+sugar)"
 )
+_GENERIC_TEST = (
+    r"(?:bris\w*|swab\w*|urin\w*|urine|nalaz\w*|rezultat\w*|result\w*|analiz\w*|lab\w*|ultrazvuk\w*|ultrasound|"
+    r"scan|ctg|test\w*|reading\w*|level\w*|vrijednost\w*|vrednost\w*)"
+)
+# First-person result context: the user reports their own result.
 _RESULT_CONTEXT = (
-    r"(?:\bmi\s+je\b|\bmi\s+su\b|\bmoj\w*\b|\bdobila\s+sam\b|\bdobio\s+sam\b|\buradila\s+sam\b|"
-    r"\buradio\s+sam\b|\bizvadila\b|\bpokazuj\w*\b|\bpokazal\w*\b|\bpise\b|\bizas[al]\w*\b|"
-    r"\bstigao\b|\bstigli\b|\bstigla\b|\bvratil\w*\b|\bmy\b|\bcame\s+back\b|\bshows?\b|\bshowed\b|"
-    r"\bsays\b|\bgot\s+(?:my|the|back)\b|\bi\s+had\b|\bi\s+did\b|\bthey\s+found\b|\bnasli\s+su\b|"
-    r"\bsta\s+(?:to\s+)?znaci\b|\bwhat\s+does\s+(?:it|this|that)\s+mean\b)"
+    r"(?:\bmi\s+je\b|\bmi\s+su\b|\bmoj\w*\b|\bdobila\s+sam\b|\bdobio\s+sam\b|\buradila\s+sam\b|\buradio\s+sam\b|"
+    r"\bizvadila\s+sam\b|\bvadila\s+sam\b|\bnalaz\s+mi\b|\bnalazi\s+mi\b|\brezultat\s+mi\b|\bstig(?:ao|la|li)\s+mi\b|"
+    r"\bmy\b|\bcame\s+back\b|\bgot\s+(?:my|the|back)\b|\bi\s+had\s+(?:a|my|the)\b|\bi\s+did\s+(?:a|my|the)\b|\bthey\s+found\b|\bnasli\s+su\s+mi\b)"
 )
 _LAB_VALUE_RE = re.compile(
-    r"\b\d+(?:[.,]\d+)?\s?(?:mmol|mg\s?dl|g\s?l|iu|miu|mu|ng\s?ml|pg\s?ml|nmol|umol|mm|miu\s?ml)\b"
+    r"\b\d+(?:[.,]\d+)?\s?(?:mmol|mg\s?dl|g\s?l|iu|miu|mu|ng\s?ml|pg\s?ml|nmol|umol|miu\s?ml)\b"
 )
-_LAB_TERM_RE = re.compile(rf"\b{_LAB_TERM}\b")
+_ANALYTE_RE = re.compile(rf"\b{_ANALYTE}\b")
+_GENERIC_TEST_RE = re.compile(rf"\b{_GENERIC_TEST}\b")
 _RESULT_CONTEXT_RE = re.compile(_RESULT_CONTEXT)
-_LAB_WITH_NUMBER_RE = re.compile(rf"\b{_LAB_TERM}\b(?:\s+\w+){{0,3}}?\s+(?:je\s+|is\s+|su\s+|are\s+|od\s+|of\s+)?\d+(?:[.,]\d+)?\b")
-_SCALE_RE = re.compile(r"\b(?:ascus|lsil|hsil|cin\s?[123]|pap\s?[1-5]|papa\s?[1-5]|\+{2,}|positiv\w*|pozitiv\w*|negativ\w*)\b")
+_ANALYTE_WITH_NUMBER_RE = re.compile(
+    rf"\b{_ANALYTE}\b(?:\s+\w+){{0,2}}?\s+(?:mi\s+je\s+|je\s+|is\s+|su\s+|are\s+|od\s+|of\s+|at\s+)?\d+(?:[.,]\d+)?\b"
+)
+_SCALE_RE = re.compile(r"\b(?:ascus|lsil|hsil|cin\s?[123]|pap\s?[1-5]|papa\s?[1-5]|\+{2,}|pozitiv\w*|positiv\w*)\b")
+_MEANING_RE = re.compile(r"\b(?:sta\s+(?:to\s+)?znaci|what\s+does\s+(?:it|this|that)\s+mean|is\s+(?:that|this|it)\s+(?:bad|ok|okay|normal|good|high|low)|da\s+li\s+je\s+to\s+(?:lose|dobro|ok|normalno|visoko|nisko))\b")
 
 # --- manipulation ----------------------------------------------------------------------------
 _MANIPULATION_RES: tuple[re.Pattern[str], ...] = (
@@ -209,15 +228,31 @@ def asks_for_diagnosis(text: str) -> bool:
 
 
 def asks_for_test_interpretation(text: str) -> bool:
+    """True when the user asks what THEIR result means.
+
+    A named analyte with a value ("hemoglobin mi je 105", "TSH 4.8", "Papa test ASCUS") is
+    enough on its own; a generic test word ("nalaz", "ultrazvuk", "test") needs a first-person
+    result context ("dobila sam nalaz ...", "my results came back ..."). "Šta je papa test" or
+    "kada se radi prvi ultrazvuk" stay in scope.
+    """
     normalised = normalize_text(text)
-    if not _LAB_TERM_RE.search(normalised):
+    analyte = _ANALYTE_RE.search(normalised) is not None
+    generic = _GENERIC_TEST_RE.search(normalised) is not None
+    if not (analyte or generic):
         return False
-    return bool(
-        _RESULT_CONTEXT_RE.search(normalised)
+    if analyte and (
+        _ANALYTE_WITH_NUMBER_RE.search(normalised)
         or _LAB_VALUE_RE.search(normalised)
-        or _LAB_WITH_NUMBER_RE.search(normalised)
         or _SCALE_RE.search(normalised)
-    )
+        or _RESULT_CONTEXT_RE.search(normalised)
+    ):
+        return True
+    if generic and _RESULT_CONTEXT_RE.search(normalised) and (
+        _LAB_VALUE_RE.search(normalised) or _SCALE_RE.search(normalised) or _MEANING_RE.search(normalised)
+        or re.search(r"\b(?:pokazuj\w*|pokazal\w*|pise|shows?|showed|says)\b", normalised)
+    ):
+        return True
+    return False
 
 
 def is_manipulation(text: str) -> bool:

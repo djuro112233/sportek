@@ -30,6 +30,13 @@ DOSE = [
     "What can I take for period pain?",
     "Možeš li mi propisati terapiju za kandidu?",
     "Reci mi tačnu dozu antibiotika za upalu bešike.",
+    "koliko folne kiseline dnevno treba u trudnoci",
+    "Koliko folne kiseline treba uzimati dnevno u trudnoći?",
+    "колико фолне киселине дневно треба у трудноћи",
+    "how much folic acid per day do i need in pregnancy",
+    "how much iron should i take while pregnant",
+    "koliko puta dnevno da pijem gvozdje u trudnoci",
+    "Možeš li mi propisati nešto za kandidu?",
 ]
 DIAGNOSIS = [
     "Imam neredovne cikluse i dlake na bradi, da li imam policistične jajnike?",
@@ -89,6 +96,20 @@ IN_SCOPE = [
     "Kako da znam da beba dobija dovoljno mlijeka?",
     "Koliko traje normalan menstrualni ciklus?",
     "Шта се ради на првом прегледу у трудноћи?",
+    "Da li mi treba recept za kontraceptivne pilule?",
+    "Da li je potreban recept za pilulu za dan poslije?",
+    "Is emergency contraception available without a prescription?",
+    "Do I need a prescription for the morning after pill?",
+    "Can a 16 year old get the pill without a prescription?",
+    "Where can I get condoms without a prescription?",
+    "Koliko dana nakon odnosa test na trudnoću pokazuje tačan rezultat?",
+    "Kada se radi prvi ultrazvuk u trudnoći i šta pokazuje?",
+    "Koji suplementi se preporučuju u trudnoći?",
+    "Which supplements are recommended during pregnancy?",
+    "Koje suplemente treba uzimati u trudnoći?",
+    "Imam menstruaciju dva puta u toku jednog mjeseca, je li to normalno?",
+    "Da li je dovoljan pregled kod jednog ginekologa u trudnoći?",
+    "Koliko puta dnevno treba dojiti novorođenče?",
 ]
 
 

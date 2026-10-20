@@ -149,6 +149,8 @@ const en = {
   error_timeout: 'This is taking too long. Try again.',
   error_server: 'Something went wrong on our side. Try again.',
   session_expired: 'Your session has ended. Please agree again to continue.',
+  error_rate_limited: 'Too many questions in a short time. Wait a moment and try again.',
+  consent_text_changed: 'The consent text has changed. Please read the new text and agree again.',
   retry: 'Try again',
   cancel: 'Cancel',
   dismiss: 'OK',
@@ -188,6 +190,7 @@ const en = {
   website: 'Website',
   hours: 'Hours',
   referral_title: 'Where to get help',
+  unverified_contact: 'Contact not yet verified',
 
   citation_title: 'Source',
   citation_source: 'Title',
@@ -254,6 +257,8 @@ const sr: Catalogue = {
   error_timeout: 'Ovo traje predugo. Pokušaj ponovo.',
   error_server: 'Nešto je pošlo po zlu kod nas. Pokušaj ponovo.',
   session_expired: 'Tvoja sesija je istekla. Potvrdi saglasnost ponovo da nastaviš.',
+  error_rate_limited: 'Previše pitanja u kratkom vremenu. Sačekaj malo i pokušaj ponovo.',
+  consent_text_changed: 'Tekst saglasnosti se promijenio. Pročitaj novi tekst i potvrdi ponovo.',
   retry: 'Pokušaj ponovo',
   cancel: 'Odustani',
   dismiss: 'U redu',
@@ -293,6 +298,7 @@ const sr: Catalogue = {
   website: 'Internet stranica',
   hours: 'Radno vrijeme',
   referral_title: 'Gdje dobiti pomoć',
+  unverified_contact: 'Kontakt još nije provjeren',
 
   citation_title: 'Izvor',
   citation_source: 'Naslov',
@@ -336,6 +342,7 @@ const bs: Catalogue = {
   translated_note: 'Prevedeno s izvornog jezika.',
   not_advice_long:
     'MILA daje opće informacije i kaže ti gdje možeš dobiti pomoć. Ne postavlja dijagnozu, ne propisuje lijekove i ne tumači nalaze. Ako se osjećaš loše, javi se ljekaru.',
+  error_rate_limited: 'Previše pitanja u kratkom vremenu. Pričekaj malo i pokušaj ponovo.',
 };
 
 const me: Catalogue = {
@@ -370,6 +377,8 @@ const hr: Catalogue = {
   error_timeout: 'Ovo traje predugo. Pokušaj ponovno.',
   error_server: 'Nešto je pošlo po zlu kod nas. Pokušaj ponovno.',
   session_expired: 'Tvoja sesija je istekla. Potvrdi pristanak ponovno da nastaviš.',
+  error_rate_limited: 'Previše pitanja u kratkom vremenu. Pričekaj malo i pokušaj ponovno.',
+  consent_text_changed: 'Tekst pristanka se promijenio. Pročitaj novi tekst i potvrdi ponovno.',
   retry: 'Pokušaj ponovno',
   cancel: 'Odustani',
   dismiss: 'U redu',
@@ -409,6 +418,7 @@ const hr: Catalogue = {
   website: 'Internetska stranica',
   hours: 'Radno vrijeme',
   referral_title: 'Gdje dobiti pomoć',
+  unverified_contact: 'Kontakt još nije provjeren',
 
   citation_title: 'Izvor',
   citation_source: 'Naslov',

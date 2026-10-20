@@ -116,7 +116,8 @@ def test_off_domain_question_with_shared_vocabulary_is_withheld_for_low_relevanc
     response, _ = _ask(pipeline, "Šta je dobro za bolove u koljenu nakon trčanja?")
     assert response.outcome == "withheld"
     assert response.gate is not None
-    assert REASON_LOW_RELEVANCE in response.gate.reasons or "no_sentences" in response.gate.reasons
+    assert {REASON_LOW_RELEVANCE, "no_sentences", "no_citations"} & set(response.gate.reasons)
+    assert all(s.reason == "off_topic" for s in response.gate.removed if s.supported)
     assert response.message == t("withheld", "sr")
 
 
@@ -131,3 +132,66 @@ def test_relevance_is_logged_in_the_event_payload(pipeline: AskPipeline) -> None
     response, sess = _ask(pipeline, "Koliko traje normalan menstrualni ciklus?")
     event = pipeline.db.scalars(select(Event).where(Event.session_id == sess.id)).one()
     assert event.payload["relevance"] == response.gate.relevance
+
+
+@pytest.mark.parametrize(
+    ("text", "lang"),
+    [
+        ("Šta je dobro za bolove u koljenu nakon trčanja?", "en"),
+        ("What is a good recipe for lasagna for six people?", "sr"),
+        ("Da li je to normalno?", "sr"),
+        ("Is that normal?", "en"),
+    ],
+)
+def test_relevance_rule_fails_closed_whatever_the_declared_language(pipeline: AskPipeline, text: str, lang: str) -> None:
+    sess = _session(pipeline.db, lang=lang)
+    response = pipeline.ask(AskRequest(session_id=sess.id, text=text, lang=lang), sess)
+    assert response.outcome == "withheld", (text, lang, response.gate)
+
+
+def test_minor_note_is_set_for_minors_on_every_outcome(pipeline: AskPipeline) -> None:
+    for text in ("Da li kondom štiti i od polno prenosivih infekcija?", "kako da napravim kolac", "јако крварим, трудна сам"):
+        response, _ = _ask(pipeline, text, is_minor=True)
+        assert response.minor_note == t("minor_note", "sr"), (text, response.outcome)
+    response, _ = _ask(pipeline, "Da li kondom štiti i od polno prenosivih infekcija?", is_minor=False)
+    assert response.minor_note == ""
+
+
+def test_cross_lingual_answer_can_pass_with_an_llm_judge_relevance_verdict(demo_kb) -> None:
+    from app.core.verifier import LLMJudge
+
+    class _FakeLLM:
+        """Answers the support rubric with SUPPORTED and the relevance rubric with RELEVANT."""
+
+        name = "fake"
+
+        def complete(self, system: str, user: str, *, temperature: float = 0.0, max_tokens: int = 600) -> str:
+            return "RELEVANT" if user.startswith("QUESTION:") else "SUPPORTED"
+
+    settings, db = demo_kb
+    providers = build_providers(settings)
+    providers.judge = LLMJudge(_FakeLLM())
+    pipe = AskPipeline(settings, db, providers)
+    sess = _session(db, lang="sr")
+    # English evidence for a Serbian question: the extractive mock copies English sentences
+    response = pipe.ask(AskRequest(session_id=sess.id, text="Which contraceptive methods are there?", lang="sr"), sess)
+    assert response.outcome == "answered" and response.translated is True
+    assert response.gate is not None and response.gate.relevance == 1.0
+
+
+def test_tampered_demo_document_fails_ingestion(tmp_path: Path) -> None:
+    import shutil
+
+    from app.kb.ingest import IngestError, ingest_document, load_manifest
+
+    settings, db = make_test_settings(tmp_path), None
+    docs = {d.id: d for d in load_manifest(settings.manifest_path)}
+    doc = docs["demo-sr-contraception-methods"]
+    tampered = tmp_path / "contraception-methods.md"
+    shutil.copy(Path(settings.kb_dir) / doc.file, tampered)
+    tampered.write_text(tampered.read_text() + "\nHitna kontracepcija izaziva trajnu neplodnost.\n")
+    engine = make_engine(f"sqlite:///{tmp_path / 'tamper.db'}")
+    Base.metadata.create_all(engine)
+    db = sessionmaker(bind=engine)()
+    with pytest.raises((IngestError, ValueError)):
+        ingest_document(db, doc, tampered, HashEmbedder(dim=settings.embedding_dim))

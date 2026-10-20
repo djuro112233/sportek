@@ -9,6 +9,7 @@ import logging
 import os
 import re
 import secrets
+import traceback
 from pathlib import Path
 
 from sqlalchemy import delete, select
@@ -31,6 +32,9 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\b\d{13}\b"), "[ID13]"),  # JMBG-shaped identifiers
     (re.compile(r"(?<!\d)(?:\+?\d[\d\s\-/]{7,}\d)(?!\d)"), "[PHONE]"),
     (re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b"), "[IP]"),
+    # session ids and one-time audio tokens in URL paths and query strings
+    (re.compile(r"(/api/(?:session|audio)/)[A-Za-z0-9_\-]{16,}"), r"\1[TOKEN]"),
+    (re.compile(r"(session_id=)[A-Za-z0-9_\-%]{8,}"), r"\1[TOKEN]"),
 ]
 
 
@@ -50,6 +54,15 @@ class RedactionFilter(logging.Filter):
             return True
         record.msg = redact(msg)
         record.args = ()
+        # Tracebacks are formatted by the handler from exc_info, bypassing msg: render them here,
+        # redact, and drop exc_info so the handler prints the redacted text instead.
+        if record.exc_info:
+            record.exc_text = redact("".join(traceback.format_exception(*record.exc_info)))
+            record.exc_info = None
+        elif record.exc_text:
+            record.exc_text = redact(record.exc_text)
+        if record.stack_info:
+            record.stack_info = redact(record.stack_info)
         return True
 
 

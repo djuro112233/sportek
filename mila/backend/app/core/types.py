@@ -108,8 +108,7 @@ class ReferralPointOut(BaseModel):
     url: str = ""
     hours: str = ""
     emergency: bool = False
-    verified_on: str = ""
-    notes: str = ""
+    verified_on: str = ""  # "" = not yet verified; the client labels such points
 
 
 class Referral(BaseModel):
@@ -150,6 +149,7 @@ class AskResponse(BaseModel):
     message: str = ""  # refusal / red-flag message (localised) when outcome != answered
     referral: Referral | None = None
     disclaimer_short: str = ""
+    minor_note: str = ""  # set for sessions of minors: 'you can also talk to a trusted adult'
     translated: bool = False
     demo_unreviewed_sources: bool = False
     redflag_category: str | None = None
