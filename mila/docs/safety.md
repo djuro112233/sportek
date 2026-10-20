@@ -193,7 +193,7 @@ Two controls close that gap; both were tuned on `eval/offkb_questions.jsonl` and
   pins a floor of 0.6 and the pilot configuration relies on the LLM judge for the rest.
   The committed dry run `reports/2026-10-20_measurement.md` (mock providers, demo knowledge
   base) records refusal correctness 0.970 on the 100 off-KB questions (the three misses are
-  `unsupported_in_kb` questions that were answered) with 26 of the 30 in-KB questions still
+  `unsupported_in_kb` questions that were answered) with 29 of the 30 in-KB questions still
   answered; these numbers describe the mocks, not a model.
 
 ## 3. What MILA will never do

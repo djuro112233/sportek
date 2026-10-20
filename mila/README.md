@@ -299,10 +299,10 @@ Its header says **DRY RUN (mock providers)**: it was produced with the mock LLM,
 judge, the hash embedder and mock STT/TTS on the demo knowledge base, so it proves that the
 pipeline and the datasets work and describes the behaviour of the deterministic mocks, not of
 any model. Read with that caveat, it records: support rate 1.000 (115/115 sentences, an upper
-bound from the lexical judge), 26 of 30 in-KB questions answered, refusal correctness 0.970
+bound from the lexical judge), 29 of 30 in-KB questions answered, refusal correctness 0.970
 (97/100 off-KB questions withheld; the three misses are listed by id), red-flag recall 1.000
 (100/100) with a false-positive rate of 0.000 on 60 near misses, and text latency median
-30.5 ms / p90 64.4 ms (pipeline overhead only). WER and usability are "not measured": there are
+52.0 ms / p90 88.9 ms (pipeline overhead only, including the relevance check). WER and usability are "not measured": there are
 no consented recordings and no usability sessions yet. None of these numbers is quotable as a
 result; the first report with real providers is roadmap item 4.
 

@@ -9,7 +9,7 @@
     "embedder": "hash"
   },
   "config": {
-    "git commit": "a0370f7cac97",
+    "git commit": "cf2c140eb36a",
     "gate version": "1.0.0",
     "date": "2026-10-20",
     "dry run": "yes",
@@ -70,9 +70,9 @@
         ],
         [
           "Answered share",
-          0.8666666666666667,
+          0.9666666666666667,
           30,
-          "26 answered"
+          "29 answered"
         ],
         [
           "Reached verifier",
@@ -308,25 +308,25 @@
       "rows": [
         [
           "Text median",
-          30.5,
+          52.0,
           130,
           "POST /api/ask equivalent, in-KB + off-KB questions"
         ],
         [
           "Text p90",
-          64.4,
+          88.9,
           130,
           "nearest-rank"
         ],
         [
           "Voice median",
-          43.2,
+          86.6,
           50,
           "transcribe + ask + speak; mock STT; mock TTS; synthetic silent audio (no consented recordings yet); transcript replaced by the reference text when empty"
         ],
         [
           "Voice p90",
-          56.3,
+          112.8,
           50,
           "nearest-rank"
         ]
@@ -511,13 +511,13 @@
         }
       },
       "answer_level_mean_support_ratio": 1.0,
-      "answered": 26,
+      "answered": 29,
       "n_questions": 30,
       "reached_verifier": 30,
       "errors": [],
       "outcomes": {
-        "withheld": 4,
-        "answered": 26
+        "answered": 29,
+        "withheld": 1
       },
       "spot_check_sheet": "reports/2026-10-20_spotcheck.csv",
       "spot_check_sentences": 50
@@ -666,13 +666,13 @@
     "latency": {
       "text": {
         "n": 130,
-        "median": 30.5,
-        "p90": 64.4
+        "median": 52.0,
+        "p90": 88.9
       },
       "voice": {
         "n": 50,
-        "median": 43.2,
-        "p90": 56.3
+        "median": 86.6,
+        "p90": 112.8
       },
       "voice_note": "transcribe + ask + speak; mock STT; mock TTS; synthetic silent audio (no consented recordings yet); transcript replaced by the reference text when empty"
     },

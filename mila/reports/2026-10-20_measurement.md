@@ -10,7 +10,7 @@ Providers: llm=mock, judge=lexical, stt=mock, tts=mock, embedder=hash
 
 | Setting | Value |
 |---|---|
-| git commit | a0370f7cac97 |
+| git commit | cf2c140eb36a |
 | gate version | 1.0.0 |
 | date | 2026-10-20 |
 | dry run | yes |
@@ -45,7 +45,7 @@ Providers: llm=mock, judge=lexical, embedder=hash
 | Support rate, en | 1.000 | 40 | 10 questions |
 | Support rate, sr | 1.000 | 75 | 20 questions |
 | Answer-level mean support ratio | 1.000 | 30 | mean of GateDecision.support_ratio |
-| Answered share | 0.867 | 30 | 26 answered |
+| Answered share | 0.967 | 30 | 29 answered |
 | Reached verifier | 30 | 30 | questions not red-flagged |
 
 - Lexical judge: this support rate is an upper bound until the human spot-check is done.
@@ -105,10 +105,10 @@ Providers: llm=mock, judge=lexical, stt=mock, tts=mock, embedder=hash
 
 | Metric | Value | n | Notes |
 |---|---|---|---|
-| Text median | 30.500 | 130 | POST /api/ask equivalent, in-KB + off-KB questions |
-| Text p90 | 64.400 | 130 | nearest-rank |
-| Voice median | 43.200 | 50 | transcribe + ask + speak; mock STT; mock TTS; synthetic silent audio (no consented recordings yet); transcript replaced by the reference text when empty |
-| Voice p90 | 56.300 | 50 | nearest-rank |
+| Text median | 52.000 | 130 | POST /api/ask equivalent, in-KB + off-KB questions |
+| Text p90 | 88.900 | 130 | nearest-rank |
+| Voice median | 86.600 | 50 | transcribe + ask + speak; mock STT; mock TTS; synthetic silent audio (no consented recordings yet); transcript replaced by the reference text when empty |
+| Voice p90 | 112.800 | 50 | nearest-rank |
 
 - Mock providers: these latencies are pipeline overhead only.
 - Hardware: x86_64, 4 CPUs, Linux 6.18.44-fc-v139; sequential requests on an idle process; models not warmed separately.
