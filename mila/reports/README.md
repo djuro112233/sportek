@@ -16,6 +16,10 @@ exist: not from a terminal, not from a notebook, not from a conversation.
 
 `YYYY-MM-DD` is the date passed with `--date` (default: the day the script ran), in UTC.
 
+Reports so far: `2026-10-20_measurement.md` (+ `.json`, `_spotcheck.csv`), a **dry run with
+mock providers** on the demo knowledge base. It proves the pipeline and the datasets run; its
+numbers are not results (rule 3). The spot-check sheet's rater columns are still empty.
+
 ## Rules
 
 1. **Only committed reports count.** The form quotes a value together with the file name and

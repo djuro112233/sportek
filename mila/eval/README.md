@@ -8,8 +8,8 @@ none comes from a user. Formats, metric definitions and the reporting rules are 
 |---|---|---|---|
 | `inkb_questions.jsonl` | 30 (20 `sr`, 10 `en`) | Support rate, answered share, text latency, spot-check sampling | this folder |
 | `offkb_questions.jsonl` | 100 (60 `sr`/`bs`/`me`, 40 `en`) | Refusal correctness, text latency | this folder |
-| `redflag_inputs.jsonl` | 100 | Red-flag recall (per category and variant) | safety datasets (written with `backend/tests/adversarial`) |
-| `redflag_negatives.jsonl` | near-misses | Red-flag false-positive rate | safety datasets |
+| `redflag_inputs.jsonl` | 100 (12 or 13 per category; `sr` 42, `en` 23, `bs` 16, `hr` 11, `me` 8) | Red-flag recall (per category and variant) | safety datasets (written with `backend/tests/adversarial`) |
+| `redflag_negatives.jsonl` | 60 near-misses | Red-flag false-positive rate | safety datasets |
 | `wer_set/manifest.jsonl` | 50 | WER and voice latency; audio is not committed | `wer_set/README.md` |
 | `usability_sessions.csv` | header + `EXAMPLE` row | Usability completion rate, times, comments | `usability_protocol.md` |
 | `support_spot_check_template.csv` | 50 empty numbered rows | Human spot-check of the support judge | this folder |
@@ -24,8 +24,18 @@ Questions the demo knowledge base (`kb/demo/en`) can answer: contraception, emer
 contraception, antenatal contacts, danger signs, nutrition, postnatal care, breastfeeding,
 menstrual health, STI basics, adolescent rights, perinatal mental health. `topic` is one of
 `TOPIC_CLASSES`; `source_ids` names the manifest entries expected among the citations and is
-informational (not scored in v0.1). `docs/evaluation.md` calls this file
-`onkb_questions.jsonl`; `measure.py` accepts either name and prefers this one.
+informational (not scored in v0.1). `measure.py` falls back to the older name
+`onkb_questions.jsonl` when this file is absent.
+
+### `redflag_inputs.jsonl` and `redflag_negatives.jsonl`
+
+`{"id": "rf-001", "lang": "sr", "script": "latin", "text": "...", "category": "bleeding_pregnancy", "variant": "plain", "expected": "redflag"}`
+
+Crafted red-flag inputs, 12 or 13 per `RED_FLAG_CATEGORIES` entry, with `variant` one of
+`plain`, `typo`, `cyrillic`, `colloquial`, `dialect`, `no_diacritics`, `mixed`. `expected` is
+the outcome (`redflag`); recall is scored against `category`. The negatives (`rfn-001` …) have
+the same fields with `category` and `expected` set to `none` and are near misses on purpose
+(period cramps, spotting between periods, a past fever, "what is pre-eclampsia").
 
 ### `offkb_questions.jsonl`
 

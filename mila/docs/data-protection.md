@@ -39,7 +39,11 @@ The `log_event` function raises if a payload contains any of the keys `text`, `q
 
 - **Version string.** `MILA_CONSENT_VERSION` (default `2026-10-01`) is returned by
   `GET /api/consent/text` and stored on the session when consent is given. Changing the
-  text requires changing the version; a session with an older version is asked again.
+  text requires changing the version: `POST /api/consent` with any other version is refused
+  with `409 consent_version_outdated` and the current version. Sessions that consented to an
+  older version are not re-prompted automatically in v0.1 (the version is not part of
+  `GET /api/session/{id}`); when the text changes, the operator purges existing sessions so
+  that everyone consents again.
 - **Plain language, written and spoken.** `GET /api/consent/text?lang=&script=&is_minor=`
   returns `text` (shown), `spoken_text` (shorter, read aloud by TTS for voice-first use) and
   `items[]` (one line per thing MILA does and does not do). The texts exist in sr, bs, me, hr
@@ -47,10 +51,10 @@ The `log_event` function raises if a payload contains any of the keys `text`, `q
 - **Act of consent.** `POST /api/consent` with `accepted: true` and the `consent_version`
   creates the session; anything else is a 403 and nothing is stored. The optional
   `save_questions` flag is a second, separate choice, default `false`.
-- **Minors.** The consent screen asks `under_18_question`. If yes, the texts switch to the
-  simpler version, the session records `is_minor=true` and the UI shows `minor_note` ("you can
-  also talk to a trusted adult"). MILA does not verify age and does not ask for one; the flag
-  only makes the service more careful. Where national law requires a parent's or guardian's
+- **Minors.** The consent screen asks `under_18_question`. If yes, the consent items and the
+  spoken text switch to the minors' version and the session records `is_minor=true`, which
+  adds child-protection services to every referral block (`docs/safety.md`, C7). MILA does
+  not verify age and does not ask for one; the flag only makes the service more careful. Where national law requires a parent's or guardian's
   consent for a minor's health data, the pilot clinic decides how the service is offered to
   minors (for example, in the clinic with a counsellor present), and that decision is recorded
   in the DPIA.
@@ -60,9 +64,12 @@ The `log_event` function raises if a payload contains any of the keys `text`, `q
 ## 4. Pseudonymous sessions
 
 `new_session_id()` returns `secrets.token_urlsafe(24)`: 192 random bits, never derived from a
-device, an IP or the time. The id lives in the browser for the duration of the visit. Nothing
-in the server can link a session to a person; conversely, a person who loses the id cannot be
-linked to their session either (see section 10).
+device, an IP or the time. The web client keeps the id in the browser's `localStorage`
+(together with language, script, region, the minor flag and display preferences, nothing
+else) until "Delete my data" clears it, so a returning user on the same browser continues her
+session; on load the client checks it with `GET /api/session/{id}` and drops it when the
+server answers 403. Nothing in the server can link a session to a person; conversely, a person
+who loses the id cannot be linked to their session either (see section 10).
 
 ## 5. Audio handling
 
@@ -134,9 +141,9 @@ to find "a person's data", which also means no one else can.
 
 | Request | How it is served | Time |
 |---|---|---|
-| Access | The session screen shows the consent record, settings and, if opted in, the saved questions; no separate export endpoint exists in v0.1 | Immediate, self-service |
+| Access | `GET /api/session/{id}` returns everything the client can read back: consent given, language, script, region, minor flag, save-questions flag. There is no endpoint that returns the consent timestamp, the events or the saved questions in v0.1; a request for those is served by the data-protection contact from the database, by session id | Immediate for the settings; 30 days for the rest |
 | Erasure | "Delete my data" or `DELETE /api/session/{id}`; the response lists the deleted row counts | Immediate |
-| Rectification | Language, script, region and minor flag can be changed in the UI | Immediate |
+| Rectification | Language and script can be changed in the UI (language switch); region and the minor flag through `POST /api/session/{id}/preferences`, or by deleting the session and consenting again | Immediate |
 | Withdrawal of consent | Same as erasure | Immediate |
 | Objection / restriction | Erasure, since no processing continues after deletion | Immediate |
 | Requests by other means (e-mail to the data-protection contact) | Verified by asking for the session id; answered within 30 days; logged without personal data | 30 days |

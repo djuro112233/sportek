@@ -7,7 +7,7 @@ Settings come from `MILA_*` environment variables or `.env`, exactly as for the 
 
 | Script | Purpose | Make target |
 |---|---|---|
-| `ingest_kb.py` | Load `kb/manifest.yaml` into the database; `--download` fetches public documents marked `download: true` | `make ingest` |
+| `ingest_kb.py` | Load `kb/manifest.yaml` into the database (`--manifest`, `--only id,id`, `--download`, `--database-url`, `--embedder hash\|bge_m3`, `-v`); prints the `IngestReport` as JSON, exit 1 on errors; `--download` fetches documents marked `download: true` and needs network access | `make ingest` |
 | `make_demo_data.py` | Seed referral points, ingest the demo KB and create synthetic consented sessions with events so `/api/metrics/public` shows something; refuses to run with `MILA_APP_ENV=prod` | `make demo-data` |
 | `measure.py` | Run the evaluation datasets under `eval/` and write `reports/<date>_measurement.md` + `.json` (+ `<date>_spotcheck.csv`) | `make measure` |
 | `export_metrics.py` | Dump the k-anonymised public metrics to `reports/metrics_<date>.json` and a per-day `.csv` | `make export-metrics` |
@@ -21,16 +21,22 @@ Settings come from `MILA_*` environment variables or `.env`, exactly as for the 
 ```
 
 - Builds `Settings(demo_mode=True)`; providers default to the mocks unless `MILA_*` variables
-  say otherwise. The report header reads **DRY RUN (mock providers)** whenever any provider is
-  a mock, and every section names the LLM, judge, STT, TTS and embedder it used.
+  say otherwise. The database is `--database-url`, else `MILA_DATABASE_URL`, else a local
+  `.measure.db` SQLite file (removed by `make clean`). The report header reads **DRY RUN (mock
+  providers)** whenever any provider is a mock (`mock` LLM/STT/TTS or the `hash` embedder), and
+  every section names the LLM, judge, STT, TTS and embedder it used.
 - Ingests the demo knowledge base if the database has no chunks, seeds referral points, and
   creates one consented evaluation session (deleted at the end unless `--keep-session`).
 - Sections: support rate over `eval/inkb_questions.jsonl` (sentence level, per language,
-  answer-level mean, answered share) plus the filled spot-check sheet; refusal correctness over
-  `eval/offkb_questions.jsonl` with incorrect ids listed; red-flag recall and false-positive
-  rate via `RedFlagRouter.check`; text and voice latency (median, nearest-rank p90); WER over
-  `eval/wer_set/manifest.jsonl` when consented recordings exist; usability from
-  `eval/usability_sessions.csv` (EXAMPLE rows ignored).
+  answer-level mean, answered share) plus the spot-check sheet with empty rater columns;
+  refusal correctness over `eval/offkb_questions.jsonl` (overall, per category, per language,
+  incorrect ids listed); red-flag recall per category and variant plus the false-positive rate
+  over `eval/redflag_negatives.jsonl`, both via `RedFlagRouter.check`; text and voice latency
+  (median, nearest-rank p90; voice uses a synthetic silent WAV while no consented recordings
+  exist); WER over `eval/wer_set/manifest.jsonl` when consented recordings exist; usability
+  from `eval/usability_sessions.csv` (EXAMPLE rows and unconsented rows ignored).
+- The "Spot-check" and "Incidents" sections are placeholders the maintainers fill by hand
+  (rater agreement once the sheet is labelled; incident counts from the log).
 - Sections that cannot run say so (`not measured (...)`) instead of failing the whole run;
   the exit code is 0 once the report is written.
 - `--limit N` truncates every dataset to its first N rows (for a quick smoke run); the report

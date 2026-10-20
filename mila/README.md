@@ -54,28 +54,32 @@ git clone <this repository> && cd mila
 ### Path A: Docker Compose
 
 ```bash
-docker compose up --build
+docker compose up --build            # starts db (Postgres + pgvector), redis, api, web
 ```
 
 - Web UI: <http://localhost:3000>
 - API health: <http://localhost:8000/api/health> (returns `{"status": "ok", "demo_mode": true, "version": "0.1.0"}`)
 - API docs (non-production only): <http://localhost:8000/api/docs>
 
-The default stack uses deterministic local providers (mock LLM, hash embedder, lexical judge,
-mock STT/TTS) so it needs no GPU, no model download and no network. Real providers are opt-in
-through `MILA_*` environment variables (see [Provider configuration](#provider-configuration)).
-The compose services and their hardening are described in
-[docs/architecture.md, Deployment](docs/architecture.md#deployment).
+Both ports are published on `127.0.0.1` only. The `api` service ingests the demo manifest
+before it starts serving. The default stack uses deterministic local providers (mock LLM, hash
+embedder, lexical judge, mock STT/TTS) so it needs no GPU, no model download and no network.
+Real providers are opt-in through `MILA_*` environment variables (see
+[Provider configuration](#provider-configuration)); copy `.env.example` to `.env` to set them.
+Optional profiles: `--profile local-llm` (vLLM on an NVIDIA GPU) and
+`--profile ingest` (one-shot download of the WHO documents, see
+[Knowledge base](#knowledge-base-review-status-and-demo-mode)). The services and their hardening
+are described in [docs/architecture.md, Deployment](docs/architecture.md#deployment).
 
 ### Path B: local development
 
-Requires Python 3.11+ and Node 18+.
+Requires Python 3.11+ and Node 20+ (`npm test` needs Node 22.18+).
 
 ```bash
 # backend
 uv venv --seed .venv                 # or: python3.11 -m venv .venv
 .venv/bin/python -m pip install -e '.[dev]'
-.venv/bin/python scripts/ingest_kb.py          # loads kb/manifest.yaml into the local SQLite DB
+.venv/bin/python scripts/ingest_kb.py          # loads kb/manifest.yaml into ./mila.db (SQLite)
 .venv/bin/uvicorn --app-dir backend 'app.main:create_app' --factory --port 8000
 
 # web (second terminal)
@@ -83,9 +87,13 @@ cd web && npm install && npm run dev
 ```
 
 `uv venv` without `--seed` creates an environment without `pip`; in that case use
-`uv pip install -e '.[dev]'` instead of the `pip` line. Optional extras: `.[voice]`
-(faster-whisper, Piper), `.[embed]` (BGE-M3 via sentence-transformers), `.[postgres]`,
-`.[redis]`.
+`uv pip install -e '.[dev]'` instead of the `pip` line (`make venv install` does the same with
+`python3.11`). The ingest step prints an `IngestReport`: the 22 demo documents land under
+`ingested` and the five WHO entries under `missing_files` until you download them (they are not
+in the repository, see [Knowledge base](#knowledge-base-review-status-and-demo-mode)). Then
+`curl http://localhost:8000/api/health` should answer as in Path A. Optional extras:
+`.[voice]` (faster-whisper, Piper), `.[embed]` (BGE-M3 via sentence-transformers),
+`.[postgres]`, `.[redis]`.
 
 ## Architecture
 
@@ -93,6 +101,9 @@ cd web && npm install && npm run dev
  audio ──► STT ──► text ──► red-flag router ──► (flag) ──► referral response
                            │
                            ▼ (no flag)
+                    scope guard (dose / diagnosis / test-result / manipulation request)
+                           │                               ──► (hit) ──► refusal + referral
+                           ▼ (in scope)
                     hybrid retrieval (vector + BM25, reviewed/demo filter)
                            │
                            ▼
@@ -100,6 +111,9 @@ cd web && npm install && npm run dev
                            │
                            ▼
                     verifier (sentence ↔ cited chunk support)
+                           │
+                           ▼
+                    question relevance (does the cited evidence cover the question?)
                            │
                            ▼
                     validation gate (approve / withhold + reasons, versioned)
@@ -114,7 +128,8 @@ cd web && npm install && npm run dev
 The binding module contracts (types, function signatures, API table) are in
 [docs/architecture.md](docs/architecture.md). Every external capability (LLM, embeddings,
 support judge, STT, TTS) sits behind a `Protocol` with a deterministic local implementation
-that is used by default and in tests.
+that is used by default and in tests. Any exception in a stage fails closed: the answer is
+withheld with gate reason `pipeline_error` and only the exception class name is recorded.
 
 ## Repository layout
 
@@ -122,27 +137,35 @@ that is used by default and in tests.
 mila/
 ├── backend/
 │   ├── app/
-│   │   ├── api/          # FastAPI routers: consent, ask, transcribe, speak, referral, metrics, admin
-│   │   ├── core/         # i18n, redflags, retrieval, generation, verifier, gate, referral,
-│   │   │                 # consent, privacy, events, pipeline
+│   │   ├── api/          # FastAPI routers: consent (+ session), ask, transcribe, speak (+ audio),
+│   │   │                 # referral, metrics, admin; deps.py (consent and admin checks)
+│   │   ├── core/         # i18n, consent_texts, redflags (+ redflag_rules), scope, retrieval,
+│   │   │                 # generation, verifier, relevance, gate, referral, privacy, events,
+│   │   │                 # container (provider wiring), pipeline, types
 │   │   ├── kb/           # embed, chunker, ingest
 │   │   ├── models/       # SQLAlchemy models (sources, chunks, sessions, events, gate records, ...)
 │   │   ├── services/     # llm, stt, tts providers (mock + optional real)
 │   │   ├── config.py     # Settings (MILA_* environment variables)
 │   │   ├── db.py         # engine / session factory
 │   │   └── main.py       # application factory `create_app`
-│   └── tests/            # unit/, integration/, adversarial/
-├── web/                  # Next.js 14 (TypeScript) voice-first UI
-├── kb/                   # manifest.yaml, demo/ paraphrases, downloads/ (git-ignored)
+│   ├── tests/            # unit/, integration/, adversarial/ (+ conftest.py)
+│   └── Dockerfile        # API image (python:3.11-slim, non-root)
+├── web/                  # Next.js 14 (TypeScript) voice-first UI, own README and Dockerfile
+├── kb/                   # manifest.yaml, demo/{en,sr}/ paraphrases, downloads/ (git-ignored)
 ├── eval/                 # evaluation datasets (JSONL/CSV, see docs/evaluation.md)
-├── scripts/              # ingest_kb.py, measure.py, helpers
+├── scripts/              # ingest_kb.py, measure.py, make_demo_data.py, export_metrics.py
 ├── reports/              # committed measurement reports (the only source of numbers)
 ├── docs/                 # architecture, safety, data protection, knowledge base, evaluation
+├── .github/workflows/    # ci.yml: lint, tests on 3.11/3.12, test-count floor, web build, compose check
+├── docker-compose.yml    # db, redis, api, web (+ local-llm and ingest profiles)
+├── .env.example          # every MILA_* variable with its default
+├── Makefile              # venv, install, test, lint, ingest, demo-data, measure, up, down
 ├── pyproject.toml        # package, pytest and ruff configuration
 └── LICENSE               # Apache-2.0
 ```
 
-All backend imports are rooted at `backend/` (`from app.core.gate import ValidationGate`).
+All backend imports are rooted at `backend/` (`from app.core.gate import ValidationGate`;
+pytest sets `pythonpath = backend`, the scripts add it to `sys.path` themselves).
 
 ## Provider configuration
 
@@ -196,30 +219,44 @@ the file. Each source carries a review status:
 | `public_unreviewed` | Public, licensed document not yet reviewed | Only when `MILA_DEMO_MODE=true`; the answer is flagged "demo: unreviewed sources" |
 | `blocked` | Pulled by the maintainers or the clinic | Never |
 
-`kb/demo/` holds short paraphrases written for this prototype (Apache-2.0) so that the full
-pipeline can be demonstrated and tested without downloading anything. **They are not clinically
-reviewed** and are only ever served in demo mode. Details, licence rules and the clinic review
-workflow: [docs/knowledge-base.md](docs/knowledge-base.md).
+The manifest currently lists 27 documents: 22 demo paraphrases under `kb/demo/` (11 topics, in
+English and in Serbian/Bosnian/Montenegrin Latin script) and 5 WHO publications (`who-*`,
+`download: true`) that are **not in the repository**. The demo paraphrases were written for this
+prototype (Apache-2.0) so that the full pipeline can be demonstrated and tested without
+downloading anything. **They are not clinically reviewed** and are only ever served in demo
+mode. The WHO documents are fetched with `scripts/ingest_kb.py --download` on your own
+machine; the manifest URLs are WHO landing pages, so set each `url` to the direct PDF link
+first, and expect the download to fail behind restrictive proxies. Details, licence rules and
+the clinic review workflow: [docs/knowledge-base.md](docs/knowledge-base.md).
 
 ## Safety design
 
 1. **Red flags first.** Before retrieval, a rules-first router (keyword and phrase lists for
-   sr/bs/me/hr/en in both scripts, typo-tolerant) checks for bleeding in pregnancy, severe
+   sr/bs/me/hr/en in both scripts, typo-tolerant, with a small character n-gram classifier as a
+   second opinion that rules always override) checks for bleeding in pregnancy, severe
    abdominal pain, fever in pregnancy, pre-eclampsia signs, reduced fetal movement, suicidal
    ideation, violence or coercion, and sexual contact between a minor and an adult. A flag
    short-circuits to an emergency or support referral; the pipeline never generates text for it.
-2. **Approved sources only.** Retrieval is filtered by review status; `blocked` chunks are never
+2. **Scope guard.** A question that *asks* for a dose or a medicine, a diagnosis, a test-result
+   interpretation, or that tries to change the rules ("ignore your instructions", "you are my
+   doctor") is refused before retrieval with a specific message and a referral (gate reasons
+   `medication_or_dose`, `diagnosis_request`, `test_interpretation`, `manipulation`).
+3. **Approved sources only.** Retrieval is filtered by review status; `blocked` chunks are never
    returned and `public_unreviewed` ones only in demo mode.
-3. **Constrained generation.** The system prompt forbids diagnosis, dosing and test
+4. **Constrained generation.** The system prompt forbids diagnosis, dosing and test
    interpretation and requires a `[Sn]` citation marker on every sentence.
-4. **Sentence-level verification.** Each sentence is checked against the chunk it cites; a
+5. **Sentence-level verification.** Each sentence is checked against the chunk it cites; a
    sentence without a marker, with a marker that maps to nothing, or with low support is removed.
-5. **Validation gate.** A versioned gate approves or withholds the whole answer with stable
-   reasons (`no_sentences`, `low_support_ratio`, `medication_or_dose`, `low_confidence`,
-   `no_citations`, `unreviewed_source_outside_demo`). Any medication quantity, dosing imperative
-   or regimen withholds the entire answer, not just the sentence.
-6. **Referral and disclaimer always.** Every response, answered or not, ends with a localised
-   disclaimer and a referral block; minors receive adapted wording and protection services.
+6. **Validation gate.** A versioned gate approves or withholds the whole answer with stable
+   reasons (`no_sentences`, `no_citations`, `medication_or_dose`, `low_support_ratio`,
+   `low_confidence`, `unreviewed_source_outside_demo`, `low_relevance`; the pipeline adds the
+   scope reasons above and `pipeline_error` when a stage raised). Any medication quantity, dosing
+   imperative or regimen withholds the entire answer, not just the sentence; `low_relevance`
+   withholds well-cited sentences that do not cover the question (knee pain answered with
+   pregnancy pain).
+7. **Referral and disclaimer always.** Every response, answered or not, ends with a localised
+   disclaimer and a referral block; minors get the minors' consent text, child-protection
+   services in the referral block and a note in the generation prompt (see docs/safety.md, C7).
 
 Full threat model, control mapping and incident process: [docs/safety.md](docs/safety.md).
 
@@ -245,44 +282,87 @@ Data map, consent model, GDPR and national-law alignment, DPIA skeleton:
 
 ## Measurement
 
-`scripts/measure.py` runs the evaluation datasets under `eval/` and writes
-`reports/YYYY-MM-DD_measurement.md`. It computes support rate, refusal correctness on off-KB
-questions, red-flag recall on crafted inputs, latency (median and p90, text and voice), word
-error rate on consented utterances and the usability summary. **No number enters the UNICEF
-application form unless it appears in a committed report under `reports/`.** Exact metric
-definitions and dataset formats: [docs/evaluation.md](docs/evaluation.md).
+`scripts/measure.py` (`make measure`) runs the evaluation datasets under `eval/` and writes
+`reports/YYYY-MM-DD_measurement.md`, the same numbers as `.json`, and a 50-sentence
+`YYYY-MM-DD_spotcheck.csv` for two human raters. It computes support rate, refusal correctness
+on off-KB questions, red-flag recall on crafted inputs and the false-positive rate on near
+misses, latency (median and p90, text and voice), word error rate on consented utterances and
+the usability summary. **No number enters the UNICEF application form unless it appears in a
+committed report under `reports/`.** Exact metric definitions and dataset formats:
+[docs/evaluation.md](docs/evaluation.md).
+
+### Measured so far
+
+One report is committed: [`reports/2026-10-20_measurement.md`](reports/2026-10-20_measurement.md).
+Its header says **DRY RUN (mock providers)**: it was produced with the mock LLM, the lexical
+judge, the hash embedder and mock STT/TTS on the demo knowledge base, so it proves that the
+pipeline and the datasets work and describes the behaviour of the deterministic mocks, not of
+any model. Read with that caveat, it records: support rate 1.000 (115/115 sentences, an upper
+bound from the lexical judge), 26 of 30 in-KB questions answered, refusal correctness 0.970
+(97/100 off-KB questions withheld; the three misses are listed by id), red-flag recall 1.000
+(100/100) with a false-positive rate of 0.000 on 60 near misses, and text latency median
+30.5 ms / p90 64.4 ms (pipeline overhead only). WER and usability are "not measured": there are
+no consented recordings and no usability sessions yet. None of these numbers is quotable as a
+result; the first report with real providers is roadmap item 4.
 
 ## Test suite
 
 ```bash
-.venv/bin/python -m pytest backend/tests -q      # unit + integration + adversarial
-.venv/bin/ruff check backend scripts
+.venv/bin/python -m pytest backend/tests -q      # unit + integration + adversarial (make test)
+.venv/bin/ruff check backend scripts             # make lint
+cd web && npm run lint && npm run typecheck && npm test
 ```
 
-- `backend/tests/unit/`: module tests (i18n, chunker, retrieval, verifier, gate, red flags,
-  privacy, events, consent, referral).
-- `backend/tests/integration/`: the API through `TestClient` with mock providers.
+- `backend/tests/unit/`: module tests (i18n, chunker, embed, ingest, retrieval, generation, llm,
+  verifier, relevance, scope, gate, red flags, privacy, events, consent texts, referral, stt,
+  tts, and the pure functions of `scripts/measure.py` and `scripts/make_demo_data.py`).
+- `backend/tests/integration/`: the API through `TestClient` with mock providers, the pipeline
+  end to end, and dataset-level regression tests over `eval/` (every off-KB question withheld,
+  every red-flag input flagged).
 - `backend/tests/adversarial/`: inputs designed to make MILA misbehave (prompt injection in
   sources, dosing requests, typo-ridden red flags in both scripts, minors disclosing abuse,
-  attempts to extract diagnosis). These must stay green before any release.
+  attempts to extract a diagnosis, consent skips). These must stay green before any release.
 
-Tests never need network, GPU or model downloads.
+At the time of writing `--collect-only` finds 1,282 tests (878 unit, 188 integration,
+216 adversarial); CI fails when fewer than 150 tests or fewer than 40 adversarial tests are
+collected, runs the suite on Python 3.11 and 3.12, compiles the scripts, builds the web client
+and validates the compose file. The web client has 19 `node:test` cases. Tests never need
+network, GPU or model downloads; real providers are imported lazily.
 
 ## Limitations (v0.1, honest)
 
+- **Mock providers by default.** The LLM, STT and TTS are deterministic mocks and the embedder
+  is a hash; nothing in the repository has been run against a real model yet. The mock LLM is
+  extractive (it copies sentences from the retrieved chunks), so the quality of real answers,
+  translations and voice is unknown until a real provider is configured and measured.
 - The demo knowledge base consists of **paraphrases that are not clinically reviewed**; they
-  exist to exercise the pipeline, not to inform patients.
+  exist to exercise the pipeline, not to inform patients. The WHO sources are not in the
+  repository, the manifest `url`s are landing pages that must be replaced by direct PDF links,
+  and `--download` needs network access from the machine that runs it (it fails behind
+  restrictive proxies).
 - The default **lexical judge is a weak verifier**: it measures token overlap between a sentence
-  and its cited chunk. It catches fabricated sentences and missing citations, not subtle
-  distortions. Until an LLM or NLI judge is configured and spot-checked against human raters,
-  support rates must be read as upper bounds.
-- **Referral numbers must be verified** by the pilot clinic before launch; the seed data marks
-  each point with `verified_on` and anything unverified is shown as such.
+  and its cited chunk, caps the score when a number or a negation differs, and that is all. It
+  catches fabricated sentences and missing citations, not a swapped word or a paraphrase that
+  inverts meaning, and it scores cross-lingual pairs near zero. Until an LLM or NLI judge is
+  configured and spot-checked against human raters, support rates must be read as upper bounds.
+- **Referral numbers are unverified.** The seed data fills in only the standard emergency numbers
+  (124 ambulance, 122 police). Every other point (SOS lines, the children's helplines, the Banja
+  Luka clinic, the generic "Dom zdravlja" entries) has an empty `phone`, an empty `verified_on`
+  and a `to verify: <number>` or "fill before pilot" note; the pilot clinic must fill and verify
+  them before launch.
+- **Minors.** The minor flag selects the minors' consent text, adds child-protection services to
+  referrals and tells the red-flag router; in generation it only appends a note to the system
+  prompt, so "adapted wording" depends on the real model, and the `minor_note` text in the
+  catalogue is not yet shown in the UI.
 - No accounts, no history, no WhatsApp or phone-line channel: the web UI is the only channel.
 - Voice quality depends on the open-weight STT/TTS models and has not yet been measured on the
-  consented utterance set.
+  consented utterance set (no recordings exist yet). The UI shows the transcript and asks for
+  confirmation but does not yet react to a low STT confidence.
 - No automatic retention timer: sessions persist until the user deletes them or the maintainers
-  purge at the end of the pilot.
+  purge at the end of the pilot. The session id is kept in the browser's `localStorage` until
+  "Delete my data".
+- One-time answer audio (`audio_url`) lives in process memory: run a single uvicorn worker or
+  put a shared store behind it.
 - Montenegrin-specific letters (ś, ź) are transliterated on input only.
 
 ## Roadmap to `v0.1.0-unicef`
@@ -290,7 +370,8 @@ Tests never need network, GPU or model downloads.
 1. Clinic review of the 20 sample answers and the sources behind them; `reviewed_by` set.
 2. Referral points for BA and ME verified by the clinic (`verified_on`, `verified_by`).
 3. LLM or NLI support judge configured; 50-sentence human spot-check with two raters.
-4. First committed measurement report under `reports/`.
+4. First measurement report with real providers under `reports/` (the only report so far is a
+   dry run with mock providers).
 5. Usability session with 5 to 10 women (three voice questions each), consent recorded.
 6. DPIA completed and signed (skeleton in `docs/data-protection.md`).
 7. faster-whisper and Piper tested on the WER set; low-bandwidth audio profile checked.
@@ -311,7 +392,9 @@ licences (for example WHO publications under CC BY-NC-SA 3.0 IGO) and are never 
 - Never store question text in `Event`, never log raw user text, never add an IP or device
   identifier to the data model.
 - Add tests next to the module you touch; adversarial cases go in `backend/tests/adversarial/`.
-- Do not add dependencies without a reason (stdlib and numpy are preferred for v0.1).
+  Run `make test lint` (what CI runs) before opening a pull request.
+- Do not add dependencies without a reason (stdlib and numpy are preferred for v0.1); real
+  providers stay lazy-imported so tests and the default stack never load a model.
 - Follow the [Code of Conduct](CODE_OF_CONDUCT.md); report vulnerabilities as described in
   [SECURITY.md](SECURITY.md).
 

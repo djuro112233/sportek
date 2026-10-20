@@ -44,7 +44,7 @@ Out of scope:
 
 | Control | Where |
 |---|---|
-| Containers run as a non-root user, with `cap_drop: [ALL]`, `no-new-privileges:true` and a read-only root filesystem; writable paths are explicit volumes or `tmpfs` | `docker-compose.yml`, see `docs/architecture.md`, Deployment |
+| The `api`, `web` and `redis` containers run as a non-root user, with `cap_drop: [ALL]`, `no-new-privileges:true`, memory limits and a read-only root filesystem; writable paths are explicit volumes or `tmpfs`; the two published ports bind to `127.0.0.1` | `docker-compose.yml`, see `docs/architecture.md`, Deployment |
 | No secrets in the repository: `.env` files are git-ignored; `MILA_LLM_API_KEY` and `MILA_ADMIN_TOKEN` come from the environment only | `.gitignore`, `backend/app/config.py` |
 | Admin endpoints are disabled (404) unless `MILA_ADMIN_TOKEN` is set; they require `X-Admin-Token` | `backend/app/api/deps.py` |
 | Log redaction filter masks API keys, bearer tokens, e-mails, phone numbers, 13-digit identifiers and IP addresses on every record | `backend/app/core/privacy.py` (`RedactionFilter`) |

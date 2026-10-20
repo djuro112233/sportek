@@ -18,14 +18,14 @@ are required. The fields and their meaning:
 |---|---|---|---|
 | `id` | string, lowercase `[a-z0-9._-]`, 1 to 60 chars, starts with a letter or digit | required | Stable identifier, e.g. `who-fp-handbook-2022`. Becomes `Source.id` and the prefix of every chunk id. Never reuse an id for a different document. |
 | `title` | string | required | Full title as printed on the document. Shown in citations. |
-| `file` | relative path inside `kb/`, no `..` | required | `demo/en/<name>.md` for demo paraphrases, `downloads/<name>.pdf` for fetched documents (git-ignored), `national/<name>.pdf` for protocols supplied by the clinic. |
+| `file` | relative path inside `kb/`, no `..` | required | `demo/<lang>/<name>.md` for demo paraphrases, `downloads/<name>.pdf` (or `.html` for a web page) for fetched documents (git-ignored), `national/<name>.pdf` for protocols supplied by the clinic. Supported types: `.pdf`, `.md`, `.txt`, `.html`. |
 | `publisher` | string | `""` | Organisation that published it (WHO, a ministry, a professional society). |
 | `year` | integer | none | Year of the edition. |
 | `url` | string | `""` | Where the document is published; required for `download: true`; shown in citations. |
 | `licence` | string | `""` | Exact licence name, e.g. `CC BY-NC-SA 3.0 IGO`, `Apache-2.0`, `Government publication, reuse permitted with attribution`. |
 | `language` | `sr` / `bs` / `me` / `hr` / `en` | `en` | Language of the document; stored on every chunk. |
 | `published_on` | ISO date string | `""` | Date of the edition; shown in citations as `date`. |
-| `sha256` | hex string | none | Expected SHA-256 of the file. A downloaded file whose hash differs is rejected; set it for every public document so a silently changed PDF cannot enter the index. |
+| `sha256` | hex string | none (`""` counts as unset) | Expected SHA-256 of the file. A file or download whose hash differs is rejected; set it for every public document so a silently changed PDF cannot enter the index. The WHO entries ship with `sha256: ""` until the first verified download. |
 | `reviewed_by` | string | `""` | Name or role of the clinician who signed the review. **Non-empty means `review_status = reviewed`**; empty means `public_unreviewed`. |
 | `reviewed_on` | ISO date string | `""` | Date of the sign-off. |
 | `allowed_topics` | list of `TOPIC_CLASSES` | `[]` | Topic classes the document may answer. Retrieval can restrict by topic. |
@@ -41,36 +41,45 @@ after the next run. A source can also be blocked at runtime through
 `POST /api/admin/sources/{id}/review`. Documents removed from the manifest are left in the
 database untouched: block them first, then remove the entry.
 
-Example:
+Example (two of the 27 entries in the current manifest: 22 `demo-*` paraphrases, 11 topics in
+`en` and `sr`, and 5 `who-*` publications with `download: true`):
 
 ```yaml
 version: 1
 documents:
-  - id: demo-contraception-methods
-    title: "Contraception methods: an overview (demo paraphrase)"
-    publisher: MILA project
+  - id: demo-en-contraception-methods
+    title: "Contraception methods: an overview (demo)"
+    publisher: "MILA project (paraphrase of WHO guidance; demo only)"
     year: 2026
+    url: ""
     file: demo/en/contraception-methods.md
     licence: Apache-2.0
     language: en
+    published_on: "2026-10-19"
+    reviewed_by: ""
     allowed_topics: [contraception]
-    published_on: "2026-10-01"
-    notes: "Project-authored paraphrase of WHO guidance. Not clinically reviewed. Demo mode only."
+    download: false
 
   - id: who-fp-handbook-2022
-    title: "Family Planning: A Global Handbook for Providers (2022 edition)"
-    publisher: World Health Organization and Johns Hopkins Bloomberg School of Public Health
+    title: "Family planning: a global handbook for providers (2022 edition)"
+    publisher: "World Health Organization and Johns Hopkins Bloomberg School of Public Health"
     year: 2022
-    url: "https://fphandbook.org"
+    url: "https://www.who.int/publications/i/item/9780999203705"
     file: downloads/who-fp-handbook-2022.pdf
-    download: true
-    # sha256: added after the first verified download, before the entry is merged
-    licence: CC BY-NC-SA 3.0 IGO
+    licence: "CC BY-NC-SA 3.0 IGO"
     language: en
-    allowed_topics: [contraception, adolescent]
-    published_on: "2022-11-01"
-    notes: "Attribution per WHO terms; see docs/knowledge-base.md section 2."
+    published_on: "2022-01-01"
+    sha256: ""            # pinned after the first verified download
+    reviewed_by: ""
+    reviewed_on: ""
+    allowed_topics: [contraception, adolescent, sti, postnatal]
+    download: true
+    notes: "verify licence + sha256 on first download; the url is the WHO landing page - set it to the direct PDF link before downloading"
 ```
+
+The `url` of every WHO entry is the publication's landing page, not the file: before running
+`--download`, replace it with the direct PDF link (the downloader refuses an HTML response for
+a `.pdf` target). The adolescent-pregnancy entry is a web page and is saved as `.html`.
 
 ## 2. Licence rules
 
@@ -150,7 +159,7 @@ documents:
 | `max_tokens` | 400 (estimate via `estimate_tokens`, a word-and-punctuation heuristic, no tokenizer download) | Long enough for a complete recommendation with its context, short enough that a `[Sn]` citation points at one idea |
 | `overlap_tokens` | 40 | Sentences at a boundary are present in both neighbours, so a citation is not lost at a cut |
 | heading detection | numbered headings, ALL-CAPS lines, short title-case lines | `heading_path` is `"H1 > H2 > H3"` and is shown as the citation `section` |
-| page extraction | `.pdf` via pypdf, one `PageText` per page; `.md` and `.txt` one page per section | Page numbers in citations come from the PDF page index |
+| page extraction | `.pdf` via pypdf, one `PageText` per physical page (blank pages dropped); `.md`, `.txt` and `.html` one page per section at heading level 1 or 2, HTML comments stripped | Page numbers in citations come from the PDF page index |
 | embeddings | `HashEmbedder` (256-dim, deterministic) by default; `BGEM3Embedder` (`BAAI/bge-m3`) with `MILA_EMBEDDER=bge_m3` | Tests never download models; multilingual retrieval in production |
 | lexical index | BM25 over `tokenize(text)` (Cyrillic to Latin, diacritics stripped) | The same normalisation as the red-flag router and the lexical judge |
 
@@ -178,30 +187,42 @@ Chunk text is stored verbatim; nothing is paraphrased at ingestion.
 ## 7. Ingestion commands
 
 ```bash
-# ingest every manifest entry whose file is present (no network)
-.venv/bin/python scripts/ingest_kb.py
+# ingest every manifest entry whose file is present (no network): 22 demo documents,
+# the 5 WHO entries are listed under missing_files
+.venv/bin/python scripts/ingest_kb.py                       # make ingest
 
-# fetch public documents listed with a url, then ingest
+# fetch the documents marked download: true whose file is missing, then ingest
 .venv/bin/python scripts/ingest_kb.py --download
 
-# re-ingest one source only
+# re-ingest one or more sources only (comma-separated ids)
 .venv/bin/python scripts/ingest_kb.py --only who-fp-handbook-2022
 
-# use a different manifest / database
+# another manifest (its folder becomes kb_dir), database or embedder; -v logs each document
+.venv/bin/python scripts/ingest_kb.py --manifest /path/to/manifest.yaml \
+  --database-url postgresql+psycopg://... --embedder bge_m3 -v
+
+# the same through the environment
 MILA_MANIFEST_PATH=/path/to/manifest.yaml MILA_DATABASE_URL=postgresql+psycopg://... \
   .venv/bin/python scripts/ingest_kb.py
 ```
 
-`scripts/ingest_kb.py --help` lists the options as implemented; the script wraps
+`scripts/ingest_kb.py --help` lists the options (`--manifest`, `--only`, `--download`,
+`--database-url`, `--embedder hash|bge_m3`, `-v`); the script wraps
 `ingest_manifest(db, settings, embedder=None, *, only=None, download=False)` and prints the
-`IngestReport`: `ingested` (new or changed versions), `skipped_unchanged` (same hash),
+`IngestReport` as JSON: `ingested` (new or changed versions), `skipped_unchanged` (same hash),
 `missing_files`, `downloaded`, `errors` (per id, including `not in manifest` for an unknown
 `--only` id), `chunks_by_doc`, `chunks_added` and `chunks_current`. One bad document never
-stops the run; it appears under `errors`. Run the script after changing the manifest, a file,
-`MILA_EMBEDDER` or `MILA_EMBEDDING_DIM` (embeddings are stored per chunk, so changing the
-embedder requires re-ingesting with a changed hash, or dropping the database).
+stops the run; it appears under `errors`. The exit code is 1 when any document errored or when
+a document requested with `--only` is missing, 0 otherwise. Run the script after changing the
+manifest, a file, `MILA_EMBEDDER` or `MILA_EMBEDDING_DIM` (embeddings are stored per chunk, so
+changing the embedder requires re-ingesting with a changed hash, or dropping the database).
 
-In Docker Compose the `api` service runs the ingestion at start-up against the demo manifest.
+`--download` runs on the machine that executes the script and needs direct network access to
+`who.int`; behind a restrictive proxy it reports `download failed (ProxyError)` under `errors`
+and ingests nothing for that entry. Download the files by hand in that case and place them at
+the manifest `file` path. In Docker Compose the `api` service runs the ingestion without
+downloads at start-up, and `docker compose --profile ingest run --rm ingest` runs it with
+`--download` into the shared `kbdownloads` volume.
 
 ## 8. Adding a national protocol after clinic approval
 
